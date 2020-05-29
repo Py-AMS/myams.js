@@ -24273,16 +24273,18 @@ var callbacks = {
   initElement: function initElement(element) {
     $('[data-ams-callback]', element).each(function (idx, elt) {
       var data = $(elt).data();
-      var callbacks;
+      var callbacks = data.amsCallback;
 
-      try {
-        callbacks = JSON.parse(data.amsCallback);
-
-        if (!$.isArray(callbacks)) {
-          callbacks = [callbacks];
+      if (typeof callbacks === 'string') {
+        try {
+          callbacks = JSON.parse(data.amsCallback);
+        } catch (e) {
+          callbacks = data.amsCallback.split(/[\s,;]+/);
         }
-      } catch (e) {
-        callbacks = data.amsCallback.split(/[\s,;]+/);
+      }
+
+      if (!$.isArray(callbacks)) {
+        callbacks = [callbacks];
       }
 
       var _iteratorNormalCompletion = true;
@@ -24292,12 +24294,14 @@ var callbacks = {
       try {
         var _loop = function _loop() {
           var callback = _step.value;
-          var callable = void 0,
+          var callname = void 0,
+              callable = void 0,
               source = void 0,
               options = void 0;
 
           if (typeof callback === 'string') {
-            callable = MyAMS.core.getFunctionByName(callback);
+            callname = callback;
+            callable = MyAMS.core.getFunctionByName(callname);
             source = data.amsCallbackOptions;
             options = data.amsCallbackOptions;
 
@@ -24306,18 +24310,19 @@ var callbacks = {
             }
           } else {
             // JSON object
-            callable = MyAMS.core.getFunctionByName(callback.callback);
+            callname = callback.callback;
+            callable = MyAMS.core.getFunctionByName(callname);
             source = callback.source;
-            options = callable.options;
+            options = callback.options;
           }
 
           if (typeof callable === 'undefined') {
             if (source) {
               MyAMS.core.getScript(source).then(function () {
-                callable = MyAMS.core.getFunctionByName(callback);
+                callable = MyAMS.core.getFunctionByName(callname);
 
                 if (typeof callable === 'undefined') {
-                  console.warn("Missing callback ".concat(callback, "!"));
+                  console.warn("Missing callback ".concat(callname, "!"));
                 } else {
                   callable.call(elt, options);
                 }

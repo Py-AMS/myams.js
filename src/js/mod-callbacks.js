@@ -19,35 +19,39 @@ export const callbacks = {
 	initElement: (element) => {
 		$('[data-ams-callback]', element).each((idx, elt) => {
 			const data = $(elt).data();
-			let callbacks;
-			try {
-				callbacks = JSON.parse(data.amsCallback);
-				if (!$.isArray(callbacks)) {
-					callbacks = [callbacks];
+			let callbacks = data.amsCallback;
+			if (typeof callbacks === 'string') {
+				try {
+					callbacks = JSON.parse(data.amsCallback);
+				} catch (e) {
+					callbacks = data.amsCallback.split(/[\s,;]+/);
 				}
-			} catch (e) {
-				callbacks = data.amsCallback.split(/[\s,;]+/);
+			}
+			if (!$.isArray(callbacks)) {
+				callbacks = [callbacks];
 			}
 			for (const callback of callbacks) {
-				let callable, source, options;
+				let callname, callable, source, options;
 				if (typeof callback === 'string') {
-					callable = MyAMS.core.getFunctionByName(callback);
+					callname = callback;
+					callable = MyAMS.core.getFunctionByName(callname);
 					source = data.amsCallbackOptions;
 					options = data.amsCallbackOptions;
 					if (typeof options === 'string') {
 						options = options.unserialize();
 					}
 				} else {  // JSON object
-					callable = MyAMS.core.getFunctionByName(callback.callback);
+					callname = callback.callback;
+					callable = MyAMS.core.getFunctionByName(callname);
 					source = callback.source;
-					options = callable.options;
+					options = callback.options;
 				}
 				if (typeof callable === 'undefined') {
 					if (source) {
 						MyAMS.core.getScript(source).then(() => {
-							callable = MyAMS.core.getFunctionByName(callback);
+							callable = MyAMS.core.getFunctionByName(callname);
 							if (typeof callable === 'undefined') {
-								console.warn(`Missing callback ${callback}!`);
+								console.warn(`Missing callback ${callname}!`);
 							} else {
 								callable.call(elt, options);
 							}

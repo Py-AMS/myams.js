@@ -1,8 +1,8 @@
 <h1>MyAMS "callbacks" module</h1>
 
 <section>
-	<p>MyAMS callbacks are callable elements which are loaded. Callbacks are initialized in the
-	context of a DOM element but unlike plug-ins, they are not kept into browser's memory
+	<p>MyAMS callbacks are callable which can be loaded asynchronously. Callbacks are initialized
+	in the context of a DOM element but unlike plug-ins, they are not kept into browser's memory
 	for future use, so they must be declared each time their use is required.</p>
 	<p>Each callback can be defined using several data attributes:</p>
 	<ul>
@@ -26,7 +26,46 @@
 	</div>
 </section>
 
-<section>
+<section
+	data-ams-modules='{"app": "resources/js/myams-app.js"}'
+	data-ams-callback="MyAMS.app.callbacks.test1">
 	<h2>Callback example</h2>
+	<p>This is an example callback, which just change section border color to red!</p>
+	<p>There is no special configuration here: the callback is defined into my own application
+	module as a function:</p>
+	<pre>	&lt;section
+	  data-ams-modules='{"app": "resources/js/myams-app.js"}'
+	  data-ams-callback="MyAMS.app.callbacks.test1"&gt;
+	  &lt;h2&gt;Callback example&lt;/h2&gt;
+	&lt;/section&gt;</pre>
+	<p>And here is an extract of the javascript code:</p>
+	<pre>	callbacks: {
+	  test1: function() {
+	    $(this).css('border-color', 'red');
+	  }
+	}</pre>
+</section>
 
+<section
+	data-ams-callback='{
+		"source": "resources/js/myams-callback.js",
+		"callback": "MyAMS.demo.callbacks.test2"
+	}'>
+	<h2>Second callback example</h2>
+	<p>This is another example, using a complete JSON callback description; callback isn't
+	defined into a module but into a classic Javascript file:</p>
+	<pre>	&lt;section
+	  data-ams-callback='{
+	    "source": "resources/js/myams-callbacks.js",
+	    "callback": "MyAMS.demo.callbacks.test2"
+	  }'&gt;
+	  &lt;h2&gt;Callback example&lt;/h2&gt;
+	&lt;/section&gt;</pre>
+	<p>Callback script source is like the previous one:</p>
+	<pre>	MyAMS.demo = MyAMS.demo || {};
+	MyAMS.demo.callbacks = $.extend({}, MyAMS.demo.callbacks, {
+	  test2: function() {
+	    $(this).css('border-color', 'blue');
+	  }
+	});</pre>
 </section>

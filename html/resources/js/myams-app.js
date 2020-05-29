@@ -37,6 +37,16 @@ const app = {
 				}
 			});
 		}
+	},
+
+	/**
+	 * Callback example
+	 */
+	callbacks: {
+
+		test1: function() {
+			$(this).css('border-color', 'red');
+		}
 	}
 }
 
