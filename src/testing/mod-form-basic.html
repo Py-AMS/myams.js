@@ -1,0 +1,222 @@
+<h1>Basic forms</h1>
+<section>
+	<p>This is the simpliest possible form that MyAMS can handle.</p>
+	<p>Compared with basic Bootstrap form template, you can notice a few addings:</p>
+	<ul>
+		<li>
+			<p>hints are added after labels.</p>
+		</li>
+		<li>
+			<p>a <code>required</code> class can be added to labels attached to
+			required fields; if so, labels are displayed (by default) with bold fonts and
+			hints markers are displayed in red color.</p>
+		</li>
+		<li>
+			<p>a <code>text-sm-right</code> is added to labels, so that labels are aligned
+			on the right on wide enough displays.</p>
+		</li>
+		<li>
+			<p>input fields are wrapped inside a <code>div class="form-widget"</code> element;
+			it's inside this block that errors messages attached to an input field, if any,
+			are inserted.</p>
+		</li>
+	</ul>
+</section>
+
+<section>
+	<h2>Form title</h2>
+	<form action="data/form-submit.json" data-async
+		  class="ams-form">
+		<fieldset class="border">
+			<legend>Fields legend</legend>
+			<div class="form-group row">
+				<label for="form_widgets_field-1"
+					   class="col-sm-3 col-md-4 col-form-label required text-sm-right">
+					Required input field
+					<i class="fa fa-question-circle hint"
+					   title="Required input hint"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control" required
+							   id="form_widgets_field-1" name="form.widgets.field-1" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_field-2"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Standard input field
+					<i class="fa fa-question-circle hint"
+					   title="This is an <b>HTML</b> hint!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control"
+							   id="form_widgets_field-2" name="form.widgets.field-2" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_field-3"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Read-only field
+					<i class="fa fa-question-circle hint"
+					   title="Read-only fields are sent on submit!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control" readonly
+							   id="form_widgets_field-3" name="form.widgets.field-3"
+							   value="Read-only input" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_field-4"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Disabled field
+					<i class="fa fa-question-circle hint"
+					   title="Disabled fields are NOT sent on submit!!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control" disabled
+							   id="form_widgets_field-4" name="form.widgets.field-4"
+							   value="Disabled input">
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_field-5"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Simple text
+					<i class="fa fa-question-circle hint"
+					   title="Read-only fields are not sent on submit if unnamed!!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input class="form-control-plaintext px-sm-2" readonly
+							   id="form_widgets_field-5"
+							   value="Simple read-only unnamed input" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_checkbox-1"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Boolean field
+					<i class="fa fa-question-circle hint"
+					   title="Read-only fields are not sent on submit if unnamed!!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<div class="form-control custom-control custom-switch border-0">
+							<input type="checkbox"
+								   id="form_widgets_checkbox-1" name="form.widgets.field-6"
+								   class="custom-control-input" />
+							<label for="form_widgets_checkbox-1"
+								   class="custom-control-label">
+								Please check me!
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer>
+			<button type="reset" class="btn btn-light">Reset</button>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit" value="submit">Submit</button>
+		</footer>
+	</form>
+</section>
+
+<section class="p-3">
+	<pre>&lt;section&gt;
+  &lt;h2&gt;Form title&lt;/h2&gt;
+  &lt;form action="data/form-submit.json" data-async
+        class="ams-form"&gt;
+    &lt;fieldset class="border"&gt;
+      &lt;legend&gt;Fields legend&lt;/legend&gt;
+      &lt;div class="form-group row"&gt;
+        &lt;label for="form_widgets_field-1"
+               class="col-sm-3 col-md-4 col-form-label required text-sm-right"&gt;
+          Required input field
+          &lt;i class="fa fa-question-circle hint"
+             title="Required input hint"&gt;&lt;/i&gt;
+        &lt;/label&gt;
+        &lt;div class="col-sm-9 col-md-8"&gt;
+          &lt;div class="form-widget"&gt;
+            &lt;input type="text" class="form-control" required
+                   id="form_widgets_field-1" name="form.widgets.field-1" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="form-group row"&gt;
+        &lt;label for="form_widgets_field-2"
+               class="col-sm-3 col-md-4 col-form-label text-sm-right"&gt;
+          Standard input field
+          &lt;i class="fa fa-question-circle hint"
+             title="This is an <b&gt;HTML&lt;/b&gt; hint!">&lt;/i&gt;
+        &lt;/label&gt;
+        &lt;div class="col-sm-9 col-md-8"&gt;
+          &lt;div class="form-widget"&gt;
+            &lt;input type="text" class="form-control"
+                   id="form_widgets_field-2" name="form.widgets.field-2" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="form-group row"&gt;
+        &lt;label for="form_widgets_field-3"
+               class="col-sm-3 col-md-4 col-form-label text-sm-right"&gt;
+          Read-only field
+          &lt;i class="fa fa-question-circle hint"
+             title="Help hint"&gt;&lt;/i&gt;
+        &lt;/label&gt;
+        &lt;div class="col-sm-9 col-md-8"&gt;
+          &lt;div class="form-widget"&gt;
+            &lt;input type="text" class="form-control" readonly
+                   id="form_widgets_field-3" name="form.widgets.field-3"
+                   value="Read-only input" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="form-group row"&gt;
+        &lt;label for="form_widgets_field-4"
+               class="col-sm-3 col-md-4 col-form-label text-sm-right"&gt;
+          Disabled field
+          &lt;i class="fa fa-question-circle hint"
+             title="Help hint"&gt;&lt;/i&gt;
+        &lt;/label&gt;
+        &lt;div class="col-sm-9 col-md-8"&gt;
+          &lt;div class="form-widget"&gt;
+            &lt;input type="text" class="form-control" disabled
+                   id="form_widgets_field-4" name="form.widgets.field-4"
+                   value="Disabled input"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="form-group row"&gt;
+        &lt;label for="form_widgets_field-5"
+               class="col-sm-3 col-md-4 col-form-label text-sm-right"&gt;
+          Simple text
+          &lt;i class="fa fa-question-circle hint"
+             title="Help hint"&gt;&lt;/i&gt;
+        &lt;/label&gt;
+        &lt;div class="col-sm-9 col-md-8"&gt;
+          &lt;div class="form-widget"&gt;
+            &lt;input class="form-control-plaintext px-sm-2" readonly
+                   id="form_widgets_field-5"
+                   value="Simple read-only input" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;footer&gt;
+      &lt;button type="reset" class="btn btn-light"&gt;Reset&lt;/button&gt;
+      &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+    &lt;/footer&gt;
+  &lt;/form&gt;
+&lt;/section&gt;</pre>
+</section>

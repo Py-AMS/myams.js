@@ -1,0 +1,46 @@
+<h1>MyAMS additions to JQuery</h1>
+<section>
+	<p>MyAMS is adding a few methods to standard JQuery selectors.</p>
+	<ul>
+		<li>
+			<p><code>$.fn.exists()</code>: this function is checking a JQuery object contents,
+			and returns <code>true</code> if at least one object is contained.</p>
+		</li>
+		<li>
+			<p><code>$.fn.objectOrParentWithClass(klass)</code>: this function is returning the
+			JQuery object itself if it supports the given CSS class, or it's first parent which
+			is supporting it otherwise.</p>
+		</li>
+		<li>
+			<p><code>$.fn.listattr(attr)</code>: this function returns an array
+			containing the value of the given attribute for all objects of the initial JQuery
+			array. This is particularty useful, for example, to get the values of all selected
+			items in a multi-select input:</p>
+			<pre class="p"><code>const values = $('option:selected', select).listattr('value');</code></pre>
+		</li>
+		<li>
+			<p><code>$.fn.style(styleName, value, priority)</code>: this function can be used to
+			define the <code>style</code> property of the given DOM object, but instead of using
+			the classic JQuery's <code>.css()</code> function, it allows to define the
+			<code>priority</code> of the given style.</p>
+			<p>Given arguments must follow the <code>CSSStyleDeclaration</code> (see <a
+			target="_blank"
+			href="https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration">MDN</a>):
+			</p>
+			<ul>
+				<li><code>styleName</code>: name of the CSS style</li>
+				<li><code>value</code>: style value to set; if no value is provided, the function
+					returns the value of the given style attribute, or the current global style
+					object if <code>styleName</code> is not defined.</li>
+				<li><code>priority</code>: set to 1 if the style is "important"</li>
+			</ul><br />
+			<pre class="p"><code>$('.myStyle').style('border', '1px solid blue', 1);</code></pre>
+		</li>
+		<li>
+			<p><code>$.fn.removeClassPrefix(prefix)</code>: this function acts as
+			<code>$().removeClass</code>, but removes all CSS classes names which starts
+			with given prefix.</p>
+			<pre class="p"><code>$('i', container).removeClassPrefix('fa');</code></pre>
+		</li>
+	</ul>
+</section>

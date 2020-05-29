@@ -1,0 +1,309 @@
+<h1>Navigation menus</h1>
+<section>
+	<p>Navigation menus are displayed on the left side of the main window.</p>
+	<p>There are two ways to create navigation menus:</p>
+	<ul>
+		<li>by using a static HTML definition;</li>
+		<li>by calling a remote service which will render menus definition in JSON format;</li>
+		<li>by using a mixed mode combining both of them.</li>
+	</ul>
+	<p>The whole menu configuration and management is handled by MyAMS's <a href="#mod-nav.html">
+	nav module</a>.</p>
+</section>
+
+<section>
+	<h2>General rules</h2>
+	<p>The navigation element is made of several "menus"; each menu is made of a header (by
+	default with an orange background, and which can be empty) and of a set of menu entries; each
+	menu entry contains a label, a link, an icon, a badge, and an optional set of sub-menus items;
+	the link itself is optional for a menu containing sub-menus. There is no theorical limit in
+	the depth of menus and sub-menus, but it's generally a better option to limit menus depth to
+	a maximum of 3 levels.</p>
+	<p>Menus can be configured in <i>accordion mode</i> or not; if this mode is activated,
+	all active menus are closed when another one is opened. To active this mode, set the
+	<code>data-ams-menu-accordion</code> attribute to <code>true</code> on the <code>nav</code>
+	element.</p>
+</section>
+
+<section>
+	<h2>Static HTML definition</h2>
+	<p>The static HTML definition is quite simple and mainly based on nested lists; here is an
+	extract of this application menu. Additional elements are required, but they will be added
+	automatically by MyAMS after page load:</p>
+	<pre>	&lt;nav data-ams-menu-config="data/menus.json" data-ams-menu-accordion="true"&gt;
+	  &lt;ul class="active"&gt;
+	    &lt;li class="header"&gt;MyAMS.js&lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#summary.html"
+	         title="What is MyAMS?"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fa fa-question-circle"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;What is MyAMS?&lt;/span&gt;
+	      &lt;/a&gt;
+	      &lt;ul&gt;
+	        &lt;li&gt;
+	          &lt;a href="#faq.html" title="FAQ"&gt;
+	            &lt;span class="menu-item-parent"&gt;FAQ&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	      &lt;/ul&gt;
+	    &lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#packaging.html" title="Packaging"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fas fa-cogs"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;Packaging&lt;/span&gt;
+	      &lt;/a&gt;
+	    &lt;/li&gt;
+	    &lt;li class="header"&gt;MyAMS features&lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#loading.html"
+	         title="Loading and configuration"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fa fa-download"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;Loading and configuration&lt;/span&gt;
+	      &lt;/a&gt;
+	      &lt;ul&gt;
+	        &lt;li&gt;
+	          &lt;a href="#env.html" title="Environment"&gt;
+	            &lt;span class="menu-item-parent"&gt;Environment&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	        &lt;li&gt;
+	          &lt;a href="#config.html" title="Configuration"&gt;
+	            &lt;span class="menu-item-parent"&gt;Configuration&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	      &lt;/ul&gt;
+	    &lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#layout.html" title="MyAMS admin layout"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fa fa-layer-group"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;MyAMS admin layout&lt;/span&gt;
+	      &lt;/a&gt;
+	      &lt;ul&gt;
+	        &lt;li&gt;
+	          &lt;a href="#body.html" title="Body classes"&gt;
+	            &lt;i class="fa-lg fa-fw mr-1 fab fa-html5"&gt;&lt;/i&gt;
+	            &lt;span class="menu-item-parent"&gt;Body classes&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	        ...
+	      &lt;/ul&gt;
+	    &lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#modules.html" title="MyAMS modules"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fa fa-plug"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;MyAMS modules&lt;/span&gt;
+	      &lt;/a&gt;
+	      &lt;ul&gt;
+	        &lt;li&gt;
+	          &lt;a href="#mod-ajax.html" title="ajax"&gt;
+	            &lt;span class="menu-item-parent"&gt;ajax&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	        &lt;li&gt;
+	          &lt;a href="#mod-form.html" title="form"&gt;
+	            &lt;span class="menu-item-parent"&gt;form&lt;/span&gt;
+	          &lt;/a&gt;
+	          &lt;ul&gt;
+	            &lt;li&gt;
+	              &lt;a href="#mod-form-basic.html" title="Basic forms"&gt;
+	                &lt;span class="menu-item-parent"&gt;Basic forms&lt;/span&gt;
+	              &lt;/a&gt;
+	            &lt;/li&gt;
+	            ...
+	          &lt;/ul&gt;
+	        &lt;/li&gt;
+	        ...
+	      &lt;/ul&gt;
+	    &lt;/li&gt;
+	    &lt;li class="header"&gt;&lt;/li&gt;
+	    &lt;li&gt;
+	      &lt;a href="#registry.html" title="Components"&gt;
+	        &lt;i class="fa-lg fa-fw mr-1 fa fa-recycle"&gt;&lt;/i&gt;
+	        &lt;span class="menu-item-parent"&gt;Components&lt;/span&gt;
+	        &lt;span class="badge ml-1 mr-3 float-right bg-danger"&gt;10&lt;/span&gt;
+	      &lt;/a&gt;
+	      &lt;ul&gt;
+	        &lt;li&gt;
+	          &lt;a href="#plugin-validate.html" title="Input validation"&gt;
+	            &lt;i  class="fa-lg fa-fw mr-1 fa fa-tasks"&gt;&lt;/i&gt;
+	            &lt;span class="menu-item-parent"&gt;Input validation&lt;/span&gt;
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	        ...
+	        &lt;li class="divider"&gt;&lt;/li&gt;
+	        ...
+	      &lt;/ul&gt;
+	    &lt;/li&gt;
+	  &lt;/ul&gt;
+	&lt;/nav&gt;</pre>
+</section>
+
+<section>
+	<h2>Menus creation from JSON definition</h2>
+	<p>Instead of creating static navigation menus, MyAMS can use a JSON file to create the menus.
+	You just have to set the URL of this file into <code>nav</code> attributes:</p>
+	<pre><code>	&lt;nav data-ams-menu-config="data/menus.json"&gt;&lt;/nav&gt;</code></pre>
+	<p>This is a sample JSON file for the same HTML definition as above:</p>
+	<pre>	[
+	  {
+	    "header": "MyAMS.js",
+	    "items": [
+	      {
+	        "label": "What is MyAMS?",
+	        "href": "#summary.html",
+	        "icon": "fa fa-question-circle",
+	        "items": [
+	          {
+	            "label": "FAQ",
+	            "href": "#faq.html"
+	          }
+	        ]
+	      },
+	      {
+	        "label": "Packaging",
+	        "href": "#packaging.html",
+	        "icon": "fas fa-cogs"
+	      }
+	    ]
+	  },
+	  {
+	    "header": "MyAMS features",
+	    "items": [
+	      {
+	        "label": "Loading and configuration",
+	        "href": "#loading.html",
+	        "icon": "fa fa-download",
+	        "items": [
+	          {
+	            "label": "Environment",
+	            "href": "#env.html"
+	          },
+	          {
+	            "label": "Configuration",
+	            "href": "#config.html"
+	          },
+	          {
+	            "label": "Main DOM objects",
+	            "href": "#dom.html"
+	          }
+	        ]
+	      },
+	      {
+	        "label": "Core features",
+	        "href": "#core.html",
+	        "icon": "fa fa-heart",
+	        "items": [
+	          {
+	            "label": "Data API",
+	            "href": "#data.html",
+	            "icon": "fa fa-code"
+	          },
+	          {
+	            "label": "JQuery addings",
+	            "href": "#jquery.html",
+	            "icon": "fab fa-js"
+	          },
+	          {
+	            "label": "Bootstrap addings",
+	            "href": "#bootstrap.html",
+	            "icon": "fab fa-bootstrap"
+	          },
+	          {
+	            "label": "Content initialization",
+	            "href": "#content-init.html",
+	            "icon": "fa fa-folder-plus"
+	          },
+	          {
+	            "label": "Events handlers",
+	            "href": "#handlers.html",
+	            "icon": "fa fa-cogs"
+	          },
+	          {
+	            "label": "Links and navigation",
+	            "href": "#navigation.html",
+	            "icon": "fa fa-route"
+	          }
+	        ]
+	      },
+	      {
+	        "label": "MyAMS admin layout",
+	        "href": "#layout.html",
+	        "icon": "fa fa-layer-group",
+	        "items": [
+	          {
+	            "label": "Body classes",
+	            "href": "#body.html",
+	            "icon": "fab fa-html5"
+	          },
+	          ...
+	          {
+	            "label": "Content classes",
+	            "href": "#content.html",
+	            "icon": "fa fa-font"
+	          }
+	        ]
+	      },
+	      {
+	        "label": "MyAMS modules",
+	        "href": "#modules.html",
+	        "icon": "fa fa-plug",
+	        "items": [
+	          {
+	            "label": "ajax",
+	            "href": "#mod-ajax.html"
+	          },
+	          {
+	            "label": "form",
+	            "href": "#mod-form.html",
+	            "items": [
+	              {
+	                "label": "Basic forms",
+	                "href": "#mod-form-basic.html"
+	              },
+	              ...
+	            ]
+	          },
+	          ...
+	        ]
+	      }
+	    ]
+	  },
+	  {
+	    "header": "",
+	    "items": [
+	      {
+	        "label": "Components",
+	        "href": "#registry.html",
+	        "icon": "fa fa-recycle",
+	        "badge": {
+	          "value": "10",
+	          "status": "danger"
+	        },
+	        "items": [
+	          {
+	            "label": "Input validation",
+	            "href": "#plugin-validate.html",
+	            "icon": "fa fa-tasks"
+	          },
+	          ...
+	          {
+	            "label": ""
+	          },
+	          ...
+	        ]
+	      }
+	    ]
+	  }
+	]</pre>
+	<p>MyAMS provides it's own private factory defined into <a href="#mod-nav.html">nav</a>
+	module; you can override this and set your own menus factory by setting a
+	<code>data-ams-menu-factory</code> attribute with the name of this factory on the
+	<code>nav</code> element.</p>
+</section>
+
+<section>
+	<h2>Mixed mode</h2>
+	<p>If required, you can mix a static menus definition with a JSON one; in this case, just
+	create the HTML definition as usual and add the URL of the JSON definition file; menus
+	created from JSON definition file will be placed after pre-created HTML menus.</p>
+</section>

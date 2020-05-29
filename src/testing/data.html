@@ -1,0 +1,18 @@
+<h1>MyAMS data API</h1>
+<section>
+	<p>One of the goals of MyAMS is to follow Bootstrap logic, by replacing any "inline"
+	Javascript code, which is often hard to read and maintain, by HTML 5 "data" attributes,
+	which are easilly handled using JQuery.</p>
+	<p>All MyAMS modules and plug-ins can be configured only with data attributes, even if
+	you can also use MyAMS Javascript API in your own application code.</p>
+	<p>Generally speaking, MyAMS specific data attributes are prefixed using <code>-ams</code>,
+	like in <code>data-ams-click-handler</code>.</p>
+	<div class="alert alert-warning m-3">
+		<p>We frequently speak of <b>data attributes</b> in this documentation; if a data
+		attribute is set using JQuery's <code>.data()</code> function, the attribute name must be
+		used as is; if the attribute is set using HTML attributes, it's name must prefixed
+		with <code>data-</code>.</p>
+		<p>So, for example, using <code>$(elt).data('ams-form-handler', true)</code> in Javascript
+		is equivalent as using <code>data-ams-form-handler="true"</code> in HTML code.</p>
+	</div>
+</section>

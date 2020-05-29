@@ -1,0 +1,158 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title">Modal title</h5>
+			<button type="button" class="close" data-dismiss="modal">
+				<i class="fa fa-times"></i>
+			</button>
+		</div>
+		<form action="data/form-submit.json" data-async
+			  class="ams-form">
+			<div class="modal-body">
+				<div>
+					<ul class="nav nav-tabs">
+						<li role="presentation" class="nav-item">
+							<a class="nav-link active" href="#p1" role="tab" data-toggle="tab">P1</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a class="nav-link" href="#p2" role="tab" data-toggle="tab">P2</a>
+						</li>
+					</ul>
+					<div class="tab-content p-2">
+						<div role="tabpanel" class="tab-pane fade show active" id="p1">
+							<fieldset class="border">
+								<legend class="switcher">My legend</legend>
+								<div class="form-group row">
+									<label for="select2-1"
+										   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+										Input text
+										<i class="fa fa-question-circle hint"
+										   title="Help message!"></i>
+									</label>
+									<div class="col-sm-9 col-md-8">
+										<div class="form-widget">
+											<select class="select2 form-control sortable" multiple
+													id="select2-1" name="form.widgets.select2-1"
+													data-placeholder="Veuillez sélectionner une option"
+													data-allow-clear="true">
+												<option value="v1">Option 1</option>
+												<option value="v2" selected>Option 2</option>
+												<option value="v3">Option 3</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="email-1"
+										   class="col-sm-3 col-md-4 col-form-label required text-sm-right">
+										Field 1
+									</label>
+									<div class="col-sm-9 col-md-8">
+										<div class="form-widget">
+											<input type="email"
+												   id="email-1" name="form.email-1"
+												   class="form-control" required>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+							<fieldset class="border">
+								<legend class="switcher" data-ams-switcher-state="open">My legend</legend>
+								<div class="form-group row">
+									<label for="select2-2"
+										   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+										Input text
+										<i class="fa fa-question-circle hint"
+										   title="Help message!"></i>
+									</label>
+									<div class="col-sm-9 col-md-8">
+										<div class="form-widget">
+											<select class="select2 form-control"
+													id="select2-2" name="form.widgets.select2-2"
+													data-placeholder="Veuillez sélectionner une option"
+													data-allow-clear="true">
+												<option value="v1">Option 1</option>
+												<option value="v2" selected>Option 2</option>
+												<option value="v3">Option 3</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="email-2"
+										   class="col-sm-3 col-md-4 col-form-label required text-sm-right">Field 1</label>
+									<div class="col-sm-9 col-md-8">
+										<div class="form-widget">
+											<input type="email"
+												   id="email-2" name="form.email-2"
+												   class="form-control" required>
+										</div>
+									</div>
+								</div>
+								<ul class="nav nav-tabs">
+									<li role="presentation" class="nav-item">
+										<a class="nav-link active" href="#p3" role="tab" data-toggle="tab">P1</a>
+									</li>
+									<li role="presentation" class="nav-item">
+										<a class="nav-link" href="#p4" role="tab" data-toggle="tab">P2</a>
+									</li>
+								</ul>
+								<div class="tab-content p-2">
+									<div role="tabpanel" class="tab-pane fade show active"
+										 id="p3">
+										This is another panel!
+									</div>
+									<div role="tabpanel" class="tab-pane fade"
+										 id="p4">
+										<fieldset class="border">
+											<legend class="switcher">My legend</legend>
+											<div class="form-group row">
+												<label for="email-3"
+													   class="col-sm-3 col-md-4 col-form-label required text-sm-right">Field 1</label>
+												<div class="col-sm-9 col-md-8">
+													<div class="form-widget">
+														<input type="email"
+															   id="email-3" name="form.email-3"
+															   class="form-control" required>
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="select2-3"
+													   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+													Input text
+													<i class="fa fa-question-circle hint"
+													   title="Help message!"></i>
+												</label>
+												<div class="col-sm-9 col-md-8">
+													<div class="form-widget">
+														<select class="select2 form-control"
+																id="select2-3" name="form.widgets.select2-3"
+																data-placeholder="Veuillez sélectionner une option"
+																data-allow-clear="true">
+															<option value="v1">Option 1</option>
+															<option value="v2" selected>Option 2</option>
+															<option value="v3">Option 3</option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="p2">
+							<p>This is P2!</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer>
+				<button type="reset" class="btn btn-light">Reset</button>
+				<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</footer>
+		</form>
+	</div>
+</div>

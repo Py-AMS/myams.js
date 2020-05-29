@@ -1,0 +1,19 @@
+<h1>Breadcrumbs ribbon</h1>
+<section>
+	<p>A breacrumbs ribbon is displayed at the top of the page to display current location:</p>
+	<p class="text-center">
+		<img src="resources/img/ribbon.png" alt="Ribbon" />
+	</p>
+	<p>First parts of these breadcrumbs are fixed; last ones are updated by MyAMS according to
+	the currently selected navigation menu.</p>
+	<p>There is no custom configuration, only static elements needs to be included into HTML
+	page:</p>
+	<pre>	&lt;div id="ribbon"&gt;
+	  &lt;ol class="breadcrumb d-flex flex-nowrap" aria-label="breadcrumb"&gt;
+	    &lt;li class="breadcrumb-item parent strong"&gt;
+	      &lt;a href="index.html"&gt;MyAMS.js&lt;/a&gt;
+	    &lt;/li&gt;
+	  &lt;/ol&gt;
+	&lt;/div&gt;
+</pre>
+</section>

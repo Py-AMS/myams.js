@@ -1,0 +1,77 @@
+@startuml
+
+(*) --> "MyAMS.form.submit()"
+
+--> "getFormSettings()"
+
+If "formData.submitted?" then
+    -left-> [Yes] submitWarning()
+    --> (*)
+else
+    --> checkValidators()
+    If "status == 'success' ?" then
+        --> [Yes] "<u>clearAlerts</u>()"
+        --> "<u>initSubmitButton</u>()"
+        --> "<u>getData()"
+        --> "<u>initData(veto)"
+        If "veto.veto ?" then
+            -left-> [true] "<u>resetSubmitButton</u>()" as rsb1
+            --> (*)
+        else
+            --> "<u>getTarget</u>()"
+            If "target ?" then
+                -right-> [yes] "<u>initTarget</u>()"
+                --> "<u>getAction</u>()"
+            else
+                --> "<u>getAction</u>()"
+            Endif
+            --> "<u>getAjaxSettings</u>()"
+            --> "<u>getDownloadTarget</u>()"
+            If "download target ?" then
+                -right-> [true] "<u>initDownloadTarget</u>()"
+                --> "<u>getProgressSettings</u>()"
+            else
+                --> "<u>getProgressSettings</u>()"
+            Endif
+            --> "<u>submit</u>()"
+            If "has progress handler ?" then
+                -right-> [true] "<u>getProgressState</u>()"
+                --> "ajaxSubmit()"
+            else
+                --> "ajaxSubmit()"
+            Endif
+            If "download target?" then
+                --> "<u>resetDownloadTarget</u>()"
+            End If
+            If "submit status ?" then
+                --> [success] "<b>event</b>\nsubmit-success.myams.form"
+                If "veto.veto?" then
+                    -right-> [true] (*)
+                else
+                    If "modal form?" then
+                        -right-> [true] "modal.close()"
+                        --> "<u>submitCallback</u>()" as sc
+                    else
+                        --> sc
+                    Endif
+                    --> "<u>resetAfterSubmit</u>()" as ras2
+                    --> "<u>resetChanged</u>()" as rc2
+                    --> (*)
+                Endif
+            else
+                --> [error] "<b>event</b>\nsubmit-error.myams.form"
+                If "target?" then
+                    -right-> [true] "<u>resetAfterError</u>()" as rae3
+                    --> "<u>resetAfterSubmit</u>()" as ras3
+                else
+                    --> ras3
+                Endif
+                --> (*)
+            Endif
+        Endif
+    else
+        --> (*)
+    Endif
+Endif
+
+@enduml

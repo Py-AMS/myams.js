@@ -1,0 +1,145 @@
+<h1>Links and navigation with MyAMS</h1>
+<section>
+	<p>Handling links and navigation correctly if an important part of any web application.</p>
+	<p>Most MyAMS navigation rules are handled by the <a href="#mod-nav.html"><code>nav</code></a>
+	module, which is also managing creation of the <a href="#nav.html">navigation menu</a>.</p>
+	<p>You can disable MyAMS navigation rules by setting <code>MyAMS.config.ajaxNav</code>
+	to <code>false</code>; otherwise, you can define several kinds of links:</p>
+	<ul>
+		<li>
+			<p><strong>classic links</strong>: these links are handled
+			in a classic way using <code>&lt;a href="absolute_URL"&gt;</code> or
+			<code>&lt;a href="relative_URL"&gt;</code>; the target URL content may replace
+			the whole HTML page content.</p>
+		</li>
+		<li>
+			<p><strong>internal "inner" links</strong>: these links are handled in a classic
+			way using a <code>&lt;a&gt;</code> tag with <code>href</code> attribute; but instead
+			of using a classic URL, we use only relative URLs and start them with a
+			<code>#</code>. A window listened to <code>hashchange</code> events is defined into
+			<a href="#mod-skin.html">MyAMS skin module</a>, which will handle asynchronous
+			downloading of link target, include content into <code>#content</code> and
+			initialize it.</p>
+			<p>Instead of using <code>&lt;a&gt;</code> tags, you can also create links on
+			any HTML tag using the <code>data-ams-url</code> attribute; the value of the
+			attribute is then equivalent to a classic <code>href</code>, as defined just above.
+			Such tags with a <code>data-ams-disabled-handlers</code> attribute set to
+			<code>true</code>, <code>'click'</code> or <code>'all'</code> will be temporary
+			disabled.</p>
+			<p>Instead of using simple URLs into a tag or attribute, you can also set a value
+			which is a function name; if this function is available, it will be called (with
+			additional URL parameters as input arguments) and it's result can be a string, which
+			will be used as target URL, or another function which will be called instead of
+			downloading target content as usual.</p>
+			<p>To replace default link target, which is <code>#content</code>, you can set
+			<code>data-ams-target</code> or <code>target</code> attributes, with a value as
+			<code>_blank</code> to open a new window, or with a valid JQuery selector.</p>
+			<p>Before replacing an element contents, an <code>clear.ams.content</code>
+			event is triggered on the element, with a <code>veto</code> argument which is a
+			simple object containing a single boolean <code>veto</code> attribute set to
+			<code>false</code>; if any registered handler of this event is setting the
+			<code>veto</code> property to <code>true</code>, the link event is cancelled; an
+			<code>cleared.ams.content</code> event is triggered after the promise is resolved.</p>
+		</li>
+		<li>
+			<p><strong>links to modals</strong>: "internal"" modals are classic
+			<a href="https://getbootstrap.com/docs/4.4/components/modal" target="_blank">Bootstrap 
+			modals</a> whose HTML content is already loaded into the DOM; such modals must be 
+			defined by a unique ID.</p>
+			<p>Links to internal modals are defined in Bootstrap's classic way, using a
+			<code>data-toggle="modal"</code> attribute, like in
+			<a href="#modal1" data-toggle="modal">this link</a>!</p>
+			<div id="modal1" class="modal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Internal modal title</h5>
+							<button type="button" class="close" data-dismiss="modal">
+								<i class="fa fa-times"></i>
+							</button>
+						</div>
+						<form class="ams-form">
+							<div class="modal-body">
+								<p class="mypara">Internal modal body</p>
+								<div class="form-group row">
+									<label for="form.email"
+										   class="col-sm-2 col-form-label col-form-label-sm">Field 1</label>
+									<div class="col-sm-10">
+										<div class="form-widget">
+											<input type="email" id="form.email"
+												   class="form-control form-control-sm">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+										data-dismiss="modal">Close</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+<pre class="p"><code>&lt;a href="#modal1" data-toggle="modal"&gt;this link&lt;/a&gt;
+&lt;div id="modal1" class="modal"&gt;
+	&lt;div class="modal-dialog"&gt;
+		&lt;div class="modal-content"&gt;
+		...
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+			<p>"External" modals are downloaded on demand using AJAX calls; this is a link to an
+			<a href="test-modal.html" data-toggle="modal">external modal</a>: the syntax is
+			identical, but without the leading '#' at the begining of the URL.</p>
+<pre class="p"><code>&lt;a href="test-modal.html" data-toggle="modal"&gt;external modal&lt;/a&gt;</code></pre>
+		</li>
+		<li>
+			<p><strong>Dynamic tabs</strong>: tabs are used in MyAMS as they are in Bootstrap.
+			However, besides having common "static" tabs, you can create tabs whose content is
+			downloaded dynamically; and if so, you can choose to download this content only once,
+			or to be able to reload it each time the tab is selected!</p>
+			<p>Dynamic tabs behaviour is based on tab link attributes; you can set:</p>
+			<ul>
+				<li><code>href</code>: this attribute is used as usual to set the ID of the
+				tab content which is associated with this link;</li>
+				<li><code>data-ams-url</code>: this is the remote URL from which you want to
+				download content;</li>
+				<li><code>data-ams-tab-load-once</code>: if you set this boolean attribute to
+				<code>true</code>, tab content will be loaded only once, on first time where
+				the tab pane is activated.</li>
+			</ul>
+			<p>Let try it below:</p>
+			<div class="p">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#static-tab" class="nav-link active"
+						   data-toggle="tab">Static tab</a>
+					</li>
+					<li class="nav-item">
+						<a href="#dynamic-tab" class="nav-link"
+						   data-ams-url="dynamic-tab.html"
+						   data-toggle="tab">Dynamic tab</a>
+					</li>
+					<li class="nav-item">
+						<a href="#dynamic-tab-once" class="nav-link"
+						   data-ams-url="dynamic-tab-once.html"
+						   data-toggle="tab" data-ams-tab-load-once="true">Dynamic tab (single load)</a>
+					</li>
+				</ul>
+				<div class="tab-content p-3 border">
+					<div id="static-tab" class="tab-pane fade show active">
+						This is a tab panel with static content.
+					</div>
+					<div id="dynamic-tab" class="tab-pane fade"></div>
+					<div id="dynamic-tab-once" class="tab-pane fade"></div>
+				</div>
+			</div>
+		</li>
+	</ul>
+	<div class="alert alert-info mx-3" role="alert">
+		<h3 class="alert-heading">Notice</h3>
+		<p>Any time you click on a link which may replace any part of the DOM, a warning can also
+		be displayed if modified form data wasn't saved.</p>
+	</div>
+</section>

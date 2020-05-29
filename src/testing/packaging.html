@@ -1,0 +1,170 @@
+<h1>MyAMS builds</h1>
+<section>
+	<p>MyAMS is split into several parts:</p>
+	<ul>
+		<li>
+			<p>a <a href="#core.html">core</a>, which contains only a very small set of basic
+			features.</p>
+		</li>
+		<li>
+			<p>several <a href="#modules.html">modules</a>, which can be integrated into MyAMS
+			package, or downloaded dynamically according to which MyAMS package was used.</p>
+		</li>
+		<li>
+			<p>several <a href="#registry.html">plug-ins</a>; these plug-ins are JQuery or
+			Bootstrap plug-ins which have been selected to handle common use cases, like
+			form validation, HTML tables, date and time inputs; they are not included into
+			any MyAMS package, and always downloaded dynamically when needed.</p>
+		</li>
+	</ul>
+	<p>MyAMS is available if three different packaging modes:</p>
+	<ul>
+		<li>
+			<p><strong>Default build:</strong> this is the default implementation of MyAMS; it's a
+				big bundle (1.2 Mb) which is including JQuery, Bootstrap, FontAwesome icons (in
+				CSS mode) and MyAMS in a single Javascript file built using Webpack; it's this
+				bundle which is currently used by this demo site.</p>
+		</li>
+		<li>
+			<p><strong>Mini-build:</strong> this package is only including all MyAMS features in a
+				single bundle; all external dependencies (JQuery, Bootstrap and FontAwesome) have
+				to be included separately. This package have to be used if you want to use
+				FontAwesome SVG icons.</p>
+		</li>
+		<li>
+			<p><strong>Core-build:</strong> this really minimalist package only includes MyAMS
+				"core" features; all extensions modules will be downloaded afterwards dynamically,
+				if required.</p>
+		</li>
+	</ul>
+	<p>Please note that all these packages are available in "development" mode as well as
+		"production" mode, where resources are minimized.</p>
+	<p>MyAMS resources directories are listed below; only files which may have to be included
+		statically into your HTML page are listed, other files exist which are mainly downloaded
+		dynamically:</p>
+	<ul>
+		<li>
+			<em>/dist</em>
+			<ul>
+				<li>
+					<em>/css</em>
+					<ul>
+						<li>
+							<em>/dev</em>
+							<ul>
+								<li><em>myams.css</em> (MyAMS.css, development mode)</li>
+							</ul>
+						</li>
+						<li>
+							<em>/ext</em>
+							<ul>
+								<li><em>bootstrap.css</em> (Bootstrap 4 CSS)</li>
+								<li><em>fontawesome.css</em> (FontAwesome CSS)</li>
+							</ul>
+						</li>
+						<li>
+							<em>/prod</em>
+							<ul>
+								<li><em>myams.css</em> (MyAMS.css, production mode)</li>
+							</ul>
+						</li>
+						<li>
+							<em>/svgs</em> (FontAwesome SVG files)
+						</li>
+						<li>
+							<em>/webfonts</em> (FontAwesome web fonts)
+						</li>
+					</ul>
+				</li>
+				<li>
+					<em>/js</em>
+					<ul>
+						<li>
+							<em>/dev</em>
+							<ul>
+								<li><em>myams-dev.js</em> (MyAMS.js, full bundle, development
+									mode)
+								</li>
+								<li><em>myams-mini-dev.js</em> (MyAMS.js, mini-bundle, development
+									mode)
+								</li>
+								<li><em>myams-core-dev.js</em> (MyAMS.js, core-bundle, development
+									mode)
+								</li>
+								<li><em>mod-*-dev.js</em> (MyAMS modules, development mode)</li>
+							</ul>
+						</li>
+						<li>
+							<em>/ext</em>
+							<ul>
+								<li><em>jquery.js</em> (JQuery)</li>
+								<li><em>jsrender.js</em> (Javascript rendering library)</li>
+								<li><em>bootstrap.js</em> (Bootstrap 4 JS)</li>
+								<li><em>fontawesome.js</em> (FontAwesome JS)</li>
+							</ul>
+						</li>
+						<li>
+							<em>/prod</em>
+							<ul>
+								<li><em>myams.js</em> (MyAMS.js, full bundle, production mode)
+								</li>
+								<li><em>myams-mini.js</em> (MyAMS.js, mini-bundle, production
+									mode)
+								</li>
+								<li><em>myams-core.js</em> (MyAMS.js, core-bundle, production
+									mode)
+								</li>
+								<li><em>mod-*.js</em> (MyAMS modules, production mode)</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<p>External resources other than <em>myams.js</em> are required only when using MyAMS packages
+	other then the default build; otherwise, all Javascript and CSS resources are included
+	into this single file, or downloaded automatically when required.<br/>
+	Using <strong>Mini</strong> or <strong>Core</strong> builds allows you to change JQuery or
+	Bootstrap packages, or to use FontAwesome in "SVG mode".</p>
+	<p>You can try other modes using the following links:</p>
+	<ul>
+		<li>
+			<a href="index.html">MyAMS full package</a>
+			<p>This bundle includes all required JS and CSS resources.</p>
+			<pre><code>	&lt;script type="text/javascript" src="/pkg/js/prod/myams.js"&gt;&lt;/script&gt;
+</code></pre>
+		</li>
+		<li>
+			<a href="index-mini.html">MyAMS mini-package</a>
+			<p>This package includes all MyAMS features and modules, but relies on a separate
+				download of JQuery, Bootstrap and FontAwesome; MyAMS CSS file contains all
+				Bootstrap CSS files.</p>
+			<p>Using this package allows you to use custom builds of JQuery or Bootstrap; if
+				using a custom Bootstrap build, don't forget to include Popper.js in your
+				dependencies.</p>
+			<pre><code>	&lt;script type="text/javascript" src="/pkg/js/ext/jquery.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/jsrender.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/bootstrap.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/fontawesome.min.js"
+		data-auto-replace-svg="nest"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/prod/myams-mini.js"&gt;&lt;/script&gt;
+	&lt;link rel="stylesheet" type="text/css" href="/pkg/css/prod/myams.css"&gt;
+</code></pre>
+		</li>
+		<li>
+			<a href="index-core.html">MyAMS core package</a>
+			<p>This package includes only MyAMS "core" features, but no additional module; these
+				modules can be downloaded dynamically, according to your own requirements. As for
+				the "mini" package, MyAMS CSS file contains all Bootstrap CSS files.</p>
+			<pre><code>	&lt;script type="text/javascript" src="/pkg/js/ext/jquery.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/jsrender.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/bootstrap.min.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/ext/fontawesome.min.js"
+		data-auto-replace-svg="nest"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="/pkg/js/prod/myams-core.js"&gt;&lt;/script&gt;
+	&lt;link rel="stylesheet" type="text/css" href="/pkg/css/prod/myams.css"&gt;
+</code></pre>
+		</li>
+	</ul>
+</section>

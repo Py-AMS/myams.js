@@ -1,0 +1,123 @@
+<h1>Progress indicators</h1>
+<section>
+	<p>There are two facts of progress indicators to manage:</p>
+	<ul>
+		<li>upload progress is used when a form contains input files, whose upload can be quite
+		long;</li>
+		<li>server progress is used when submit action is handled by a server operation which
+		can also be long!</li>
+	</ul>
+</section>
+<section>
+	<h2>Upload progress</h2>
+	<p>There is no special need to handle upload progress: everything is handled automatically
+	by MyAMS, but you can always override this default behaviour.</p>
+	<p>When you submit a form, a <code>.progress</code> DIV element is created insite form's
+	submit button; this gauge is updated automatically with a linear green and red gradient
+	background when	file upload is in progress.</p>
+</section>
+<section>
+	<h2>Form upload sample</h2>
+	<form action="data/form-submit.json" data-async
+		  class="ams-form">
+		<fieldset class="border">
+			<legend>Field legend</legend>
+			<div class="alert alert-info p-2">
+				<p class="small">You can upload any file, contents are not saved!</p>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_file-1"
+					   class="col-sm-3 col-md-4 col-form-label required text-sm-right">
+					Required file input field
+					<i class="fa fa-question-circle hint"
+					   title="File input hint"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget custom-file">
+						<input type="file" class="custom-file-input" required
+							   id="form_widgets_file-1" name="form.widgets.file-1" />
+						<label for="form_widgets_file-1"
+							   class="custom-file-label">Browse...</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_file-1"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Multiple file input field
+					<i class="fa fa-question-circle hint"
+					   title="Another input hint"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget custom-file">
+						<input type="file" class="custom-file-input" multiple
+							   id="form_widgets_file-2" name="form.widgets.file-2" />
+						<label for="form_widgets_file-2"
+							   class="custom-file-label">Select multiple files...</label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer>
+			<button type="reset" class="btn btn-light">Reset</button>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit-1" value="submit-1">Submit</button>
+		</footer>
+	</form>
+</section>
+
+<section>
+	<h2>Server progress</h2>
+	<p>Server progress handler requires a server handler which is not available in this
+	environment without an application server, so no example is available.</p>
+	<p>When you want to show that a long server-side operation is in progress, MyAMS is updating
+	form's submit button text with values sent by the server which are checked on a regular basis;
+	several steps are required to handle this:</p>
+	<ul>
+		<li>
+			you must provide a <em>progress handler</em>: using form's
+			<code>progressHandler</code> option (see <a href="#mod-form-options.html">forms
+			options</a>), you define an URL which will be called to get processing status of this
+			operation;
+		</li>
+		<li>
+			this operation must be defined by a unique ID; MyAMS is generating an UUID, which
+			will be send in form's submit data in a field identified by the
+			<code>progressFieldName</code> option (default is <code>progressId</code>);
+		</li>
+		<li>
+			on a regular basis (defined by <code>progressTimeout</code> option, set to 1000ms
+			by default), a new request is send to defined progress handler to check status of
+			the current operation.
+		</li>
+	</ul>
+	<p>These long operations can be separated between those for which the number of operations
+	is known from the beginning of the operation, and those for which this value is unknown
+	until the end but for which we can display a kind of counter; so progress handler response
+	is a JSON object which can contain several attributes:</p>
+	<ul>
+		<li>
+			<code>status</code>: may be <code>running</code> as long as the operation is
+			executing, or <code>finished</code> when the operation is over; when the operation
+			is finished, form's submit button text is reset;
+		</li>
+		<li>
+			<code>message</code>: if this attribute is present, form's submit button text is
+			replaced with given text, without using other attributes;
+		</li>
+		<li>
+			<code>progress</code>: this label is used to update form's submit button text; if
+			not defined, a lookup is made into button's <code>ams-progress-text</code> data
+			attribute, or by using MyAMS's default value;
+		</li>
+		<li>
+			<code>current</code>: this kind of <i>counter</i> is used to display the number of
+			<i>items</i> which have already been processed by the server;
+		</li>
+		<li>
+			<code>length</code>: this is the total number of <i>items</i> that the server should
+			process; if <code>current</code> value is given without <code>length</code>, we use
+			a value of <code>100</code> as default length.
+		</li>
+	</ul>
+</section>

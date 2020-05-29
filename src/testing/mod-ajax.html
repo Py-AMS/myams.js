@@ -1,0 +1,208 @@
+<h1>MyAMS "ajax" module</h1>
+
+<section>
+	<p>This module provides features which are used mainly to handle AJAX request.</p>
+</section>
+
+<section id="check">
+	<h2><code>MyAMS.ajax.check(resource, source): Promise&lt;boolean&gt;</code></h2>
+	<p>This function is used to check if a given "resource" has already be loaded, and if not
+	to download it from the given source URL; you can provide a single resource with a single
+	source, or an array of resources and an array of sources.</p>
+	<p>The function returns a Promise, which is resolved when all the resources have been
+	donwloaded; the Promise value is a boolean, with a <code>true</code> value if at least one
+	resource had to be downloaded.</p>
+</section>
+
+<section id="error">
+	<h2><code>MyAMS.ajax.error(event, response, request, error)</code></h2>
+	<p>This function is used as a callback for AJAX errors, as defined by
+	<code>jQuery.ajaxError</code> function. A JSON response, if any, will be parsed and handled
+	as usual using <a href="#mod-ajax.html!handleJSON"><code>handleJSON</code></a>; for other
+	content types, a <a href="#mod-alert.html!messageBox">message box</a> will be displayed.</p>
+</section>
+
+<section id="get">
+	<h2><code>MyAMS.ajax.get(url, params, options): Promise&lt;result, status, xhr&gt;</code></h2>
+	<p>This function is used to get data from given URL; <code>params</code> are URL params,
+	while <code>options</code> can be used to customize JAquery <code>.ajax()</code> function
+	call.</p>
+	<p>The function returns a Promise which is resolved when the AJAX request is executed and it's
+	result returned.</p>
+</section>
+
+<section id="getAddr">
+	<h2><code>MyAMS.ajax.getAddr(addr): string</code></h2>
+	<p>This function returns an AJAX URL relative to current page, removing all characters after
+	the last slash.</p>
+</section>
+
+<section id="getJSON">
+	<h2><code>MyAMS.ajax.getJSON(): function</code></h2>
+	<p>This function returns another function which returns a <code>MyAMS.ajax.post</code>
+	request.</p>
+	<p>This function can be used, for example, into a link's <code>href</code> or <code>data-ams-url
+	</code> attribute, as in:</p>
+	<pre>	&lt;a href="MyAMS.ajax.getJSON?url=..."&gt;click me&lt;/a&gt;</pre>
+	<p>See <a href="#navigation.html">navigation</a> to know more about navigation rules.</p>
+</section>
+
+<section id="getResponse">
+	<h2><code>MyAMS.ajax.getResponse(request): object</code></h2>
+	<p>This function tries to extract useful elements from a server's response. The result is an
+	object containg a <code>contentType</code> attribute matching returned <code>Content-Type</code>
+	server's response, and a <code>data</code> attribute matching returned value, which is
+	generally a simple string or an unserialized JSON object.</p>
+</section>
+
+<section id="handleJSON">
+	<h2><code>MyAMS.ajax.handleJSON(result, form, target)</code></h2>
+	<p>This function is determining how a JSON response is handled by MyAMS. This JSON response
+	has no required attribute, but some attributes may be required based on other attributes
+	values; here is a list of attributes and values which are handled by MyAMS:</p>
+	<table class="table">
+		<tr>
+			<th>name</th>
+			<td>description</td>
+		</tr>
+		<tr>
+			<td><code>status</code></td>
+			<td>This attribute can have several values:
+				<ul>
+					<li>
+						<code>alert</code>: this status is used to display a synchronous browser's
+						alert box; response may contain an <code>alert</code> attribute which is
+						another objet with attributes <code>title</code> and <code>content</code>,
+						which will be used to create the alert.
+					</li>
+					<li>
+						<code>error</code>: this status is generally used for forms; it allows to
+						display form errors, including errors messages assigned to a specific
+						widget; see <a href="#mod-form-errors.html">form errors</a> to get
+						information about required response content.
+					</li>
+					<li>
+						<code>modal</code>: this status is used when it's required to open a
+						new modal; modal location URL is given into <code>location</code>
+						attribute.
+					</li>
+					<li>
+						<code>reload</code>: this status specifies that an element of current
+						page must be reloaded; the element to be reloaded can be given by
+						<code>target</code> response attribute, otherwise the function's
+						<code>target</code> will be used, or <code>#content</code> if none.
+						The URL from which content may be reloaded is given into
+						<code>location</code> attribute, otherwise current location hash will be
+						used.<br />
+						Response can also contain <code>preReload</code>,
+						<code>preReloadOptions</code>, <code>postReload</code> and
+						<code>postReloadOptions</code> attributes, which will be forwarded to
+						<a href="#mod-skin.html!loadURL"><code>MyAMS.skin.loadURL()</code></a>
+						options.
+					</li>
+					<li>
+						<code>redirect</code>: this status is used to redirect the whole page to
+						a new location, given by the <code>location</code> attribute or by the
+						current location URL.<br />
+						If response has a <code>window</code> attribute, a new window will be
+						opened, with <code>options</code> attribute as window options.
+					</li>
+				</ul>
+				<p>Other status values will generate a warning in browser's console.</p>
+			</td>
+		</tr>
+		<tr>
+			<td><code>content</code></td>
+			<td>
+				This is HTML content which may be included into a DOM element and initialized;
+				this element is identified by <code>target</code> response attribute,
+				otherwise the function's <code>target</code> argument will be used, or
+				<code>#content</code> if none.<br />
+				If content is not a string but an object, MyAMS will use text format if it's
+				<code>text</code> attribute exists, otherwise HTML will be used on
+				<code>html</code> attribute.<br />
+				Element's <code>hidden</code> class will be removed from element's parents,
+				except if response's <code>keepHidden</code> attribute is set to
+				<code>true</code>.
+			</td>
+		</tr>
+		<tr>
+			<td><code>contents</code></td>
+			<td>
+				Instead of returning a single content, an array of contents can be returned.
+				In thi case, each element of this array must specify it's own <code>target</code>,
+				<code>text</code> or <code>html</code>, and <code>keepHidden</code> attributes.
+			</td>
+		</tr>
+		<tr>
+			<td><code>message</code></td>
+			<td>
+				This attribute is used to display an <a href="#mod-alert.html!alert">alert</a> or
+				a <a href="#mod-alert.html!smallBox">small box</a>.<br />
+				If the value is a simple string, a <i>small box</i> information message is
+				displayed with this message; otherwise, an alert is displayed using
+				<code>status</code>, <code>header</code>, <code>subtitle</code> and
+				<code>message</code> attributes of the given object.
+			</td>
+		</tr>
+		<tr>
+			<td><code>messagebox</code></td>
+			<td>
+				As for the <code>message</code> attribute, this allows to display a message box
+				(see <a href="#mod-alert.html!messageBox">alert</a> module).<br />
+				If the value is a simple string, default values are used; otherwise,
+				<code>status</code>, <code>title</code>, <code>icon</code>, <code>message</code>,
+				<code>content</code> and <code>timeout</code> attributes are used to build the
+				message box.
+			</td>
+		</tr>
+		<tr>
+			<td><code>smallbox</code></td>
+			<td>
+				As for the <code>messagebox</code> attribute, this allows to display a small box
+				(see <a href="#mod-alert.html!smallBox">alert</a> module).<br />
+				If the value is a simple string, default values are used; otherwise,
+				<code>status</code>, <code>message</code>, <code>content</code>, <code>icon</code>,
+				and <code>timeout</code> attributes are used to build the small message box.
+			</td>
+		</tr>
+		<tr>
+			<td><code>event</code></td>
+			<td>
+				This response attribute is used to trigger an event from the <code>form</code>
+				argument; <code>eventOptions</code> attribute is used as event options.
+			</td>
+		</tr>
+		<tr>
+			<td><code>callback</code></td>
+			<td>
+				If this attribute is present, the function matching the attribute value will be
+				called with document as context; <code>form</code> argument and <code>options</code>
+				attribute are added as callback parameters.
+			</td>
+		</tr>
+		<tr>
+			<td><code>callbacks</code></td>
+			<td>
+				This attribute works in the same way as <code>callback</code>, but expects it's
+				value to be an array; each array element can be a simple string (which is the
+				name of the callback to be called), or an object with <code>callback</code> and
+				<code>options</code> attributes.
+			</td>
+		</tr>
+	</table>
+	<p>Except if explicitly noted, all "successful" responses with status <code>info</code>,
+	<code>success</code>, <code>notify</code>, <code>callback</code> or <code>callbacks</code>
+	will close the current modal window, if any, except if response contains a
+	<code>closeForm</code> attribute set to <code>false</code>.</p>
+	<p>Note also that several attributes can be provided in the same response, for example to
+	return HTML content, display a message box and call a callback function! Attributes are
+	handled in the order in which they are given above, so that callbacks for example are
+	called last.</p>
+</section>
+
+<section id="post">
+	<h2><code>MyAMS.ajax.post(url, data, options): Promise&lt;result, status, xhr&gt;</code></h2>
+	<p>This function is the same as the <code>get</code> function, but is using a POST request
+	instead of a GET request;</p>
+</section>

@@ -1,0 +1,11 @@
+{
+	"status": "error",
+	"error": "This is the main error message; missing header is replaced with a default one!",
+	"messages": [
+		"This is a simple error message.",
+		{
+			"header": "Header",
+			"message": "This is another error message with header"
+		}
+	]
+}

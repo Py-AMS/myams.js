@@ -1,0 +1,39 @@
+{
+	"timestamp": 1587644933164.823,
+	"notifications": [
+		{
+			"timestamp": 1587644932164.823,
+			"source": {
+				"title": "Thierry Florac",
+				"id": "user.id",
+				"avatar": "resources/img/profile.png"
+			},
+			"host": "localhost",
+			"title": "Content published",
+			"message": "published new content",
+			"status": "success",
+			"url": "#layout.html"
+		},
+		{
+			"timestamp": 1587642432164.724,
+			"source": {
+				"title": "John Doe",
+				"id": "unknown"
+			},
+			"host": "localhost",
+			"title": "User login",
+			"message": "logged in"
+		},
+		{
+			"timestamp": 1587640852164.823,
+			"source": {
+				"title": "Thierry Florac",
+				"id": "user.id",
+				"avatar": "resources/img/profile.png"
+			},
+			"host": "localhost",
+			"title": "User login",
+			"message": "logged in"
+		}
+	]
+}

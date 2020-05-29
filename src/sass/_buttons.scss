@@ -1,0 +1,10 @@
+
+
+@import 'variables';
+
+
+.btn {
+  &.btn-light {
+    border-color: $gray-400;
+  }
+}

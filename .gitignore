@@ -1,0 +1,10 @@
+
+!/.installed.cfg
+!/eggs/
+!/bin/
+!/parts/
+!/develop-eggs/
+!/src/myams_js.egg-info/
+/.coverage
+/coverage.xml
+/.scannerwork/

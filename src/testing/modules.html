@@ -1,0 +1,184 @@
+<h1>MyAMS modules</h1>
+<section>
+	<p>MyAMS is built on several <i>modules</i>. If you choose to use only the <code>core</code>
+	package (see <a href="#packaging.html">MyAMS packaging</a>), you can choose which modules
+	you want to use; otherwise, all default MyAMS modules will be used.</p>
+	<p>MyAMS modules management is asynchronous: the <code>MyAMS.require()</code> function
+	used to check for given modules returns a Promise which is resolved when all required
+	modules are loaded (which can be immediate when all modules are already loaded).</p>
+	<p>So you should always use modules, for example, this way:</p>
+	<pre>	MyAMS.require('ajax', 'alert').then(() => {
+	  MyAMS.ajax.post(...).then((result, status, xhr) => {
+	    MyAMS.alert({...});
+	  });
+	});
+</pre>
+</section>
+
+<section>
+	<h2>Default MyAMS modules</h2>
+	<p>MyAMS includes several modules; the <code>core</code> module is always loaded as soon as
+	you load any version of MyAMS.js, while other modules can be loaded on request if using
+	MyAMS <code>core</code> package.</p>
+	<p>Here are modules provided with MyAMS:</p>
+	<table class="table table-sm">
+		<tr>
+			<th class="pl-2">name</th>
+			<th>description</th>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#core.html">(core)</a></td>
+			<td>
+				MyAMS base features, always required to use MyAMS; this is not a real module,
+				as it's loaded automatically from any MyAMS package
+			</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-ajax.html">ajax</a></td>
+			<td>AJAX requests management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-alert.html">alert</a></td>
+			<td>Alerts and messages management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-callbacks.html">callbacks</a></td>
+			<td>Custom callbacks definitions</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-clipboard.html">clipboard</a></td>
+			<td>Browser's clipboard management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-container.html">container</a></td>
+			<td>Containers management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-datatable.html">datatable</a></td>
+			<td>Datatables helpers</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-error.html">error</a></td>
+			<td>Errors alerts</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-events.html">events</a></td>
+			<td>Custom events handlers</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-form.html">form</a></td>
+			<td>Forms managements</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-graph.html">graph</a></td>
+			<td>Graphs helpers</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-handlers.html">handlers</a></td>
+			<td>Standard events handlers</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-helpers.html">helpers</a></td>
+			<td>Custom components helpers</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-i18n.html">i18n</a></td>
+			<td>MyAMS internationalization support</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-jsonrpc.html">jsonrpc</a></td>
+			<td>JSON-RPC protocol support</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-menu.html">menu</a></td>
+			<td>Context menu handler</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-nav.html">nav</a></td>
+			<td>Navigation menu support</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-notifications.html">notifications</a></td>
+			<td>Notifications dropdown support</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-plugins.html">plugins</a></td>
+			<td>Plugins registry</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-skin.html">skin</a></td>
+			<td>Standard skin management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-stats.html">stats</a></td>
+			<td>Statistics management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-tree.html">tree</a></td>
+			<td>Tree views management</td>
+		</tr>
+		<tr>
+			<td class="pl-2"><a href="#mod-xmlrpc.html">xmlrpc</a></td>
+			<td>XML-RPC protocol support</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h2>Dynamic modules download</h2>
+	<p>When using MyAMS <code>core</code> package, you can choose which modules you want to load.
+	These modules can be loaded using Javascript core, or using HTML's data attribute.</p>
+	<p>To load a standard module from Javascript code, just use <code>MyAMS.require()</code>
+	function, as specified above in this page.</p>
+	<p>To load a module from HTML code, you can use the <code>data-ams-modules</code> data
+	attribute; the value of this attribute can be:</p>
+	<ul>
+		<li>
+			a space/comma/semicolon-separated list of standard MyAMS modules, as listed just
+			above
+		</li>
+		<li>
+			an object whose properties names are modules names, and whose properties values are
+			the URL to their scripts.
+		</li>
+	</ul>
+	<p>For example:</p>
+	<pre>	data-ams-modules='{"app": "resources/js/myams-app.js"}'</pre>
+	<p>will load <code>myams-app.js</code> code under <code>app</code> module name.</p>
+	<p>If you need to mix standard modules with custom ones, you can use the <i>object
+	form</i>, using the module name as module URL:</p>
+	<pre>	data-ams-modules='{"form": "form", "app": "resources/js/myams-app.js"}'</pre>
+	<p>This also allows you to replace a standard MyAMS module with your own one, which is not
+	a problem as long as you provide at least the same API; this required that you use MyAMS's
+	<code>core</code> package, and that you take care to load your custom module before
+	MyAMS's default one!</p>
+</section>
+
+<section>
+	<h2>Extending MyAMS with new modules</h2>
+	<p>You can easilly structure your application code into one or several modules which will
+	be loaded "statically" (from page headers) or "dynamically" (based on HTML data
+	attributes).</p>
+	<p>The module syntax is the same for both cases:</p>
+	<pre>	const $ = MyAMS.$;
+
+	const app = {
+
+	  /**
+	   * Internal module initialization
+	   */
+	  initElement: (element) => {
+	    console.debug("MyAMS: app module initialized...");
+	  }
+	}
+
+	if (window.MyAMS) {
+	  MyAMS.config.modules.push('app');
+	  MyAMS.app = app;
+	  console.debug("MyAMS: app module loaded...");
+	}
+</pre>
+	<p>The <code>initElement</code> function is not required; but if it is present, it will be
+	called when the module is loaded with the element on which the <code>data-ams-modules</code>
+	attribute was attached to as argument.</p>
+</section>

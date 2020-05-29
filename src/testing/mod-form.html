@@ -1,0 +1,106 @@
+<h1>MyAMS "form" module</h1>
+<section>
+	<h2>General form submit workflow</h2>
+	<p>Forms are a very common use case into web applications.</p>
+	<p>MyAMS handles AJAX forms using the <a href="https://github.com/jquery-form/form"
+	target="_blank">JQuery form plug-in</a>, but is adding a few features to correctly handle all
+	aspects of form submission.</p>
+	<p>MyAMS provides a general use case mechanism, but provides many entry points which can be
+	used to customize this default behaviour.</p>
+	<p>General submit workflow proposed by MyAMS is described in the following diagram; this
+	workflow is applied	automatically for all forms with the <code>data-async</code> attribute
+	set (other forms being submitted without using AJAX):</p>
+	<p class="text-center">
+		<img src="resources/img/form-submit.png" alt="Form submission process" />
+	</p>
+	<p>All underlined functions names have default implementations provided by MyAMS, but each
+	of them can be overriden, using data attributes applied to the form or to the button used to
+	submit the form, or given in the <code>options</code> parameter of <code>MyAMS.form.submit
+	</code> function; see <a href="#mod-form-options.html">setting form options</a> to know
+	which settings can be used.</p>
+	<p>The whole validation process is done by the <a href="#plugin-validate.html">validate</a>
+	plug-in; if the client validation rules are accepted, the form is submitted using MyAMS
+	<code>form.submit()</code> function.</p>
+	<div class="alert alert-info mx-3">
+		<p>If you don't want to use this plug-in and MyAMS validation and submission
+		process, set form's <code>novalidate</code> attribute to <code>novalidate</code>.</p>
+		<p>If you want to validate your form but use a classic form's <code>submit</code>, just
+		remove the <code>data-async</code> attribute.</p>
+	</div>
+<!--	<ul>
+		<li>
+			<p>the button used to submit the form (if any) is stored into form's data attribute
+			<code>ams-submit-button</code>; if you want to submit a form using Javascript code,
+			you can "simulate" that a click on a button was done by setting this attribute.</p>
+			<div class="alert alert-info mx-3">
+				<p>Submit button name and value are sent with other form fields when the form is
+				submitted!</p>
+			</div>
+		</li>
+		<li>
+			<p>check if form wasn't already submitted; if so, a warning message is displayed
+			and the submit is cancelled.</p>
+			<div class="alert alert-info mx-3">
+				<ul>
+					<li>
+						<p>if you don't want to prevent multiple form submissions, you can set
+						an <code>ams-form-hide-submitted</code> data attribute to <code>true</code>
+						on the form.</p>
+					</li>
+					<li>
+						<p>default alert message is displayed during 5 seconds; you can change
+						this timeout by setting an <code>ams-form-alert-timeout</code>
+						attribute on the form, giving the timeout in milliseconds.</p>
+					</li>
+				</ul>
+			</div>
+		</li>
+		<li>
+			<p>check form <b>validators</b>: validators are used to handle complex validation
+			rules which can't be defined using <code>validate</code> plug-in; a validator can be
+			registered using the <code>ams-form-validator</code> data attribute on any element
+			inside the form; the validator value is the name of a function which will be called
+			with the form and it's applied context as arguments; the function result must be a
+			<code>Promise</code> which can be resolved with:</p>
+			<ul>
+				<li>
+					<p><code>true</code>: the validator is OK, the form can be submitted</p>
+				</li>
+				<li>
+					<p><code>false</code>: the validator is NOT OK, the form submission must be
+					cancelled</p>
+				</li>
+				<li>
+					<p>a <code>string</code> or an array of strings: the validator is NOT OK, the
+					form submission must be cancelled; the result will be displayed into an alert
+					message!</p>
+				</li>
+			</ul>
+			<p>If several validators are registered into a single form, they will be called
+			and the form submission will be handled when all validators will have been resolved;
+			if a single validator isn't resolved with a <code>true</code> value, the whole
+			submission is aborted.</p>
+			<p>See <a href="#mod-form-validation.html">validation chapter</a> to see a
+			custom validator sample.</p>
+		</li>
+		<li>
+			<p>before submitting the form, the submit button is disabled, and it's actual HTML
+			content is stored into button's <code>ams-progress-content</code> attribute; this is
+			used on some forms which can provide a progress indicator, which will be displayed
+			into button's text.</p>
+		</li>
+		<li>
+			<p>submit button and form are checked to get a "submit target": this target is an
+			HTML container which is supposed to receive server's response, if received directly
+			in HTML; if no target is provided, server's response is supposed to be handled as
+			JSON by a submit callback.</p>
+		</li>
+		<li>
+			<p>form data is initialized: the form data is sent to remote server along with
+			current field values; these data can be extracted from form's data attributes,
+			from submit button's data attributes and from <code>MyAMS.form.submit</code>
+			function's <code>submitOptions</code> argument (merged into this order), and extended
+			using a callback.</p>
+		</li>
+	</ul> -->
+</section>

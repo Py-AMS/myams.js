@@ -1,0 +1,110 @@
+<h1>Using form validators</h1>
+<section>
+	<p>MyAMS relies on <a href="https://jqueryvalidation.org" target="_blank">JQuery's validate
+	plug-in</a>, which provides many standard validation rules, but which also allows you to
+	define custom validation rules; see <a href="#plugin-validate.html">MyAMS validate plug-in</a>
+	to know all integration options provided by MyAMS for this plug-in.</p>
+	<p>But if required, you can also create custom (and often complex or multi-fields) validation
+	rules and attach them to a form.</p>
+	<p>Validators are registered using <code>data-ams-form-validator</code> attributes; there is
+	no problem to register several validators in a given form, as long as they are attached to
+	different DOM elements; you can also provide several validators on a single element by
+	separating their names with spaces, commas or semicolons.</p>
+	<p>Here is a simple example of a custom validator, to check that a minimum value is strictly
+	lower than an optional maximum value:</p>
+</section>
+
+<section>
+	<h2>Form with validators</h2>
+	<form class="ams-form"
+		  action="data/form-submit.json" data-async
+		  data-ams-modules='{"app": "resources/js/myams-app.js"}'
+		  data-ams-form-validator="MyAMS.app.validators.checkMinMax">
+		<fieldset class="border">
+			<legend>Fields legend</legend>
+			<div class="alert alert-info p-2">
+				<p>Just enter a maximum value lower than required minimal value to activate
+				validator!</p>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_minimum"
+					   class="col-sm-3 col-md-4 col-form-label required text-sm-right">
+					Minimum value
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="number" class="form-control" required
+							   id="form_widgets_minimum" name="form.widgets.minimum" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_maximum"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Maximum value
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="number" class="form-control"
+							   id="form_widgets_maximum" name="form.widgets.maximum" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer>
+			<button type="reset" class="btn btn-light">Reset</button>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit" value="submit">Submit</button>
+		</footer>
+	</form>
+</section>
+
+<section>
+	<p>A validator is just a function which returns a Promise, which is resolved with a value
+	matching validation status: a <code>true</code> value is returned if validation is OK,
+	otherwise the Promise can be resolved with a simple string specifying the source of the
+	error, or with an array of strings, which be displayed into an alert at the top of the form.
+	</p>
+	<pre>	const $ = MyAMS.$;
+	const app = {
+
+	  /**
+	   * Custom validators
+	   */
+	  validators: {
+
+	    checkMinMax: (form) => {
+	      return new Promise((resolve, reject) => {
+	        const
+	          min = parseInt($('input[name="form.widgets.minimum"]', form).val()),
+	          max = parseInt($('input[name="form.widgets.maximum"]', form).val());
+	        if ((typeof min === 'number') && (typeof max === 'number')) {
+	          if (min >= max) {
+	            MyAMS.form.setInvalid(form, "form.widgets.maximum",
+	                                  "Maximum value must be higher than minimum value!")
+	            resolve("Minimum value must be strictly lower than max value!");
+	          } else {
+	            resolve(true);
+	          }
+	        } else {
+	          resolve(true);
+	        }
+	      });
+	    }
+	  }
+	}
+
+	if (window.MyAMS) {
+	  MyAMS.config.modules.push('app');
+	  MyAMS.app = app;
+	  console.debug("MyAMS: app module loaded...");
+	}</pre>
+	<p>The application module and it's validator can then be registered with form's data 
+	attributes:</p>
+	<pre>	&lt;form class="ams-form"
+	      action="data/form-submit.json" data-async
+	      data-ams-modules='{"app": "resources/js/myams-app.js"}'
+	      data-ams-form-validator="MyAMS.app.validators.checkMinMax"&gt;
+	...
+	&lt;/form&gt;</pre>
+</section>

@@ -1,0 +1,40 @@
+<h1>MyAMS admin layout</h1>
+<section>
+	<p>MyAMS provides components and stylesheets which have been created with a specific HTML
+	layout in mind, which is the one used by this test site.</p>
+	<p>Except for a few of them, many of these components are optional, and can be included or
+	not according to your own application needs.</p>
+	<p>To see how these components are organized into the HTML page, just have a look at the
+	source code; menus entries dedicated to each part are available in the navigation menus.</p>
+	<p>MyAMS admin layout is globally organized as is:</p>
+	<pre>	&lt;html&gt;
+	  &lt;body class="fixed-ribbon"&gt;
+	    &lt;header id="header"
+	            class="d-flex flex-nowrap justify-content-between pr-2"&gt;
+	      &lt;div id="logo-group"
+	           class="d-flex align-items-center"&gt;...&lt;/div&gt;
+	      &lt;div id="top-links" class="flex-grow-1 d-none d-sm-flex"&gt;
+	        &lt;div class="top-menu d-flex flex-column px-3 py-1"&gt;...&lt;/div&gt;
+	        &lt;div class="top-tabs d-none d-md-flex flex-column px-3 py-1"&gt;...&lt;/div&gt;
+	      &lt;/div&gt;
+	      &lt;div class="flex-nowrap flex-shrink-0 d-flex align-items-end pb-1"&gt;
+	        &lt;div id="user-search"&gt;...&lt;/div&gt;
+	        &lt;div id="user-bookmarks" class="d-none d-md-inline-block ml-1"&gt;...&lt;/div&gt;
+		    &lt;div id="user-notifications" class="ml-1"&gt;...&lt;/div&gt;
+	        &lt;div id="user-menu" class="ml-1"&gt;...&lt;/div&gt;
+	        &lt;div id="hide-menu" class="ml-1"&gt;...&lt;/div&gt;
+	      &lt;/div&gt;
+	    &lt;/header&gt;
+	    &lt;aside id="left-panel"&gt;
+	      &lt;div id="ajax-gear"&gt;...&lt;/div&gt;
+	      &lt;nav data-ams-accordion="true"&gt;...&lt;/nav&gt;
+	      &lt;div id="minifyme"&gt;...&lt;/div&gt;
+	      &lt;div class="version"&gt;...&lt;/div&gt;
+	    &lt;/aside&gt;
+	    &lt;div id="main"&gt;
+	      &lt;div id="ribbon"&gt;...&lt;/div&gt;
+	      &lt;div id="content"&gt;&lt;/div&gt;
+	    &lt;/div&gt;
+	  &lt;/body&gt;
+	&lt;/html&gt;</pre>
+</section>

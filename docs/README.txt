@@ -1,0 +1,54 @@
+================
+MyAMS.js package
+================
+
+.. contents::
+
+
+What is PyAMS?
+==============
+
+PyAMS (Pyramid Application Management Suite) is a small suite of packages written for applications
+and content management with the Pyramid framework.
+
+**PyAMS** is actually mainly used to manage web sites through content management applications (CMS,
+see PyAMS_content package), but many features are generic and can be used inside any kind of web
+application.
+
+All PyAMS documentation is available on `ReadTheDocs <https://pyams.readthedocs.io>`_; source code
+is available on `Gitlab <https://gitlab.com/pyams>`_ and pushed to `Github
+<https://github.com/py-ams>`_.
+
+
+What is MyAMS.js?
+=================
+
+MyAMS.js is a "small" extension package over JQuery and Bootstrap. It provides a small set of
+features using the HTML "data" API to enable components configuration without using any
+javascript code.
+
+MyAMS documentation and demo site is available at http://myams.ztfy.org.
+
+Please note that this package also includes a Python package, for easy integration of MyAMS.js
+within a Pyramid application.
+
+
+MyAMS upgrade
+=============
+ - three available versions: full package "myams.js" (including JQuery, Bootstrap and FontAwesome,
+   with all MyAMS extensions and modules), "myams-mini.js" (including only MyAMS extensions and
+   modules) and "myams-core.js" (including only base MyAMS extensions, but no module)
+ - all MyAMS modules can now be downloaded automatically using MyAMS.require; you may check
+   all modules before using them, to be able to change your MyAMS packaging mode as you want
+ - all synchronous downloads should now be forbidden! An "async=false" attribute is still
+   available when defining plug-ins, but it is just used to load "not-async" plug-ins after the
+   other ones, but always in an asynchronous way...
+ - upgraded to JQuery 3.4, Bootstrap 4.4 and FontAwesome 5.12
+ - move MyAMS.plugins to MyAMS.registry (refactored)
+ - plug-ins are now called with "element" and "context" arguments, without using "this"; "element"
+   is the DOM source element which is updated, "context" is the context to which plug-in is attached
+ - move MyAMS.dialog to MyAMS.modal
+ - removed Bootstrap modalmanager
+ - calling "MyAMS.modal.close" without argument is now closing the upper modal
+ - mode MyAMS.event to MyAMS.events
+ - removed widgets and utf8 modules

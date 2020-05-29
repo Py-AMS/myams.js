@@ -1,0 +1,141 @@
+
+@import "variables";
+
+
+.ams-form {
+  font-size: 90%;
+
+  // Border
+  &.border {
+    border: 1px solid $fieldset-border;
+  }
+
+  // Labels
+  .col-form-label {
+    &.required {
+      font-weight: bold;
+
+      .hint {
+        color: $danger;
+        opacity: 0.8;
+      }
+    }
+    .hint {
+      position: absolute;
+      top: 0.1rem;
+      margin-left: 0.25rem;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  // File inputs
+  .custom-file-label {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  // Tabs
+  .form-tabs {
+    margin-bottom: 1rem;
+  }
+  .nav-link {
+    padding: 0.3rem 1rem;
+    font-family: $nav-font;
+  }
+  .tab-content {
+    border-color: $nav-tabs-border-color;
+    border-width: 0 1px 1px;
+    border-style: solid;
+  }
+
+  // Fieldsets
+  fieldset {
+    position: relative;
+    padding: $fieldset-padding;
+    border: 0;
+    background: $fieldset-bg;
+
+    &[disabled] {
+      > section,
+      > article,
+      > div {
+        opacity: 0.6;
+      }
+    }
+    &.border {
+      border: 1px solid $fieldset-border;
+      @include border-radius($border-radius);
+    }
+    legend {
+      font-size: 0.95rem;
+      font-weight: normal;
+
+      &.switcher,
+      &.checker {
+        user-select: none;
+
+        label {
+          cursor: pointer;
+        }
+      }
+
+      .fa,
+      [data-fa-i2svg] {
+        position: relative;
+        top: -1px;
+        color: $primary;
+        font-size: 0.8rem;
+      }
+    }
+    &.border > legend {
+      width: auto;
+      padding: $legend-padding;
+      background-color: $white;
+      border: 1px solid $fieldset-border;
+      @include border-radius($border-radius);
+    }
+  }
+  > fieldset,
+  > div {
+    margin: 0.5rem;
+  }
+  fieldset + fieldset {
+    margin-top: 0.5rem;
+  }
+
+  // Footer
+  footer,
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    background-color: $gray-100;
+    border-top: 1px solid $gray-300;
+    border-bottom-right-radius: calc(0.3rem - 1px);
+    border-bottom-left-radius: calc(0.3rem - 1px);
+
+    > * {
+      margin: 0.25rem;
+    }
+
+    .btn {
+      position: relative;
+
+      .progress {
+        position: absolute;
+        left: 0.25rem;
+        bottom: 0.2rem;
+        width: calc(100% - 0.5rem);
+        height: 0.25rem;
+        background-color: transparent;
+        background-image: linear-gradient(to right, transparent, transparent);
+      }
+    }
+  }
+}

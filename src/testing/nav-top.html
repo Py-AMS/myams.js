@@ -1,0 +1,110 @@
+<h1>Top menus bar</h1>
+<div class="alert alert-warning" role="alert">
+	<h3 class="alert-heading">Notice</h3>
+	<p>Top tabs and menus can be hidden on mobile devices for several screen resolutions;
+	so always take care to use these features carefully if mobile devices are a
+	priority for your applications!</p>
+</div>
+<section>
+	<h2>Top menus</h2>
+	<p>These menus are not mandatory; they are quite application specific and can be used, for
+	example, to store a set of shortcuts links; but anything that can be included into a
+	dropdown menu can be integrated here!</p>
+	<p class="text-center"><img src="resources/img/top-menu.png" alt="Top menu" /></p>
+	<p>HTML code is formatted like this:</p>
+	<pre>	&lt;div class="top-menu d-flex flex-column px-3 py-1"&gt;
+		&lt;span class="label">MyAMS bundle&lt;/span&gt;
+		&lt;span class="btn btn-sm dropdown-toggle" data-toggle="dropdown"&gt;
+			&lt;span class="title">Full-bundle&lt;/span&gt;
+		&lt;/span&gt;
+		&lt;span class="dropdown-menu"&gt;
+			&lt;a href="index.html" class="dropdown-item"&gt;Full bundle&lt;/a&gt;
+			&lt;a href="index-mini.html" class="dropdown-item"&gt;Mini bundle&lt;/a&gt;
+			&lt;a href="index-core.html" class="dropdown-item"&gt;Core bundle&lt;/a&gt;
+		&lt;/span&gt;
+	&lt;/div&gt;</pre>
+</section>
+ <section>
+	<h2>Top tabs</h2>
+	<p>These tabs are also very application specific; they are generally associated with
+	MyAMS <a href="#handlers.html">click handlers</a>, using custom data attributes.</p>
+	<p class="text-center"><img src="resources/img/top-tabs.png" alt="Top tabs" /></p>
+	<p>HTML code is formatted like this:</p>
+	<pre>	&lt;div class="top-tabs d-none d-sm-flex flex-column px-3 py-1"&gt;
+		&lt;span class="label d-block text-nowrap"&gt;Sections&lt;/span&gt;
+		&lt;ul class="nav nav-tabs flex-nowrap"&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a class="nav-link px-2 py-1 active"
+				   href="#" data-toggle="tab"&gt;Core&lt;/a&gt;
+			&lt;/li&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a class="nav-link px-2 py-1"
+				   href="#" data-toggle="tab"&gt;Layout&lt;/a&gt;
+			&lt;/li&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a class="nav-link px-2 py-1"
+				   href="#" data-toggle="tab"&gt;Components&lt;/a&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;</pre>
+	<p>You can also combine both and create dropdown menus inside tabs, like this:</p>
+	<p class="text-center"><img src="resources/img/top-dropdown.png" alt="Top dropdown menus" />
+	</p>
+	<pre>	&lt;div class="top-tabs d-none d-sm-flex flex-column px-3 py-1"&gt;
+		&lt;span class="label d-block text-nowrap"&gt;Menus&lt;/span&gt;
+		&lt;ul class="nav nav-tabs flex-nowrap"&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a href="#" data-toggle="dropdown"
+				   class="nav-link dropdown-toggle px-2 py-1 bg-white"&gt;
+					Menu 1
+				&lt;/a&gt;
+				&lt;span class="dropdown-menu"&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 1&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 2&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 3&lt;/a&gt;
+				&lt;/span&gt;
+			&lt;/li&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a href="#" data-toggle="dropdown"
+				   class="nav-link dropdown-toggle px-2 py-1 bg-white"&gt;
+					Menu 2
+				&lt;/a&gt;
+				&lt;span class="dropdown-menu"&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 1&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 2&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 3&lt;/a&gt;
+				&lt;/span&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;</pre>
+	<p>This can be easilly "enhanced" if you want to remove the label which is displayed above,
+	like this:</p>
+	<p class="text-center">
+		<img src="resources/img/top-dropdown-2.png"
+			 alt="Alternate top dropdown menus" />
+	</p>
+	<pre>	&lt;div class="top-tabs d-none d-sm-flex flex-column mt-2 px-3 pt-2"&gt;
+		&lt;ul class="nav nav-tabs flex-nowrap"&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a href="#"
+				   class="nav-link dropdown-toggle px-3 py-2 bg-white"
+				   data-toggle="dropdown"&gt;Menu 1&lt;/a&gt;
+				&lt;span class="dropdown-menu"&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 1&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 2&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 3&lt;/a&gt;
+				&lt;/span&gt;
+			&lt;/li&gt;
+			&lt;li class="nav-item"&gt;
+				&lt;a href="#"
+				   class="nav-link dropdown-toggle px-3 py-2 bg-white"
+				   data-toggle="dropdown"&gt;Menu 2&lt;/a&gt;
+				&lt;span class="dropdown-menu"&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 1&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 2&lt;/a&gt;
+					&lt;a href="#" class="dropdown-item"&gt;Option 3&lt;/a&gt;
+				&lt;/span&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;</pre>
+</section>

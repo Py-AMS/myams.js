@@ -1,0 +1,27 @@
+<h1>Managing server response</h1>
+<section>
+	<p>When submitting a form, several typical responses types can be received:</p>
+	<ul>
+		<li>
+			<p><b>JSON</b> response: the server send a JSON response containing properties defining
+			how the response should be treated. This JSON response is handled by MyAMS <a
+			href="#mod-ajax.html!handleJSON">AJAX module</a>, including errors management.</p>
+		</li>
+		<li>
+			<p><b>HTML</b> response: the server send an HTML response which is directly placed
+			into a <i>target</i> element ; see <a href="#mod-form-options.html">form options</a>
+			to know all form settings.</p>
+		</li>
+		<li>
+			<p><b>text</b> response: as for HTML responses, the received text is placed into a
+			<i>target</i> element.</p>
+		</li>
+		<li>
+			<p><b>file</b> response: the server send a file object which may be downloaded and
+			saved by the browser. This process generally requires the creation of a dedicated
+			iframe, which is done automatically by MyAMS as soon as a few conditions are
+			required; this configuration is described into <a href="#mod-form-download.html">
+			Managing file downloads</a> section.</p>
+		</li>
+	</ul>
+</section>

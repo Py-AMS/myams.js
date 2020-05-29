@@ -1,0 +1,85 @@
+<h1>MyAMS events handlers</h1>
+<section>
+	<h2>Default events handlers</h2>
+	<p>MyAMS <a href="#mod-handlers.html"><i>handlers</i></a> module is registering several
+	events handlers which are bound to data-attributes.</p>
+	<p>These events can be bound to any HTML element, included elements included
+	dynamically into the DOM.</p>
+	<p>Assigned callbacks can be defined in preloaded Javascript modules, or in extensions which
+	are declared and downloaded dynamically (see <a href="#modules.html">modules</a>).</p>
+	<ul>
+		<li>
+			<p><code>click</code> events handlers: you can set a <code>data-ams-click-handler
+			</code> attribute on any HTML tag to declare a callback which will be called when
+			a <code>click</code> event occurs on this element; you can declare several
+			callbacks by separating their names with spaces or tabs.</p>
+			<p>The callback will receive arguments <code>this</code> with the source element,
+			the original click event, and additional parameters which can be defined as JSON
+			in a <code>data-ams-click-handler-options</code> attribute.</p>
+			<p>Please note that <a href="https://api.jquery.com/event.preventDefault">
+			<code>event.preventDefault()</code></a> will be called except if you set
+			<code>data-ams-prevent-default</code> or <code>data-ams-click-prevent-default</code>
+			attributes to <code>false</code>, and that
+			<a href="https://api.jquery.com/event.stopPropagation">
+			<code>event.stopPropagation()</code></a> will be called except if you set
+			<code>data-ams-stop-propagation</code> or <code>data-ams-click-stop-propagation</code>
+			to <code>false</code>.</p>
+			<p>For any reason, you can also disable a click handler temporarily by setting a
+			<code>data-ams-disabled-handlers</code> attribute to <code>true</code>,
+			<code>'click'</code> or <code>'all'</code> values.</p>
+		</li>
+		<li>
+			<p><code>change</code> events handlers: you can set a <code>data-ams-change-handler
+			</code> attribute on any HTML input supporting "change" events to declare a callback
+			which will be called when a <code>change</code> event occurs on the input; you can
+			declare several callbacks by separating their names with spaces or tabs.</p>
+			<p>The callback will receive arguments <code>this</code> with the source element,
+			the original change event, and additional parameters which can be defined as JSON in a
+			<code>data-ams-change-handler-options</code> attribute.</p>
+			<p>Please note that <a href="https://api.jquery.com/event.preventDefault">
+			<code>event.preventDefault()</code></a> will be called except if you set
+			<code>data-ams-prevent-default</code> or <code>data-ams-change-prevent-default</code>
+			attributes to <code>false</code>, and that
+			<a href="https://api.jquery.com/event.stopPropagation">
+			<code>event.stopPropagation()</code></a> will be called except if you set
+			<code>data-ams-stop-propagation</code> or <code>data-ams-change-stop-propagation</code>
+			to <code>false</code>.</p>
+			<p>For any reason, you can also disable a change handler temporarily by setting a
+			<code>data-ams-disabled-handlers</code> attribute to <code>true</code>,
+			<code>'change'</code> or <code>'all'</code> values.</p>
+		</li>
+		<li>
+			<p><code>reset</code> callbacks: "reset" events handlers are associated
+			with all forms, to reset alerts and validation warnings.</p>
+			<p>You can also register your own additional callbacks by setting a <code>
+			data-ams-reset-callback</code> on any element inside the form, which will be called
+			on form reset with the form as <code>this</code>, and with additional parameters
+			which are the element on which the callback was defined, and other options which can
+			be defined as JSON in a <code>data-ams-reset-callback-options</code> attribute.</p>
+			<p>"reset" events can also be handled using <code>data-ams-reset-handler</code>
+			forms attribute; compared with reset callbacks defined just above, these handlers can
+			prevent default reset by setting <code>data-ams-keep-default</code> or
+			<code>data-ams-reset-keep-default</code> attributes to <code>false</code>; you can
+			add additional parameters with <code>data-ams-reset-handler-options</code> attribute,
+			in JSON format.</p>
+		</li>
+	</ul>
+</section>
+<section>
+	<h2>Custom events handlers</h2>
+	<p>Besides standard events listed above, you can subscribe to any "custom" event using a
+	<code>data-ams-events-handlers</code> data attribute applied on any HTML element; the value
+	of this attribute is a serialized JSON object whose attributes names are the names of the
+	events, and whose values are the names of the events handlers. For example, if you set
+	<code>data-ams-events-handlers='{"mouseover": "MyAMS.app.mouseHandler"}'</code> on an
+	HTML element, the given handler will be fired every time a <code>mouseover</code> event will
+	be triggered on	the given element.</p>
+</section>
+<section>
+	<h2>Generating click events</h2>
+	<p>Instead of defining specific <code>click</code> handlers, it can be quite convenient in a
+	few use cases to just trigger custom events when a click occurs on an HTML element; this can
+	be done using a <code>data-ams-click-event</code> attribute, whose value is the name of the
+	event which may be triggered; additional event options can be set using <code>
+	data-ams-click-event-options</code> attribute.</p>
+</section>

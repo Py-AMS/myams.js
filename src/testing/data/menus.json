@@ -1,0 +1,403 @@
+[
+	{
+		"header": "MyAMS.js",
+		"items": [
+			{
+				"label": "What is MyAMS?",
+				"href": "#summary.html",
+				"icon": "fa fa-question-circle",
+				"items": [
+					{
+						"label": "FAQ",
+						"href": "#faq.html"
+					}
+				]
+			},
+			{
+				"label": "Packaging",
+				"href": "#packaging.html",
+				"icon": "fas fa-cogs"
+			}
+		]
+	},
+	{
+		"header": "MyAMS features",
+		"items": [
+			{
+				"label": "Loading and configuration",
+				"href": "#loading.html",
+				"icon": "fa fa-download",
+				"items": [
+					{
+						"label": "Environment",
+						"href": "#env.html"
+					},
+					{
+						"label": "Configuration",
+						"href": "#config.html"
+					},
+					{
+						"label": "Main DOM objects",
+						"href": "#dom.html"
+					}
+				]
+			},
+			{
+				"label": "Core features",
+				"href": "#core.html",
+				"icon": "fa fa-heart",
+				"items": [
+					{
+						"label": "Data API",
+						"href": "#data.html",
+						"icon": "fa fa-code"
+					},
+					{
+						"label": "JQuery addings",
+						"href": "#jquery.html",
+						"icon": "fab fa-js"
+					},
+					{
+						"label": "Bootstrap addings",
+						"href": "#bootstrap.html",
+						"icon": "fab fa-bootstrap"
+					},
+					{
+						"label": "Content initialization",
+						"href": "#content-init.html",
+						"icon": "fa fa-folder-plus"
+					},
+					{
+						"label": "Events handlers",
+						"href": "#handlers.html",
+						"icon": "fa fa-cogs"
+					},
+					{
+						"label": "Links and navigation",
+						"href": "#navigation.html",
+						"icon": "fa fa-route"
+					}
+				]
+			},
+			{
+				"label": "MyAMS admin layout",
+				"href": "#layout.html",
+				"icon": "fa fa-layer-group",
+				"items": [
+					{
+						"label": "Body classes",
+						"href": "#body.html",
+						"icon": "fab fa-html5"
+					},
+					{
+						"label": "Main logo",
+						"href": "#logo.html",
+						"icon": "fa fa-image"
+					},
+					{
+						"label": "Top menus bar",
+						"href": "#nav-top.html",
+						"icon": "fa fa-directions"
+					},
+					{
+						"label": "Search box",
+						"href": "#search.html",
+						"icon": "fa fa-search"
+					},
+					{
+						"label": "Notifications",
+						"href": "#notifications.html",
+						"icon": "fa fa-bell"
+					},
+					{
+						"label": "User menu",
+						"href": "#user-menu.html",
+						"icon": "fa fa-user"
+					},
+					{
+						"label": "Show/hide menus",
+						"href": "#show-menu.html",
+						"icon": "fa fa-bars"
+					},
+					{
+						"label": "AJAX gear",
+						"href": "#ajax-gear.html",
+						"icon": "fa fa-cog"
+					},
+					{
+						"label": "Navigation menus",
+						"href": "#nav.html",
+						"icon": "fa fa-location-arrow"
+					},
+					{
+						"label": "Breadcrumbs",
+						"href": "#ribbon.html",
+						"icon": "fa fa-ribbon"
+					},
+					{
+						"label": "Content classes",
+						"href": "#content.html",
+						"icon": "fa fa-font"
+					}
+				]
+			},
+			{
+				"label": "MyAMS modules",
+				"href": "#modules.html",
+				"icon": "fa fa-plug",
+				"items": [
+					{
+						"label": "ajax",
+						"href": "#mod-ajax.html"
+					},
+					{
+						"label": "alert",
+						"href": "#mod-alert.html"
+					},
+					{
+						"label": "callbacks",
+						"href": "#mod-callbacks.html"
+					},
+					{
+						"label": "clipboard",
+						"href": "#mod-clipboard.html"
+					},
+					{
+						"label": "container",
+						"href": "#mod-container.html"
+					},
+					{
+						"label": "datatable",
+						"href": "#mod-datatable.html"
+					},
+					{
+						"label": "error",
+						"href": "#mod-error.html"
+					},
+					{
+						"label": "events",
+						"href": "#mod-events.html"
+					},
+					{
+						"label": "form",
+						"href": "#mod-form.html",
+						"items": [
+							{
+								"label": "Basic forms",
+								"href": "#mod-form-basic.html"
+							},
+							{
+								"label": "More advanced forms",
+								"href": "#mod-form-advanced.html"
+							},
+							{
+								"label": "Setting forms options",
+								"href": "#mod-form-options.html"
+							},
+							{
+								"label": "Using validators",
+								"href": "#mod-form-validators.html"
+							},
+							{
+								"label": "Managing server response",
+								"href": "#mod-form-response.html"
+							},
+							{
+								"label": "Modal forms",
+								"href": "#mod-form-modal.html"
+							},
+							{
+								"label": "Forms events",
+								"href": "#mod-form-events.html"
+							},
+							{
+								"label": "Forms errors",
+								"href": "#mod-form-errors.html"
+							},
+							{
+								"label": "Progress indicators",
+								"href": "#mod-form-progress.html"
+							},
+							{
+								"label": "Managing file downloads",
+								"href": "#mod-form-download.html"
+							},
+							{
+								"label": "Tabs inside forms",
+								"href": "#mod-form-tabs.html"
+							},
+							{
+								"label": "Module API",
+								"href": "#mod-form-api.html"
+							}
+						]
+					},
+					{
+						"label": "graph",
+						"href": "#mod-graph.html"
+					},
+					{
+						"label": "handlers",
+						"href": "#mod-handlers.html"
+					},
+					{
+						"label": "helpers",
+						"href": "#mod-helpers.html"
+					},
+					{
+						"label": "i18n",
+						"href": "#mod-i18n.html"
+					},
+					{
+						"label": "jsonrpc",
+						"href": "#mod-jsonrpc.html"
+					},
+					{
+						"label": "menu",
+						"href": "#mod-menu.html"
+					},
+					{
+						"label": "modal",
+						"href": "#mod-modal.html"
+					},
+					{
+						"label": "nav",
+						"href": "#mod-nav.html"
+					},
+					{
+						"label": "plugins",
+						"href": "#mod-plugins.html"
+					},
+					{
+						"label": "skin",
+						"href": "#mod-skin.html"
+					},
+					{
+						"label": "stats",
+						"href": "#mod-stats.html"
+					},
+					{
+						"label": "tree",
+						"href": "#mod-tree.html"
+					},
+					{
+						"label": "xmlrpc",
+						"href": "#mod-xmlrpc.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"header": "",
+		"items": [
+			{
+				"label": "Components",
+				"href": "#registry.html",
+				"icon": "fa fa-recycle",
+				"badge": {
+					"value": "10",
+					"status": "danger"
+				},
+				"items": [
+					{
+						"label": "Input validation",
+						"href": "#plugin-validate.html",
+						"icon": "fa fa-tasks"
+					},
+					{
+						"label": "Input masks",
+						"href": "#plugin-inputmask.html",
+						"icon": "fa fa-dollar-sign"
+					},
+					{
+						"label": "Date and time pickers",
+						"href": "#plugin-datetime.html",
+						"icon": "fa fa-calendar"
+					},
+					{
+						"label": "Color picker",
+						"href": "#plugin-color.html",
+						"icon": "fa fa-eye-dropper"
+					},
+					{
+						"label": "Fieldset switcher",
+						"href": "#plugin-switcher.html",
+						"icon": "fa fa-plus"
+					},
+					{
+						"label": "Fieldset checker",
+						"href": "#plugin-checker.html",
+						"icon": "fa fa-toggle-on"
+					},
+					{
+						"label": "Select 2",
+						"href": "#plugin-select2.html",
+						"icon": "fa fa-list"
+					},
+					{
+						"label": "Datatables",
+						"href": "#plugin-datatables.html",
+						"icon": "fa fa-table"
+					},
+					{
+						"label": ""
+					},
+					{
+						"label": "Tree views",
+						"href": "#plugin-treeview.html",
+						"icon": "fa fa-stream"
+					},
+					{
+						"label": "Drag & drop",
+						"href": "#plugin-dragdrop.html",
+						"icon": "fa fa-arrows-alt"
+					},
+					{
+						"label": "Sortables",
+						"href": "#plugin-sortable.html",
+						"icon": "fa fa-sort"
+					},
+					{
+						"label": "Resizables",
+						"href": "#plugin-resizable.html",
+						"icon": "fa fa-expand-alt"
+					},
+					{
+						"label": ""
+					},
+					{
+						"label": "Drag & drop upload",
+						"href": "#plugin-dndupload.html",
+						"icon": "fa fa-file-upload"
+					},
+					{
+						"label": "Image area selection",
+						"href": "#plugin-imgareaselect.html",
+						"icon": "fa fa-expand"
+					}
+				]
+			}
+		]
+	},
+	{
+		"header": "Extending MyAMS",
+		"items": [
+			{
+				"label": "Building MyAMS",
+				"href": "#build.html",
+				"icon": "fa fa-bug"
+			},
+			{
+				"label": "Customizing MyAMS",
+				"href": "#customize.html",
+				"icon": "fa fa-palette"
+			},
+			{
+				"label": "Upgrade from 0.x",
+				"href": "#upgrade",
+				"icon": "fa fa-wrench"
+			}
+		]
+	}
+]

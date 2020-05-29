@@ -1,0 +1,33 @@
+<h1>User search box</h1>
+<section>
+	<p>Your application can include a global search box by using this simple HTML code.</p>
+	<p class="text-center">
+		<img src="resources/img/search.png" alt="Search input" />
+	</p>
+	<pre>	&lt;div id="user-search"&gt;
+	  &lt;a href="#" class="btn btn-light pt-2"
+	     data-toggle="dropdown" data-offset="36,7"&gt;
+	    &lt;i class="fa fa-search hint" title="Search..."
+	       data-placement="bottom" data-offset="0,10" &gt;&lt;/i&gt;
+	  &lt;/a&gt;
+	  &lt;div class="dropdown-menu dropdown-menu-right p-2 width-100 width-sm-75 width-md-50"
+	       data-ams-click-dismiss="false"&gt;
+	    &lt;form class="ams-form" method="post" action="#search.html"
+	          target="#content" data-async
+	          data-ams-events-handlers='{"submit-success.myams.form": "MyAMS.helpers.hideDropdown"}'&gt;
+	      &lt;div class="input-group form-widget m-0"&gt;
+	        &lt;input type="text" class="form-control" name="query"
+	               placeholder="Search..."/&gt;
+	        &lt;button type="submit"
+	                class="input-group-append input-group-text"&gt;
+	          &lt;i class="fa fa-fw fa-search"&gt;&lt;/i&gt;
+	        &lt;/div&gt;
+	      &lt;/div&gt;
+	    &lt;/form&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</pre>
+	<p>With this configuration, the <code>search.html</code> page may return an HTML code which
+	will be included directly into <code>#content</code> tag.</p>
+	<p>The <code>data-ams-events-handlers</code> attribute is used so that, when the search form
+	is correctly submitted, the dropdown menu is automatically hidden.</p>
+</section>

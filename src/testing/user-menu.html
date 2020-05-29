@@ -1,0 +1,38 @@
+<h1>User menu</h1>
+<section>
+	<p>User menu is displayed at the top right of the main window; it gives access to a
+	dropdown menu to display logged-in user name, get access to user profile and logout from
+	the application.</p>
+	<p>User icon can be displayed as an icon, or as an image if the application allows user to
+	select an avatar:</p>
+	<p class="text-center">
+		<img src="resources/img/user-menu-icon.png" alt="User icon" />
+		<img src="resources/img/user-menu-img.png" alt="User image" />
+	</p>
+	<p>Here is the HTML code:</p>
+	<pre>	&lt;div id="user-menu" class="ml-2"&gt;
+		&lt;a href="#" data-toggle="dropdown" data-offset="36,7"
+		   class="btn px-1 pt-2"&gt;
+			&lt;img src="resources/img/profile.png" alt="User profile"
+			     class="hint" title="User menu"
+				 data-placement="bottom" data-offset="0,3" /&gt;
+		&lt;/a&gt;
+		&lt;div class="dropdown-menu dropdown-menu-right"&gt;
+			&lt;a href="#" class="dropdown-item pl-3 bg-success text-white"&gt;
+				&lt;i class="fa fa-fw fa-user-circle mr-1"&gt;&lt;/i&gt;
+				&lt;strong&gt;John Doe&lt;/strong&gt;
+			&lt;/a&gt;
+			&lt;a href="#" class="dropdown-item pl-3"&gt;
+				&lt;i class="fa fa-fw fa-address-card mr-1"&gt;&lt;/i&gt;
+				User profile
+			&lt;/a&gt;
+			&lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+			&lt;a href="#" class="dropdown-item pl-3"&gt;
+				&lt;i class="fa fa-fw fa-sign-out-alt mr-1"&gt;&lt;/i&gt;
+				Logout
+			&lt;/a&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</pre>
+	<p>To use a generic user icon, you just have to replace the <code>img</code> tag with
+	<code>&lt;i class="fa fa-fw fa-2x fa-user"&gt;&lt;/i&gt;</code>.</p>
+</section>

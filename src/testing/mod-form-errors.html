@@ -1,0 +1,95 @@
+<h1>Managing form errors</h1>
+<section>
+	<h2>General rules</h2>
+	<p>There are several kinds of errors which can occur inside a form:</p>
+	<ul>
+		<li>
+			pre-submit errors, which occur before form is submitted and prevent successfull
+			submission;
+		</li>
+		<li>
+			post-submit errors, which are returned by the web server and generally implies that
+			submitted data was not saved.
+		</li>
+	</ul>
+	<p>Pre-submit checks and errors are handled by <a href="#plugin-validate.html">MyAMS
+	validate plug-in</a> and by optional <a href="#mod-form-validators.html">validators</a>
+	which can be defined inside a form. Both of them can generate validation errors which
+	prevent form submission. Whenever a validation error is triggered, an alert is generally
+	displayed, and <code>is-invalid</code> class is added to invalid inputs, if any, to display
+	an error message next to them.</p>
+	<p>Web server can also make other checks and return errors; even if the form was supposed
+	to receive HTML content for example, errors are sent using JSON. They can include a global
+	message, and an array of messages assigned to specific input widgets. JSON format is as
+	follow; all attributes are optional:</p>
+	<pre>	{
+	  "status": "error",  // required!
+	  "header": "Global header (will be replaced with standard header if missing)",
+	  "error": "Main error message",
+	  "messages": [
+	    "Simple message",
+	    {
+	      "header": "Message header",
+	      "message": "Message content"
+	    }
+	  ],
+	  "widgets": [{
+	    "id": "Widget ID",
+	    "name": "Widget name",
+	    "label": "Widget label",
+	    "message": "Widget error message"
+	  }, {
+	    ...
+	  }]
+	}</pre>
+</section>
+
+<section>
+	<h2>Form errors sample</h2>
+	<form action="data/form-submit-errors.json" data-async
+		  class="ams-form">
+		<div class="alert alert-info">
+			<p>This form will always return the same errors, whatever inputs you choose!<br />
+			The two submit buttons provides two types of errors messages...</p>
+		</div>
+		<fieldset class="border">
+			<legend>Fields legend</legend>
+			<div class="form-group row">
+				<label for="form_widgets_field-1"
+					   class="col-sm-3 col-md-4 col-form-label required text-sm-right">
+					Required input field
+					<i class="fa fa-question-circle hint"
+					   title="Required input hint"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control" required
+							   id="form_widgets_field-1" name="form.widgets.field-1" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="form_widgets_field-2"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Standard input field
+					<i class="fa fa-question-circle hint"
+					   title="This is an <b>HTML</b> hint!"></i>
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="form-widget">
+						<input type="text" class="form-control"
+							   id="form_widgets_field-2" name="form.widgets.field-2" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer>
+			<button type="reset" class="btn btn-light">Reset</button>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit-1" value="submit-1">Submit</button>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit-2" value="submit-2"
+					data-ams-form-submit-handler="data/form-submit-errors-2.json">Other submit</button>
+		</footer>
+	</form>
+</section>

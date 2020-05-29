@@ -1,0 +1,12 @@
+
+/**
+ * Overlapped modals styles
+ */
+
+.modal-backdrop.show {
+  opacity: 0.2;
+
+  & + & {
+    opacity: 0;
+  }
+}

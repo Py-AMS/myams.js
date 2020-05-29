@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+		<title>MyAMS test page</title>
+		<meta charset="UTF-8">
+		<meta name="HandheldFriendly" content="True" />
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<script type="text/javascript" src="dist/js/dev/myams-dev.js"></script>
+		<script type="text/javascript" src="resources/js/myams-app.js"></script>
+	</head>
+	<body class="fixed-ribbon">
+
+		<!-- header panel -->
+		<header id="header"
+				class="d-flex flex-nowrap justify-content-between pr-2">
+			<div id="logo-group"
+				 class="d-flex align-items-center">
+				<span id="logo">
+					<a href="index.html">
+						<img src="resources/img/logo.png" alt="Logo" />
+					</a>
+				</span>
+			</div>
+			<div id="top-links"
+				 class="flex-grow-1 d-none d-sm-flex">
+				<div class="top-menu d-flex flex-column px-3 py-1">
+					<span class="label d-block text-nowrap">MyAMS bundle</span>
+					<span class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+						<span class="title">Full bundle</span>
+					</span>
+					<span class="dropdown-menu">
+						<a href="index.html" class="dropdown-item">Full bundle</a>
+						<a href="index-mini.html" class="dropdown-item">Mini bundle</a>
+						<a href="index-core.html" class="dropdown-item">Core bundle</a>
+					</span>
+				</div>
+				<div class="top-tabs d-none d-sm-flex flex-column px-3 py-1">
+					<span class="label d-block text-nowrap">Sections</span>
+					<ul class="nav nav-tabs flex-nowrap">
+						<li class="nav-item">
+							<a class="nav-link px-2 py-1 active"
+							   href="#content" data-ams-url="core.html"
+							   data-toggle="tab">Core</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link px-2 py-1"
+							   href="#content" data-ams-url="layout.html"
+							   data-toggle="tab">Layout</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link px-2 py-1"
+							   href="#content" data-ams-url="registry.html"
+							   data-toggle="tab">Components</a>
+						</li>
+					</ul>
+				</div>
+				<div class="top-tabs d-none d-md-flex flex-column py-1 px-3">
+					<span class="label d-block text-nowrap">Menus</span>
+					<ul class="nav nav-tabs flex-nowrap">
+						<li class="nav-item">
+							<a href="#" class="nav-link dropdown-toggle px-2 py-1 bg-white"
+							   data-toggle="dropdown">Menu 1</a>
+							<span class="dropdown-menu">
+								<a href="#" class="dropdown-item">Option 1</a>
+								<a href="#" class="dropdown-item">Option 2</a>
+								<a href="#" class="dropdown-item">Option 3</a>
+							</span>
+						</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link dropdown-toggle px-2 py-1 bg-white"
+							   data-toggle="dropdown">Menu 2</a>
+							<span class="dropdown-menu">
+								<a href="#" class="dropdown-item">Option 1</a>
+								<a href="#" class="dropdown-item">Option 2</a>
+								<a href="#" class="dropdown-item">Option 3</a>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="flex-nowrap flex-shrink-0 d-flex align-items-end pb-1">
+				<div id="user-search">
+					<a href="#" class="btn btn-light pt-2"
+					   data-toggle="dropdown" data-offset="36,7">
+						<i class="fa fa-search hint" title="Search..."
+						   data-placement="bottom" data-offset="0,10"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right p-2 width-100 width-sm-75 width-md-50"
+						 data-ams-click-dismiss="false">
+						<form class="ams-form" method="post" action="#search.html"
+							  target="#content" data-async
+							  data-ams-events-handlers='{"submit-success.myams.form": "MyAMS.helpers.hideDropdown"}'>
+							<div class="input-group form-widget m-0">
+								<input type="text" class="form-control" name="query"
+									   required placeholder="Search..." />
+								<button type="submit"
+										class="input-group-append input-group-text">
+									<i class="fa fa-fw fa-search"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="user-bookmarks" class="d-none d-md-inline-block ml-1">
+					<a href="#" class="btn btn-light pt-2"
+					   data-toggle="dropdown" data-offset="36,7">
+						<i class="fa fa-bookmark hint" title="Bookmarks"
+						   data-placement="bottom" data-offset="0,10"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a href="#layout.html" class="dropdown-item">Layout</a>
+						<a href="#modules.html" class="dropdown-item">Modules</a>
+						<a href="#registry.html" class="dropdown-item">Components</a>
+					</div>
+				</div>
+				<div id="user-notifications" class="ml-1"
+					 data-ams-events-handlers='{"show.bs.dropdown": "MyAMS.notifications.getNotifications"}'
+					 data-ams-events-options='{"localTimestamp": "true"}'
+					 data-ams-notifications-target="#notifications-pane"
+					 data-ams-notifications-source="data/user-notifications.json">
+					<a href="#" class="btn btn-light pt-2"
+					   data-toggle="dropdown" data-offset="36,7">
+						<i class="fa fa-bell hint" title="Notifications"
+						   data-placement="bottom" data-offset="0,10"></i>
+						<b id="notifications-count" data-content="10"
+						   class="badge bg-danger text-white">10</b>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right p-1"
+						 data-ams-click-dismiss="false">
+						<div class="position-relative d-flex flex-column h-100">
+							<ul class="nav nav-tabs nav-fill">
+								<li class="nav-item">
+									<a href="#notifications-pane" class="nav-link active"
+									   data-toggle="tab"
+									   data-ams-events-handlers='{"show.bs.tab": "MyAMS.notifications.getNotifications"}'
+									   data-ams-events-options='{"localTimestamp": "true"}'>
+										Notifications
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="#info-pane" class="nav-link"
+									   data-toggle="tab">Other infos</a>
+								</li>
+							</ul>
+							<div class="tab-content flex-grow-1 overflow-hidden p-1 pt-2 border">
+								<div class="tab-pane d-flex flex-column overflow-hidden h-100 fade show active"
+									 id="notifications-pane">
+									<!-- dynamic content -->
+								</div>
+								<div class="tab-pane d-flex flex-column h-100 fade"
+									 id="info-pane">
+									Other static info.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="user-menu" class="ml-1">
+					<a href="#" data-toggle="dropdown" data-offset="36,7"
+					   class="btn px-1 pt-2">
+						<img src="resources/img/profile.png" alt="User profile"
+							 class="hint" title="User menu"
+							 data-placement="bottom" data-offset="0,3" />
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a href="#" class="dropdown-item pl-3 bg-success text-white">
+							<i class="fa fa-fw fa-user-circle mr-1"></i>
+							<strong>John Doe</strong>
+						</a>
+						<a href="#" class="dropdown-item pl-3">
+							<i class="fa fa-fw fa-address-card mr-1"></i>
+							User profile
+						</a>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item pl-3">
+							<i class="fa fa-fw fa-sign-out-alt mr-1"></i>
+							Logout
+						</a>
+					</div>
+				</div>
+				<div id="hide-menu" class="ml-1">
+					<a href="#" class="btn btn-light pt-2 hint" title="Show/hide navigation menus"
+					   data-placement="bottom" data-ams-click-handler="MyAMS.nav.hideMenu">
+						<i class="fa fa-bars"></i>
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- left panel -->
+		<aside id="left-panel">
+
+			<div id="ajax-gear">
+				<i class="fa fa-2x fa-cog fa-spin"></i>
+			</div>
+
+			<nav data-ams-menu-config="data/menus.json"
+				 data-ams-menu-accordion="true">
+			</nav>
+
+			<div id="minifyme"
+				 class="hint" data-placement="left" title="Minify menus"
+				 data-ams-click-handler="MyAMS.nav.minifyMenu">
+				<i class="fa fa-arrow-circle-left"></i>
+			</div>
+
+			<div class="version">
+				MyAMS.js - version 1.0.0
+			</div>
+
+		</aside>
+
+		<!-- main panel -->
+		<div id="main" role="main">
+
+			<!-- breadcrumbs ribbon -->
+			<div id="ribbon">
+				<ol class="breadcrumb d-flex flex-nowrap" aria-label="breadcrumb">
+					<li class="breadcrumb-item parent strong">
+						<a href="index.html">MyAMS.js</a>
+					</li>
+				</ol>
+			</div>
+
+			<!-- content panel -->
+			<div id="content"></div>
+
+		</div>
+	</body>
+</html>

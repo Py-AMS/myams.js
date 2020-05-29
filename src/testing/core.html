@@ -1,0 +1,101 @@
+<h1>MyAMS core features</h1>
+<section>
+	<p><code>MyAMS.core</code> object provides a set of functions which are always included in
+		the core of MyAMS library; but you can always choose to replace them if you wish...</p>
+	<ul>
+		<li>
+			<p><code>function getObject(objectName, context)</code>: this function allows to
+			get an object given by it's name; for example, giving the full dotted name of a
+			function will return will return this function.<br />
+			If <code>context</code> argument is provided, it allows to define a context into
+			which the object lookup is done, instead of global window object. If the given object
+				can't be found, the function returns <code>undefined</code>.</p>
+		</li>
+		<li>
+			<p><code>function getFunctionByName(functionName, context)</code>: this is the
+			same function as <code>getObject</code>, but will return a function, or
+			<code>undefined</code> if the function can't be found. If given
+			<code>functionName</code> argument is already a function, it is returned as is.</p>
+		</li>
+		<li>
+			<p><code>function executeFunctionByName(functionName, context)</code>: get a function
+			by it's name and call it for execution; the <code>context</code> argument will be
+			used as <code>this</code> into the called function; if additional arguments are
+				provided, they will be added to parameters of the called function.</p>
+		</li>
+		<li>
+			<p><code>function getSource(url)</code>: this function can be used to convert a string
+			containing variable names between brackets, by replacing variables names by their
+			value as in a template string; for example, calling
+			<code>getSource('{MyAMS.env.baseURL}')</code> will return a string containg MyAMS
+			base URL.</p>
+		</li>
+		<li>
+			<p><code>function getScript(url, options)</code>: load a script given by it's URL, using
+			a JQuery AJAX call; if <code>options</code> argument is provided, it's values will
+			be merged with default AJAX call parameters.<br />
+			The function is returning a <code>Promise</code> object which is resolved when the
+			script is actually downloaded and executed; it's value is the URL which was actually
+			used.</p>
+		</li>
+		<li>
+			<p><code>function getCSS(url, name)</code>: load a CSS file given by it's URL; the
+			provided name argument is required and should be unique to define the CSS file in a
+			unique way, so that no action is executed if the CSS file was already loaded.<br />
+			The function is returning a <code>Promise</code> object which is resolved when the
+			CSS file is actually downloaded and integrated into browser stylesheets; it's value
+			is <code>true</code> if the file was actually downloaded, or <code>false</code> if
+			the file was already loaded before function call.</p>
+		</li>
+		<li>
+			<p><code>function getQueryVar(src, varName)</code>: get value of given parameter
+			extracted from the source URL.</p>
+		</li>
+		<li>
+			<p><code>function generateId()</code>: generate a simple random string.</p>
+		</li>
+		<li>
+			<p><code>function generateUUID()</code>: generate a random unique UUID.</p>
+		</li>
+		<li>
+			<p><code>function switchIcon(element, fromClass, toClass)</code>: this function can
+			be used to change a FontAwesome icon dynamically with Javascript; if FontAwesome API
+			is available and if SVG auto-replace mode is enabled, this API is used to generate
+			SVG code; otherwise, the icon CSS class is just updated.</p>
+			<p>Pleas note that icon classes are given without the "fa-" prefix!</p>
+		</li>
+		<li>
+			<p><code>function initPage()</code>: this function is called when all the HTML page is
+			loaded, via a JQuery <code>$(document).ready()</code> method call.</p>
+			<p>You can override this function call by changing value of
+			<code>MyAMS.config.initPage</code>, or by setting a <code>data-ams-init-page</code>
+			attribute on the root <code>&lt;html&gt;</code> tag with the name of the function
+			which must be called.</p>
+			<p>The default function implementation check, load and initialize several MyAMS
+			<a href="#modules.html">modules</a>, before calling the <code>initContent()</code>
+			function on the global page; it returns a <code>Promise</code> which is resolved
+			when all required modules have been initialized.</p>
+		</li>
+		<li>
+			<p><code>function initContent(element)</code>: after loading and initializing MyAMS
+			modules globally, content must be "initialized"; initializing means loading
+			required plug-ins into MyAMS <a href="#registry.html">registry</a>, and initializing
+			components.</p>
+			<p>This function is called after initial page load, but also after download of any
+			dynamic content afterwards; you can override this function by changing value of
+			<code>MyAMS.config.initContent</code>, or by setting a
+			<code>data-ams-init-content</code> attribute on the root <code>&lt;html&gt;</code>
+			tag with the name of the function which must be called.</p>
+			<p>The default function implementation check, load and initialize several MyAMS
+			<a href="#modules.html">modules</a> with the given <code>element</code> argument
+			as parameter, and returns a <code>Promise</code> which is resolved when all required
+			plug-ins have been applied on the given element.</p>
+		</li>
+		<li>
+			<p><code>function clearContent()</code>: this function is called when an HTML container
+			is replaced with new content; if you need to "clean" a container, you can subscribe
+			to specific MyAMS events; for compatibility with previous MyAMS releases, you can
+				also register callbacks which will be called before content removal.</p>
+		</li>
+	</ul>
+</section>

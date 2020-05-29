@@ -1,0 +1,161 @@
+<h1>MyAMS "alert" module</h1>
+
+<section>
+	<p>The <code>alert</code> module is used to display several kinds of messages.</p>
+</section>
+
+<section id="alert">
+	<h2><code>MyAMS.alert.alert(props)</code></h2>
+	<p>This function is used to display an alert message; an alert is included into HTML content
+	(typically at the top of a form) and is not dismissed automatically.</p>
+	<p class="text-center">
+		<img src="resources/img/form-alert.png" alt="Form alert" />
+	</p>
+	<p><code>props</code> is an object which can have the following attributes; none of them is
+	mandatory:</p>
+	<ul>
+		<li>
+			<code>status</code>: alert status is matching Bootstrap contexts (<code>primary</code>,
+			<code>secondary</code>, <code>info</code>...). The <code>error</code> context can also
+			be used, and it is matching <code>danger</code> context. Default value is
+			<code>info</code>.
+		</li>
+		<li>
+			<code>parent</code>: this is the jQuery object matching the parent into which the
+			alert must be added; this element is always cleared from previous alerts of the same
+			status, except those for which a <code>persistent</code> class has been added, then
+			the alert is displayed at the start of the element.
+		</li>
+		<li>
+			<code>header</code>: this is the alert header.
+		</li>
+		<li>
+			<code>message</code>: message content; this can be a simple string, or an array of
+			strings; in case of an array, messages are displayed as list items.
+		</li>
+	</ul>
+</section>
+
+<section id="bigBox">
+	<h2><code>MyAMS.alert.bigBox(props): Promise&lt;string&gt;</code></h2>
+	<p>A big box is a modal dialog used to display a message. Compared with other messages,
+	this one provides OK/Cancel buttons which allows to validate a question; so the function
+	returns a Promise which is resolved with the "dismiss value" of the button used to close
+	the modal, which can be <code>success</code> if the "OK" button was used, or
+	<code>cancel</code> in the other cases (Escape key, close button or Cancel button).</p>
+	<p class="text-center">
+		<img src="resources/img/bigbox.png" alt="Big box" />
+	</p>
+	<p><code>props</code> is an object which have the following attributes:</p>
+	<ul>
+		<li>
+			<code>status</code>: message status is matching Bootstrap contexts, and is used to
+			set header color; default value is <code>info</code>.
+		</li>
+		<li>
+			<code>icon</code>: this is the FontAwesome icon to use; please note that only the
+			<code>fa</code> CSS class is automatically added, so custom icons like brands which
+			are not in the standard library have to be added as part of the icon name (for exemple,
+			as in <code>fab fa-youtube</code>).
+		</li>
+		<li>
+			<code>title</code>: modal title.
+		</li>
+		<li>
+			<code>message</code>: message content.
+		</li>
+		<li>
+			<code>cancelLabel</code>: label of the cancel button; if not provided, a default
+			label from MyAMS <a href="#mod-i18n.html">I18n module</a> will be used.
+		</li>
+		<li>
+			<code>successLabel</code>: label of the submit button; if not provided, a default
+			label from MyAMS <a href="#mod-i18n.html">I18n module</a> will be used.
+		</li>
+	</ul>
+</section>
+
+<section id="messageBox">
+	<h2><code>MyAMS.alert.messageBox(props)</code></h2>
+	<p>This function is used to display a message box on the right of the screen, like this:</p>
+	<p class="text-center">
+		<img src="resources/img/messagebox.png" alt="Message box" />
+	</p>
+	<p><code>props</code> is an object which can have the following attributes; none of them is
+	mandatory:</p>
+	<ul>
+		<li>
+			<code>status</code>: message status is matching Bootstrap contexts; default value is
+			<code>info</code>.
+		</li>
+		<li>
+			<code>timeout</code>: this is the number of milliseconds after which the toast is
+			automatically dismissed; default value is 5000. If the given value is <code>0</code>,
+			the toast is never dismissed automatically (but a close button is always available).
+		</li>
+		<li>
+			<code>title</code>: message box title.
+		</li>
+		<li>
+			<code>icon</code>: this is the FontAwesome icon to use; please note that only the
+			<code>fa</code> CSS class is automatically added, so custom icons like brands which
+			are not in the standard library have to be added as part of the icon name (for exemple,
+			as in <code>fab fa-youtube</code>).
+		</li>
+		<li>
+			<code>hideTimestamp</code>: a timestamp, as in the example displayed above, is
+			automatically added to toast header; if this attribute is set to <code>true</code>,
+			this timestamp is not displayed.
+		</li>
+		<li>
+			<code>content</code>: if this attribute is used, it's content is used "as is" to
+			display given message.
+		</li>
+		<li>
+			<code>message</code>: this attribute will be used only if <code>content</code> is not
+			defined; if so, it's value is integrated in the toast into an HTML paragraph.
+		</li>
+	</ul>
+	<p>Message boxes are handled as stacked Bootstrap toasts; a toasts container is creadted
+	automatically by MyAMS if required.</p>
+</section>
+
+<section id="smallBox">
+	<h2><code>MyAMS.alert.smallBox(props)</code></h2>
+	<p>This function is used to display a small message box on the right of the screen, like
+	this:</p>
+	<p class="text-center">
+		<img src="resources/img/smallbox.png" alt="Small box" />
+	</p>
+	<p>Compared with previous <a href="#mod-alert.html!messageBox">message box</a>, this one
+	doesn't have a title and is always dismissed automatically.</p>
+	<p><code>props</code> is an object which have the following attributes:</p>
+	<ul>
+		<li>
+			<code>status</code>: message status is matching Bootstrap contexts; default value is
+			<code>info</code>.
+		</li>
+		<li>
+			<code>timeout</code>: this is the number of milliseconds after which the toast is
+			automatically dismissed; default value is 5000. This timeout can't be cancelled
+			with a <code>0</code> value.
+		</li>
+		<li>
+			<code>content</code>: if this attribute is used, it's content is used "as is" to
+			display given message. If defined, <code>icon</code> and <code>message</code>
+			attributes are not used.
+		</li>
+		<li>
+			<code>icon</code>: this is the FontAwesome icon to use; please note that only the
+			<code>fa</code> CSS class is automatically added, so custom icons like brands which
+			are not in the standard library have to be added as part of the icon name (for exemple,
+			as in <code>fab fa-youtube</code>).
+		</li>
+		<li>
+			<code>message</code>: this attribute will be used only if <code>content</code> is not
+			defined; if so, it's value is integrated in the toast into an HTML paragraph.
+		</li>
+	</ul>
+	<p>Message boxes are handled as stacked Bootstrap toasts; a toasts container is creadted
+	automatically by MyAMS if required.</p>
+</section>

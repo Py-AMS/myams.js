@@ -1,0 +1,119 @@
+<h1>MyAMS notifications</h1>
+<section>
+	<p>MyAMS allows to display a "notifications" box, displayed at the top right of the main
+	application window.</p>
+	<p class="text-center">
+		<img src="resources/img/notifications.png" alt="Notifications" />
+	</p>
+	<p>MyAMS provides a simple template, but you can override it if required, or don't include
+	this feature in your main templare:</p>
+	<pre>	&lt;div id="user-notifications" class="ml-1"
+	   data-ams-events-handlers='{"show.bs.dropdown": "MyAMS.notifications.getNotifications"}'
+	   data-ams-events-options='{"localTimestamp": "true"}'
+	   data-ams-notifications-target="#notifications-pane"
+	   data-ams-notifications-source="data/user-notifications.json"&gt;
+	  &lt;a href="#" class="btn btn-light pt-2"
+	     data-toggle="dropdown" data-offset="36,7"&gt;
+	    &lt;i class="fa fa-bell hint" title="Notifications"
+	       data-placement="bottom" data-offset="0,10"&gt;&lt;/i&gt;
+	    &lt;b id="notifications-count" data-content="10"
+	       class="badge bg-danger text-white"&gt;10&lt;/b&gt;
+	  &lt;/a&gt;
+	  &lt;div class="dropdown-menu dropdown-menu-right p-1"
+	     data-ams-click-dismiss="false"&gt;
+	    &lt;div class="position-relative d-flex flex-column h-100"&gt;
+	      &lt;ul class="nav nav-tabs nav-fill"&gt;
+	        &lt;li class="nav-item"&gt;
+	          &lt;a href="#notifications-pane" class="nav-link active"
+	             data-toggle="tab"
+	             data-ams-events-handlers='{"show.bs.tab": "MyAMS.notifications.getNotifications"}'
+	             data-ams-events-options='{"localTimestamp": "true"}'&gt;
+	            Notifications
+	          &lt;/a&gt;
+	        &lt;/li&gt;
+	        &lt;li class="nav-item"&gt;
+	          &lt;a href="#info-pane" class="nav-link"
+	             data-toggle="tab"&gt;Other infos&lt;/a&gt;
+	        &lt;/li&gt;
+	      &lt;/ul&gt;
+	      &lt;div class="tab-content flex-grow-1 overflow-hidden p-1 pt-2 border"&gt;
+	        &lt;div class="tab-pane d-flex flex-column overflow-hidden h-100 fade show active" 
+	           id="notifications-pane"&gt;
+	          &lt;!-- dynamic content --&gt;
+	        &lt;/div&gt;
+	        &lt;div class="tab-pane d-flex flex-column h-100 fade" 
+	           id="info-pane"&gt;
+	          User info
+	        &lt;/div&gt;
+	      &lt;/div&gt;
+	    &lt;/div&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</pre>
+	<div class="alert alert-info mx-3" role="alert">
+		<h3 class="alert-heading">Notice</h3>
+		<p>Don't forget to include <code>overflow-*</code> and <code>flex-*</code> CSS classes
+		to get a good layout!</p>
+	</div>
+	<p>A badge is added to the notifications button; its <code>data-content</code> attribute,
+	which may match the tag text, can be used to automatically hide the badge when it's value
+	is "0".</p>
+	<p>In this configuration, notifications are downloaded from a JSON URL defined into
+	<code>data-ams-notifications-source</code> attribute, and stored into an element
+	defined by <code>data-ams-notifications-target</code>; the
+	<code>MyAMS.notifications.getNotifications</code> function is called, when the dropdown is
+	opened but also when the tab pane is activated, to download JSON file and generate
+	notifications panel content, so don't forget to include the <code>notifications</code>
+	module if you use MyAMS <i>core</i> bundle.</p>
+	<p>The JSON file is built like this:</p>
+	<pre>	{
+		"timestamp": 1587644933164.823,
+		"notifications": [
+			{
+				"timestamp": 1587644932164.823,
+				"source": {
+					"title": "Thierry Florac",
+					"id": "user.id",
+					"avatar": "resources/img/profile.png"
+				},
+				"host": "localhost",
+				"title": "Content published",
+				"message": "published new content",
+				"url": "#layout.html"
+			},
+			{
+				...
+			}
+		]
+	}</pre>
+	<ul>
+		<li>
+			<p><code>timestamp</code>: timestamp in Javascript format, which is the date at which
+			the JSON content was generated; if the <code>localTimestamp</code> option is set to
+			<code>true</code> in the HTML template, a locally generated timestamp will be
+			displayed instead of the one included in the JSON file.</p>
+		</li>
+		<li>
+			<p><code>notifications.timestamp</code>: a specific timestamp is associated with each
+			entry.</p>
+		</li>
+		<li>
+			<p><code>notifications.status</code>: if used, this attribute is used to set item
+			background color.</p>
+		</li>
+		<li>
+			<p><code>notifications.source</code>: this object is describing the "source" of the event; the only
+			mandatory attribute is <code>title</code>; if an <code>avatar</code> attribute is
+			present, it may be an URL pointing to a 32x32 pixels image, otherwise a generic user
+			icon will be used.</p>
+		</li>
+		<li>
+			<p><code>notifications.message</code>: this is the "main" notification message</p>
+		</li>
+		<li>
+			<p><code>notifications.url</code>: if this attribute is present, a link will be added on the
+			notification item to this URL.</p>
+		</li>
+	</ul>
+	<p>Other attributes can be added to notifications file, but they will not be used by MyAMS
+	default implementation.</p>
+</section>

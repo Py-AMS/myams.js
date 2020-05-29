@@ -1,0 +1,471 @@
+<h1>Setting form options</h1>
+<section>
+	<p>MyAMS <code>form</code> module provides a generic way to manage forms submissions, which
+	can be customized in many ways.</p>
+	<p>There are three ways to define custom settings:</p>
+	<ul>
+		<li><p>by setting data attributes on the form;</p></li>
+		<li><p>by setting data attributes on the button which is used to submit the form;</p>
+		<li><p>by setting attributes in the <code>options</code> parameter of
+		<code>MyAMS.form.submit()</code> function, when you submit a form by code.</p></li>
+	</ul>
+	<p>All <i>data</i> attributes can be set using an <code>ams-form</code> prefix; for example,
+	you can set the <code>initData</code> callback name using <code>data-ams-form-init-data</code>
+	attribute, applied to the form or to the submit button, or just by setting the
+	<code>options.initData</code> property.</p>
+	<p>If the same setting is found several times (for example, on the form and in the
+	<code>MyAMS.form.submit()</code> options), the options have priority over button data
+	attributes, button data attributes have priority over form data attributes, and form data
+	attributes have priority over MyAMS default settings.</p>
+	<p>Callbacks can be defined via data attributes by giving their name, which must be found in
+	the global scope (eventually using a dotted namespace, for example
+	<code>MyAMS.form.resetChanged</code>); if set using options, they can be provided by their
+	name of by using a function object, as in:<br />
+	<code>&nbsp;&nbsp;MyAMS.form.submit(form, url, {resetChanged: MyAMS.myapp.form.resetChanged});
+	</code></p>
+	<p>Most defined callbacks receive the form and the computed settings object as first
+	arguments.</p>
+	<p>Here is the options list:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Comments</th>
+		</tr>
+		<tr>
+			<td><code>submitWarning</code></td>
+			<td>function</td>
+			<td>
+				<code>submitWarning(form, settings)</code><br />
+				This function is used to display a warning message when the form is submitted
+				twice.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getValidators</code></td>
+			<td>function</td>
+			<td>
+				<code>getValidators(form, settings): Map&lt;form, validator&gt;</code><br />
+				This function is used to extract a list of <code>validators</code> from the
+				submitted form; the default MyAMS implementation is using a
+				<code>data-ams-form-validator</code> to extract this list.<br />
+				See <a href="#mod-form-validators.html">Using validators</a> to know how to use
+				them.
+			</td>
+		</tr>
+		<tr>
+			<td><code>checkValidators</code></td>
+			<td>function</td>
+			<td>
+				<code>checkFormValidators(form, settings): Promise&lt;status&gt;</code><br />
+				This function is used to <i>check</i> form validators which are loaded by
+				<code>getValidators()</code>; it returns a <code>Promise</code>, which is
+				resolved when all the validators, if any, have been resolved! The Promise
+				value is a <code>status code</code> based on the result value of each
+				validator.<br />
+				See <a href="#mod-form-validators.html">Using validators</a> to know how to use
+				them.
+			</td>
+		</tr>
+		<tr>
+			<td><code>clearAlerts</code></td>
+			<td>function</td>
+			<td>
+				<code>clearAlerts(form, settings)</code><br />
+				Alerts can be added to the form because of submit errors; this function is
+				used to clean the form and remove all alerts before submitting the form another
+				time.
+			</td>
+		</tr>
+		<tr>
+			<td><code>initSubmitButton</code></td>
+			<td>function</td>
+			<td>
+				<code>initSubmitButton(form, settings, button)</code><br />
+				This function is used to initialize the submit button state.<br />
+				By default, the submit button is disabled and it's label is changed by adding
+				"..." to it's label. You can provide an alternate text by setting a
+				<code>data-ams-loading-text</code> attribute on the button; a <code>progress</code>
+				element is also added to the button, to be able to display upload progress (see
+				<a href="#mod-form-progress.html">Progress indicators</a>).<br />
+				If the submit button only contains an image, it's HTML content is replaced by
+				a spinning wheel, after saving it's original content into it's
+				<code>original-html</code> data attribute.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetSubmitButton</code></td>
+			<td>function</td>
+			<td>
+				<code>resetSubmitButton(form, settings, button)</code><br />
+				This function is used to reset submit button state.<br />
+				By default, the submit button contents are restored, and it's "disabled"
+				state is removed.<br />
+				This function is also called if an error occurs, to be able to submit the
+				form another time.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getFormData</code></td>
+			<td>function</td>
+			<td>
+				<code>getFormData(form, settings, formData, button, buttonData, options)</code><br />
+				This function is used to get custom form POST data.<br />
+				The default MyAMS implementation is merging form's <code>ams-form-data</code>
+				data attribute with submit button's <code>ams-form-data</code> data attribute and
+				with submit options <code>data</code> attribute, in this order.<br />
+				If a named submit button is used, the value of this button is also added to POST
+				data.
+			</td>
+		</tr>
+		<tr>
+			<td><code>initDataCallback</code></td>
+			<td>function</td>
+			<td>
+				<code>initDataCallback(form, settings, button, postData, options, veto)</code><br />
+				This function is optional. If defined, default MyAMS implementation is calling this
+				function in <code>initFormData</code> function.<br />
+			</td>
+		</tr>
+		<tr>
+			<td><code>initFormData</code></td>
+			<td>function</td>
+			<td>
+				<code>initFormData(form, settings, button, postData, options, veto)</code><br />
+				This function is used to initialize form data extracted by the
+				<code>getFormData</code> function.<br />
+				If the <code>veto</code> object is updated with a <code>true</code> value in his
+				<code>veto</code> attribute, the submit button is reset and the submit operation
+				is cancelled.
+				After initialization is done, an <code>init-data.myams.form</code> event is
+				triggered on the form, with <code>postData</code> and <code>veto</code> arguments.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submitTarget</code></td>
+			<td>string</td>
+			<td>
+				The form's submit target is the ID (so prefixed with a '#') of a DOM element
+				which may receive server's submit response in HTML or text format.<br />
+				This property is initialized by default with form's <code>target</code>
+				attribute value, if any.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submitMessage</code></td>
+			<td>string</td>
+			<td>
+				If set, this attribute is used to display a message into form's submit target
+				until server's response is received.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getTarget</code></td>
+			<td>function</td>
+			<td>
+				<code>getTarget(form, settings, formData, buttonData)</code><br />
+				This function is used to transform <code>submitTarget</code> value into a
+				JQuery object.
+			</td>
+		</tr>
+		<tr>
+			<td><code>initTarget</code></td>
+			<td>function</td>
+			<td>
+				<code>initTarget(form, settings, target)</code><br />
+				This function is used to initialize form's submit target, as returned by the
+				<code>getTarget()</code> function call.<br />
+				By default, the target is cleared and replaced by a spinning wheel; if
+				settings <code>submitMessage</code> attribute is set, it's value is also
+				included into submit target until server's response is received.<br />
+				If the target is included into any DOM element with a <code>hidden</code>, this
+				class is removed from all it's parents.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submitHandler</code></td>
+			<td>string</td>
+			<td>
+				This attribute is initialized with form's <code>action</code> attribute,
+				removing any leading '#';
+			</td>
+		</tr>
+		<tr>
+			<td><code>getAction</code></td>
+			<td>function</td>
+			<td>
+				<code>getAction(form, settings, handler)</code><br />
+				This function is used to extract absolute URL of form's action. The base URL
+				is extracted from given <code>handler</code> argument, or from
+				<code>submitHandler</code> attribute; if the resulting handler isn't an absolute
+				one, this value is concatenated with current base URL.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getAjaxSettings</code></td>
+			<td>function</td>
+			<td>
+				<code>getAjaxSettings(form, settings, button, postData, action, target)</code><br />
+				This function is used to initialize settings of JQuery.form plug-in
+				<code>ajaxSubmit()</code> call.<br />
+				Several events are triggered; those which receive a <code>veto</code> object
+				can cancel the submission by setting it's <code>veto</code> attribute to
+				<code>false</code>.
+				<ul>
+					<li><code>before-serialize.myams.form(veto)</code></li>
+					<li><code>before-submit.myams.form(data, veto)</code></li>
+					<li><code>complete.myams.form(xhr)</code></li>
+					<li>
+						<code>submit-success.myams.form(result, status, request, veto)</code><br />
+						The <code>veto</code> argument of this event is not used to cancel the
+						submission as it is already done, but to cancel default MyAMS behaviour
+						to handle it's result.
+					</li>
+					<li><code>submit-error.myams.form(request, status, error, target)</code></li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><code>progressHandler</code></td>
+			<td>string</td>
+			<td>
+				This optional attribute is an URL which can be used to get progress status of
+				form's submission. This progress is those of a possible long operation which can
+				be done on the server side, and should not be confused with the upload progress
+				when the form contains files to upload; both of them are explained with more
+				details in the <a href="#mod-form-progress.html">progress indicators</a>
+				chapter.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getProgressSettings</code></td>
+			<td>function</td>
+			<td>
+				<code>getProgressSettings(form, settings, postData)</code><br />
+				If a <code>progressHandler</code> attribute is defined, this function is used
+				to get all progress handler settings. The function may return an object with
+				several attributes:<br />
+				<ul>
+					<li><code>handler</code>: URL of progress handler</li>
+					<li>
+						<code>interval</code>: interval, in milliseconds, between progress
+						checks
+					</li>
+					<li>
+						<code>fieldname</code>: name of a POST data field used to check
+						progress status; default field name is <code>progressId</code>. This
+						field is set into main POST data, and will be used on each call to
+						progress handler
+					</li>
+					<li>
+						<code>callback</code>: name of a javascript function used to handle
+						progress handler response; MyAMS provides a default implementation
+						which is updating submit button's label based on handler response
+					</li>
+					<li>
+						<code>endCallback</code>: name of a javascript function called after
+						progress handler has finished.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><code>progressFieldName</code></td>
+			<td>string</td>
+			<td>
+				Name of a POST field used to identify current progress operation. This field
+				is initialized on the client side using <code>MyAMS.core.generateUUID()</code>
+				function, and is sent to progress handler to identify requested request
+				progress; it's then up to the server backend to handle this task to be able
+				to provide information about progress.
+			</td>
+		</tr>
+		<tr>
+			<td><code>progressInterval</code></td>
+			<td>number</td>
+			<td>
+				If a progress handler is provided, this is the interval (in ms) at which this
+				handler is checked; default value is set to 1000ms.<br />
+				<i>Please note that this is not a real javascript interval, but a timeout after
+				receiving the last response before checking progress again!</i>
+			</td>
+		</tr>
+		<tr>
+			<td><code>progressCallback</code></td>
+			<td>function</td>
+			<td>
+				<code>callback(result, status)</code><br />
+				If a progress handler is defined, this is the callback which is used to handle
+				result of handler calls; MyAMS provides a default implementation which is
+				updating the content of the submit button according to handler result.
+			</td>
+		</tr>
+		<tr>
+			<td><code>progressEndCallback</code></td>
+			<td>function</td>
+			<td>
+				<code>endCallback(form, settings, target)</code><br />
+				This callback is not mandatory; if defined, it is called by MyAMS default
+				implementation when the progress handler returns a result specifying that the
+				request is finished.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getProgressState</code></td>
+			<td>function</td>
+			<td>
+				<code>getProgressState(form, settings, postData, progress)</code><br />
+				If a progress handler is defined, this function is called before the effective
+				form's submit to initialize progress state callbacks.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submit</code></td>
+			<td>function</td>
+			<td>
+				<code>submit(form, settings, button, postData, ajaxSettings)</code><br />
+				This function is called to realize the effective form's submission; the progress
+				handler is checked and initialized if required, before calling the effective
+				<code>form.ajaxSubmit()</code> call; <code>postData</code> is the object
+				containing all required extra fields values, as returned by <code>getData()</code>,
+				and <code>ajaxSettings</code> is the result of <code>getAjaxSettings()</code>
+				function call.
+			</td>
+		</tr>
+		<tr>
+			<td><code>datatype</code></td>
+			<td>string</td>
+			<td>
+				This is the datatype of the AJAX response; it is set to <code>null</code> by
+				default, which means that it's detected automatically, but you can force this
+				datatype by specifying a custom value for this setting; see <code>dataType</code>
+				option of <a href="https://api.query.com/jQuery.ajax">jQuery.ajax()</a> call to
+				know available values.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submitOptions</code></td>
+			<td>object</td>
+			<td>
+				If defined, this object is merged with default AJAX settings provided by
+				<code>getAjaxSettings()</code>.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetBeforeSubmit</code></td>
+			<td>boolean</td>
+			<td>
+				By default, form's submit button is reset only after server response has been
+				received.<br />
+				If required, you can reset this button before actually submitting the form by
+				setting this option to <code>true</code>.
+			</td>
+		</tr>
+		<tr>
+			<td><code>submitCallback</code></td>
+			<td>function</td>
+			<td>
+				<code>submitCallback(form, settings, target, result, status, request)</code><br />
+				This function is called when the server's response is received with a successfull
+				status.<br />
+				In MyAMS default implementation, content-type and data are extracted from this
+				response; if data is in JSON format, <a href="#mod-ajax.html">MyAMS AJAX module</a>
+				is used to handle this response; otherwise, we replace form's submit target
+				with received data.<br />
+				In some use cases, it can be necessary to get server's response in text or HTML
+				format, but also to call a specific function; this callback can be set in server's
+				response using a dedicated <code>X-AMS-Callback</code> HTTP header, and another
+				<code>X-AMS-Callback-Options</code> header to define callback options in a
+				serialized JSON object string.<br />
+				After function call, a <code>after-submit.myams.form</code> event is triggered
+				on the form, with <code>result</code> as argument.
+			</td>
+		</tr>
+		<tr>
+			<td><code>keepModalOpen</code></td>
+			<td>boolean</td>
+			<td>
+				When the submitted form is located into a modal dialog, MyAMS default behaviour
+				is to close this modal.<br />
+				If necessary, you can keep this modal open after submit by setting this option
+				to <code>true</code>.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetAfterSubmit</code></td>
+			<td>function</td>
+			<td>
+				<code>resetAfterSubmit(form, defaults, button</code><br />
+				This function is called after submit to reset form's state. The submit button
+				is reset, and form's <code>submitted</code> data attribute is reset to
+				<code>false</code> so that the form can be submitted again.<br/>
+				An <code>after-reset.myams.form</code> event is also triggered.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetAfterError</code></td>
+			<td>function</td>
+			<td>
+				<code>resetAfterError(form, settings, target)</code><br />
+				This function is called on submit error. By default, the spinning whell located
+				in form's submit target is removed, and replaced by an ambulance to specify that
+				something wrong happened...
+			</td>
+		</tr>
+		<tr>
+			<td><code>downloadTarget</code></td>
+			<td>string</td>
+			<td>
+				When form submission leads to a file which may be downloaded and saved on the
+				client side, MyAMS submit process is a little bit different than classic submit.<br />
+				In this case, an hidden iframe is created to be used as form's target to receive
+				the downloaded file and save it. The iframe is created automatically, but it's
+				name must be set using this option.
+			</td>
+		</tr>
+		<tr>
+			<td><code>getDownloadTarget</code></td>
+			<td>function</td>
+			<td>
+				<code>getDownloadTarget(form, settings)</code><br />
+				This function is called to get the name of form's download target, if required.<br />
+				MyAMS default implementation just returns <code>downloadTarget</code> option value.
+			</td>
+		</tr>
+		<tr>
+			<td><code>initDownloadTarget</code></td>
+			<td>function</td>
+			<td>
+				<code>initDownloadTarget(form, settings, target, ajaxSettings)</code><br />
+				This function is used to initialize form's download target, if required.<br />
+				In MyAMS default implementation, it creates the hidden iframe which will receive
+				server's response, and update <code>iframe</code> and <code>iframeTarget</code>
+				attributes of <code>ajaxSettings</code>.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetDownloadTarget</code></td>
+			<td>function</td>
+			<td>
+				<code>resetDownloadTarget(form, settings, target, ajaxSettings)</code><br />
+				This function is used to reset download target.<br />
+				By default, if the form is located into a modal dialog, it is closed except
+				if the <code>keepModalOpen</code> option is set to <code>true</code>.<br />
+				A specific behaviour is defined according to progress management: if a progress
+				handler is defined, form is reset when progress handler indicates that the action
+				is finished; otherwise, the form is reset after a timeout specified by
+				<code>resetTimeout</code> option, as specified below.
+			</td>
+		</tr>
+		<tr>
+			<td><code>resetTimeout</code></td>
+			<td>number</td>
+			<td>
+				When using a download target as specified above, the original form must be
+				reset before getting the actual response from the remote server. This value
+				defines the timeout, in milliseconds, before resetting the original form; the
+				default value is 1000ms.
+			</td>
+		</tr>
+	</table>
+</section>

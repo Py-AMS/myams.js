@@ -1,0 +1,38 @@
+<h1>Bootstrap addings</h1>
+<section>
+	<p>MyAMS is adding a few elements to Bootrap-based features.</p>
+</section>
+<section>
+	<h2>New CSS classes</h2>
+	<ul>
+		<li>
+			<p><code>width-*</code>: unlike Bootstrap's <code>w-*</code> CSS classes, the
+			<code>width-*</code> CSS classes can be used with media queries; for example, you can
+			set a class to <code>width-100 width-sm-75 width-md-50</code> if you want the element
+			to be 100% width of it's parent by default, 75% on small devices and 50% on medium
+			or larger devices.</p>
+		</li>
+		<li>
+			<p><code>hidden-mobile</code>, <code>hidden-desktop</code>, <code>visible-mobile-*
+			</code> and <code>visible-desktop-*</code>: these CSS classes are using
+			<code>desktop-detected</code> and <code>mobile-detected</code> classes which
+			MyAMS is applying on HTML body according to detected device type, which is based on
+			user agent and not on screen resolution!</p>
+			<p>These classes can be used with media queries, like in <code>hidden-mobile
+			visible-mobile-block-md</code> if you want to hide an element on mobile devices except
+			on medium or larger devices where it will be displayed as block.</p>
+		</li>
+	</ul>
+</section>
+<section>
+	<h2>New data attributes</h2>
+	<ul>
+		<li>
+			<p><code>data-ams-click-dismiss</code>: generally speaking, a click inside a dropdown
+			menu wil dismiss the dropdown; by setting this boolean attribute to <code>false</code>,
+			you can prevent this behaviour, for example if you want to display a form or tabs
+			inside your dropdown (see <a href="#search.html">search box</a> or
+			<a href="#notifications.html">notifications</a> to see an example).</p>
+		</li>
+	</ul>
+</section>

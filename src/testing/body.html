@@ -1,0 +1,34 @@
+<h1>Body classes</h1>
+<section>
+	<p>MyAMS supports several custom CSS classes which can be applied to the main
+	<code>&lt;body&gt;</code> tag:</p>
+	<ul>
+		<li>
+			<p><code>minified</code>: the main <a href="#nav.html">navigation menu</a> can be
+			displayed in a classic way or in a "minified" way, in which only first level icons are
+			visibles; sub-menus are then visible on mouse-over.</p>
+			<p>A "minifying" button is present, by default, below the navigation menus.</p>
+		</li>
+		<li>
+			<p><code>hidden-menu</code>: in this mode, the navigation menu is nearly hidden and
+			displayed on mouse over the left part of the screen.</p>
+			<p>A "show/hide menu" button is present, by default, into page's header, to handle
+			this class.</p>
+			<div class="alert alert-info">
+				<h3 class="alert-heading">Notice</h3>
+				<p>Please note also that the <code>minified</code> class should not be used with the
+				<code>hidden-menu</code> class at the same time!</p>
+			</div>
+		</li>
+		<li>
+			<p><code>fixed-ribbon</code>: when this class is applied, the <a href="#ribbon.html">
+			ribbon</a> is fixed instead of scrolling with the <code>#content</code> part.</p>
+		</li>
+		<li>
+			<p><code>desktop-detected</code> and <code>mobile-detected</code>: these CSS classes
+			are assigned automatically after page load according to detected device type.</p>
+		</li>
+	</ul>
+	<p><code>minified</code> and <code>hidden-menu</code> classes are stored into browser's local
+	storage and restored automatically on startup.</p>
+</section>
