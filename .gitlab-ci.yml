@@ -31,7 +31,6 @@ test:
         - npm run coverage || true
     artifacts:
         paths:
-            - test-report.xml
             - ./coverage/
     coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
