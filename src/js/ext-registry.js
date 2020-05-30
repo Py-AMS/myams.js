@@ -26,7 +26,7 @@ class Plugin {
 			if (props.hasOwnProperty('name')) {
 				name = props.name;
 			} else {
-				throw "Missing plug-in name!";
+				throw new Error("Missing plug-in name!");
 			}
 		}
 		// plug-in name

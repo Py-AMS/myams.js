@@ -586,8 +586,8 @@
 
 
   function getFormAction(form, settings, handler) {
-    var url,
-        formHandler = handler || settings.submitHandler;
+    var url;
+    var formHandler = handler || settings.submitHandler;
 
     if (formHandler.startsWith(window.location.protocol)) {
       url = formHandler;

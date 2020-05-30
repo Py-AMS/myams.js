@@ -497,7 +497,7 @@ function getFormData(form, settings, formData, button, buttonData, options) {
 
 // initialize form data
 function initFormData(form, settings, button, postData, options, veto) {
-	let callback = settings.initDataCallback;
+	const callback = settings.initDataCallback;
 	if (callback) {
 		$.extend(postData, callback(form, settings, button, postData, options, veto));
 	}
@@ -534,8 +534,8 @@ function initFormTarget(form, settings, target) {
 
 // get form action
 function getFormAction(form, settings, handler) {
-	let url,
-		formHandler = handler || settings.submitHandler;
+	let url;
+	const formHandler = handler || settings.submitHandler;
 	if (formHandler.startsWith(window.location.protocol)) {
 		url = formHandler;
 	} else {

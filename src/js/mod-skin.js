@@ -59,8 +59,8 @@ export const skin = {
 		const nav = MyAMS.dom.nav;
 		let hash = location.hash,
 			url = hash.replace(/^#/, ''),
-			tag = null,
-			tagPosition = url.indexOf('!');
+			tag = null;
+		const tagPosition = url.indexOf('!');
 		if (tagPosition > 0) {
 			hash = hash.substring(0, tagPosition + 1);
 			tag = url.substring(tagPosition + 1);
@@ -82,10 +82,11 @@ export const skin = {
 			}
 			// load specified URL into '#content'
 			skin.loadURL(url, container).then(() => {
-				const prefix = $('html head title').data('ams-title-prefix');
-				document.title = `${prefix ? `${prefix} > ` : ''}` +
-					($('[data-ams-page-title]:first', container).data('ams-page-title') ||
-					 menu.attr('title') || document.title);
+				const
+					prefix = $('html head title').data('ams-title-prefix'),
+					fullPrefix = prefix ? `${prefix} > ` : '';
+				document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') ||
+					 menu.attr('title') || document.title}`;
 				if (tag) {
 					const anchor = $(`#${tag}`);
 					if (anchor.exists()) {
@@ -156,8 +157,10 @@ export const skin = {
 						if (target[0] === $('#content')[0]) {
 							MyAMS.require('nav').then(() => {
 								MyAMS.nav.drawBreadcrumbs();
-								const prefix = $('html head title').data('ams-title-prefix');
-								document.title = `${prefix ? `${prefix} > ` : ''}${$('.breadcrumb li:last-child').text()}`;
+								const
+									prefix = $('html head title').data('ams-title-prefix'),
+									fullPrefix = prefix ? `${prefix} > ` : '';
+								document.title = `${fullPrefix}${$('.breadcrumb li:last-child').text()}`;
 								MyAMS.dom.root.animate({scrollTop: 0}, 'fast');
 							});
 						}

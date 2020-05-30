@@ -21938,7 +21938,7 @@ function init($) {
       }
 
       return this.replace(/[A-Z]/g, function (cap) {
-        return '-' + cap.toLowerCase();
+        return "-".concat(cap.toLowerCase());
       });
     },
 
@@ -22085,7 +22085,7 @@ function init($) {
         return this;
       }
 
-      return this.parents('.' + klass);
+      return this.parents(".".concat(klass));
     },
 
     /**
@@ -22484,7 +22484,7 @@ function getScript(url) {
 function getCSS(url, name) {
   return new Promise(function (resolve, reject) {
     var head = $('HEAD');
-    var style = $('style[data-ams-id="' + name + '"]', head);
+    var style = $("style[data-ams-id=\"".concat(name, "\"]"), head);
 
     if (style.length === 0) {
       style = $('<style>').attr('data-ams-id', name).text("@import \"".concat(getSource(url), "\";")).appendTo(head);
@@ -22494,7 +22494,7 @@ function getCSS(url, name) {
 
           clearInterval(styleInterval);
           resolve(true);
-        } catch (e) {// CSS is not loaded yet...
+        } catch (e) {// CSS is not loaded yet, just wait...
         }
       }, 10);
     } else {
@@ -22521,7 +22521,7 @@ function getQueryVar(src, varName) {
   } // Dynamic replacement RegExp
 
 
-  var regex = new RegExp('.*?[&\\?]' + varName + '=(.*?)&.*'); // Apply RegExp to the query string
+  var regex = new RegExp(".*?[&\\?]".concat(varName, "=(.*?)&.*")); // Apply RegExp to the query string
 
   var val = src.replace(regex, "$1"); // If the string is the same, we didn't find a match - return null
 
@@ -22740,7 +22740,7 @@ function () {
       if (props.hasOwnProperty('name')) {
         name = props.name;
       } else {
-        throw "Missing plug-in name!";
+        throw new Error("Missing plug-in name!");
       }
     } // plug-in name
 
@@ -23375,6 +23375,17 @@ __webpack_require__.r(__webpack_exports__);
  * MyAMS AJAX features
  */
 var $ = MyAMS.$;
+
+function checkCsrfHeader(request, options) {
+  if (window.Cookies) {
+    var token = Cookies.get(MyAMS.config.csrfCookieName);
+
+    if (token) {
+      request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+    }
+  }
+}
+
 var ajax = {
   /**
    * Check for a given feature, and download script if necessary
@@ -23503,15 +23514,7 @@ var ajax = {
         cache: false,
         data: $.param(params),
         datatype: 'json',
-        beforeSend: function beforeSend(request, options) {
-          if (window.Cookies) {
-            var token = Cookies.get(MyAMS.config.csrfCookieName);
-
-            if (token) {
-              request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-            }
-          }
-        }
+        beforeSend: checkCsrfHeader
       };
       var settings = $.extend({}, defaults, options);
       $.ajax(settings).then(function (result, status, xhr) {
@@ -23545,15 +23548,7 @@ var ajax = {
         cache: false,
         data: $.param(data),
         dataType: 'json',
-        beforeSend: function beforeSend(request, options) {
-          if (window.Cookies) {
-            var token = Cookies.get(MyAMS.config.csrfCookieName);
-
-            if (token) {
-              request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-            }
-          }
-        }
+        beforeSend: checkCsrfHeader
       };
       var settings = $.extend({}, defaults, options);
       $.ajax(settings).then(function (result, status, xhr) {
@@ -25351,8 +25346,8 @@ function initFormTarget(form, settings, target) {
 
 
 function getFormAction(form, settings, handler) {
-  var url,
-      formHandler = handler || settings.submitHandler;
+  var url;
+  var formHandler = handler || settings.submitHandler;
 
   if (formHandler.startsWith(window.location.protocol)) {
     url = formHandler;
@@ -27528,7 +27523,7 @@ function svgPlugin(element) {
           height = svg.attr('height');
 
       if (width && height) {
-        elt.setAttribute('viewBox', '0 0 ' + Math.round(parseFloat(width)) + ' ' + Math.round(parseFloat(height)));
+        elt.setAttribute('viewBox', "0 0 ".concat(Math.round(parseFloat(width)), " ").concat(Math.round(parseFloat(height))));
       }
 
       svg.attr('width', '100%').attr('height', 'auto');
@@ -27778,8 +27773,8 @@ var skin = {
     var nav = MyAMS.dom.nav;
     var hash = location.hash,
         url = hash.replace(/^#/, ''),
-        tag = null,
-        tagPosition = url.indexOf('!');
+        tag = null;
+    var tagPosition = url.indexOf('!');
 
     if (tagPosition > 0) {
       hash = hash.substring(0, tagPosition + 1);
@@ -27808,8 +27803,9 @@ var skin = {
 
 
       skin.loadURL(url, container).then(function () {
-        var prefix = $('html head title').data('ams-title-prefix');
-        document.title = "".concat(prefix ? "".concat(prefix, " > ") : '') + ($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
+        var prefix = $('html head title').data('ams-title-prefix'),
+            fullPrefix = prefix ? "".concat(prefix, " > ") : '';
+        document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
 
         if (tag) {
           var anchor = $("#".concat(tag));
@@ -27892,8 +27888,9 @@ var skin = {
             if (target[0] === $('#content')[0]) {
               MyAMS.require('nav').then(function () {
                 MyAMS.nav.drawBreadcrumbs();
-                var prefix = $('html head title').data('ams-title-prefix');
-                document.title = "".concat(prefix ? "".concat(prefix, " > ") : '').concat($('.breadcrumb li:last-child').text());
+                var prefix = $('html head title').data('ams-title-prefix'),
+                    fullPrefix = prefix ? "".concat(prefix, " > ") : '';
+                document.title = "".concat(fullPrefix).concat($('.breadcrumb li:last-child').text());
                 MyAMS.dom.root.animate({
                   scrollTop: 0
                 }, 'fast');

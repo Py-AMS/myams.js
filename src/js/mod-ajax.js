@@ -5,6 +5,16 @@
 const $ = MyAMS.$;
 
 
+function checkCsrfHeader(request, options) {
+	if (window.Cookies) {
+		const token = Cookies.get(MyAMS.config.csrfCookieName);
+		if (token) {
+			request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+		}
+	}
+}
+
+
 export const ajax = {
 
 	/**
@@ -112,14 +122,7 @@ export const ajax = {
 				cache: false,
 				data: $.param(params),
 				datatype: 'json',
-				beforeSend: (request, options) => {
-					if (window.Cookies) {
-						const token = Cookies.get(MyAMS.config.csrfCookieName);
-						if (token) {
-							request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-						}
-					}
-				}
+				beforeSend: checkCsrfHeader
 			};
 			const settings = $.extend({}, defaults, options);
 			$.ajax(settings).then((result, status, xhr) => {
@@ -154,14 +157,7 @@ export const ajax = {
 				cache: false,
 				data: $.param(data),
 				dataType: 'json',
-				beforeSend: (request, options) => {
-					if (window.Cookies) {
-						const token = Cookies.get(MyAMS.config.csrfCookieName);
-						if (token) {
-							request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-						}
-					}
-				}
+				beforeSend: checkCsrfHeader
 			};
 			const settings = $.extend({}, defaults, options);
 			$.ajax(settings).then((result, status, xhr) => {
@@ -360,7 +356,8 @@ export const ajax = {
 
 		// Single content response
 		if (result.content) {
-			let content = result.content,
+			const
+				content = result.content,
 				container = $(content.target || target || '#content');
 			if (typeof content === 'string') {
 				container.html(content);

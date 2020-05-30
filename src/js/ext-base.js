@@ -40,7 +40,7 @@ export function init($) {
 				return this;
 			}
 			return this.replace(/[A-Z]/g, (cap) => {
-				return '-' + cap.toLowerCase();
+				return `-${cap.toLowerCase()}`;
 			});
 		},
 
@@ -142,7 +142,7 @@ export function init($) {
 			if (this.hasClass(klass)) {
 				return this;
 			}
-			return this.parents('.' + klass);
+			return this.parents(`.${klass}`);
 		},
 
 		/**
@@ -449,18 +449,18 @@ export function getCSS(url, name) {
 
 	return new Promise((resolve, reject) => {
 		const head = $('HEAD');
-		let style = $('style[data-ams-id="' + name + '"]', head);
+		let style = $(`style[data-ams-id="${name}"]`, head);
 		if (style.length === 0) {
 			style = $('<style>').attr('data-ams-id', name)
 								.text(`@import "${getSource(url)}";`)
 								.appendTo(head);
 			const styleInterval = setInterval(() => {
 				try {
-					let _check = style[0].sheet.cssRules;  // Is only populated when file is loaded
+					const _check = style[0].sheet.cssRules;  // Is only populated when file is loaded
 					clearInterval(styleInterval);
 					resolve(true);
 				} catch (e) {
-					// CSS is not loaded yet...
+					// CSS is not loaded yet, just wait...
 				}
 			}, 10);
 		} else {
@@ -486,7 +486,7 @@ export function getQueryVar(src, varName) {
 		src += '&';
 	}
 	// Dynamic replacement RegExp
-	const regex = new RegExp('.*?[&\\?]' + varName + '=(.*?)&.*');
+	const regex = new RegExp(`.*?[&\\?]${varName}=(.*?)&.*`);
 	// Apply RegExp to the query string
 	const val = src.replace(regex, "$1");
 	// If the string is the same, we didn't find a match - return null

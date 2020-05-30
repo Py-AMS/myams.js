@@ -42,13 +42,14 @@ export const modal = {
 		/**
 		 * Handle modal events to allow modals stacking
 		 */
-		let zIndexModal = 1100;
+		const zIndexModal = 1100;
 
 		$(document).on('shown.bs.modal', '.modal', (evt) => {
 			// Enable modals stacking
-			const dialog = $(evt.target),
-				  visibleModalsCount = $('.modal:visible').length,
-				  zIndex = zIndexModal + (100 * visibleModalsCount);
+			const
+				dialog = $(evt.target),
+				visibleModalsCount = $('.modal:visible').length,
+				zIndex = zIndexModal + (100 * visibleModalsCount);
 			dialog.css('z-index', zIndex);
 			setTimeout(() => {
 				$('.modal-backdrop').not('.modal-stack')

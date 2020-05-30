@@ -303,8 +303,7 @@ function svgPlugin(element) {
 				  height = svg.attr('height');
 			if (width && height) {
 				elt.setAttribute('viewBox',
-								 '0 0 ' + Math.round(parseFloat(width)) + ' ' +
-								 Math.round(parseFloat(height)));
+								 `0 0 ${Math.round(parseFloat(width))} ${Math.round(parseFloat(height))}`);
 			}
 			svg.attr('width', '100%')
 			   .attr('height', 'auto');

@@ -166,7 +166,7 @@ function init($) {
       }
 
       return this.replace(/[A-Z]/g, function (cap) {
-        return '-' + cap.toLowerCase();
+        return "-".concat(cap.toLowerCase());
       });
     },
 
@@ -313,7 +313,7 @@ function init($) {
         return this;
       }
 
-      return this.parents('.' + klass);
+      return this.parents(".".concat(klass));
     },
 
     /**
@@ -712,7 +712,7 @@ function getScript(url) {
 function getCSS(url, name) {
   return new Promise(function (resolve, reject) {
     var head = $('HEAD');
-    var style = $('style[data-ams-id="' + name + '"]', head);
+    var style = $("style[data-ams-id=\"".concat(name, "\"]"), head);
 
     if (style.length === 0) {
       style = $('<style>').attr('data-ams-id', name).text("@import \"".concat(getSource(url), "\";")).appendTo(head);
@@ -722,7 +722,7 @@ function getCSS(url, name) {
 
           clearInterval(styleInterval);
           resolve(true);
-        } catch (e) {// CSS is not loaded yet...
+        } catch (e) {// CSS is not loaded yet, just wait...
         }
       }, 10);
     } else {
@@ -749,7 +749,7 @@ function getQueryVar(src, varName) {
   } // Dynamic replacement RegExp
 
 
-  var regex = new RegExp('.*?[&\\?]' + varName + '=(.*?)&.*'); // Apply RegExp to the query string
+  var regex = new RegExp(".*?[&\\?]".concat(varName, "=(.*?)&.*")); // Apply RegExp to the query string
 
   var val = src.replace(regex, "$1"); // If the string is the same, we didn't find a match - return null
 
@@ -968,7 +968,7 @@ function () {
       if (props.hasOwnProperty('name')) {
         name = props.name;
       } else {
-        throw "Missing plug-in name!";
+        throw new Error("Missing plug-in name!");
       }
     } // plug-in name
 

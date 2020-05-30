@@ -22,6 +22,17 @@
    * MyAMS AJAX features
    */
   var $ = MyAMS.$;
+
+  function checkCsrfHeader(request, options) {
+    if (window.Cookies) {
+      var token = Cookies.get(MyAMS.config.csrfCookieName);
+
+      if (token) {
+        request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+      }
+    }
+  }
+
   var ajax = {
     /**
      * Check for a given feature, and download script if necessary
@@ -150,15 +161,7 @@
           cache: false,
           data: $.param(params),
           datatype: 'json',
-          beforeSend: function beforeSend(request, options) {
-            if (window.Cookies) {
-              var token = Cookies.get(MyAMS.config.csrfCookieName);
-
-              if (token) {
-                request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-              }
-            }
-          }
+          beforeSend: checkCsrfHeader
         };
         var settings = $.extend({}, defaults, options);
         $.ajax(settings).then(function (result, status, xhr) {
@@ -192,15 +195,7 @@
           cache: false,
           data: $.param(data),
           dataType: 'json',
-          beforeSend: function beforeSend(request, options) {
-            if (window.Cookies) {
-              var token = Cookies.get(MyAMS.config.csrfCookieName);
-
-              if (token) {
-                request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
-              }
-            }
-          }
+          beforeSend: checkCsrfHeader
         };
         var settings = $.extend({}, defaults, options);
         $.ajax(settings).then(function (result, status, xhr) {

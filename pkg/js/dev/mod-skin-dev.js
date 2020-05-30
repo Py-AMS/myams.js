@@ -75,8 +75,8 @@
       var nav = MyAMS.dom.nav;
       var hash = location.hash,
           url = hash.replace(/^#/, ''),
-          tag = null,
-          tagPosition = url.indexOf('!');
+          tag = null;
+      var tagPosition = url.indexOf('!');
 
       if (tagPosition > 0) {
         hash = hash.substring(0, tagPosition + 1);
@@ -105,8 +105,9 @@
 
 
         skin.loadURL(url, container).then(function () {
-          var prefix = $('html head title').data('ams-title-prefix');
-          document.title = "".concat(prefix ? "".concat(prefix, " > ") : '') + ($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
+          var prefix = $('html head title').data('ams-title-prefix'),
+              fullPrefix = prefix ? "".concat(prefix, " > ") : '';
+          document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
 
           if (tag) {
             var anchor = $("#".concat(tag));
@@ -189,8 +190,9 @@
               if (target[0] === $('#content')[0]) {
                 MyAMS.require('nav').then(function () {
                   MyAMS.nav.drawBreadcrumbs();
-                  var prefix = $('html head title').data('ams-title-prefix');
-                  document.title = "".concat(prefix ? "".concat(prefix, " > ") : '').concat($('.breadcrumb li:last-child').text());
+                  var prefix = $('html head title').data('ams-title-prefix'),
+                      fullPrefix = prefix ? "".concat(prefix, " > ") : '';
+                  document.title = "".concat(fullPrefix).concat($('.breadcrumb li:last-child').text());
                   MyAMS.dom.root.animate({
                     scrollTop: 0
                   }, 'fast');
