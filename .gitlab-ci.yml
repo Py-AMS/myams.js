@@ -27,10 +27,12 @@ test:
     image: node:12.17.0
     stage: test
     script:
+        - npm install
         - npm run coverage | tee ./coverage/coverage.log
     artifacts:
         paths:
             - ./coverage/
+    coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 dist:
     stage: dist
