@@ -28,7 +28,7 @@ test:
     stage: test
     script:
         - npm install --no-audit
-        - npm run coverage --ci | tee ./coverage/coverage.log
+        - npm run coverage || true
     artifacts:
         paths:
             - ./coverage/
