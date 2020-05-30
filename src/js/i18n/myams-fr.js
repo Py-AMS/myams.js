@@ -30,8 +30,8 @@
 		BTN_NO: "Non",
 
 		CLIPBOARD_COPY: "Copiez ce contenu dans le presse-papier avec Ctrl+C, puis Entrée",
-		CLIPBOARD_CHARACTER_COPY_OK: "Le caractère a été déposé dans le presse-papier",
-		CLIPBOARD_TEXT_COPY_OK: "Le texte a été copié dans le presse-papier",
+		CLIPBOARD_CHARACTER_COPY_OK: "Le caractère a été déposé dans le presse-papier.",
+		CLIPBOARD_TEXT_COPY_OK: "Le texte a été copié dans le presse-papier.",
 
 		FORM_CHANGED_WARNING: "Des modifications n'ont pas été enregistrées. Ces modifications seront perdues si vous quittez cette page.",
 		DELETE_WARNING: "Cette suppression ne pourra pas être annulée. La confirmez-vous ?",

@@ -5550,11 +5550,71 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * MyAMS i18n translations
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
+var $ = MyAMS.$;
+/**
+ * Internal function used to copy text to clipboard
+ *
+ * @param text: text to be copied
+ */
+
+function doCopy(text) {
+  var copied = false;
+
+  if (window.clipboardData && window.clipboardData.setData) {
+    // IE specific code
+    copied = clipboardData.setData("Text", text);
+  } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+    var textarea = $('<textarea>');
+    textarea.val(text).css('position', 'fixed') // prevent scrolling to bottom of page in Edge
+    .appendTo(MyAMS.dom.root);
+    textarea.get(0).select();
+
+    try {
+      document.execCommand('copy'); // security exception may be thrown by some browsers!
+
+      copied = true;
+    } catch (e) {
+      console.warn("Clipboard copy failed!", e);
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  if (copied) {
+    MyAMS.require('i18n', 'alert').then(function () {
+      MyAMS.alert.smallBox({
+        status: 'success',
+        message: text.length > 1 ? MyAMS.i18n.CLIPBOARD_TEXT_COPY_OK : MyAMS.i18n.CLIPBOARD_CHARACTER_COPY_OK,
+        icon: 'fa-info-circle',
+        timeout: 3000
+      });
+    });
+  } else {
+    MyAMS.require('i18n').then(function () {
+      prompt(MyAMS.i18n.CLIPBOARD_COPY, text);
+    });
+  }
 }
 
-var clipboard = {};
+var clipboard = {
+  /**
+   * Copy given text to system's clipboard
+   *
+   * @param text: text to be copied
+   */
+  copy: function copy(text) {
+    if (typeof text === 'undefined') {
+      return function () {
+        var source = $(this),
+            text = source.text();
+        source.parents('.btn-group').removeClass('open');
+        doCopy(text);
+      };
+    } else {
+      doCopy(text);
+    }
+  }
+};
 /**
  * Global module initialization
  */
@@ -7063,8 +7123,8 @@ var i18n = {
   BTN_NO: "No",
   BTN_CLOSE: "Close",
   CLIPBOARD_COPY: "Copy to clipboard with Ctrl+C, and Enter",
-  CLIPBOARD_CHARACTER_COPY_OK: "Character copied to clipboard",
-  CLIPBOARD_TEXT_COPY_OK: "Text copied to clipboard",
+  CLIPBOARD_CHARACTER_COPY_OK: "Character copied to clipboard.",
+  CLIPBOARD_TEXT_COPY_OK: "Text copied to clipboard.",
   FORM_CHANGED_WARNING: "Some changes were not saved. These updates will be lost if you leave this page.",
   DELETE_WARNING: "This change can't be undone. Are you sure that you want to delete this element?",
   NO_UPDATE: "No changes were applied.",

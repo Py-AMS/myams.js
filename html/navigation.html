@@ -20,8 +20,8 @@
 			<a href="#mod-skin.html">MyAMS skin module</a>, which will handle asynchronous
 			downloading of link target, include content into <code>#content</code> and
 			initialize it.</p>
-			<p>Instead of using <code>&lt;a&gt;</code> tags, you can also create links on
-			any HTML tag using the <code>data-ams-url</code> attribute; the value of the
+			<p>Instead of using <code>&lt;a&gt;</code> tags with <code>href</code>, you can also create
+			links on any HTML tag using the <code>data-ams-url</code> attribute; the value of the
 			attribute is then equivalent to a classic <code>href</code>, as defined just above.
 			Such tags with a <code>data-ams-disabled-handlers</code> attribute set to
 			<code>true</code>, <code>'click'</code> or <code>'all'</code> will be temporary
@@ -34,11 +34,11 @@
 			<p>To replace default link target, which is <code>#content</code>, you can set
 			<code>data-ams-target</code> or <code>target</code> attributes, with a value as
 			<code>_blank</code> to open a new window, or with a valid JQuery selector.</p>
-			<p>Before replacing an element contents, an <code>clear.ams.content</code>
+			<p>Before replacing an element content, a <code>clear.ams.content</code>
 			event is triggered on the element, with a <code>veto</code> argument which is a
 			simple object containing a single boolean <code>veto</code> attribute set to
 			<code>false</code>; if any registered handler of this event is setting the
-			<code>veto</code> property to <code>true</code>, the link event is cancelled; an
+			<code>veto</code> property to <code>true</code>, the link event is cancelled; a
 			<code>cleared.ams.content</code> event is triggered after the promise is resolved.</p>
 		</li>
 		<li>
