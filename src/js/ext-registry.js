@@ -127,6 +127,9 @@ class PluginsRegistry {
 			return plugins.get(name);
 		}
 		// register new plug-in
+		if (typeof plugin === 'string') {  // callable name
+			plugin = MyAMS.core.getFunctionByName(plugin);
+		}
 		if (typeof plugin === 'function') {  // callable object
 			plugins.set(name, new Plugin(name, {
 				callback: plugin
@@ -154,12 +157,13 @@ class PluginsRegistry {
 				props;
 			if (typeof names === 'string') {
 				for (const name of names.split(/[\s,;]+/)) {
+					const lowerName = name.toLowerCase();
 					props = {
-						src: source.data(`ams-plugin-${name}-src`),
-						css: source.data(`ams-plugin-${name}-css`),
-						callback: source.data(`ams-plugin-${name}-callback`),
+						src: source.data(`ams-plugin-${lowerName}-src`),
+						css: source.data(`ams-plugin-${lowerName}-css`),
+						callback: source.data(`ams-plugin-${lowerName}-callback`),
 						context: source,
-						async: source.data(`ams-plugin-${name}-async`)
+						async: source.data(`ams-plugin-${lowerName}-async`)
 					};
 					plugin = this.register(props, name);
 					if (!plugin.loaded) {
@@ -171,7 +175,7 @@ class PluginsRegistry {
 					}
 				}
 			} else {  // JSON plug-in declaration
-				for (props of names) {
+				for (props of $.isArray(names) ? names : [names]) {
 					$.extend(props, {
 						context: source
 					});
@@ -259,7 +263,7 @@ export const registry = {
 	 * @param callback: callback function which can be called after plug-in registration
 	 */
 	register: function(plugin, name, callback) {
-		plugins.register(plugin, name, callback);
+		return plugins.register(plugin, name, callback);
 	},
 
 	/**
@@ -298,6 +302,6 @@ export const registry = {
 	 * @param names: names of plug-in to run on given element; all if null
 	 */
 	run: function(element, names=null) {
-		plugins.run(element, names);
+		return plugins.run(element, names);
 	}
 };
