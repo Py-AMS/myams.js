@@ -4066,6 +4066,11 @@ function () {
       } // register new plug-in
 
 
+      if (typeof plugin === 'string') {
+        // callable name
+        plugin = MyAMS.core.getFunctionByName(plugin);
+      }
+
       if (typeof plugin === 'function') {
         // callable object
         plugins.set(name, new Plugin(name, {
@@ -4106,12 +4111,13 @@ function () {
           try {
             for (var _iterator2 = names.split(/[\s,;]+/)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var name = _step2.value;
+              var lowerName = name.toLowerCase();
               props = {
-                src: source.data("ams-plugin-".concat(name, "-src")),
-                css: source.data("ams-plugin-".concat(name, "-css")),
-                callback: source.data("ams-plugin-".concat(name, "-callback")),
+                src: source.data("ams-plugin-".concat(lowerName, "-src")),
+                css: source.data("ams-plugin-".concat(lowerName, "-css")),
+                callback: source.data("ams-plugin-".concat(lowerName, "-callback")),
                 context: source,
-                async: source.data("ams-plugin-".concat(name, "-async"))
+                async: source.data("ams-plugin-".concat(lowerName, "-async"))
               };
               plugin = _this2.register(props, name);
 
@@ -4144,7 +4150,7 @@ function () {
           var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator3 = names[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (var _iterator3 = ($.isArray(names) ? names : [names])[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
               props = _step3.value;
               $.extend(props, {
                 context: source
@@ -4321,7 +4327,7 @@ var registry = {
    * @param callback: callback function which can be called after plug-in registration
    */
   register: function register(plugin, name, callback) {
-    plugins.register(plugin, name, callback);
+    return plugins.register(plugin, name, callback);
   },
 
   /**
@@ -4365,7 +4371,7 @@ var registry = {
    */
   run: function run(element) {
     var names = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    plugins.run(element, names);
+    return plugins.run(element, names);
   }
 };
 
