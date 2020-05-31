@@ -137,7 +137,7 @@
 				If the <code>veto</code> object is updated with a <code>true</code> value in his
 				<code>veto</code> attribute, the submit button is reset and the submit operation
 				is cancelled.
-				After initialization is done, an <code>init-data.myams.form</code> event is
+				After initialization is done, an <code>init-data.ams.form</code> event is
 				triggered on the form, with <code>postData</code> and <code>veto</code> arguments.
 			</td>
 		</tr>
@@ -212,16 +212,16 @@
 				can cancel the submission by setting it's <code>veto</code> attribute to
 				<code>false</code>.
 				<ul>
-					<li><code>before-serialize.myams.form(veto)</code></li>
-					<li><code>before-submit.myams.form(data, veto)</code></li>
-					<li><code>complete.myams.form(xhr)</code></li>
+					<li><code>before-serialize.ams.form(veto)</code></li>
+					<li><code>before-submit.ams.form(data, veto)</code></li>
+					<li><code>complete.ams.form(xhr)</code></li>
 					<li>
-						<code>submit-success.myams.form(result, status, request, veto)</code><br />
+						<code>submit-success.ams.form(result, status, request, veto)</code><br />
 						The <code>veto</code> argument of this event is not used to cancel the
 						submission as it is already done, but to cancel default MyAMS behaviour
 						to handle it's result.
 					</li>
-					<li><code>submit-error.myams.form(request, status, error, target)</code></li>
+					<li><code>submit-error.ams.form(request, status, error, target)</code></li>
 				</ul>
 			</td>
 		</tr>
@@ -377,7 +377,7 @@
 				response using a dedicated <code>X-AMS-Callback</code> HTTP header, and another
 				<code>X-AMS-Callback-Options</code> header to define callback options in a
 				serialized JSON object string.<br />
-				After function call, a <code>after-submit.myams.form</code> event is triggered
+				After function call, a <code>after-submit.ams.form</code> event is triggered
 				on the form, with <code>result</code> as argument.
 			</td>
 		</tr>
@@ -399,7 +399,7 @@
 				This function is called after submit to reset form's state. The submit button
 				is reset, and form's <code>submitted</code> data attribute is reset to
 				<code>false</code> so that the form can be submitted again.<br/>
-				An <code>after-reset.myams.form</code> event is also triggered.
+				An <code>after-reset.ams.form</code> event is also triggered.
 			</td>
 		</tr>
 		<tr>

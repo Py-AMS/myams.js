@@ -3,40 +3,40 @@
 	<p>Several events are triggered during form submission:</p>
 	<ul>
 		<li>
-			<p><code>init-data.myams.form</code>: this event is triggered at the end of form's
+			<p><code>init-data.ams.form</code>: this event is triggered at the end of form's
 			data initialization; if receives actual POST data and a veto object as arguments;
 			if veto's <code>veto</code> attribute is set to <code>true</code>, the submit button
 			is reset and the submit process is cancelled.</p>
 		</li>
 		<li>
-			<p><code>before-serialized.myams.form</code>: this event is triggered before form
+			<p><code>before-serialized.ams.form</code>: this event is triggered before form
 			fields serialization; it received a veto object argument: if it's <code>veto</code>
 			attribute is set to <code>true</code>, the submit process is cancelled.</p>
 		</li>
 		<li>
-			<p><code>before-submit.myams.form</code>: this event is triggered before form submit;
+			<p><code>before-submit.ams.form</code>: this event is triggered before form submit;
 			current data is added as event argument, with a veto object: if it's <code>veto</code>
 			attribute is set to <code>true</code>, the submit process is cancelled.</p>
 		</li>
 		<li>
-			<p><code>complete.myams.form</code>: this event is triggered when submission is
+			<p><code>complete.ams.form</code>: this event is triggered when submission is
 			completed, with a success or an error status.</p>
 		</li>
 		<li>
-			<p><code>submit-success.myams.form</code>: this event is triggered on successfull
+			<p><code>submit-success.ams.form</code>: this event is triggered on successfull
 			commit. It's arguments are the submit result, the request status, the request and a
 			veto object; if <code>veto.veto</code> is set to <code>true</code>, the default
 			MyAMS callbacks will not be called.</p>
 		</li>
 		<li>
-			<p><code>submit-error.myams.form</code>: this event is triggered on failed commit.</p>
+			<p><code>submit-error.ams.form</code>: this event is triggered on failed commit.</p>
 		</li>
 		<li>
-			<p><code>after-submit.myams.form</code>: this event is triggered when the form submit
+			<p><code>after-submit.ams.form</code>: this event is triggered when the form submit
 			callback has been called.</p>
 		</li>
 		<li>
-			<p><code>after-reset.myams.form</code>: this event is triggered when a non modal form
+			<p><code>after-reset.ams.form</code>: this event is triggered when a non modal form
 			has been submitted, and it's state reset.</p>
 		</li>
 	</ul>

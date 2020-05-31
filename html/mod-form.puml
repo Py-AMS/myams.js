@@ -44,7 +44,7 @@ else
                 --> "<u>resetDownloadTarget</u>()"
             End If
             If "submit status ?" then
-                --> [success] "<b>event</b>\nsubmit-success.myams.form"
+                --> [success] "<b>event</b>\nsubmit-success.ams.form"
                 If "veto.veto?" then
                     -right-> [true] (*)
                 else
@@ -59,7 +59,7 @@ else
                     --> (*)
                 Endif
             else
-                --> [error] "<b>event</b>\nsubmit-error.myams.form"
+                --> [error] "<b>event</b>\nsubmit-error.ams.form"
                 If "target?" then
                     -right-> [true] "<u>resetAfterError</u>()" as rae3
                     --> "<u>resetAfterSubmit</u>()" as ras3

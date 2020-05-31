@@ -501,7 +501,7 @@ function initFormData(form, settings, button, postData, options, veto) {
 	if (callback) {
 		$.extend(postData, callback(form, settings, button, postData, options, veto));
 	}
-	form.trigger('init-data.myams.form', [postData, veto]);
+	form.trigger('init-data.ams.form', [postData, veto]);
 }
 
 
@@ -555,7 +555,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
 		dataType: settings.datatype,
 		beforeSerialize: () => {
 			const veto = { veto: false };
-			form.trigger('before-serialize.myams.form', [veto]);
+			form.trigger('before-serialize.ams.form', [veto]);
 			if (veto.veto) {
 				return false;
 			}
@@ -565,7 +565,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
 		},
 		beforeSubmit: (data, form) => {
 			const veto = { veto: false };
-			form.trigger('before-submit.myams.form', [data, veto]);
+			form.trigger('before-submit.ams.form', [data, veto]);
 			if (veto.veto) {
 				return false;
 			}
@@ -581,11 +581,11 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
 				`linear-gradient(to right, white -45%, green ${completed}%, red ${completed}%, red)`);
 		},
 		complete: (xhr) => {
-			form.trigger('complete.myams.form', [xhr]);
+			form.trigger('complete.ams.form', [xhr]);
 		},
 		success: (result, status, request, form) => {
 			const veto = { veto: false };
-			form.trigger('submit-success.myams.form', [result, status, request, veto]);
+			form.trigger('submit-success.ams.form', [result, status, request, veto]);
 			if (veto.veto) {
 				return;
 			}
@@ -601,7 +601,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
 			}
 		},
 		error: (request, status, error, form) => {
-			form.trigger('submit-error.myams.form', [request, status, error, target]);
+			form.trigger('submit-error.ams.form', [request, status, error, target]);
 			if (target) {
 				settings.resetAfterError(form, settings, button, target);
 			}
@@ -726,7 +726,7 @@ function formSubmitCallback(form, settings, target, result, status, request) {
 		MyAMS.core.executeFunctionByName(callback, document, form, settings, options,
 			result, status, request);
 	}
-	form.trigger('after-submit.myams.form', [result]);
+	form.trigger('after-submit.ams.form', [result]);
 }
 
 
@@ -742,7 +742,7 @@ function resetFormAfterSubmit(form, settings, button) {
 		settings.resetSubmitButton(form, settings, button);
 		form.data('submitted', false);
 		form.removeData('ams-submit-button');
-		form.trigger('after-reset.myams.form');
+		form.trigger('after-reset.ams.form');
 	}
 }
 

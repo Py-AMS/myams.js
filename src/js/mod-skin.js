@@ -169,7 +169,7 @@ export const skin = {
 				const
 					settings = $.extend({}, defaults, options),
 					veto = { veto: false };
-				target.trigger('before-load.myams.content', [settings, veto]);
+				target.trigger('before-load.ams.content', [settings, veto]);
 				if (veto.veto) {
 					return;
 				}
@@ -204,7 +204,7 @@ export const skin = {
 									MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
 										window, target).then(() => {
 										MyAMS.form && MyAMS.form.setFocus(target);
-										target.trigger('after-load.myams.content');
+										target.trigger('after-load.ams.content');
 										resolve(result, status, xhr);
 									})
 							}

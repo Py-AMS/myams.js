@@ -94,7 +94,7 @@ function checker(element) {
 					input = $(evt.target),
 					checked = input.is(':checked'),
 					veto = { veto: false };
-				legend.trigger('before-switch.myams.checker', [legend, veto]);
+				legend.trigger('before-switch.ams.checker', [legend, veto]);
 				if (veto.veto) {
 					input.prop('checked', !checked);
 					return;
@@ -107,11 +107,11 @@ function checker(element) {
 						if (checked) {
 							fieldset.removeClass('switched');
 							prefix.val(checkedValue);
-							legend.trigger('opened.myams.checker', [legend]);
+							legend.trigger('opened.ams.checker', [legend]);
 						} else {
 							fieldset.addClass('switched');
 							prefix.val(uncheckedValue);
-							legend.trigger('closed.myams.checker', [legend]);
+							legend.trigger('closed.ams.checker', [legend]);
 						}
 					} else {
 						fieldset.prop('disabled', !checked);
@@ -330,14 +330,14 @@ function switcher(element) {
 			legend.on('click', (evt) => {
 				evt.preventDefault();
 				const veto = {};
-				legend.trigger('before-switch.myams.switcher', [legend, veto]);
+				legend.trigger('before-switch.ams.switcher', [legend, veto]);
 				if (veto.veto) {
 					return;
 				}
 				if (fieldset.hasClass('switched')) {
 					fieldset.removeClass('switched');
 					MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
-					legend.trigger('opened.myams.switcher', [legend]);
+					legend.trigger('opened.ams.switcher', [legend]);
 					const id = legend.attr('id');
 					if (id) {
 						$(`legend.swicther[data-ams-switcher-sync="${id}"]`, fieldset).each((idx, elt) => {
@@ -350,7 +350,7 @@ function switcher(element) {
 				} else {
 					fieldset.addClass('switched');
 					MyAMS.core.switchIcon($('i', legend), minusClass, plusClass);
-					legend.trigger('closed.myams.switcher', [legend]);
+					legend.trigger('closed.ams.switcher', [legend]);
 				}
 			});
 			if (data.amsSwitcherState !== 'open') {

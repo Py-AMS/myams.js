@@ -282,15 +282,17 @@ export function initContent(element=null) {
 
 	const modules = getModules(element);
 	return MyAMS.require(...modules).then(() => {
-		element.trigger('before-init.myams.content');
-		MyAMS.registry.initElement(element).then(() => {
-			for (const moduleName of MyAMS.config.modules) {
-				executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
-			}
-		}).then(() => {
-			MyAMS.registry.run(element);
-			element.trigger('after-init.myams.content');
-		});
+		element.trigger('before-init.ams.content');
+		if (MyAMS.config.useRegistry) {
+			MyAMS.registry.initElement(element).then(() => {
+				for (const moduleName of MyAMS.config.modules) {
+					executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
+				}
+			}).then(() => {
+				MyAMS.registry.run(element);
+				element.trigger('after-init.ams.content');
+			});
+		}
 	});
 }
 
@@ -613,6 +615,7 @@ const
 		initPage: 'MyAMS.core.initPage',
 		initContent: 'MyAMS.core.initContent',
 		clearContent: 'MyAMS.core.clearContent',
+		useRegistry: true,
 		alertsContainerClass: 'toast-wrapper',
 		safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
 		csrfCookieName: 'csrf_token',
