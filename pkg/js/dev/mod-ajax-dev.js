@@ -160,7 +160,7 @@
           type: 'get',
           cache: false,
           data: $.param(params),
-          datatype: 'json',
+          dataType: 'json',
           beforeSend: checkCsrfHeader
         };
         var settings = $.extend({}, defaults, options);
