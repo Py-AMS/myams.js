@@ -232,6 +232,10 @@ test("Test MyAMS getFunctionByName()", () => {
 	expect(typeof(func)).toBe('function');
 	expect(getFunctionByName(func)).toBe(func);
 	expect(getFunctionByName()).toBe(undefined);
+	expect(getFunctionByName(1)).toBe(undefined);
+	expect(getFunctionByName(false)).toBe(undefined);
+	expect(getFunctionByName([])).toBe(undefined);
+	expect(getFunctionByName({})).toBe(undefined);
 	expect(getFunctionByName('MyAMS.env.missing')).toBe(undefined);
 	expect(getFunctionByName('MyAMS.missing.missing')).toBe(undefined);
 	expect(getFunctionByName('missing.missing.missing')).toBe(undefined);
