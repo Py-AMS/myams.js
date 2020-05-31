@@ -184,7 +184,7 @@ test("Test JQuery removeClassPrefix function", () => {
 });
 
 // Test MyAMS getModules
-test("Test MyAMS getModules()", () => {
+test("Test MyAMS getModules function", () => {
 
 	document.body.innerHTML = `<html>
 		<body>
@@ -207,7 +207,7 @@ test("Test MyAMS getModules()", () => {
 });
 
 // Test MyAMS getObject
-test("Test MyAMS getObject()", () => {
+test("Test MyAMS getObject function", () => {
 
 	const name1 = 'window.location.href',
 		  name2 = 'window.undefined',
@@ -224,7 +224,7 @@ test("Test MyAMS getObject()", () => {
 });
 
 // Test MyAMS getFunctionByName
-test("Test MyAMS getFunctionByName()", () => {
+test("Test MyAMS getFunctionByName function", () => {
 
 	const name = 'MyAMS.$.fn.removeClassPrefix',
 		  func = getFunctionByName(name);
@@ -243,7 +243,7 @@ test("Test MyAMS getFunctionByName()", () => {
 });
 
 // Test MyAMS executeFunctionByName
-test("Test MyAMS executeFunctionByName()", () => {
+test("Test MyAMS executeFunctionByName function", () => {
 
 	MyAMS.test = {
 		testFunction: function(arg1, arg2) {
@@ -263,7 +263,7 @@ test("Test MyAMS executeFunctionByName()", () => {
 });
 
 // Test MyAMS getSource
-test("Test MyAMS getSource()", () => {
+test("Test MyAMS getSource function", () => {
 
 	const url = getSource("http://example.com/{MyAMS.env.baseURL}myams_js/test{MyAMS.env.devext}.js");
 
@@ -272,7 +272,7 @@ test("Test MyAMS getSource()", () => {
 });
 
 // Test MyAMS getScript
-test("Test MyAMS getScript()", () => {
+test("Test MyAMS getScript function", () => {
 
 	const url = 'resources/test.js';
 	$.ajax = jest.fn().mockImplementation(() => {
@@ -284,7 +284,7 @@ test("Test MyAMS getScript()", () => {
 });
 
 // Test MyAMS getQueryVar
-test("Test MyAMS getQueryVar()", () => {
+test("Test MyAMS getQueryVar function", () => {
 
 	const url1 = null,
 		  url2 = '',
@@ -311,7 +311,7 @@ test("Test MyAMS getQueryVar()", () => {
 });
 
 // Test MyAMS generateId
-test("Test MyAMS generateId()", () => {
+test("Test MyAMS generateId function", () => {
 
 	const id = generateId();
 
@@ -321,7 +321,7 @@ test("Test MyAMS generateId()", () => {
 });
 
 // Test MyAMS generateUUID
-test("Test MyAMS generateUUID()", () => {
+test("Test MyAMS generateUUID function", () => {
 
 	const id = generateUUID();
 
@@ -332,7 +332,7 @@ test("Test MyAMS generateUUID()", () => {
 });
 
 // Test MyAMS switchIcon
-test("Test MyAMS switchIcon()", () => {
+test("Test MyAMS switchIcon function", () => {
 
 	const element = $('<i class="fa fa-open"></i>');
 	switchIcon(element, 'open', 'close');
@@ -341,7 +341,7 @@ test("Test MyAMS switchIcon()", () => {
 });
 
 // Test MyAMS initContent
-test("Test MyAMS initContent()", () => {
+test("Test MyAMS initContent function", () => {
 
 	document.body.innerHTML = `<div>
 		<div class="inner"></div>
@@ -364,7 +364,7 @@ test("Test MyAMS initContent()", () => {
 });
 
 // Test MyAMS clearContent
-test("Test MyAMS clearContent()", () => {
+test("Test MyAMS clearContent function", () => {
 
 	document.body.innerHTML = `<div>
 		<div class="inner"></div>
@@ -386,7 +386,7 @@ test("Test MyAMS clearContent()", () => {
 
 });
 
-test("Test MyAMS clearContent() veto", () => {
+test("Test MyAMS clearContent function veto", () => {
 
 	document.body.innerHTML = `<div>
 		<div class="inner"></div>
