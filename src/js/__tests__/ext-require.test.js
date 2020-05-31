@@ -29,7 +29,6 @@ test("Test MyAMS.require function (from string)", () => {
 		MyAMS.config.modules.push(moduleName);
 		return Promise.resolve();
 	});
-	debugger
 	return MyAMS.require('ajax').then(() => {
 		expect(MyAMS.ajax).toBeInstanceOf(Object);
 		expect(loaded).toBe(false);

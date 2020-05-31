@@ -112,7 +112,6 @@ test("Test MyAMS.registry.load from string definition", () => {
 	const body = $(document.body);
 
 	// Load registry
-	debugger
 	registry.initElement(body);
 	const plugin = registry.plugins.plugins.get('MyAMS_test');
 	expect(plugin).toBeInstanceOf(Object);
