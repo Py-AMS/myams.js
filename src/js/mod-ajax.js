@@ -121,7 +121,7 @@ export const ajax = {
 				type: 'get',
 				cache: false,
 				data: $.param(params),
-				datatype: 'json',
+				dataType: 'json',
 				beforeSend: checkCsrfHeader
 			};
 			const settings = $.extend({}, defaults, options);
