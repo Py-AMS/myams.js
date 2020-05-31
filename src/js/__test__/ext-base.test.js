@@ -13,13 +13,19 @@ import MyAMS, {
 	getObject,
 	getQueryVar,
 	getSource,
+	getModules,
+	getScript,
+	switchIcon,
 	init,
-	initPage
+	initPage,
+	clearContent, initContent
 } from '../ext-base';
 import myams_require from "../ext-require";
 
 
+// Initialize MyAMS
 init($);
+
 
 // Test String protoype functions
 test("Test String.camelCase function", () => {
@@ -177,6 +183,29 @@ test("Test JQuery removeClassPrefix function", () => {
 
 });
 
+// Test MyAMS getModules
+test("Test MyAMS getModules()", () => {
+
+	document.body.innerHTML = `<html>
+		<body>
+			<div class="inner" data-ams-modules="app">
+				<div class="other"
+					 data-ams-modules='{"other": "resources/js/script.js"}'>
+					 <p>This is just a paragraph.</p>
+				</div>
+			</div>
+		</body>
+	</html>`;
+	const body = $('body');
+	const modules = getModules(body);
+	expect($.isArray(modules)).toBe(true);
+	expect(modules.length).toBe(2);
+	expect(modules[0]).toBe('app');
+	expect(modules[1]).toBeInstanceOf(Object);
+	expect(modules[1].other).toBe('resources/js/script.js');
+
+});
+
 // Test MyAMS getObject
 test("Test MyAMS getObject()", () => {
 
@@ -238,6 +267,18 @@ test("Test MyAMS getSource()", () => {
 
 });
 
+// Test MyAMS getScript
+test("Test MyAMS getScript()", () => {
+
+	const url = 'resources/test.js';
+	$.ajax = jest.fn().mockImplementation(() => {
+		return Promise.resolve(url);
+	});
+	return getScript(url).then(result => {
+		expect(result).toBe(url);
+	})
+});
+
 // Test MyAMS getQueryVar
 test("Test MyAMS getQueryVar()", () => {
 
@@ -283,6 +324,84 @@ test("Test MyAMS generateUUID()", () => {
 	expect(typeof id).toBe('string');
 	expect(id.length).toBe(36);
 	expect(/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}/.test(id)).toBe(true);
+
+});
+
+// Test MyAMS switchIcon
+test("Test MyAMS switchIcon()", () => {
+
+	const element = $('<i class="fa fa-open"></i>');
+	switchIcon(element, 'open', 'close');
+	expect(element.hasClass('fa-close')).toBe(true);
+
+});
+
+// Test MyAMS initContent
+test("Test MyAMS initContent()", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"></div>
+	</div>`;
+	MyAMS.require = myams_require;
+	MyAMS.config.useRegistry = false;
+	let beforeInitEvent = false;
+	$(document).on('before-init.ams.content', (evt) => {
+		beforeInitEvent = true;
+	});
+	let afterInitEvent = false;
+	$(document).on('after-init.ams.content', (evt) => {
+		afterInitEvent = true;
+	});
+	const body = $(document.body);
+	return initContent(body).then(() => {
+		expect(beforeInitEvent).toBe(true);
+		expect(afterInitEvent).toBe(false);
+	});
+});
+
+// Test MyAMS clearContent
+test("Test MyAMS clearContent()", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"></div>
+	</div>`;
+	let clearEvent = false;
+	$(document).on('clear.ams.content', (evt, element, veto) => {
+		clearEvent = true;
+	});
+	let clearedEvent = false;
+	$(document).on('cleared.ams.content', (evt, element) => {
+		clearedEvent = true;
+	})
+	const body = $(document.body);
+	return clearContent(body).then((status) => {
+		expect(status).toBe(true);
+		expect(clearEvent).toBe(true);
+		expect(clearedEvent).toBe(true);
+	});
+
+});
+
+test("Test MyAMS clearContent() veto", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"></div>
+	</div>`;
+	let clearEvent = false;
+	$(document).on('clear.ams.content', (evt, element, veto) => {
+		veto.veto = true;
+		clearEvent = true;
+	});
+	let clearedEvent = false;
+	$(document).on('cleared.ams.content', (evt, element) => {
+		clearedEvent = true;
+	})
+	const body = $(document.body);
+	return clearContent(body).then((status) => {
+		expect(status).toBe(false);
+		expect(clearEvent).toBe(true);
+		expect(clearedEvent).toBe(false);
+	});
 
 });
 
