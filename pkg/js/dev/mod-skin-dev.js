@@ -204,7 +204,7 @@
               veto = {
             veto: false
           };
-          target.trigger('before-load.myams.content', [settings, veto]);
+          target.trigger('before-load.ams.content', [settings, veto]);
 
           if (veto.veto) {
             return;
@@ -243,7 +243,7 @@
                     }, 300);
                     MyAMS.core.executeFunctionByName(MyAMS.config.initContent, window, target).then(function () {
                       MyAMS.form && MyAMS.form.setFocus(target);
-                      target.trigger('after-load.myams.content');
+                      target.trigger('after-load.ams.content');
                       resolve(_result, status, xhr);
                     });
                 }

@@ -477,37 +477,47 @@ function initContent() {
   }
 
   element = $(element);
-  var modules = getModules(element);
-  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-    element.trigger('before-init.myams.content');
-    MyAMS.registry.initElement(element).then(function () {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
 
+  function initElementModules() {
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = MyAMS.config.modules[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var moduleName = _step3.value;
+        executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
       try {
-        for (var _iterator3 = MyAMS.config.modules[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var moduleName = _step3.value;
-          executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
+        if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+          _iterator3["return"]();
         }
-      } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-            _iterator3["return"]();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
+        if (_didIteratorError3) {
+          throw _iteratorError3;
         }
       }
-    }).then(function () {
-      MyAMS.registry.run(element);
-      element.trigger('after-init.myams.content');
-    });
+    }
+  }
+
+  var modules = getModules(element);
+  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
+    element.trigger('before-init.ams.content');
+
+    if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
+      MyAMS.registry.initElement(element).then(function () {
+        initElementModules();
+      }).then(function () {
+        MyAMS.registry.run(element);
+        element.trigger('after-init.ams.content');
+      });
+    } else {
+      initElementModules();
+    }
   });
 }
 /**
@@ -870,6 +880,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   initPage: 'MyAMS.core.initPage',
   initContent: 'MyAMS.core.initContent',
   clearContent: 'MyAMS.core.clearContent',
+  useRegistry: true,
   alertsContainerClass: 'toast-wrapper',
   safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
   csrfCookieName: 'csrf_token',

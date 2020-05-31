@@ -563,7 +563,7 @@
       $.extend(postData, callback(form, settings, button, postData, options, veto));
     }
 
-    form.trigger('init-data.myams.form', [postData, veto]);
+    form.trigger('init-data.ams.form', [postData, veto]);
   } // get form target
 
 
@@ -610,7 +610,7 @@
         var veto = {
           veto: false
         };
-        form.trigger('before-serialize.myams.form', [veto]);
+        form.trigger('before-serialize.ams.form', [veto]);
 
         if (veto.veto) {
           return false;
@@ -624,7 +624,7 @@
         var veto = {
           veto: false
         };
-        form.trigger('before-submit.myams.form', [data, veto]);
+        form.trigger('before-submit.ams.form', [data, veto]);
 
         if (veto.veto) {
           return false;
@@ -642,13 +642,13 @@
         $('.progress', button).css('background-image', "linear-gradient(to right, white -45%, green ".concat(completed, "%, red ").concat(completed, "%, red)"));
       },
       complete: function complete(xhr) {
-        form.trigger('complete.myams.form', [xhr]);
+        form.trigger('complete.ams.form', [xhr]);
       },
       success: function success(result, status, request, form) {
         var veto = {
           veto: false
         };
-        form.trigger('submit-success.myams.form', [result, status, request, veto]);
+        form.trigger('submit-success.ams.form', [result, status, request, veto]);
 
         if (veto.veto) {
           return;
@@ -668,7 +668,7 @@
         }
       },
       error: function error(request, status, _error, form) {
-        form.trigger('submit-error.myams.form', [request, status, _error, target]);
+        form.trigger('submit-error.ams.form', [request, status, _error, target]);
 
         if (target) {
           settings.resetAfterError(form, settings, button, target);
@@ -801,7 +801,7 @@
       MyAMS.core.executeFunctionByName(callback, document, form, settings, options, result, status, request);
     }
 
-    form.trigger('after-submit.myams.form', [result]);
+    form.trigger('after-submit.ams.form', [result]);
   }
   /**
    * Reset AJAX form after submit
@@ -817,7 +817,7 @@
       settings.resetSubmitButton(form, settings, button);
       form.data('submitted', false);
       form.removeData('ams-submit-button');
-      form.trigger('after-reset.myams.form');
+      form.trigger('after-reset.ams.form');
     }
   }
   /**

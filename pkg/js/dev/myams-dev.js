@@ -22249,37 +22249,47 @@ function initContent() {
   }
 
   element = $(element);
-  var modules = getModules(element);
-  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-    element.trigger('before-init.myams.content');
-    MyAMS.registry.initElement(element).then(function () {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
 
+  function initElementModules() {
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = MyAMS.config.modules[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var moduleName = _step3.value;
+        executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
       try {
-        for (var _iterator3 = MyAMS.config.modules[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var moduleName = _step3.value;
-          executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
+        if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+          _iterator3["return"]();
         }
-      } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-            _iterator3["return"]();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
+        if (_didIteratorError3) {
+          throw _iteratorError3;
         }
       }
-    }).then(function () {
-      MyAMS.registry.run(element);
-      element.trigger('after-init.myams.content');
-    });
+    }
+  }
+
+  var modules = getModules(element);
+  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
+    element.trigger('before-init.ams.content');
+
+    if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
+      MyAMS.registry.initElement(element).then(function () {
+        initElementModules();
+      }).then(function () {
+        MyAMS.registry.run(element);
+        element.trigger('after-init.ams.content');
+      });
+    } else {
+      initElementModules();
+    }
   });
 }
 /**
@@ -22642,6 +22652,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   initPage: 'MyAMS.core.initPage',
   initContent: 'MyAMS.core.initContent',
   clearContent: 'MyAMS.core.clearContent',
+  useRegistry: true,
   alertsContainerClass: 'toast-wrapper',
   safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
   csrfCookieName: 'csrf_token',
@@ -25323,7 +25334,7 @@ function initFormData(form, settings, button, postData, options, veto) {
     $.extend(postData, callback(form, settings, button, postData, options, veto));
   }
 
-  form.trigger('init-data.myams.form', [postData, veto]);
+  form.trigger('init-data.ams.form', [postData, veto]);
 } // get form target
 
 
@@ -25370,7 +25381,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
       var veto = {
         veto: false
       };
-      form.trigger('before-serialize.myams.form', [veto]);
+      form.trigger('before-serialize.ams.form', [veto]);
 
       if (veto.veto) {
         return false;
@@ -25384,7 +25395,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
       var veto = {
         veto: false
       };
-      form.trigger('before-submit.myams.form', [data, veto]);
+      form.trigger('before-submit.ams.form', [data, veto]);
 
       if (veto.veto) {
         return false;
@@ -25402,13 +25413,13 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
       $('.progress', button).css('background-image', "linear-gradient(to right, white -45%, green ".concat(completed, "%, red ").concat(completed, "%, red)"));
     },
     complete: function complete(xhr) {
-      form.trigger('complete.myams.form', [xhr]);
+      form.trigger('complete.ams.form', [xhr]);
     },
     success: function success(result, status, request, form) {
       var veto = {
         veto: false
       };
-      form.trigger('submit-success.myams.form', [result, status, request, veto]);
+      form.trigger('submit-success.ams.form', [result, status, request, veto]);
 
       if (veto.veto) {
         return;
@@ -25428,7 +25439,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
       }
     },
     error: function error(request, status, _error, form) {
-      form.trigger('submit-error.myams.form', [request, status, _error, target]);
+      form.trigger('submit-error.ams.form', [request, status, _error, target]);
 
       if (target) {
         settings.resetAfterError(form, settings, button, target);
@@ -25561,7 +25572,7 @@ function formSubmitCallback(form, settings, target, result, status, request) {
     MyAMS.core.executeFunctionByName(callback, document, form, settings, options, result, status, request);
   }
 
-  form.trigger('after-submit.myams.form', [result]);
+  form.trigger('after-submit.ams.form', [result]);
 }
 /**
  * Reset AJAX form after submit
@@ -25577,7 +25588,7 @@ function resetFormAfterSubmit(form, settings, button) {
     settings.resetSubmitButton(form, settings, button);
     form.data('submitted', false);
     form.removeData('ams-submit-button');
-    form.trigger('after-reset.myams.form');
+    form.trigger('after-reset.ams.form');
   }
 }
 /**
@@ -27306,7 +27317,7 @@ function checker(element) {
             veto = {
           veto: false
         };
-        legend.trigger('before-switch.myams.checker', [legend, veto]);
+        legend.trigger('before-switch.ams.checker', [legend, veto]);
 
         if (veto.veto) {
           input.prop('checked', !checked);
@@ -27324,13 +27335,13 @@ function checker(element) {
 
               _prefix.val(checkedValue);
 
-              legend.trigger('opened.myams.checker', [legend]);
+              legend.trigger('opened.ams.checker', [legend]);
             } else {
               fieldset.addClass('switched');
 
               _prefix.val(uncheckedValue);
 
-              legend.trigger('closed.myams.checker', [legend]);
+              legend.trigger('closed.ams.checker', [legend]);
             }
           } else {
             fieldset.prop('disabled', !checked);
@@ -27548,7 +27559,7 @@ function switcher(element) {
       legend.on('click', function (evt) {
         evt.preventDefault();
         var veto = {};
-        legend.trigger('before-switch.myams.switcher', [legend, veto]);
+        legend.trigger('before-switch.ams.switcher', [legend, veto]);
 
         if (veto.veto) {
           return;
@@ -27557,7 +27568,7 @@ function switcher(element) {
         if (fieldset.hasClass('switched')) {
           fieldset.removeClass('switched');
           MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
-          legend.trigger('opened.myams.switcher', [legend]);
+          legend.trigger('opened.ams.switcher', [legend]);
           var id = legend.attr('id');
 
           if (id) {
@@ -27572,7 +27583,7 @@ function switcher(element) {
         } else {
           fieldset.addClass('switched');
           MyAMS.core.switchIcon($('i', legend), minusClass, plusClass);
-          legend.trigger('closed.myams.switcher', [legend]);
+          legend.trigger('closed.ams.switcher', [legend]);
         }
       });
 
@@ -27902,7 +27913,7 @@ var skin = {
             veto = {
           veto: false
         };
-        target.trigger('before-load.myams.content', [settings, veto]);
+        target.trigger('before-load.ams.content', [settings, veto]);
 
         if (veto.veto) {
           return;
@@ -27941,7 +27952,7 @@ var skin = {
                   }, 300);
                   MyAMS.core.executeFunctionByName(MyAMS.config.initContent, window, target).then(function () {
                     MyAMS.form && MyAMS.form.setFocus(target);
-                    target.trigger('after-load.myams.content');
+                    target.trigger('after-load.ams.content');
                     resolve(_result, status, xhr);
                   });
               }

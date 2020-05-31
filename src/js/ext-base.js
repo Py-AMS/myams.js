@@ -280,18 +280,24 @@ export function initContent(element=null) {
 	}
 	element = $(element);
 
+	function initElementModules() {
+		for (const moduleName of MyAMS.config.modules) {
+			executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
+		}
+	}
+
 	const modules = getModules(element);
 	return MyAMS.require(...modules).then(() => {
 		element.trigger('before-init.ams.content');
-		if (MyAMS.config.useRegistry) {
+		if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
 			MyAMS.registry.initElement(element).then(() => {
-				for (const moduleName of MyAMS.config.modules) {
-					executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
-				}
+				initElementModules();
 			}).then(() => {
 				MyAMS.registry.run(element);
 				element.trigger('after-init.ams.content');
 			});
+		} else {
+			initElementModules();
 		}
 	});
 }
