@@ -24597,136 +24597,144 @@ var error = {
    * @param errors: errors properties
    */
   showErrors: function showErrors(parent, errors) {
-    if (typeof errors === 'string') {
-      // simple error message
-      MyAMS.require('i18n', 'alert').then(function () {
-        MyAMS.alert.alert({
-          parent: parent,
-          status: 'danger',
-          header: MyAMS.i18n.ERROR_OCCURED,
-          message: errors
+    return new Promise(function (resolve, reject) {
+      if (typeof errors === 'string') {
+        // simple error message
+        MyAMS.require('i18n', 'alert').then(function () {
+          MyAMS.alert.alert({
+            parent: parent,
+            status: 'danger',
+            header: MyAMS.i18n.ERROR_OCCURED,
+            message: errors
+          });
+        }).then(function () {
+          resolve();
         });
-      });
-    } else if ($.isArray(errors)) {
-      // array of messages
-      MyAMS.require('i18n', 'alert').then(function () {
-        MyAMS.alert.alert({
-          parent: parent,
-          status: 'danger',
-          header: MyAMS.i18n.ERRORS_OCCURED,
-          message: errors
+      } else if ($.isArray(errors)) {
+        // array of messages
+        MyAMS.require('i18n', 'alert').then(function () {
+          MyAMS.alert.alert({
+            parent: parent,
+            status: 'danger',
+            header: MyAMS.i18n.ERRORS_OCCURED,
+            message: errors
+          });
+        }).then(function () {
+          resolve();
         });
-      });
-    } else {
-      // full errors with widgets
-      MyAMS.require('i18n', 'alert', 'form').then(function () {
-        // clear previous alerts
-        MyAMS.form.clearAlerts(parent); // create new alert
+      } else {
+        // full errors with widgets
+        MyAMS.require('i18n', 'alert', 'form').then(function () {
+          // clear previous alerts
+          MyAMS.form.clearAlerts(parent); // create new alert
 
-        var messages = [];
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+          var messages = [];
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
 
-        try {
-          for (var _iterator = (errors.messages || [])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var message = _step.value;
+          try {
+            for (var _iterator = (errors.messages || [])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var message = _step.value;
 
-            if (typeof message === 'string') {
+              if (typeof message === 'string') {
+                messages.push({
+                  header: null,
+                  message: message
+                });
+              } else {
+                messages.push(message);
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = (errors.widgets || [])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var widget = _step2.value;
               messages.push({
-                header: null,
-                message: message
+                header: widget.label,
+                message: widget.message
               });
-            } else {
-              messages.push(message);
             }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                _iterator2["return"]();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
-        }
 
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+          var header = errors.header || (messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
+              props = {
+            status: 'danger',
+            header: header,
+            message: errors.error || null,
+            messages: messages
+          };
+          $(ERROR_TEMPLATE.render(props)).prependTo(parent); // update status of invalid widgets
 
-        try {
-          for (var _iterator2 = (errors.widgets || [])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var widget = _step2.value;
-            messages.push({
-              header: widget.label,
-              message: widget.message
-            });
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
+
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
+            for (var _iterator3 = (errors.widgets || [])[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var _widget = _step3.value;
+              var input = void 0;
+
+              if (_widget.id) {
+                input = $("#".concat(_widget.id), parent);
+              } else {
+                input = $("[name=\"".concat(_widget.name, "\"]"), parent);
+              }
+
+              if (input.exists()) {
+                MyAMS.form.setInvalid(parent, input, _widget.message);
+              }
             }
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                _iterator3["return"]();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
+              }
             }
           }
-        }
-
-        var header = errors.header || (messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
-            props = {
-          status: 'danger',
-          header: header,
-          message: errors.error || null,
-          messages: messages
-        };
-        $(ERROR_TEMPLATE.render(props)).prependTo(parent); // update status of invalid widgets
-
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
-
-        try {
-          for (var _iterator3 = (errors.widgets || [])[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var _widget = _step3.value;
-            var input = void 0;
-
-            if (_widget.id) {
-              input = $("#".concat(_widget.id), parent);
-            } else {
-              input = $("[name=\"".concat(_widget.name, "\"]"), parent);
-            }
-
-            if (input.exists()) {
-              MyAMS.form.setInvalid(parent, input, _widget.message);
-            }
-          }
-        } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-              _iterator3["return"]();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
-          }
-        }
-      });
-    }
+        }).then(function () {
+          resolve();
+        });
+      }
+    });
   }
 };
 /**

@@ -56,70 +56,78 @@ export const error = {
 	 * @param errors: errors properties
 	 */
 	showErrors: (parent, errors) => {
-		if (typeof errors === 'string') {  // simple error message
-			MyAMS.require('i18n', 'alert').then(() => {
-				MyAMS.alert.alert({
-					parent: parent,
-					status: 'danger',
-					header: MyAMS.i18n.ERROR_OCCURED,
-					message: errors
-				});
-			});
-		} else if ($.isArray(errors)) {  // array of messages
-			MyAMS.require('i18n', 'alert').then(() => {
-				MyAMS.alert.alert({
-					parent: parent,
-					status: 'danger',
-					header: MyAMS.i18n.ERRORS_OCCURED,
-					message: errors
-				});
-			});
-		} else {  // full errors with widgets
-			MyAMS.require('i18n', 'alert', 'form').then(() => {
-				// clear previous alerts
-				MyAMS.form.clearAlerts(parent);
-				// create new alert
-				const messages= [];
-				for (const message of errors.messages || []) {
-					if (typeof message === 'string') {
-						messages.push({
-							header: null,
-							message: message
-						});
-					} else {
-						messages.push(message);
-					}
-				}
-				for (const widget of errors.widgets || []) {
-					messages.push({
-						header: widget.label,
-						message: widget.message
-					});
-				}
-				const
-					header = errors.header ||
-						(messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
-					props = {
+		return new Promise((resolve, reject) => {
+			if (typeof errors === 'string') {  // simple error message
+				MyAMS.require('i18n', 'alert').then(() => {
+					MyAMS.alert.alert({
+						parent: parent,
 						status: 'danger',
-						header: header,
-						message: errors.error || null,
-						messages: messages
-					};
-				$(ERROR_TEMPLATE.render(props)).prependTo(parent);
-				// update status of invalid widgets
-				for (const widget of errors.widgets || []) {
-					let input;
-					if (widget.id) {
-						input = $(`#${widget.id}`, parent);
-					} else {
-						input = $(`[name="${widget.name}"]`, parent);
+						header: MyAMS.i18n.ERROR_OCCURED,
+						message: errors
+					});
+				}).then(() => {
+					resolve();
+				});
+			} else if ($.isArray(errors)) {  // array of messages
+				MyAMS.require('i18n', 'alert').then(() => {
+					MyAMS.alert.alert({
+						parent: parent,
+						status: 'danger',
+						header: MyAMS.i18n.ERRORS_OCCURED,
+						message: errors
+					});
+				}).then(() => {
+					resolve();
+				});
+			} else {  // full errors with widgets
+				MyAMS.require('i18n', 'alert', 'form').then(() => {
+					// clear previous alerts
+					MyAMS.form.clearAlerts(parent);
+					// create new alert
+					const messages = [];
+					for (const message of errors.messages || []) {
+						if (typeof message === 'string') {
+							messages.push({
+								header: null,
+								message: message
+							});
+						} else {
+							messages.push(message);
+						}
 					}
-					if (input.exists()) {
-						MyAMS.form.setInvalid(parent, input, widget.message);
+					for (const widget of errors.widgets || []) {
+						messages.push({
+							header: widget.label,
+							message: widget.message
+						});
 					}
-				}
-			});
-		}
+					const
+						header = errors.header ||
+							(messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
+						props = {
+							status: 'danger',
+							header: header,
+							message: errors.error || null,
+							messages: messages
+						};
+					$(ERROR_TEMPLATE.render(props)).prependTo(parent);
+					// update status of invalid widgets
+					for (const widget of errors.widgets || []) {
+						let input;
+						if (widget.id) {
+							input = $(`#${widget.id}`, parent);
+						} else {
+							input = $(`[name="${widget.name}"]`, parent);
+						}
+						if (input.exists()) {
+							MyAMS.form.setInvalid(parent, input, widget.message);
+						}
+					}
+				}).then(() => {
+					resolve();
+				});
+			}
+		});
 	}
 };
 

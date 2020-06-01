@@ -5,11 +5,13 @@
 </section>
 
 <section id="showErrors">
-	<h2><code>MyAMS.error.showErrors(parent, errors)</code></h2>
+	<h2><code>MyAMS.error.showErrors(parent, errors): Promise&lt;&gt;</code></h2>
 	<p>This function is used to add an alert into given <code>parent</code> element.</p>
 	<p class="text-center">
 		<img src="resources/img/form-alert.png" alt="Form alert" />
 	</p>
+	<p>A this function relies on other modules, she returns a Promise which is resolved
+	when all missing modules have been checked and alerts included into DOM.</p>
 	<p>If <code>errors</code> is a simple string or an array of strings, there strings are
 	simply added to the alert (see <a href="#mod-alert.html!alert"><code>alert</code></a>
 	module).</p>
