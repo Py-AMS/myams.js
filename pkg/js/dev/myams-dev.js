@@ -24789,12 +24789,18 @@ var events = {
           handlers = element.data('ams-events-handlers');
 
       if (handlers) {
-        for (var _i = 0, _Object$entries = Object.entries(handlers); _i < _Object$entries.length; _i++) {
+        var _loop = function _loop() {
           var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
               event = _Object$entries$_i[0],
               handler = _Object$entries$_i[1];
 
-          element.on(event, element.data('ams-events-options') || {}, MyAMS.core.getFunctionByName(handler));
+          element.on(event, function (event) {
+            MyAMS.core.executeFunctionByName(handler, document, event, element.data('ams-events-options') || {});
+          });
+        };
+
+        for (var _i = 0, _Object$entries = Object.entries(handlers); _i < _Object$entries.length; _i++) {
+          _loop();
         }
       }
     });

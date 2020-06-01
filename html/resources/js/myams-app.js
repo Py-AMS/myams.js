@@ -47,6 +47,42 @@ const app = {
 		test1: (element) => {
 			$(element).css('border-color', 'red');
 		}
+	},
+
+	/**
+	 * Events handlers
+	 */
+	handlers: {
+
+		click: (event) => {
+			MyAMS.require('alert').then(() => {
+				MyAMS.alert.smallBox({
+					status: 'info',
+					icon: 'fa-info-circle',
+					message: `You clicked on a link with text « ${$(event.target).text()} »!`
+				});
+			});
+		},
+
+		clickWithSimpleOption: (event, value) => {
+			MyAMS.require('alert').then(() => {
+				MyAMS.alert.smallBox({
+					status: value || 'info',
+					icon: 'fa-info-circle',
+					message: `You clicked on a link with text « ${$(event.target).text()} »!`
+				});
+			});
+		},
+
+		clickWithObjectOptions: (event, options) => {
+			MyAMS.require('alert').then(() => {
+				MyAMS.alert.smallBox({
+					status: options.status || 'info',
+					icon: options.icon || 'fa-info-circle',
+					message: `You clicked on a link with text « ${$(event.target).text()} »!`
+				});
+			});
+		}
 	}
 }
 

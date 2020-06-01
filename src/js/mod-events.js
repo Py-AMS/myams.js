@@ -22,9 +22,10 @@ export const events = {
 				  handlers = element.data('ams-events-handlers');
 			if (handlers) {
 				for (const [event, handler] of Object.entries(handlers)) {
-					element.on(event,
-						element.data('ams-events-options') || {},
-						MyAMS.core.getFunctionByName(handler));
+					element.on(event, (event) => {
+						MyAMS.core.executeFunctionByName(handler, document, event,
+							element.data('ams-events-options') || {});
+					});
 				}
 			}
 		});

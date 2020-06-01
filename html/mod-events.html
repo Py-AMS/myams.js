@@ -1,0 +1,36 @@
+<h1>MyAMS "events" module</h1>
+<section>
+	<p>The <code>events</code> module allows to define custom handlers for any event which can
+	be triggered on a DOM element.</p>
+	<p>Configuration is done using <code>data-ams-events-handlers</code> attribute; the value
+	is a serialized JSON object containing the event name as key, and the handler name as
+	value.</p>
+	<p>You can provide arguments to these handlers using <code>data-ams-events-options</code>
+	attribute; these options can then be given as a simple string or as a serialized JSON
+	object. Please note however that if you declare several events handlers on a single
+	element, they will share the same options.</p>
+	<p>Here are three links which implement different options:</p>
+	<p data-ams-modules='{"app": "resources/js/myams-app.js"}'>
+		<a href="#"
+		   data-ams-events-handlers='{"click": "MyAMS.app.handlers.click"}'>Click event!</a> |
+		<a href="#"
+		   data-ams-events-handlers='{"click": "MyAMS.app.handlers.clickWithSimpleOption"}'
+		   data-ams-events-options="danger">Click with simple option!</a> |
+		<a href="#"
+		   data-ams-events-handlers='{"click": "MyAMS.app.handlers.clickWithObjectOptions"}'
+		   data-ams-events-options='{"status": "danger", "icon": "fa-cog"}'>Click with object!</a></p>
+	<pre>	&lt;a href="#"
+	   data-ams-events-handlers='{"click": "MyAMS.app.handlers.click"}'&gt;...&lt;/div&gt;
+</pre>
+	<pre>	&lt;a href="#"
+	   data-ams-events-handlers='{"click": "MyAMS.app.handlers.clickWithSimpleOption"}'
+	   data-ams-events-options="success"&gt;Click with simple option!&lt;/a&gt;
+</pre>
+	<pre>	&lt;a href="#"
+	   data-ams-events-handlers='{"click": "MyAMS.app.handlers.clickWithObjectOptions"}'
+	   data-ams-events-options='{"status": "danger", "icon": "fa-cog"}'&gt;Click with object!&lt;/a&gt;
+</pre>
+	<p>Please not that generic handlers are already available for basic events like
+	<code>click</code> or <code>change</code>; so it would probably be better to use their
+	lighter syntax here... (see <a href="#mod-handlers.html"><code>handlers</code> module</a>).</p>
+</section>
