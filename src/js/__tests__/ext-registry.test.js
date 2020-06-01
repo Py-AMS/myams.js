@@ -11,8 +11,11 @@ import myams_require from "../ext-require";
 
 
 init($);
-MyAMS.i18n = i18n;
-MyAMS.config.modules.push('i18n');
+
+if (!MyAMS.i18n) {
+	MyAMS.i18n = i18n;
+	MyAMS.config.modules.push('i18n');
+}
 MyAMS.require = myams_require;
 
 

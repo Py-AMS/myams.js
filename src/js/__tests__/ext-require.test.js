@@ -8,6 +8,7 @@ import myams_require from "../ext-require";
 
 
 init($);
+
 MyAMS.require = myams_require;
 
 

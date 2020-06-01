@@ -16,12 +16,18 @@ const bs = require("bootstrap");
 
 init($);
 
-MyAMS.i18n = i18n;
-MyAMS.config.modules.push('i18n');
-MyAMS.alert = alert;
-MyAMS.config.modules.push('alert');
-MyAMS.modal = modal;
-MyAMS.config.modules.push('modal');
+if (!MyAMS.i18n) {
+	MyAMS.i18n = i18n;
+	MyAMS.config.modules.push('i18n');
+}
+if (!MyAMS.alert) {
+	MyAMS.alert = alert;
+	MyAMS.config.modules.push('alert');
+}
+if (!MyAMS.modal) {
+	MyAMS.modal = modal;
+	MyAMS.config.modules.push('modal');
+}
 MyAMS.require = myams_require;
 
 
