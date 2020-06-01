@@ -27051,10 +27051,10 @@ var nav = {
    */
   drawBreadcrumbs: function drawBreadcrumbs() {
     var crumb = $('ol.breadcrumb', '#ribbon');
-    $('li', crumb).not('.parent').remove();
+    $('li', crumb).not('.persistent').remove();
 
     if (!$('li', crumb).exists()) {
-      var template = "<li class=\"breadcrumb-item\">\n\t\t\t\t\t<a class=\"p-r-1\" href=\"".concat($('a[href!="#"]:first', MyAMS.dom.nav).attr('href'), "\">").concat(MyAMS.i18n.HOME, "</a></li>");
+      var template = "<li class=\"breadcrumb-item\">\n\t\t\t\t\t<a class=\"p-r-1\" href=\"".concat($('a[href!="#"]:first', MyAMS.dom.nav).attr('href'), "\">\n\t\t\t\t\t\t").concat(MyAMS.i18n.HOME, "\n\t\t\t\t\t</a>\n\t\t\t\t</li>");
       crumb.append($(template));
     }
 

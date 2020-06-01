@@ -473,10 +473,13 @@ export const nav = {
 	 */
 	drawBreadcrumbs: () => {
 		const crumb = $('ol.breadcrumb', '#ribbon');
-		$('li', crumb).not('.parent').remove();
+		$('li', crumb).not('.persistent').remove();
 		if (!$('li', crumb).exists()) {
 			const template = `<li class="breadcrumb-item">
-					<a class="p-r-1" href="${$('a[href!="#"]:first', MyAMS.dom.nav).attr('href')}">${MyAMS.i18n.HOME}</a></li>`;
+					<a class="p-r-1" href="${$('a[href!="#"]:first', MyAMS.dom.nav).attr('href')}">
+						${MyAMS.i18n.HOME}
+					</a>
+				</li>`;
 			crumb.append($(template));
 		}
 		$('li.active >a', MyAMS.dom.nav).each((idx, elt) => {
