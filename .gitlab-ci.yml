@@ -27,19 +27,17 @@ test:
     image: node:12.17.0
     stage: test
     script:
-        - mkdir ./coverage
         - npm install --no-audit
+        - apt update && apt install -y python3-pip
+        - pip3 install anybadge
+        - mkdir ./coverage
         - (npm run coverage | tee coverage/coverage.log) || true
-        - apt update && apt install -y python-pip
-        - pip install anybadge
         - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
-        - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
         - echo "Global tests coverage is $GLOBAL_COVER %"
+        - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
     artifacts:
         paths:
-            - ./node_modules/
             - ./coverage/
-    coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 dist:
     stage: dist
