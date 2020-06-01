@@ -27,8 +27,9 @@ test:
     image: node:12.17.0
     stage: test
     script:
+        - mkdir ./coverage
         - npm install --no-audit
-        - npm run coverage | tee coverage/coverage.log
+        - (npm run coverage | tee coverage/coverage.log) || true
         - apt install python3-pip
         - pip install anybadge
         - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
