@@ -456,7 +456,6 @@ test("Test MyAMS clearContent function from string", () => {
 	$(document).on('cleared.ams.content', (evt, element) => {
 		clearedEvent = true;
 	});
-	debugger;
 	return clearContent('.body').then((status) => {
 		expect(status).toBe(true);
 		expect(clearEvent).toBe(true);

@@ -1615,7 +1615,7 @@ function myams_require() {
 
       resolve();
     }, function () {
-      reject("Can't load requested modules!");
+      reject("Can't load requested modules (".concat(names, ")!"));
     });
   });
 }

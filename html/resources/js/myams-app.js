@@ -44,8 +44,8 @@ const app = {
 	 */
 	callbacks: {
 
-		test1: function() {
-			$(this).css('border-color', 'red');
+		test1: (element) => {
+			$(element).css('border-color', 'red');
 		}
 	}
 }

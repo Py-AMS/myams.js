@@ -32,89 +32,93 @@
       _initialized = true;
     },
     initElement: function initElement(element) {
-      $('[data-ams-callback]', element).each(function (idx, elt) {
-        var data = $(elt).data();
-        var callbacks = data.amsCallback;
+      return new Promise(function (resolve, reject) {
+        var deferred = [];
+        $('[data-ams-callback]', element).each(function (idx, elt) {
+          var data = $(elt).data();
+          var callbacks = data.amsCallback;
 
-        if (typeof callbacks === 'string') {
-          try {
-            callbacks = JSON.parse(data.amsCallback);
-          } catch (e) {
-            callbacks = data.amsCallback.split(/[\s,;]+/);
-          }
-        }
-
-        if (!$.isArray(callbacks)) {
-          callbacks = [callbacks];
-        }
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          var _loop = function _loop() {
-            var callback = _step.value;
-            var callname = void 0,
-                callable = void 0,
-                source = void 0,
-                options = void 0;
-
-            if (typeof callback === 'string') {
-              callname = callback;
-              callable = MyAMS.core.getFunctionByName(callname);
-              source = data.amsCallbackOptions;
-              options = data.amsCallbackOptions;
-
-              if (typeof options === 'string') {
-                options = options.unserialize();
-              }
-            } else {
-              // JSON object
-              callname = callback.callback;
-              callable = MyAMS.core.getFunctionByName(callname);
-              source = callback.source;
-              options = callback.options;
+          if (typeof callbacks === 'string') {
+            try {
+              callbacks = JSON.parse(data.amsCallback);
+            } catch (e) {
+              callbacks = data.amsCallback.split(/[\s,;]+/);
             }
+          }
 
-            if (typeof callable === 'undefined') {
-              if (source) {
-                MyAMS.core.getScript(source).then(function () {
-                  callable = MyAMS.core.getFunctionByName(callname);
+          if (!$.isArray(callbacks)) {
+            callbacks = [callbacks];
+          }
 
-                  if (typeof callable === 'undefined') {
-                    console.warn("Missing callback ".concat(callname, "!"));
-                  } else {
-                    callable.call(elt, options);
-                  }
-                });
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            var _loop = function _loop() {
+              var callback = _step.value;
+              var callname = void 0,
+                  callable = void 0,
+                  source = void 0,
+                  options = void 0;
+
+              if (typeof callback === 'string') {
+                callname = callback;
+                callable = MyAMS.core.getFunctionByName(callname);
+                source = data.amsCallbackOptions;
+                options = data.amsCallbackOptions;
+
+                if (typeof options === 'string') {
+                  options = options.unserialize();
+                }
               } else {
-                console.warn("Missing source for undefined callback ".concat(callback, "!"));
+                // JSON object
+                callname = callback.callback;
+                callable = MyAMS.core.getFunctionByName(callname);
+                source = callback.source;
+                options = callback.options;
               }
-            } else {
-              Promise.resolve().then(function () {
-                callable.call(elt, options);
-              });
-            }
-          };
 
-          for (var _iterator = callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            _loop();
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
+              if (typeof callable === 'undefined') {
+                if (source) {
+                  deferred.push(MyAMS.core.getScript(source).then(function () {
+                    callable = MyAMS.core.getFunctionByName(callname);
+
+                    if (typeof callable === 'undefined') {
+                      console.warn("Missing callback ".concat(callname, "!"));
+                    } else {
+                      callable.call(document, elt, options);
+                    }
+                  }));
+                } else {
+                  console.warn("Missing source for undefined callback ".concat(callback, "!"));
+                }
+              } else {
+                deferred.push(Promise.resolve(callable.call(document, elt, options)));
+              }
+            };
+
+            for (var _iterator = callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              _loop();
             }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
           } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
+            try {
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
             }
           }
-        }
+        });
+        $.when.apply($, deferred).then(function () {
+          resolve();
+        });
       });
     }
   };

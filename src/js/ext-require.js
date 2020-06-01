@@ -66,7 +66,7 @@ export default function myams_require(...modules) {
 				}
 				resolve();
 			}, () => {
-				reject("Can't load requested modules!");
+				reject(`Can't load requested modules (${names})!`);
 			});
 	});
 }
