@@ -156,7 +156,7 @@ test("Test MyAMS.registry.load from object definition", () => {
 
 test("Test MyAMS.registry.load from array definition", () => {
 
-	MyAMS.pluginCall = (element, context) => {
+	MyAMS.pluginCall = (element) => {
 		$('.inner', element).addClass('modified');
 	};
 
@@ -180,4 +180,44 @@ test("Test MyAMS.registry.load from array definition", () => {
 	// cleanup
 	registry.plugins.plugins.delete(plugin.name);
 	delete MyAMS.pluginCall;
+});
+
+test("Test MyAMS.registry async plug-ins", () => {
+
+	const output = [];
+
+	MyAMS.asyncCall = (element) => {
+		output.push("Async callback");
+	};
+	MyAMS.syncCall = (element) => {
+		output.push("Sync callback");
+	};
+
+	document.body.innerHTML = `<body>
+		<div data-ams-plugins='[
+			{"name": "MyAMS_sync", "callback": "MyAMS.syncCall", "async": "false"},
+			{"name": "MyAMS_async", "callback": "MyAMS.asyncCall"}
+		]'></div>
+	</body>`;
+	const body = $(document.body);
+
+	// Load registry
+	registry.initElement(body);
+	const syncPlugin = registry.plugins.plugins.get('MyAMS_sync');
+	expect(syncPlugin).toBeInstanceOf(Object);
+	expect(syncPlugin.name).toBe('MyAMS_sync');
+	const asyncPlugin = registry.plugins.plugins.get('MyAMS_async');
+	expect(asyncPlugin).toBeInstanceOf(Object);
+	expect(asyncPlugin.name).toBe('MyAMS_async');
+
+	// Run registry
+	registry.run(body);
+	expect(output.length).toBe(2);
+
+	// cleanup
+	registry.plugins.plugins.delete(syncPlugin.name);
+	registry.plugins.plugins.delete(asyncPlugin.name);
+	delete MyAMS.syncCall;
+	delete MyAMS.asyncCall;
+
 });
