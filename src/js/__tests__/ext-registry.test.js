@@ -6,9 +6,15 @@ import $ from "jquery";
 import MyAMS, {init} from "../ext-base";
 
 import { registry } from "../ext-registry";
+import { i18n } from "../mod-i18n";
+import myams_require from "../ext-require";
 
 
 init($);
+MyAMS.i18n = i18n;
+MyAMS.config.modules.push('i18n');
+MyAMS.require = myams_require;
+
 
 // Test MyAMS.registry.initData
 test("Test MyAMS.registry.initData function", () => {
@@ -154,6 +160,76 @@ test("Test MyAMS.registry.load from object definition", () => {
 	delete MyAMS.pluginCall;
 });
 
+test("Test MyAMS.registry.load from object definition with source", () => {
+
+	const oldAjax = $.ajax;
+	$.ajax = jest.fn().mockImplementation((settings) => {
+		MyAMS.pluginCall = (element, context) => {
+			$('.inner', element).addClass('modified');
+		};
+		return Promise.resolve();
+	});
+
+	document.body.innerHTML = `<div>
+		<div data-ams-plugins='{
+			"name": "MyAMS_test",
+			"src": "resources/js/callback.js", 
+			"callback": "MyAMS.pluginCall"
+		}'>
+			<div class="inner"></div>
+		</div>
+	</div>`;
+	const body = $(document.body);
+
+	// Load registry
+	return registry.initElement(body).then(() => {
+		const plugin = registry.plugins.plugins.get('MyAMS_test');
+		expect(plugin).toBeInstanceOf(Object);
+		expect(plugin.name).toBe('MyAMS_test');
+
+		// Run registry
+		registry.run(body);
+		expect($('.inner', body).hasClass('modified')).toBe(true);
+
+		// cleanup
+		registry.plugins.plugins.delete(plugin.name);
+		delete MyAMS.pluginCall;
+	});
+});
+
+test("Test MyAMS.registry.load multiple objects definitions", () => {
+
+	MyAMS.pluginCall = (element, context) => {
+		$('.inner', element).addClass('modified');
+	};
+
+	document.body.innerHTML = `<div>
+		<div data-ams-plugins='{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"}'>
+			<div class="inner"></div>
+		</div>
+		<div data-ams-plugins='{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"}'>
+			<div class="inner"></div>
+		</div>
+	</div>`;
+	const body = $(document.body);
+
+	// Load registry
+	registry.initElement(body);
+	const plugin = registry.plugins.plugins.get('MyAMS_test');
+	expect(plugin).toBeInstanceOf(Object);
+	expect(plugin.name).toBe('MyAMS_test');
+	expect(plugin.callbacks.length).toBe(2);
+
+	// Run registry
+	registry.run(body);
+	expect($('.inner', body).first().hasClass('modified')).toBe(true);
+	expect($('.inner', body).last().hasClass('modified')).toBe(true);
+
+	// cleanup
+	registry.plugins.plugins.delete(plugin.name);
+	delete MyAMS.pluginCall;
+});
+
 test("Test MyAMS.registry.load from array definition", () => {
 
 	MyAMS.pluginCall = (element) => {
@@ -162,6 +238,37 @@ test("Test MyAMS.registry.load from array definition", () => {
 
 	document.body.innerHTML = `<div>
 		<div data-ams-plugins='[{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"}]'>
+			<div class="inner"></div>
+		</div>
+	</div>`;
+	const body = $(document.body);
+
+	// Load registry
+	registry.initElement(body);
+	const plugin = registry.plugins.plugins.get('MyAMS_test');
+	expect(plugin).toBeInstanceOf(Object);
+	expect(plugin.name).toBe('MyAMS_test');
+
+	// Run registry
+	registry.run(body);
+	expect($('.inner', body).hasClass('modified')).toBe(true);
+
+	// cleanup
+	registry.plugins.plugins.delete(plugin.name);
+	delete MyAMS.pluginCall;
+});
+
+test("Test MyAMS.registry.load from array definition with same context", () => {
+
+	MyAMS.pluginCall = (element) => {
+		$('.inner', element).addClass('modified');
+	};
+
+	document.body.innerHTML = `<div>
+		<div data-ams-plugins='[
+			{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"},
+			{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"}
+		]'>
 			<div class="inner"></div>
 		</div>
 	</div>`;
@@ -219,5 +326,75 @@ test("Test MyAMS.registry async plug-ins", () => {
 	registry.plugins.plugins.delete(asyncPlugin.name);
 	delete MyAMS.syncCall;
 	delete MyAMS.asyncCall;
+
+});
+
+test("Test MyAMS.registry.load with disabled plug-ins", () => {
+
+	MyAMS.pluginCall = (element, context) => {
+		$('.inner', element).addClass('modified');
+	};
+
+	document.body.innerHTML = `<div>
+		<div data-ams-plugins='{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"}'
+			 data-ams-plugins-disabled="MyAMS_test">
+			<div class="inner"></div>
+		</div>
+	</div>`;
+	const body = $(document.body);
+
+	// Load registry
+	registry.initElement(body);
+	const plugin = registry.plugins.plugins.get('MyAMS_test');
+	expect(plugin).toBeInstanceOf(Object);
+	expect(plugin.name).toBe('MyAMS_test');
+
+	// Run registry
+	registry.run(body);
+	expect($('.inner', body).hasClass('modified')).toBe(false);
+
+	// cleanup
+	registry.plugins.plugins.delete(plugin.name);
+	delete MyAMS.pluginCall;
+});
+
+test("Test MyAMS.registry.run with selected plug-ins", () => {
+
+	MyAMS.pluginCall = (element, context) => {
+		$('.inner', element).addClass('modified');
+	};
+	MyAMS.disabledCall = (element, context) => {
+		$('.inner', element).addClass('notcalled');
+	};
+
+	document.body.innerHTML = `<div>
+		<div data-ams-plugins='[
+			{"name": "MyAMS_test", "callback": "MyAMS.pluginCall"},
+			{"name": "MyAMS_disabled", "callback": "MyAMS.disabledCall"}
+		]'>
+			<div class="inner"></div>
+		</div>
+	</div>`;
+	const body = $(document.body);
+
+	// Load registry
+	registry.initElement(body);
+	const plugin = registry.plugins.plugins.get('MyAMS_test');
+	expect(plugin).toBeInstanceOf(Object);
+	expect(plugin.name).toBe('MyAMS_test');
+	const disabled = registry.plugins.plugins.get('MyAMS_disabled');
+	expect(disabled).toBeInstanceOf(Object);
+	expect(disabled.name).toBe('MyAMS_disabled');
+
+	// Run registry
+	registry.run(body, ['MyAMS_test']);
+	expect($('.inner', body).hasClass('modified')).toBe(true);
+	expect($('.inner', body).hasClass('notcalled')).toBe(false);
+
+	// cleanup
+	registry.plugins.plugins.delete(plugin.name);
+	registry.plugins.plugins.delete(disabled.name);
+	delete MyAMS.pluginCall;
+	delete MyAMS.disabledCall;
 
 });

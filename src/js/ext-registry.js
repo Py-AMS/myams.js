@@ -20,15 +20,6 @@
 class Plugin {
 
 	constructor(name, props={}, loaded=false) {
-		if (typeof name === 'object') {
-			props = name;
-			loaded = props;
-			if (props.hasOwnProperty('name')) {
-				name = props.name;
-			} else {
-				throw new Error("Missing plug-in name!");
-			}
-		}
 		// plug-in name
 		this.name = name;
 		// plug-in source URL
@@ -47,13 +38,6 @@ class Plugin {
 		this.async = props.async === undefined ? true : props.async;
 		// loaded flag
 		this.loaded = loaded;
-	}
-
-	/**
-	 * Extend properties of already registered plug-in
- 	 */
-	extend(props) {
-		return $.extend(this, props);
 	}
 
 	/**
@@ -109,14 +93,13 @@ class PluginsRegistry {
 	/**
 	 * Register new plug-in
 	 *
-	 * @param plugin: plugin function caller, or object containing plug-in properties
+	 * @param props: plugin function caller, or object containing plug-in properties
 	 * @param name: plug-in unique name
-	 * @param callback: callback function which can be called after plug-in registration
 	 */
-	register(plugin, name) {
+	register(props, name) {
 		// check arguments
-		if (!name && plugin.hasOwnProperty('name')) {
-			name = plugin.name;
+		if (!name && props.hasOwnProperty('name')) {
+			name = props.name;
 		}
 		// check for already registered plug-in
 		const plugins = this.plugins;
@@ -124,18 +107,32 @@ class PluginsRegistry {
 			if (window.console) {
 				console.debug && console.debug(`Plug-in ${name} is already registered!`);
 			}
-			return plugins.get(name);
+			const plugin = plugins.get(name);
+			let addContext = true;
+			for (const callback of plugin.callbacks) {
+				if ((callback.callback === props.callback) && (callback.context === props.context)) {
+					addContext = false;
+					break;
+				}
+			}
+			if (addContext) {
+				plugin.callbacks.push({
+					callback: props.callback,
+					context: props.context || 'body'
+				});
+			}
+			return plugin;
 		}
 		// register new plug-in
-		if (typeof plugin === 'string') {  // callable name
-			plugin = MyAMS.core.getFunctionByName(plugin);
+		if (typeof props === 'string') {  // callable name
+			props = MyAMS.core.getFunctionByName(props);
 		}
-		if (typeof plugin === 'function') {  // callable object
+		if (typeof props === 'function') {  // callable object
 			plugins.set(name, new Plugin(name, {
-				callback: plugin
+				callback: props
 			}, true));
-		} else if (typeof plugin === 'object') {  // plug-in properties object
-			plugins.set(name, new Plugin(name, plugin, !Boolean(plugin.src)));
+		} else if (typeof props === 'object') {  // plug-in properties object
+			plugins.set(name, new Plugin(name, props, !Boolean(props.src)));
 		}
 		// check callback
 		return plugins.get(name);

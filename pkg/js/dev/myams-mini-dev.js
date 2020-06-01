@@ -3909,18 +3909,7 @@ function () {
 
     _classCallCheck(this, Plugin);
 
-    if (_typeof(name) === 'object') {
-      props = name;
-      loaded = props;
-
-      if (props.hasOwnProperty('name')) {
-        name = props.name;
-      } else {
-        throw new Error("Missing plug-in name!");
-      }
-    } // plug-in name
-
-
+    // plug-in name
     this.name = name; // plug-in source URL
 
     this.src = props.src; // plug-in associated CSS
@@ -3942,22 +3931,13 @@ function () {
     this.loaded = loaded;
   }
   /**
-   * Extend properties of already registered plug-in
-  	 */
+   * Load plug-in from remote script
+   *
+   * @returns {Promise<void>|*}
+   */
 
 
   _createClass(Plugin, [{
-    key: "extend",
-    value: function extend(props) {
-      return $.extend(this, props);
-    }
-    /**
-     * Load plug-in from remote script
-     *
-     * @returns {Promise<void>|*}
-     */
-
-  }, {
     key: "load",
     value: function load() {
       var _this = this;
@@ -4040,18 +4020,17 @@ function () {
   /**
    * Register new plug-in
    *
-   * @param plugin: plugin function caller, or object containing plug-in properties
+   * @param props: plugin function caller, or object containing plug-in properties
    * @param name: plug-in unique name
-   * @param callback: callback function which can be called after plug-in registration
    */
 
 
   _createClass(PluginsRegistry, [{
     key: "register",
-    value: function register(plugin, name) {
+    value: function register(props, name) {
       // check arguments
-      if (!name && plugin.hasOwnProperty('name')) {
-        name = plugin.name;
+      if (!name && props.hasOwnProperty('name')) {
+        name = props.name;
       } // check for already registered plug-in
 
 
@@ -4062,23 +4041,60 @@ function () {
           console.debug && console.debug("Plug-in ".concat(name, " is already registered!"));
         }
 
-        return plugins.get(name);
+        var plugin = plugins.get(name);
+        var addContext = true;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = plugin.callbacks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var callback = _step2.value;
+
+            if (callback.callback === props.callback && callback.context === props.context) {
+              addContext = false;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        if (addContext) {
+          plugin.callbacks.push({
+            callback: props.callback,
+            context: props.context || 'body'
+          });
+        }
+
+        return plugin;
       } // register new plug-in
 
 
-      if (typeof plugin === 'string') {
+      if (typeof props === 'string') {
         // callable name
-        plugin = MyAMS.core.getFunctionByName(plugin);
+        props = MyAMS.core.getFunctionByName(props);
       }
 
-      if (typeof plugin === 'function') {
+      if (typeof props === 'function') {
         // callable object
         plugins.set(name, new Plugin(name, {
-          callback: plugin
+          callback: props
         }, true));
-      } else if (_typeof(plugin) === 'object') {
+      } else if (_typeof(props) === 'object') {
         // plug-in properties object
-        plugins.set(name, new Plugin(name, plugin, !Boolean(plugin.src)));
+        plugins.set(name, new Plugin(name, props, !Boolean(props.src)));
       } // check callback
 
 
@@ -4104,13 +4120,13 @@ function () {
         var plugin, props;
 
         if (typeof names === 'string') {
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator2 = names.split(/[\s,;]+/)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var name = _step2.value;
+            for (var _iterator3 = names.split(/[\s,;]+/)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var name = _step3.value;
               var lowerName = name.toLowerCase();
               props = {
                 src: source.data("ams-plugin-".concat(lowerName, "-src")),
@@ -4130,28 +4146,28 @@ function () {
               }
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-                _iterator2["return"]();
+              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                _iterator3["return"]();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
         } else {
           // JSON plug-in declaration
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator3 = ($.isArray(names) ? names : [names])[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              props = _step3.value;
+            for (var _iterator4 = ($.isArray(names) ? names : [names])[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              props = _step4.value;
               $.extend(props, {
                 context: source
               });
@@ -4166,16 +4182,16 @@ function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-                _iterator3["return"]();
+              if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                _iterator4["return"]();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -4206,34 +4222,6 @@ function () {
       var disabled = new Set();
       $('[data-ams-plugins-disabled]', element).each(function (idx, elt) {
         var names = $(elt).data('ams-plugins-disabled').split(/[\s,;]+/);
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
-
-        try {
-          for (var _iterator4 = names[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var name = _step4.value;
-            disabled.add(name);
-          }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-              _iterator4["return"]();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
-        }
-      });
-      var plugins = this.plugins;
-
-      if (names) {
-        // only run given plug-ins, EVEN DISABLED ONES
         var _iteratorNormalCompletion5 = true;
         var _didIteratorError5 = false;
         var _iteratorError5 = undefined;
@@ -4241,10 +4229,7 @@ function () {
         try {
           for (var _iterator5 = names[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
             var name = _step5.value;
-
-            if (plugins.has(name)) {
-              plugins.get(name).run(element);
-            }
+            disabled.add(name);
           }
         } catch (err) {
           _didIteratorError5 = true;
@@ -4260,23 +4245,22 @@ function () {
             }
           }
         }
-      } else {
-        // run all plug-ins, except disabled ones
+      });
+      var plugins = this.plugins;
+
+      if (names) {
+        // only run given plug-ins, EVEN DISABLED ONES
         var _iteratorNormalCompletion6 = true;
         var _didIteratorError6 = false;
         var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator6 = plugins.entries()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var _step6$value = _slicedToArray(_step6.value, 2),
-                _name = _step6$value[0],
-                plugin = _step6$value[1];
+          for (var _iterator6 = names[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var name = _step6.value;
 
-            if (disabled.has(_name)) {
-              continue;
+            if (plugins.has(name)) {
+              plugins.get(name).run(element);
             }
-
-            plugin.run(element);
           }
         } catch (err) {
           _didIteratorError6 = true;
@@ -4289,6 +4273,38 @@ function () {
           } finally {
             if (_didIteratorError6) {
               throw _iteratorError6;
+            }
+          }
+        }
+      } else {
+        // run all plug-ins, except disabled ones
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = plugins.entries()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var _step7$value = _slicedToArray(_step7.value, 2),
+                _name = _step7$value[0],
+                plugin = _step7$value[1];
+
+            if (disabled.has(_name)) {
+              continue;
+            }
+
+            plugin.run(element);
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+              _iterator7["return"]();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
