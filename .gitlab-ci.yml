@@ -28,7 +28,12 @@ test:
     stage: test
     script:
         - npm install --no-audit
-        - npm run coverage || true
+        - npm run coverage | tee coverage/coverage.log
+        - apt install python3-pip
+        - pip install anybadge
+        - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
+        - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
+        - echo "Global tests coverage is $GLOBAL_COVER %"
     artifacts:
         paths:
             - ./node_modules/
