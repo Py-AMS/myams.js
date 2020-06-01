@@ -2,9 +2,12 @@
  * MyAMS alerts management
  */
 
-import 'jsrender';
-
 const $ = MyAMS.$;
+
+if (!$.templates) {
+	const jsrender = require('jsrender');
+	$.templates = jsrender.templates;
+}
 
 
 /**

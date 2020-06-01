@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "jsrender"], factory);
+    define(["exports"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("jsrender"));
+    factory(exports);
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.jsrender);
+    factory(mod.exports);
     global.modAlert = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _jsrender) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -22,9 +22,16 @@
    * MyAMS alerts management
    */
   var $ = MyAMS.$;
+
+  if (!$.templates) {
+    var jsrender = require('jsrender');
+
+    $.templates = jsrender.templates;
+  }
   /**
    * Alert template
    */
+
 
   var ALERT_TEMPLATE_STRING = "\n\t<div class=\"alert alert-{{:status}}\" role=\"alert\">\n\t\t<button type=\"button\" class=\"close\" data-dismiss=\"alert\" \n\t\t\t\taria-label=\"{{*: MyAMS.i18n.BTN_CLODE }}\">\n\t\t\t<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\t\n\t\t</button>\n\t\t{{if header}}\n\t\t<h5 class=\"alert-heading\">{{:header}}</h5>\n\t\t{{/if}}\n\t\t{{* if (typeof message === 'string') { }}\n\t\t<ul>\n\t\t\t<li>{{:message}}</li>\n\t\t</ul>\n\t\t{{* } else { }}\n\t\t<ul>\n\t\t{{for message}}\n\t\t\t<li>{{:}}</li>\n\t\t{{/for}}\n\t\t</ul>\n\t\t{{* } }}\n\t</div>";
   var ALERT_TEMPLATE = $.templates({
