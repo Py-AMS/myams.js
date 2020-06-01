@@ -30,7 +30,7 @@ test:
         - mkdir ./coverage
         - npm install --no-audit
         - (npm run coverage | tee coverage/coverage.log) || true
-        - apt update && apt install -y python3-pip
+        - apt update && apt install -y python-pip
         - pip install anybadge
         - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
         - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
