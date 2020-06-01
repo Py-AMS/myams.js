@@ -1,0 +1,14 @@
+<h1>MyAMS "i18n" module</h1>
+<section>
+	<p>The <code>i18n</code> module is used to handle internationalization. This is required if
+	you want to display messages in original user's language.</p>
+	<p>It's up to the web server to include language code into HTML tag's <code>lang</code>
+	attribute; according to that, MyAMS will try to load messages files matching given
+	language, if available.</p>
+	<p>I18n module API is used automatically by MyAMS on page load; but using strings constants
+	names may return the translated meessage automatically, like in
+	<code>MyAMS.i18n.ERROR_OCCURED</code>.</p>
+	<p>If you want to provide your own translation file, just create a file called
+	<code>myams-{lang}.js</code> in MyAMS's <code>i18n</code> subfolder; using given french
+	translation file as template is a good starting point...</p>
+</section>

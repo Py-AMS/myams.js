@@ -3,6 +3,8 @@
 
 	$.extend(MyAMS.i18n, {
 
+		language: 'fr',
+
 		INFO: "Information",
 		WARNING: "!! ATTENTION !!",
 		ERROR: "ERREUR: ",

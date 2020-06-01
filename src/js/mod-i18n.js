@@ -58,9 +58,9 @@ export const i18n = {
 	/**
 	 * MyAMS i18n package
 	 */
-	init: () => {
+	init: (force=false) => {
 		return new Promise((resolve, reject) => {
-			if (_initialized) {
+			if (_initialized && !force) {
 				resolve();
 				return;
 			}
@@ -68,7 +68,6 @@ export const i18n = {
 			const html = $('html'),
 				  lang = html.attr('lang') || html.attr('xml:lang');
 			if (lang && !lang.startsWith('en')) {
-				i18n.language = lang;
 				MyAMS.core.getScript(`${MyAMS.env.baseURL}i18n/myams-${lang.substr(0, 2)}.js`)
 						  .then(resolve, reject);
 			} else {

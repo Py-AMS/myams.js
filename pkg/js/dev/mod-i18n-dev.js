@@ -61,8 +61,9 @@
      * MyAMS i18n package
      */
     init: function init() {
+      var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       return new Promise(function (resolve, reject) {
-        if (_initialized) {
+        if (_initialized && !force) {
           resolve();
           return;
         }
@@ -72,7 +73,6 @@
             lang = html.attr('lang') || html.attr('xml:lang');
 
         if (lang && !lang.startsWith('en')) {
-          i18n.language = lang;
           MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "i18n/myams-").concat(lang.substr(0, 2), ".js")).then(resolve, reject);
         } else {
           resolve();
