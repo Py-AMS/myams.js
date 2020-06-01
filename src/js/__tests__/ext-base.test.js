@@ -184,7 +184,7 @@ test("Test JQuery removeClassPrefix function", () => {
 });
 
 // Test MyAMS getModules
-test("Test MyAMS getModules function", () => {
+test("Test MyAMS getModules base function", () => {
 
 	document.body.innerHTML = `<html>
 		<body>
@@ -203,6 +203,62 @@ test("Test MyAMS getModules function", () => {
 	expect(modules[0]).toBe('app');
 	expect(modules[1]).toBeInstanceOf(Object);
 	expect(modules[1].other).toBe('resources/js/script.js');
+
+});
+
+test("Test MyAMS getModules with multiple names", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner" data-ams-modules="app i18n">
+			<div class="other">
+				 <p>This is just a paragraph.</p>
+			</div>
+		</div>
+	</div>`;
+	const body = $('body');
+	const modules = getModules(body);
+	expect($.isArray(modules)).toBe(true);
+	expect(modules.length).toBe(2);
+	expect(modules[0]).toBe('app');
+	expect(modules[1]).toBe('i18n');
+
+});
+
+test("Test MyAMS getModules from body with object definition", () => {
+
+	document.body.innerHTML = `<div data-ams-modules='{
+		"app": "resources/js/app.js"
+	}'>
+		<div class="inner">
+			<div class="other">
+				 <p>This is just a paragraph.</p>
+			</div>
+		</div>
+	</div>`;
+	const div = $('body > div');
+	const modules = getModules(div);
+	expect($.isArray(modules)).toBe(true);
+	expect(modules.length).toBe(1);
+	expect(modules[0]).toBeInstanceOf(Object);
+	expect(modules[0].app).toBe('resources/js/app.js');
+
+});
+
+test("Test MyAMS getModules from body with multiple names", () => {
+
+	document.body.innerHTML = `<div data-ams-modules="app i18n">
+		<div class="inner">
+			<div class="other">
+				 <p>This is just a paragraph.</p>
+			</div>
+		</div>
+	</div>`;
+	const div = $('body > div');
+	const modules = getModules(div);
+	expect($.isArray(modules)).toBe(true);
+	expect(modules.length).toBe(2);
+	expect(modules[0]).toBe('app');
+	expect(modules[1]).toBe('i18n');
 
 });
 
@@ -379,6 +435,29 @@ test("Test MyAMS clearContent function", () => {
 	})
 	const body = $(document.body);
 	return clearContent(body).then((status) => {
+		expect(status).toBe(true);
+		expect(clearEvent).toBe(true);
+		expect(clearedEvent).toBe(true);
+	});
+
+});
+
+// Test MyAMS clearContent
+test("Test MyAMS clearContent function from string", () => {
+
+	document.body.innerHTML = `<div class="body">
+		<div class="inner"></div>
+	</div>`;
+	let clearEvent = false;
+	$(document).on('clear.ams.content', (evt, element, veto) => {
+		clearEvent = true;
+	});
+	let clearedEvent = false;
+	$(document).on('cleared.ams.content', (evt, element) => {
+		clearedEvent = true;
+	});
+	debugger;
+	return clearContent('.body').then((status) => {
 		expect(status).toBe(true);
 		expect(clearEvent).toBe(true);
 		expect(clearedEvent).toBe(true);
