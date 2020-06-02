@@ -73,6 +73,7 @@ coverage:
     variables:
         SONAR_URL: http://sonar.dev-dsm.onf.fr
         SONAR_HOST_URL: http://sonar.dev-dsm.onf.fr
+        GIT_FETCH_EXTRA_FLAGS: --unshallow
     script:
         - sonar-scanner -Dsonar.qualitygate.wait=true
     only:
