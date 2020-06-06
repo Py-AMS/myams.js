@@ -5,11 +5,14 @@
 </section>
 
 <section id="clearContent">
-	<h2><code>MyAMS.core.clearContent()</code></h2>
+	<h2><code>MyAMS.core.clearContent(): Promise&lt;boolean&gt;</code></h2>
 	<p>This function is called when an HTML container is replaced with new content; if you need
-	to "clean" a container, you can subscribe to specific MyAMS events; for compatibility with
-	previous MyAMS releases, you can also register callbacks which will be called before content
-	removal.</p>
+	to "clean" a container, you can subscribe to specific MyAMS events like
+	<code>clear.ams.content</code> and <code>cleared.ams.content</code>. </p>
+	<p>The returned Promise is resolved with a boolean value which is <code>false</code> if a
+	handler of <code>clear.ams.content</code> applied a veto, and if content clearing was not
+	complete, and a <code>true</code> value if clearing was complete. If the clearing is
+	cancelled by an event handler, the <code>cleared.ams.content</code> event is not triggered.</p>
 </section>
 
 <section id="executeFunctionByName">
@@ -86,12 +89,12 @@
 	<p>This function is called after initial page load, but also after download of any
 	dynamic content afterwards; you can override this function by changing value of
 	<code>MyAMS.config.initContent</code>, or by setting a
-	<code>data-ams-init-content</code> attribute on the root <code>&lt;html&gt;</code>
-	tag with the name of the function which must be called.</p>
+	<code>data-ams-init-content</code> attribute on the root <code>&lt;html&gt;</code> tag or on the
+	updated element with the name of the function which must be called.</p>
 	<p>The default function implementation check, load and initialize several MyAMS
 	<a href="#modules.html">modules</a> with the given <code>element</code> argument
 	as parameter, and returns a <code>Promise</code> which is resolved when all required
-	plug-ins have been applied on the given element.</p>
+	plug-ins have been applied on the given element; .</p>
 </section>
 
 <section id="initPage">

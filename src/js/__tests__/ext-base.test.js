@@ -18,13 +18,20 @@ import MyAMS, {
 	switchIcon,
 	init,
 	initPage,
-	clearContent, initContent
+	clearContent,
+	initContent
 } from '../ext-base';
+import { events } from "../mod-events";
 import myams_require from "../ext-require";
 
 
 // Initialize MyAMS
 init($);
+
+if (!MyAMS.events) {
+	MyAMS.events = events;
+	MyAMS.config.modules.push('events');
+}
 
 
 // Test String protoype functions
@@ -106,6 +113,7 @@ test("Test JQuery exists function", () => {
 
 });
 
+
 // Test JQuery $.fn.objectOrParentWithClass
 test("Test JQuery objectOrParentWithClass function", () => {
 
@@ -128,6 +136,7 @@ test("Test JQuery objectOrParentWithClass function", () => {
 
 });
 
+
 // Test JQuery $.fn.listattr
 test("Test JQuery listattr function", () => {
 
@@ -146,6 +155,7 @@ test("Test JQuery listattr function", () => {
 	expect(selected[1]).toBe('3');
 
 });
+
 
 // Test JQuery $.fn.style
 test("Test JQuery style function", () => {
@@ -170,6 +180,7 @@ test("Test JQuery style function", () => {
 
 });
 
+
 // Test JQuery $.fn.removeClassPrefix
 test("Test JQuery removeClassPrefix function", () => {
 
@@ -182,6 +193,7 @@ test("Test JQuery removeClassPrefix function", () => {
 	expect(div.get(0).className).toBe('other-1');
 
 });
+
 
 // Test MyAMS getModules
 test("Test MyAMS getModules base function", () => {
@@ -262,6 +274,7 @@ test("Test MyAMS getModules from body with multiple names", () => {
 
 });
 
+
 // Test MyAMS getObject
 test("Test MyAMS getObject function", () => {
 
@@ -278,6 +291,7 @@ test("Test MyAMS getObject function", () => {
 	expect(getObject(name3)).toBe(undefined);
 
 });
+
 
 // Test MyAMS getFunctionByName
 test("Test MyAMS getFunctionByName function", () => {
@@ -297,6 +311,7 @@ test("Test MyAMS getFunctionByName function", () => {
 	expect(getFunctionByName('missing.missing.missing')).toBe(undefined);
 
 });
+
 
 // Test MyAMS executeFunctionByName
 test("Test MyAMS executeFunctionByName function", () => {
@@ -318,6 +333,7 @@ test("Test MyAMS executeFunctionByName function", () => {
 
 });
 
+
 // Test MyAMS getSource
 test("Test MyAMS getSource function", () => {
 
@@ -326,6 +342,7 @@ test("Test MyAMS getSource function", () => {
 	expect(url).toBe('http://example.com//myams_js/test-dev.js');
 
 });
+
 
 // Test MyAMS getScript
 test("Test MyAMS getScript function", () => {
@@ -338,6 +355,7 @@ test("Test MyAMS getScript function", () => {
 		expect(result).toBe(url);
 	})
 });
+
 
 // Test MyAMS getQueryVar
 test("Test MyAMS getQueryVar function", () => {
@@ -366,6 +384,7 @@ test("Test MyAMS getQueryVar function", () => {
 
 });
 
+
 // Test MyAMS generateId
 test("Test MyAMS generateId function", () => {
 
@@ -387,6 +406,7 @@ test("Test MyAMS generateUUID function", () => {
 
 });
 
+
 // Test MyAMS switchIcon
 test("Test MyAMS switchIcon function", () => {
 
@@ -395,6 +415,7 @@ test("Test MyAMS switchIcon function", () => {
 	expect(element.hasClass('fa-close')).toBe(true);
 
 });
+
 
 // Test MyAMS initContent
 test("Test MyAMS initContent function", () => {
@@ -416,34 +437,13 @@ test("Test MyAMS initContent function", () => {
 	return initContent(body).then(() => {
 		expect(beforeInitEvent).toBe(true);
 		expect(afterInitEvent).toBe(false);
+		$(document).off('.ams');
 	});
 });
 
-// Test MyAMS clearContent
-test("Test MyAMS clearContent function", () => {
-
-	document.body.innerHTML = `<div>
-		<div class="inner"></div>
-	</div>`;
-	let clearEvent = false;
-	$(document).on('clear.ams.content', (evt, element, veto) => {
-		clearEvent = true;
-	});
-	let clearedEvent = false;
-	$(document).on('cleared.ams.content', (evt, element) => {
-		clearedEvent = true;
-	})
-	const body = $(document.body);
-	return clearContent(body).then((status) => {
-		expect(status).toBe(true);
-		expect(clearEvent).toBe(true);
-		expect(clearedEvent).toBe(true);
-	});
-
-});
 
 // Test MyAMS clearContent
-test("Test MyAMS clearContent function from string", () => {
+test("Test MyAMS clearContent function with events", () => {
 
 	document.body.innerHTML = `<div class="body">
 		<div class="inner"></div>
@@ -460,6 +460,7 @@ test("Test MyAMS clearContent function from string", () => {
 		expect(status).toBe(true);
 		expect(clearEvent).toBe(true);
 		expect(clearedEvent).toBe(true);
+		$(document).off('.ams');
 	});
 
 });
@@ -470,7 +471,7 @@ test("Test MyAMS clearContent function veto", () => {
 		<div class="inner"></div>
 	</div>`;
 	let clearEvent = false;
-	$(document).on('clear.ams.content', (evt, element, veto) => {
+	$(document).on('clear.ams.content', (evt, veto, element) => {
 		veto.veto = true;
 		clearEvent = true;
 	});
@@ -479,13 +480,94 @@ test("Test MyAMS clearContent function veto", () => {
 		clearedEvent = true;
 	})
 	const body = $(document.body);
-	return clearContent(body).then((status) => {
+	clearContent(body).then((status) => {
 		expect(status).toBe(false);
 		expect(clearEvent).toBe(true);
 		expect(clearedEvent).toBe(false);
+		$(document).off('.ams');
 	});
 
 });
+
+test("Test MyAMS clearContent function with inner events handlers", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"
+			 data-ams-events-handlers='{
+			 	"clear.ams.content": "MyAMS.app.clearHandler",
+			 	"cleared.ams.content": "MyAMS.app.clearedHandler"
+			 }'></div>
+	</div>`;
+
+	let clearEvent = false,
+		clearedEvent = false;
+	MyAMS.app = {
+		clearHandler: (evt, veto) => {
+			$(evt.target).data('clearing', true);
+			clearEvent = true;
+		},
+		clearedHandler: (evt) => {
+			$(evt.target).data('cleared', true);
+			clearedEvent = true;
+		}
+	}
+	const
+		body = $(document.body),
+		inner = $('.inner', body);
+
+	MyAMS.events.initElement(body);
+	return clearContent(body).then((status) => {
+		expect(status).toBe(true);
+		expect(clearEvent).toBe(true);
+		expect(inner.data('clearing')).toBe(true);
+		expect(clearedEvent).toBe(true);
+		expect(inner.data('cleared')).toBe(true);
+	});
+
+	delete MyAMS.app;
+
+});
+
+test("Test MyAMS clearContent function with inner events handlers and veto", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"
+			 data-ams-events-handlers='{
+			 	"clear.ams.content": "MyAMS.app.clearHandler",
+			 	"cleared.ams.content": "MyAMS.app.clearedHandler"
+			 }'></div>
+	</div>`;
+
+	let clearEvent = false,
+		clearedEvent = false;
+	MyAMS.app = {
+		clearHandler: (evt, veto) => {
+			$(evt.target).data('clearing', true);
+			clearEvent = true;
+			veto.veto = true;
+		},
+		clearedHandler: (evt) => {
+			$(evt.target).data('cleared', true);
+			clearedEvent = true;
+		}
+	}
+	const
+		body = $(document.body),
+		inner = $('.inner', body);
+
+	MyAMS.events.initElement(body);
+	return clearContent(body).then((status) => {
+		expect(status).toBe(false);
+		expect(clearEvent).toBe(true);
+		expect(inner.data('clearing')).toBe(true);
+		expect(clearedEvent).toBe(false);
+		expect(inner.data('cleared')).toBeUndefined();
+	});
+
+	delete MyAMS.app;
+
+});
+
 
 // Test base MyAMS structure
 test("Test MyAMS base structure", () => {

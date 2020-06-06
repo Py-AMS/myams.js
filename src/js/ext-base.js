@@ -286,19 +286,24 @@ export function initContent(element=null) {
 		}
 	}
 
-	const modules = getModules(element);
-	return MyAMS.require(...modules).then(() => {
-		element.trigger('before-init.ams.content');
-		if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
-			MyAMS.registry.initElement(element).then(() => {
+	return new Promise((resolve, reject) => {
+		const modules = getModules(element);
+		return MyAMS.require(...modules).then(() => {
+			element.trigger('before-init.ams.content');
+			if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
+				MyAMS.registry.initElement(element).then(() => {
+					initElementModules();
+				}).then(() => {
+					MyAMS.registry.run(element);
+					element.trigger('after-init.ams.content');
+				}).then(resolve);
+			} else {
 				initElementModules();
-			}).then(() => {
-				MyAMS.registry.run(element);
-				element.trigger('after-init.ams.content');
-			});
-		} else {
-			initElementModules();
-		}
+				resolve();
+			}
+		}, () => {
+			reject("Missing MyAMS modules!");
+		});
 	});
 }
 
@@ -323,10 +328,27 @@ export function clearContent(element) {
 	}
 	return new Promise((resolve, reject) => {
 		const veto = { veto: false };
-		element.trigger('clear.ams.content', [element, veto]);
-		resolve(!veto.veto);
+		$(document).trigger('clear.ams.content', [veto, element]);
 		if (!veto.veto) {
-			element.trigger('cleared.ams.content', [element]);
+			MyAMS.require('events').then(() => {
+				$(MyAMS.events.getHandlers(element, 'clear.ams.content')).each((idx, elt) => {
+					$(elt).trigger('clear.ams.content', [veto]);
+					if (veto.veto) {
+						return false;
+					}
+				});
+				if (!veto.veto) {
+					$(MyAMS.events.getHandlers(element, 'cleared.ams.content')).each((idx, elt) => {
+						$(elt).trigger('cleared.ams.content');
+					});
+					$(document).trigger('cleared.ams.content', [element]);
+				}
+				resolve(!veto.veto);
+			}, () => {
+				reject("Missing MyAMS.events module!");
+			});
+		} else {
+			resolve(!veto.veto);
 		}
 	});
 }

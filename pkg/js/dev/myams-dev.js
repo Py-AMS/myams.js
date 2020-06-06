@@ -22276,20 +22276,25 @@ function initContent() {
     }
   }
 
-  var modules = getModules(element);
-  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-    element.trigger('before-init.ams.content');
+  return new Promise(function (resolve, reject) {
+    var modules = getModules(element);
+    return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
+      element.trigger('before-init.ams.content');
 
-    if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
-      MyAMS.registry.initElement(element).then(function () {
+      if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
+        MyAMS.registry.initElement(element).then(function () {
+          initElementModules();
+        }).then(function () {
+          MyAMS.registry.run(element);
+          element.trigger('after-init.ams.content');
+        }).then(resolve);
+      } else {
         initElementModules();
-      }).then(function () {
-        MyAMS.registry.run(element);
-        element.trigger('after-init.ams.content');
-      });
-    } else {
-      initElementModules();
-    }
+        resolve();
+      }
+    }, function () {
+      reject("Missing MyAMS modules!");
+    });
   });
 }
 /**
@@ -22316,11 +22321,31 @@ function clearContent(element) {
     var veto = {
       veto: false
     };
-    element.trigger('clear.ams.content', [element, veto]);
-    resolve(!veto.veto);
+    $(document).trigger('clear.ams.content', [veto, element]);
 
     if (!veto.veto) {
-      element.trigger('cleared.ams.content', [element]);
+      MyAMS.require('events').then(function () {
+        $(MyAMS.events.getHandlers(element, 'clear.ams.content')).each(function (idx, elt) {
+          $(elt).trigger('clear.ams.content', [veto]);
+
+          if (veto.veto) {
+            return false;
+          }
+        });
+
+        if (!veto.veto) {
+          $(MyAMS.events.getHandlers(element, 'cleared.ams.content')).each(function (idx, elt) {
+            $(elt).trigger('cleared.ams.content');
+          });
+          $(document).trigger('cleared.ams.content', [element]);
+        }
+
+        resolve(!veto.veto);
+      }, function () {
+        reject("Missing MyAMS.events module!");
+      });
+    } else {
+      resolve(!veto.veto);
     }
   });
 }
@@ -24785,8 +24810,8 @@ var events = {
   },
   initElement: function initElement(element) {
     $('[data-ams-events-handlers]', element).each(function (idx, elt) {
-      var element = $(elt),
-          handlers = element.data('ams-events-handlers');
+      var context = $(elt),
+          handlers = context.data('ams-events-handlers');
 
       if (handlers) {
         var _loop = function _loop() {
@@ -24794,8 +24819,8 @@ var events = {
               event = _Object$entries$_i[0],
               handler = _Object$entries$_i[1];
 
-          element.on(event, function (event) {
-            MyAMS.core.executeFunctionByName(handler, document, event, element.data('ams-events-options') || {});
+          context.on(event, function (event, options) {
+            MyAMS.core.executeFunctionByName(handler, document, event, options || context.data('ams-events-options') || {});
           });
         };
 
@@ -24804,6 +24829,32 @@ var events = {
         }
       }
     });
+  },
+
+  /**
+   * Get events handlers on given element for a specific event
+   *
+   * @param element: the checked element
+   * @param event: event for which handlers lookup is made
+   * @returns: an array of elements for which the event handler is defined
+   */
+  getHandlers: function getHandlers(element, event) {
+    var result = [],
+        handlers = element.data('ams-events-handlers');
+
+    if (handlers && handlers[event]) {
+      result.push(element);
+    }
+
+    $('[data-ams-events-handlers]', element).each(function (idx, elt) {
+      var context = $(elt),
+          handlers = context.data('ams-events-handlers');
+
+      if (handlers && handlers[event]) {
+        result.push(context);
+      }
+    });
+    return result;
   }
 };
 /**
@@ -28022,15 +28073,13 @@ var skin = {
                 case 'html':
                 case 'text':
                 default:
-                  target.parents('.hidden').removeClass('hidden'); // TODO: update alerts container class!!!
-
-                  $('.alert', target.parents('.alerts')).remove();
+                  target.parents('.hidden').removeClass('hidden');
                   target.css({
                     opacity: '0.0'
                   }).html(_result).removeClass('hidden').delay(30).animate({
                     opacity: '1.0'
                   }, 300);
-                  MyAMS.core.executeFunctionByName(MyAMS.config.initContent, window, target).then(function () {
+                  MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(function () {
                     MyAMS.form && MyAMS.form.setFocus(target);
                     target.trigger('after-load.ams.content');
                     resolve(_result, status, xhr);

@@ -41,8 +41,8 @@
     },
     initElement: function initElement(element) {
       $('[data-ams-events-handlers]', element).each(function (idx, elt) {
-        var element = $(elt),
-            handlers = element.data('ams-events-handlers');
+        var context = $(elt),
+            handlers = context.data('ams-events-handlers');
 
         if (handlers) {
           var _loop = function _loop() {
@@ -50,8 +50,8 @@
                 event = _Object$entries$_i[0],
                 handler = _Object$entries$_i[1];
 
-            element.on(event, function (event) {
-              MyAMS.core.executeFunctionByName(handler, document, event, element.data('ams-events-options') || {});
+            context.on(event, function (event, options) {
+              MyAMS.core.executeFunctionByName(handler, document, event, options || context.data('ams-events-options') || {});
             });
           };
 
@@ -60,6 +60,32 @@
           }
         }
       });
+    },
+
+    /**
+     * Get events handlers on given element for a specific event
+     *
+     * @param element: the checked element
+     * @param event: event for which handlers lookup is made
+     * @returns: an array of elements for which the event handler is defined
+     */
+    getHandlers: function getHandlers(element, event) {
+      var result = [],
+          handlers = element.data('ams-events-handlers');
+
+      if (handlers && handlers[event]) {
+        result.push(element);
+      }
+
+      $('[data-ams-events-handlers]', element).each(function (idx, elt) {
+        var context = $(elt),
+            handlers = context.data('ams-events-handlers');
+
+        if (handlers && handlers[event]) {
+          result.push(context);
+        }
+      });
+      return result;
     }
   };
   /**

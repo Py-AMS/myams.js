@@ -4,7 +4,7 @@
 
 import $ from "jquery";
 import MyAMS, { init } from "../ext-base";
-import { events } from "../mod-events";
+import { events, getHandlers } from "../mod-events";
 
 import myams_require from "../ext-require";
 
@@ -61,5 +61,31 @@ test("Test MyAMS.events for event with options", () => {
 	$('.inner', body).trigger('test.myams.event');
 	expect($('.inner', body).hasClass('modified')).toBe(true);
 	delete MyAMS.testHandler;
+
+});
+
+
+// Test MyAMS.events getHandlers
+test("Test MyAMS.events getHandlers", () => {
+
+	document.body.innerHTML = `<div>
+		<div class="inner"
+			 data-ams-events-handlers='{
+			 	"test.myams.event": "MyAMS.app.testHandler"
+			 }'>
+			 <div class="other"
+			 	  data-ams-events-handlers='{
+			 	  	"test.myams.event": "MyAMS.app.anotherHandler"
+			 	  }'></div>
+		</div>
+	</div>`;
+
+	const
+		body = $(document.body),
+		inner = $('.inner', body),
+		handlers = MyAMS.events.getHandlers(inner, 'test.myams.event');
+	expect(handlers.length).toBe(2);
+	expect(handlers[0].hasClass('inner')).toBe(true);
+	expect(handlers[1].hasClass('other')).toBe(true);
 
 });

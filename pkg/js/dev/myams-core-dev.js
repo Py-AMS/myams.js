@@ -504,20 +504,25 @@ function initContent() {
     }
   }
 
-  var modules = getModules(element);
-  return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-    element.trigger('before-init.ams.content');
+  return new Promise(function (resolve, reject) {
+    var modules = getModules(element);
+    return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
+      element.trigger('before-init.ams.content');
 
-    if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
-      MyAMS.registry.initElement(element).then(function () {
+      if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
+        MyAMS.registry.initElement(element).then(function () {
+          initElementModules();
+        }).then(function () {
+          MyAMS.registry.run(element);
+          element.trigger('after-init.ams.content');
+        }).then(resolve);
+      } else {
         initElementModules();
-      }).then(function () {
-        MyAMS.registry.run(element);
-        element.trigger('after-init.ams.content');
-      });
-    } else {
-      initElementModules();
-    }
+        resolve();
+      }
+    }, function () {
+      reject("Missing MyAMS modules!");
+    });
   });
 }
 /**
@@ -544,11 +549,31 @@ function clearContent(element) {
     var veto = {
       veto: false
     };
-    element.trigger('clear.ams.content', [element, veto]);
-    resolve(!veto.veto);
+    $(document).trigger('clear.ams.content', [veto, element]);
 
     if (!veto.veto) {
-      element.trigger('cleared.ams.content', [element]);
+      MyAMS.require('events').then(function () {
+        $(MyAMS.events.getHandlers(element, 'clear.ams.content')).each(function (idx, elt) {
+          $(elt).trigger('clear.ams.content', [veto]);
+
+          if (veto.veto) {
+            return false;
+          }
+        });
+
+        if (!veto.veto) {
+          $(MyAMS.events.getHandlers(element, 'cleared.ams.content')).each(function (idx, elt) {
+            $(elt).trigger('cleared.ams.content');
+          });
+          $(document).trigger('cleared.ams.content', [element]);
+        }
+
+        resolve(!veto.veto);
+      }, function () {
+        reject("Missing MyAMS.events module!");
+      });
+    } else {
+      resolve(!veto.veto);
     }
   });
 }
