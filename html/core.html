@@ -10,8 +10,8 @@
 	to "clean" a container, you can subscribe to specific MyAMS events like
 	<code>clear.ams.content</code> and <code>cleared.ams.content</code>. </p>
 	<p>The returned Promise is resolved with a boolean value which is <code>false</code> if a
-	handler of <code>clear.ams.content</code> applied a veto, and if content clearing was not
-	complete, and a <code>true</code> value if clearing was complete. If the clearing is
+	handler of <code>clear.ams.content</code> event applied a veto, and if content clearing was
+	not complete, and a <code>true</code> value if clearing was complete. If the clearing has been
 	cancelled by an event handler, the <code>cleared.ams.content</code> event is not triggered.</p>
 </section>
 
