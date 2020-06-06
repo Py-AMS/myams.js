@@ -414,6 +414,17 @@ test("Test MyAMS switchIcon function", () => {
 	switchIcon(element, 'open', 'close');
 	expect(element.hasClass('fa-close')).toBe(true);
 
+	document.body.innerHTML = `<div>
+		<i id="testIcon" class="fa fa-cog"></i>
+	</div>`;
+
+	const
+		body = $(document.body),
+		icon = $('#testIcon', body);
+	switchIcon('#testIcon', 'cog', 'spin');
+	expect(icon.exists()).toBe(true);
+	expect(icon.hasClass('fa-spin')).toBe(true);
+
 });
 
 
