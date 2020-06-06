@@ -194,15 +194,13 @@ export const skin = {
 								case 'text':
 								default:
 									target.parents('.hidden').removeClass('hidden');
-									// TODO: update alerts container class!!!
-									$('.alert', target.parents('.alerts')).remove();
 									target.css({opacity: '0.0'})
 										.html(result)
 										.removeClass('hidden')
 										.delay(30)
 										.animate({opacity: '1.0'}, 300);
-									MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
-										window, target).then(() => {
+									MyAMS.core.executeFunctionByName(target.data('ams-init-content') ||
+										MyAMS.config.initContent, window, target).then(() => {
 										MyAMS.form && MyAMS.form.setFocus(target);
 										target.trigger('after-load.ams.content');
 										resolve(result, status, xhr);
