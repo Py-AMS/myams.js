@@ -3,6 +3,11 @@
  * Overlapped modals styles
  */
 
+.modal-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 210px);
+}
+
 .modal-backdrop.show {
   opacity: 0.2;
 
