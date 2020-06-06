@@ -5988,14 +5988,32 @@ if (MyAMS.env.bundle) {
 /*!****************************!*\
   !*** ./src/js/mod-form.js ***!
   \****************************/
-/*! exports provided: form */
+/*! exports provided: form, showFormSubmitWarning, getFormValidators, checkFormValidators, initFormSubmitButton, resetFormSubmitButton, getFormData, initFormData, getFormTarget, initFormTarget, getFormAction, getFormAjaxSettings, getFormProgressSettings, getFormProgressState, submitForm, formSubmitCallback, resetFormAfterSubmit, resetFormAfterError, getFormDownloadTarget, initFormDownloadTarget, resetFormDownloadTarget */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "form", function() { return form; });
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showFormSubmitWarning", function() { return showFormSubmitWarning; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormValidators", function() { return getFormValidators; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkFormValidators", function() { return checkFormValidators; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initFormSubmitButton", function() { return initFormSubmitButton; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetFormSubmitButton", function() { return resetFormSubmitButton; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormData", function() { return getFormData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initFormData", function() { return initFormData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormTarget", function() { return getFormTarget; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initFormTarget", function() { return initFormTarget; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormAction", function() { return getFormAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormAjaxSettings", function() { return getFormAjaxSettings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormProgressSettings", function() { return getFormProgressSettings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormProgressState", function() { return getFormProgressState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "submitForm", function() { return submitForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formSubmitCallback", function() { return formSubmitCallback; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetFormAfterSubmit", function() { return resetFormAfterSubmit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetFormAfterError", function() { return resetFormAfterError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormDownloadTarget", function() { return getFormDownloadTarget; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initFormDownloadTarget", function() { return initFormDownloadTarget; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetFormDownloadTarget", function() { return resetFormDownloadTarget; });
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -6009,8 +6027,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /**
  * MyAMS forms support
  */
-
 var $ = MyAMS.$;
+
+if (!$.templates) {
+  var jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
+
+  $.templates = jsrender.templates;
+}
+
 var _initialized = false;
 /**
  * MyAMS "form" module
@@ -6035,12 +6059,7 @@ var form = {
     $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
   },
   initElement: function initElement(element) {
-    // Initialize form buttons
-    $(element).on('click', 'button[type="submit"], button.submit', function (evt) {
-      var button = $(evt.currentTarget);
-      $(button.get(0).form).data('ams-submit-button', button);
-    }); // Submit form when CTRL+Enter key is pressed in textarea
-
+    // Submit form when CTRL+Enter key is pressed in textarea
     $(element).on('keydown', 'textarea', function (evt) {
       if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
         $(evt.currentTarget).closest('form').submit();
@@ -6076,7 +6095,7 @@ var form = {
           var event = inputData.amsChangedEvent || 'change';
           input.on(event, function () {
             MyAMS.form.setChanged(form);
-            MyAMS.core.executeFunctionByName(inputData.amsChangedCallback || callback, form, input);
+            MyAMS.core.executeFunctionByName(inputData.amsChangedCallback || callback, document, form, input);
           });
         }
       });
@@ -6183,6 +6202,66 @@ var form = {
   },
 
   /**
+   * Get all settings for given form
+   *
+   * @param form: submitted form
+   * @param formData: form data
+   * @param button: submit button
+   * @param buttonData: submit button data
+   * @param options: submit options
+   */
+  getSettings: function getSettings(form, formData, button, buttonData, options) {
+    var defaults = {
+      submitWarning: showFormSubmitWarning,
+      getValidators: getFormValidators,
+      checkValidators: checkFormValidators,
+      clearAlerts: MyAMS.form.clearAlerts,
+      initSubmitButton: initFormSubmitButton,
+      resetSubmitButton: resetFormSubmitButton,
+      getData: getFormData,
+      initData: initFormData,
+      initDataCallback: null,
+      getTarget: getFormTarget,
+      initTarget: initFormTarget,
+      getAction: getFormAction,
+      getAjaxSettings: getFormAjaxSettings,
+      getProgressSettings: getFormProgressSettings,
+      getProgressState: getFormProgressState,
+      submit: submitForm,
+      datatype: null,
+      submitOptions: null,
+      submitHandler: (form.attr('action') || '').replace(/#/, ''),
+      submitTarget: form.attr('target') || null,
+      submitMessage: null,
+      submitCallback: formSubmitCallback,
+      progressHandler: null,
+      progressFieldName: 'progressId',
+      progressInterval: 1000,
+      progressTarget: null,
+      progressCallback: null,
+      progressEndCallback: null,
+      resetBeforeSubmit: false,
+      keepModalOpen: false,
+      resetAfterSubmit: resetFormAfterSubmit,
+      resetTimeout: 1000,
+      resetAfterError: resetFormAfterError,
+      downloadTarget: null,
+      getDownloadTarget: getFormDownloadTarget,
+      initDownloadTarget: initFormDownloadTarget,
+      resetDownloadTarget: resetFormDownloadTarget
+    },
+        settings = $.extend({}, defaults); // extend default values with form, button and options properties
+
+    $.extendPrefix(settings, 'amsForm', function (value) {
+      return MyAMS.core.getFunctionByName(value) || value;
+    }, formData, buttonData);
+    $.extendOnly(settings, function (value) {
+      return MyAMS.core.getFunctionByName(value) || value;
+    }, options);
+    return settings;
+  },
+
+  /**
    * Submit given form
    *
    * @param form: input form
@@ -6207,50 +6286,7 @@ var form = {
     var formData = form.data(),
         button = $(formData.amsSubmitButton),
         buttonData = button.data() || {},
-        defaults = {
-      submitWarning: showFormSubmitWarning,
-      getValidators: getFormValidators,
-      checkValidators: checkFormValidators,
-      clearAlerts: MyAMS.form.clearAlerts,
-      initSubmitButton: initFormSubmitButton,
-      resetSubmitButton: resetFormSubmitButton,
-      getData: getFormData,
-      initData: initFormData,
-      initDataCallback: null,
-      getTarget: getFormTarget,
-      initTarget: initFormTarget,
-      getAction: getFormAction,
-      getAjaxSettings: getFormAjaxSettings,
-      getProgressSettings: getFormProgressSettings,
-      getProgressState: getFormProgressState,
-      submit: submitForm,
-      datatype: null,
-      submitOptions: null,
-      submitHandler: form.attr('action').replace(/#/, ''),
-      submitTarget: form.attr('target'),
-      submitMessage: null,
-      submitCallback: formSubmitCallback,
-      progressHandler: null,
-      progressFieldName: 'progressId',
-      progressInterval: 1000,
-      progressCallback: null,
-      progressEndCallback: null,
-      resetBeforeSubmit: false,
-      keepModalOpen: false,
-      resetAfterSubmit: resetFormAfterSubmit,
-      resetTimeout: 1000,
-      resetAfterError: resetFormAfterError,
-      downloadTarget: null,
-      getDownloadTarget: getFormDownloadTarget,
-      initDownloadTarget: initFormDownloadTarget,
-      resetDownloadTarget: resetFormDownloadTarget
-    },
-        settings = $.extend({}, defaults); // extend default values with form, button and options properties
-
-    $.extendPrefix(settings, 'amsForm', function (value) {
-      return MyAMS.core.getFunctionByName(value) || value;
-    }, formData, buttonData);
-    $.extendOnly(settings, options); // prevent multiple submits
+        settings = MyAMS.form.getSettings(form, formData, button, buttonData, options); // prevent multiple submits
 
     if (formData.submitted) {
       settings.submitWarning(form, settings);
@@ -6300,10 +6336,10 @@ var form = {
           } // get progress settings
 
 
-          ajaxSettings.progress = settings.getProgressSettings(form, settings, postData); // YESSSS!!!!
+          ajaxSettings.progress = settings.getProgressSettings(form, settings, button, postData); // YESSSS!!!!
           // submit form!!
 
-          settings.submit(form, settings, button, postData, ajaxSettings);
+          settings.submit(form, settings, button, postData, ajaxSettings, target);
 
           if (downloadTarget) {
             settings.resetDownloadTarget(form, settings, downloadTarget, ajaxSettings);
@@ -6323,17 +6359,23 @@ var form = {
  */
 
 function showFormSubmitWarning(form, settings) {
-  if (!form.data('ams-form-hide-submitted')) {
-    MyAMS.require('i18n', 'alert').then(function () {
-      MyAMS.alert.messageBox({
-        status: 'warning',
-        title: MyAMS.i18n.WAIT,
-        message: MyAMS.i18n.FORM_SUBMITTED,
-        icon: 'fa-save',
-        timeout: form.data('ams-form-alert-timeout') || 5000
+  return new Promise(function (resolve, reject) {
+    if (!form.data('ams-form-hide-submitted')) {
+      MyAMS.require('i18n', 'alert').then(function () {
+        MyAMS.alert.messageBox({
+          status: 'warning',
+          title: MyAMS.i18n.WAIT,
+          message: MyAMS.i18n.FORM_SUBMITTED,
+          icon: 'fa-save',
+          timeout: form.data('ams-form-alert-timeout') || 5000
+        });
+      }).then(function () {
+        resolve();
       });
-    });
-  }
+    } else {
+      resolve();
+    }
+  });
 }
 /**
  * Extract custom validators from given form
@@ -6342,7 +6384,6 @@ function showFormSubmitWarning(form, settings) {
  * @param settings: computed form settings
  * @returns {Map<any, any>}
  */
-
 
 function getFormValidators(form, settings) {
   var result = new Map(),
@@ -6386,7 +6427,6 @@ function getFormValidators(form, settings) {
  * @param form: checked form
  * @param settings: computed form settings
  */
-
 
 function checkFormValidators(form, settings) {
   return new Promise(function (resolve, reject) {
@@ -6478,10 +6518,11 @@ function checkFormValidators(form, settings) {
             header: header,
             message: output
           });
+          resolve(status);
         });
+      } else {
+        resolve(status);
       }
-
-      resolve(status);
     }, function () {
       reject('error');
     });
@@ -6491,7 +6532,6 @@ function checkFormValidators(form, settings) {
  * Initialize form submit button
  * Button is disabled and text is updated
  */
-
 
 function initFormSubmitButton(form, settings, button) {
   var text = button.data('ams-loading-text') || button.text().trim();
@@ -6504,7 +6544,6 @@ function initFormSubmitButton(form, settings, button) {
     button.data('original-html', button.html()).prop('disabled', true).html('<i class="fa fa-cog fa-spin"></i>');
   }
 } // reset form submit button
-
 
 function resetFormSubmitButton(form, settings, button) {
   $('.progress', button).remove();
@@ -6523,7 +6562,6 @@ function resetFormSubmitButton(form, settings, button) {
   button.prop('disabled', false);
 } // get form data
 
-
 function getFormData(form, settings, formData, button, buttonData, options) {
   var data = $.extend({}, formData.amsFormData, buttonData.amsFormData, options.data),
       name = button.attr('name');
@@ -6535,7 +6573,6 @@ function getFormData(form, settings, formData, button, buttonData, options) {
   return data;
 } // initialize form data
 
-
 function initFormData(form, settings, button, postData, options, veto) {
   var callback = settings.initDataCallback;
 
@@ -6546,24 +6583,20 @@ function initFormData(form, settings, button, postData, options, veto) {
   form.trigger('init-data.ams.form', [postData, veto]);
 } // get form target
 
-
 function getFormTarget(form, settings, formData, buttonData) {
   return $(settings.submitTarget);
 } // initialize form target
-
 
 var TARGET_INIT_TEMPLATE_STRING = "\n\t<div class=\"row m-3\">\n\t\t<div class=\"text-center w-100\">\n\t\t\t<i class=\"fa fa-3x fa-cog fa-spin\"></i>\n\t\t\t{{if message}}\n\t\t\t<strong>{{:message}}</strong>\n\t\t\t{{/if}}\n\t\t</div>\n\t</div>";
 var TARGET_INIT_TEMPLATE = $.templates({
   markup: TARGET_INIT_TEMPLATE_STRING
 });
-
 function initFormTarget(form, settings, target) {
   target.html(TARGET_INIT_TEMPLATE.render({
     message: settings.submitMessage
   }));
   target.parents('.hidden').removeClass('hidden');
 } // get form action
-
 
 function getFormAction(form, settings, handler) {
   var url;
@@ -6578,7 +6611,6 @@ function getFormAction(form, settings, handler) {
   return url;
 } // get AJAX POST submit settings
 
-
 function getFormAjaxSettings(form, settings, button, postData, action, target) {
   var base = {
     url: action,
@@ -6586,7 +6618,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
     cache: false,
     data: postData,
     dataType: settings.datatype,
-    beforeSerialize: function beforeSerialize() {
+    beforeSerialize: function beforeSerialize(form, options) {
       var veto = {
         veto: false
       };
@@ -6600,7 +6632,7 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
         tinyMCE.triggerSave();
       }
     },
-    beforeSubmit: function beforeSubmit(data, form) {
+    beforeSubmit: function beforeSubmit(data, form, options) {
       var veto = {
         veto: false
       };
@@ -6661,31 +6693,43 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
   return $.extend({}, base, settings.submitOptions);
 } // get form submit processing progress settings
 
-
-function getFormProgressSettings(form, settings, postData) {
+function getFormProgressSettings(form, settings, button, postData) {
   var handler = settings.progressHandler;
 
   if (handler) {
+    // check fieldname
     var fieldname = settings.progressFieldName;
-    postData[fieldname] = MyAMS.core.generateUUID();
+    postData[fieldname] = MyAMS.core.generateUUID(); // check progress target
+
+    var progressTarget = button;
+
+    if (settings.progressTarget) {
+      progressTarget = $(settings.progressTarget);
+    }
+
     return {
       handler: handler,
       interval: settings.progressInterval,
       fieldname: fieldname,
+      target: progressTarget,
       callback: settings.progressCallback,
       endCallback: settings.progressEndCallback
     };
   }
 } // get form submit progress state
 
-
-function getFormProgressState(form, settings, postData, progress) {
+function getFormProgressState(form, settings, postData, progress, target) {
   var timeout = setTimeout(_getProgressState, progress.interval);
 
   function _getProgressState() {
     var data = {};
     data[progress.fieldname] = postData[progress.fieldname];
     MyAMS.ajax.post(progress.handler, data).then(MyAMS.core.getFunctionByName(progress.callback || function (result, status) {
+      if ($.isArray(result)) {
+        status = result[1];
+        result = result[0];
+      }
+
       if (status === 'success') {
         if (result.status === 'running') {
           if (result.message) {
@@ -6720,10 +6764,9 @@ function getFormProgressState(form, settings, postData, progress) {
   }
 } // submit form
 
-
-function submitForm(form, settings, button, postData, ajaxSettings) {
+function submitForm(form, settings, button, postData, ajaxSettings, target) {
   if (ajaxSettings.progress) {
-    settings.getProgressState(form, settings, postData, ajaxSettings.progress);
+    settings.getProgressState(form, settings, postData, ajaxSettings.progress, target);
   }
 
   form.ajaxSubmit(ajaxSettings);
@@ -6738,7 +6781,6 @@ function submitForm(form, settings, button, postData, ajaxSettings) {
  * @param status
  * @param request
  */
-
 
 function formSubmitCallback(form, settings, target, result, status, request) {
   var dataType = settings.datatype;
@@ -6791,7 +6833,6 @@ function formSubmitCallback(form, settings, target, result, status, request) {
  * @param button: button used to submit the form, if any
  */
 
-
 function resetFormAfterSubmit(form, settings, button) {
   if (form.data('submitted')) {
     settings.resetSubmitButton(form, settings, button);
@@ -6808,22 +6849,19 @@ function resetFormAfterSubmit(form, settings, button) {
  * @param target: previous form target
  */
 
-
 function resetFormAfterError(form, settings, target) {
   $('i', target).removeClass('fa-spin').removeClass('fa-cog').addClass('fa-ambulance');
 } // get form download target
-
 
 function getFormDownloadTarget(form, settings) {
   return settings.downloadTarget;
 } // initialize download target
 
-
 function initFormDownloadTarget(form, settings, target, ajaxSettings) {
   var iframe = $("iframe[name=\"".concat(target, "\"]"));
 
   if (!iframe.exists()) {
-    iframe = $('<iframe>').attr('name', target).hide().appendTo(MyAMS.core.root);
+    iframe = $('<iframe>').attr('name', target).hide().appendTo(MyAMS.dom.root);
   }
 
   $.extend(ajaxSettings, {
@@ -6831,7 +6869,6 @@ function initFormDownloadTarget(form, settings, target, ajaxSettings) {
     iframeTarget: iframe
   });
 } // reset if download target
-
 
 function resetFormDownloadTarget(form, settings, target, ajaxSettings) {
   var modal = form.closest('.modal-dialog'),
@@ -6853,7 +6890,6 @@ function resetFormDownloadTarget(form, settings, target, ajaxSettings) {
 /**
  * Global module initialization
  */
-
 
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
