@@ -205,8 +205,12 @@
 
 
 #hide-menu {
-  i {
-    color: $gray-700;
-    font-size: 1.25rem;
+  .hidden-menu & {
+    .btn {
+      background-color: $hide-menu-hidden-bg;
+      background-image: linear-gradient(to bottom, $hide-menu-hidden-grad1 0, $hide-menu-hidden-grad2 100%);
+      color: $white;
+      border-color: $hide-menu-border;
+    }
   }
 }

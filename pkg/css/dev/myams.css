@@ -8074,9 +8074,11 @@ aside {
 #user-menu img {
   transform: rotate(10deg); }
 
-#hide-menu i {
-  color: #495057;
-  font-size: 1.25rem; }
+.hidden-menu #hide-menu .btn {
+  background-color: #e8e8e8;
+  background-image: linear-gradient(to bottom, #909090 0, #848484 100%);
+  color: #fff;
+  border-color: #494949; }
 
 #ribbon {
   position: relative;
