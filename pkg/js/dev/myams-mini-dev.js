@@ -7770,14 +7770,13 @@ if (MyAMS.env.bundle) {
 /*!***************************!*\
   !*** ./src/js/mod-nav.js ***!
   \***************************/
-/*! exports provided: nav */
+/*! exports provided: NavigationMenu, nav */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationMenu", function() { return NavigationMenu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nav", function() { return nav; });
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -7795,7 +7794,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 /**
  * MyAMS navigation module
  */
-
 var $ = MyAMS.$;
 /**
  * Dynamic navigation menu class
@@ -8047,25 +8045,16 @@ function () {
 
   return NavigationMenu;
 }();
-
-var _initialized = false;
+var _initialized = false,
+    _hammer = null;
 /**
  * Main navigation module
- *
- * @type {{init: nav.init, setActiveMenu: nav.setActiveMenu, hideMenu: nav.hideMenu, restoreState: nav.restoreState, drawBreadcrumbs: nav.drawBreadcrumbs, minifyMenu: nav.minifyMenu, initElement: nav.initElement}}
  */
 
 function _openPage(href) {
   if (href.startsWith('#')) {
     if (href !== location.hash) {
-      if (MyAMS.dom.root.hasClass('mobile-view-activated')) {
-        MyAMS.dom.root.removeClass('hidden-menu');
-        setTimeout(function () {
-          window.location.hash = href;
-        }, 50);
-      } else {
-        window.location.hash = href;
-      }
+      window.location.hash = href;
     }
   } else {
     window.location = href;
@@ -8171,24 +8160,24 @@ var nav = {
         var hrefGetter = MyAMS.core.getFunctionByName(target);
 
         if (typeof hrefGetter === 'function') {
-          href = hrefGetter.call(link, params);
+          href = hrefGetter(link, params);
         }
 
         if (typeof href === 'function') {
-          href.call(link, params);
+          href(link, params);
         } else {
           // Standard AJAX or browser URL call
           // Convert %23 characters to #
           href = href.replace(/%23/, '#');
 
           if (evt.ctrlKey) {
-            window.open(href);
+            window.open && window.open(href);
           } else {
             var linkTarget = link.data('ams-target') || link.attr('target');
 
             if (linkTarget) {
               if (linkTarget === '_blank') {
-                window.open(href);
+                window.open && window.open(href);
               } else {
                 if (MyAMS.form) {
                   MyAMS.form.confirmChangedForm().then(function (result) {
@@ -8222,7 +8211,7 @@ var nav = {
       $(document).on('click', 'a[target="_blank"]', function (evt) {
         evt.preventDefault();
         var target = $(evt.currentTarget);
-        window.open(target.attr('href'));
+        window.open && window.open(target.attr('href'));
         MyAMS.stats && MyAMS.stats.logEvent(target.data('ams-stats-category') || 'Navigation', target.data('ams-stats-action') || 'External', target.data('ams-stats-label') || target.attr('href'));
       }); // Top target clicks
 
@@ -8280,14 +8269,37 @@ var nav = {
       } else {
         MyAMS.dom.root.addClass('mobile-detected');
 
-        if (MyAMS.config.enableFastclick) {
-          MyAMS.require('ajax').then(function () {
+        MyAMS.require('ajax').then(function () {
+          if (MyAMS.config.enableFastclick) {
             MyAMS.ajax.check($.fn.noClickDelay, "".concat(MyAMS.env.baseURL, "../ext/js-smartclick").concat(MyAMS.env.extext, ".js")).then(function () {
               $('a', MyAMS.dom.nav).noClickDelay();
               $('a', '#hide-menu').noClickDelay();
             });
-          });
-        }
+          }
+
+          if (MyAMS.dom.root.exists()) {
+            MyAMS.ajax.check(window.Hammer, "".concat(MyAMS.env.baseURL, "../ext/hammer").concat(MyAMS.env.extext, ".js")).then(function () {
+              _hammer = new Hammer.Manager(MyAMS.dom.root.get(0));
+
+              _hammer.add(new Hammer.Pan({
+                direction: Hammer.DIRECTION_HORIZONTAL,
+                threshold: 200
+              }));
+
+              _hammer.on('panright', function (evt) {
+                if (!MyAMS.dom.root.hasClass('hidden-menu')) {
+                  MyAMS.nav.switchMenu();
+                }
+              });
+
+              _hammer.on('panleft', function (evt) {
+                if (MyAMS.dom.root.hasClass('hidden-menu')) {
+                  MyAMS.nav.switchMenu();
+                }
+              });
+            });
+          }
+        });
       }
     }
 
@@ -8382,7 +8394,7 @@ var nav = {
    *
    * @param evt: original click event
    */
-  hideMenu: function hideMenu(evt) {
+  switchMenu: function switchMenu(evt) {
     evt && evt.preventDefault();
     MyAMS.dom.root.toggleClass('hidden-menu');
 
@@ -8406,7 +8418,10 @@ var nav = {
       var state = localStorage.getItem('window-state');
 
       if (state === 'minified') {
-        $('#minifyme').click();
+        MyAMS.nav.minifyMenu({
+          currentTarget: $('#minifyme'),
+          preventDefault: function preventDefault() {}
+        });
       } else {
         MyAMS.dom.root.addClass(state);
       }

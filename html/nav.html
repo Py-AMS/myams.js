@@ -23,6 +23,10 @@
 	all active menus are closed when another one is opened. To active this mode, set the
 	<code>data-ams-menu-accordion</code> attribute to <code>true</code> on the <code>nav</code>
 	element.</p>
+	<p>A menu "minifier" button is located below the navigation menus; on desktop, it allows to
+	minify navigation menus, and only display first level menus; sub-menus are then available
+	when the mouse cursor is located over these icons. This gadget is not visible on mobile
+	devices.</p>
 </section>
 
 <section>
@@ -295,6 +299,12 @@
 	    ]
 	  }
 	]</pre>
+	<p>You can also provide custom attributes (like <code>id</code> or <code>target</code>) to any
+	menu entry by using an additional <code>attrs</code> property:</p>
+	<pre>	attrs: {
+	  id: 'myMenu',
+	  target: '_blank'
+	}</pre>
 	<p>MyAMS provides it's own private factory defined into <a href="#mod-nav.html">nav</a>
 	module; you can override this and set your own menus factory by setting a
 	<code>data-ams-menu-factory</code> attribute with the name of this factory on the

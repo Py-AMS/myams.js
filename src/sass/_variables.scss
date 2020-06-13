@@ -56,16 +56,16 @@ $tooltip-margin:                3px !default;
 $body:                    $gray-900 !default;
 $body-bg:                   #e7e7ef !default;
 $body-border:               #bfbfbf !default;
-$body-shadow:               rgba(0, 0, 0, .45);
+$body-shadow:            rgba(0, 0, 0, .45) !default;
 
 $body-scrollbar-width:         thin !default;
 $body-scrollbar-color:   rgba(182, 182, 182, 0.5) rgba(104, 104, 104, 0.9) !default;
 
-$wk-body-scrollbar-width:      10px !default;
-$wk-body-scrollbar-btn-height: 1rem !default;
-$wk-body-scrollbar-radius:     10px !default;
-$wk-body-scrollbar-thumb-bg:        rgba(182, 182, 182, 0.6) !default;
-$wk-body-scrollbar-thumb-hover-bg:  rgba(128, 128, 128, 0.8) !default;
+$wk-body-scrollbar-width:             10px !default;
+$wk-body-scrollbar-btn-height:        1rem !default;
+$wk-body-scrollbar-radius:            10px !default;
+$wk-body-scrollbar-thumb-bg:          rgba(182, 182, 182, 0.6) !default;
+$wk-body-scrollbar-thumb-hover-bg:    rgba(128, 128, 128, 0.8) !default;
 $wk-body-scrollbar-thumb-radius:      10px !default;
 
 
@@ -100,7 +100,7 @@ $nav-link-focus:            #c9c9c9 !default;
 $nav-link-hover:               #fff !default;
 $nav-link-pipe:             #e5e2cf !default;
 $nav-menu-active:           #fefefe !default;
-$nav-sub-menu-bg: #4a534d !default;
+$nav-sub-menu-bg:           #4a534d !default;
 $nav-sub-menu-active-bg:    #337ab7 !default;
 $nav-sub-menu-hover-bg:     #39423c !default;
 $nav-sub-menu-hover-border: rgba(122, 122, 122, .4) !default;

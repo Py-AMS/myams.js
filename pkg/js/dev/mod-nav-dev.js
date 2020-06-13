@@ -1,22 +1,22 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "jsrender"], factory);
+    define(["exports"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("jsrender"));
+    factory(exports);
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.jsrender);
+    factory(mod.exports);
     global.modNav = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _jsrender) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
-  _exports.nav = void 0;
+  _exports.nav = _exports.NavigationMenu = void 0;
 
   function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -32,6 +32,9 @@
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+  /**
+   * MyAMS navigation module
+   */
   var $ = MyAMS.$;
   /**
    * Dynamic navigation menu class
@@ -284,24 +287,17 @@
     return NavigationMenu;
   }();
 
-  var _initialized = false;
+  _exports.NavigationMenu = NavigationMenu;
+  var _initialized = false,
+      _hammer = null;
   /**
    * Main navigation module
-   *
-   * @type {{init: nav.init, setActiveMenu: nav.setActiveMenu, hideMenu: nav.hideMenu, restoreState: nav.restoreState, drawBreadcrumbs: nav.drawBreadcrumbs, minifyMenu: nav.minifyMenu, initElement: nav.initElement}}
    */
 
   function _openPage(href) {
     if (href.startsWith('#')) {
       if (href !== location.hash) {
-        if (MyAMS.dom.root.hasClass('mobile-view-activated')) {
-          MyAMS.dom.root.removeClass('hidden-menu');
-          setTimeout(function () {
-            window.location.hash = href;
-          }, 50);
-        } else {
-          window.location.hash = href;
-        }
+        window.location.hash = href;
       }
     } else {
       window.location = href;
@@ -407,24 +403,24 @@
           var hrefGetter = MyAMS.core.getFunctionByName(target);
 
           if (typeof hrefGetter === 'function') {
-            href = hrefGetter.call(link, params);
+            href = hrefGetter(link, params);
           }
 
           if (typeof href === 'function') {
-            href.call(link, params);
+            href(link, params);
           } else {
             // Standard AJAX or browser URL call
             // Convert %23 characters to #
             href = href.replace(/%23/, '#');
 
             if (evt.ctrlKey) {
-              window.open(href);
+              window.open && window.open(href);
             } else {
               var linkTarget = link.data('ams-target') || link.attr('target');
 
               if (linkTarget) {
                 if (linkTarget === '_blank') {
-                  window.open(href);
+                  window.open && window.open(href);
                 } else {
                   if (MyAMS.form) {
                     MyAMS.form.confirmChangedForm().then(function (result) {
@@ -458,7 +454,7 @@
         $(document).on('click', 'a[target="_blank"]', function (evt) {
           evt.preventDefault();
           var target = $(evt.currentTarget);
-          window.open(target.attr('href'));
+          window.open && window.open(target.attr('href'));
           MyAMS.stats && MyAMS.stats.logEvent(target.data('ams-stats-category') || 'Navigation', target.data('ams-stats-action') || 'External', target.data('ams-stats-label') || target.attr('href'));
         }); // Top target clicks
 
@@ -516,14 +512,37 @@
         } else {
           MyAMS.dom.root.addClass('mobile-detected');
 
-          if (MyAMS.config.enableFastclick) {
-            MyAMS.require('ajax').then(function () {
+          MyAMS.require('ajax').then(function () {
+            if (MyAMS.config.enableFastclick) {
               MyAMS.ajax.check($.fn.noClickDelay, "".concat(MyAMS.env.baseURL, "../ext/js-smartclick").concat(MyAMS.env.extext, ".js")).then(function () {
                 $('a', MyAMS.dom.nav).noClickDelay();
                 $('a', '#hide-menu').noClickDelay();
               });
-            });
-          }
+            }
+
+            if (MyAMS.dom.root.exists()) {
+              MyAMS.ajax.check(window.Hammer, "".concat(MyAMS.env.baseURL, "../ext/hammer").concat(MyAMS.env.extext, ".js")).then(function () {
+                _hammer = new Hammer.Manager(MyAMS.dom.root.get(0));
+
+                _hammer.add(new Hammer.Pan({
+                  direction: Hammer.DIRECTION_HORIZONTAL,
+                  threshold: 200
+                }));
+
+                _hammer.on('panright', function (evt) {
+                  if (!MyAMS.dom.root.hasClass('hidden-menu')) {
+                    MyAMS.nav.switchMenu();
+                  }
+                });
+
+                _hammer.on('panleft', function (evt) {
+                  if (MyAMS.dom.root.hasClass('hidden-menu')) {
+                    MyAMS.nav.switchMenu();
+                  }
+                });
+              });
+            }
+          });
         }
       }
 
@@ -618,7 +637,7 @@
      *
      * @param evt: original click event
      */
-    hideMenu: function hideMenu(evt) {
+    switchMenu: function switchMenu(evt) {
       evt && evt.preventDefault();
       MyAMS.dom.root.toggleClass('hidden-menu');
 
@@ -642,7 +661,10 @@
         var state = localStorage.getItem('window-state');
 
         if (state === 'minified') {
-          $('#minifyme').click();
+          MyAMS.nav.minifyMenu({
+            currentTarget: $('#minifyme'),
+            preventDefault: function preventDefault() {}
+          });
         } else {
           MyAMS.dom.root.addClass(state);
         }

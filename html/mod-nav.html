@@ -1,0 +1,114 @@
+<h1>MyAMS "nav" module</h1>
+<section>
+	<p>MyAMS's <code>nav</code> module is used to handle navigation into the web application. It
+	defines navigation menus creation, and handles several kinds of links as already explained
+	into <a href="#navigation.html">Links and navigation with MyAMS</a>.</p>
+</section>
+
+<section>
+	<h2>Navigation menus</h2>
+	<p>Navigation menus are an important part of any web application; a page is dedicated to
+	them in the <i>Layout</i> section (see <a href="#nav.html">Navigation menus</a>), where you
+	can discover how to create them.</p>
+</section>
+
+<section>
+	<h2>Module API</h2>
+
+	<section class="m-2" id="NavigationMenu">
+		<h3><code>class NavigationMenu</code></h3>
+		<p>This class is used internally by MyAMS to create menus and register events handlers.
+		But the class is exported so that you can use it in your own code if required.</p>
+
+		<section class="m-1">
+			<h3><code>NavigationMenu.constructor(menus, parent, settings)</code></h3>
+			<p>The constructor receives three arguments which are the menus definition object, the
+			parent into which menus are to be added, and the component settings; definition object
+			can be null if menus definition is already included into HTML code. See <a
+			href="#nav.html">Navigation menus</a> to know how menus are defined.</p>
+			<p>Settings is an object which can provide several attributes: <code>accordion</code>
+			is a boolean value specifying if menu should be used in accordion mode or not, and is
+			<code>true</code> unless explicitly defined to <code>false</code>; <code>speed</code>
+			is a number which specifies how quickly the menu items are opened or closed; default
+			value is 200 and is given in milliseconds.</p>
+		</section>
+		<section class="m-1">
+			<h3><code>NavigationMenu.getMenus()</code></h3>
+			<p>This method is used to create HTML elements from menus definition provided to
+			the constructor, using internal <code>Menu</code> and <code>MenuHeader</code>
+			classes.</p>
+			<p>Please note that the method is creating and returns HTML elements, but without
+			including them into the DOM.</p>
+		</section>
+		<section class="m-1">
+			<h3><code>NavigationMenu.init(menus)</code></h3>
+			<p>This method receives menus as HTML elements created by the <code>getMenus</code>
+			method. She goes through all menus items, adds aditional elements if required (like
+			opening/closing signs on items with sub-menus), and sets CSS classes on active menus.
+			</p>
+		</section>
+		<section class="m-1">
+			<h3><code>NavigationMenu.render()</code></h3>
+			<p>This method is calling the <code>getMenus()</code> method to create menus, then
+			<code>init()</code> to initialize them; the menus are then added to the DOM.</p>
+		</section>
+	</section>
+
+	<section class="m-2" id="init">
+		<h3><code>MyAMS.nav.init()</code></h3>
+		<p>This function is called automatically by MyAMS after module loading. She creates a
+		JQuery <code>$().navigationMenu()</code> components, which is using the
+		<code>NavigationMenu</code> class.</p>
+		<p>If <a href="#config.html!ajaxNav"><code>MyAMS.config.ajaxNav</code></a> is set to
+		<code>true</code> (which is the default), this module also registers events handlers
+		which are used to handle all navigation links, including those which are created into
+		MyAMS navigation menu.</p>
+	</section>
+
+	<section class="m-2" id="initElement">
+		<h3><code>MyAMS.nav.initElement(element)</code></h3>
+		<p>This function is called automatically by MyAMS on content initialization. It's only
+		action is actually to create a navigation menu from the <code>nav</code> HTML element.</p>
+	</section>
+
+	<section class="m-2" id="setActiveMenu">
+		<h3><code>MyAMS.nav.setActiveMenu(menu)</code></h3>
+		<p>This function is used to <i>activate</i> the menu given as argument. This activation
+		will highlight the menu, and the navigation bar will be scrolled if necessary so that
+		the activated menu is made visible.</p>
+		<p>This function is generally called automatically by MyAMS on any menu click.</p>
+	</section>
+
+	<section class="m-2" id="drawBreadcrumbs">
+		<h3><code>MyAMS.nav.drawBreadcrumbs()</code></h3>
+		<p>As explained in the <a href="#ribbon.html">Breadcrumbs ribbon</a>'s page of MyAMS
+		layout section, breadcrumbs are also handled automatically when navigation menus are used;
+		the activated menu is used to draw breadcrumbs.</p>
+	</section>
+
+	<section class="m-2" id="minifyMenu">
+		<h3><code>MyAMS.nav.minifyMenu(evt)</code></h3>
+		<p>This function is used as a click event handler of navigation menu minifying button (see
+		<a href="#nav.html">Navigation menus</a> in MyAMS's layout section).</p>
+		<p>The navigation menu is minified by adding a <code>minified</code> class to the page
+		body; the minifying state is then stored into local storage, and set automatically
+		on page reload.</p>
+	</section>
+
+	<section class="m-2" id="switchMenu">
+		<h3><code>MyAMS.nav.switchMenu(evt)</code></h3>
+		<p>This function is used as a click event handler of navigation menus show/hide button,
+		located on the top right of the window (see <a href="#show-menu.html">Show/hide menus</a>
+		in MyAMS layout section).</p>
+		<p>The navigation menu is shown or hidden by adding a <code>hidden-menu</code> class to
+		the page body; the state of the menus is stored into local storage, and set automatically
+		on page reload.</p>
+	</section>
+
+	<section class="m-2" id="restoreState">
+		<h3><code>MyAMS.nav.restoreState()</code></h3>
+		<p>This function is used to restore state of navigation menus by looking into local
+		storage.</p>
+	</section>
+
+</section>

@@ -2,8 +2,6 @@
  * MyAMS navigation module
  */
 
-import "jsrender";
-
 const $ = MyAMS.$;
 
 
@@ -76,7 +74,7 @@ class Menu {
 	}
 }
 
-class NavigationMenu {
+export class NavigationMenu {
 
 	constructor(menus, parent, settings) {
 		this.menus = menus;
@@ -120,7 +118,8 @@ class NavigationMenu {
 		});
 		// open active level
 		menus.find('li.active').each((idx, elt) => {
-			const activeParent = $(elt).parents('ul'),
+			const
+				activeParent = $(elt).parents('ul'),
 				activeItem = activeParent.parent('li');
 			activeParent.slideDown(settings.speed);
 			activeItem.find('b:first').html(settings.openedSign);
@@ -137,8 +136,9 @@ class NavigationMenu {
 				href = link.attr('href').replace(/^#/, ''),
 				parentUL = link.parent().find("ul");
 			if (settings.accordion) {
-				const parents = link.parent().parents("ul"),
-					  visibleMenus = menus.find("ul:visible");
+				const
+					parents = link.parent().parents("ul"),
+					visibleMenus = menus.find("ul:visible");
 				visibleMenus.each((visibleIndex, visibleElt) => {
 					let close = true;
 					parents.each((parentIndex, parentElt) => {
@@ -184,26 +184,18 @@ class NavigationMenu {
 }
 
 
-let _initialized = false;
+let _initialized = false,
+	_hammer = null;
 
 
 /**
  * Main navigation module
- *
- * @type {{init: nav.init, setActiveMenu: nav.setActiveMenu, hideMenu: nav.hideMenu, restoreState: nav.restoreState, drawBreadcrumbs: nav.drawBreadcrumbs, minifyMenu: nav.minifyMenu, initElement: nav.initElement}}
  */
 
 function _openPage(href) {
 	if (href.startsWith('#')) {
 		if (href !== location.hash) {
-			if (MyAMS.dom.root.hasClass('mobile-view-activated')) {
-				MyAMS.dom.root.removeClass('hidden-menu');
-				setTimeout(() => {
-					window.location.hash = href;
-				}, 50);
-			} else {
-				window.location.hash = href;
-			}
+			window.location.hash = href;
 		}
 	} else {
 		window.location = href;
@@ -303,21 +295,21 @@ export const nav = {
 				}
 				const hrefGetter = MyAMS.core.getFunctionByName(target);
 				if (typeof hrefGetter === 'function') {
-					href = hrefGetter.call(link, params);
+					href = hrefGetter(link, params);
 				}
 				if (typeof href === 'function') {
-					href.call(link, params);
+					href(link, params);
 				} else {
 					// Standard AJAX or browser URL call
 					// Convert %23 characters to #
 					href = href.replace(/%23/, '#');
 					if (evt.ctrlKey) {
-						window.open(href);
+						window.open && window.open(href);
 					} else {
 						const linkTarget = link.data('ams-target') || link.attr('target');
 						if (linkTarget) {
 							if (linkTarget === '_blank') {
-								window.open(href);
+								window.open && window.open(href);
 							} else {
 								if (MyAMS.form) {
 									MyAMS.form.confirmChangedForm().then((result) => {
@@ -354,7 +346,7 @@ export const nav = {
 			$(document).on('click', 'a[target="_blank"]', (evt) => {
 				evt.preventDefault();
 				const target = $(evt.currentTarget);
-				window.open(target.attr('href'));
+				window.open && window.open(target.attr('href'));
 				MyAMS.stats && MyAMS.stats.logEvent(
 					target.data('ams-stats-category') || 'Navigation',
 					target.data('ams-stats-action') || 'External',
@@ -410,15 +402,35 @@ export const nav = {
 				MyAMS.dom.root.addClass('desktop-detected');
 			} else {
 				MyAMS.dom.root.addClass('mobile-detected');
-				if (MyAMS.config.enableFastclick) {
-					MyAMS.require('ajax').then(() => {
+				MyAMS.require('ajax').then(() => {
+					if (MyAMS.config.enableFastclick) {
 						MyAMS.ajax.check($.fn.noClickDelay,
 							`${MyAMS.env.baseURL}../ext/js-smartclick${MyAMS.env.extext}.js`).then(() => {
 							$('a', MyAMS.dom.nav).noClickDelay();
 							$('a', '#hide-menu').noClickDelay();
 						});
-					})
-				}
+					}
+					if (MyAMS.dom.root.exists()) {
+						MyAMS.ajax.check(window.Hammer,
+							`${MyAMS.env.baseURL}../ext/hammer${MyAMS.env.extext}.js`).then(() => {
+							_hammer = new Hammer.Manager(MyAMS.dom.root.get(0));
+							_hammer.add(new Hammer.Pan({
+								direction: Hammer.DIRECTION_HORIZONTAL,
+								threshold: 200
+							}));
+							_hammer.on('panright', (evt) => {
+								if (!MyAMS.dom.root.hasClass('hidden-menu')) {
+									MyAMS.nav.switchMenu();
+								}
+							});
+							_hammer.on('panleft', (evt) => {
+								if (MyAMS.dom.root.hasClass('hidden-menu')) {
+									MyAMS.nav.switchMenu();
+								}
+							});
+						});
+					}
+				});
 			}
 		}
 
@@ -506,10 +518,10 @@ export const nav = {
 		MyAMS.dom.root.toggleClass('minified');
 		if (MyAMS.dom.root.hasClass('minified')) {
 			MyAMS.core.switchIcon($('i', evt.currentTarget),
-				'arrow-circle-left', 'arrow-circle-right')
+				'arrow-circle-left', 'arrow-circle-right');
 		} else {
 			MyAMS.core.switchIcon($('i', evt.currentTarget),
-				'arrow-circle-right', 'arrow-circle-left')
+				'arrow-circle-right', 'arrow-circle-left');
 		}
 		if (window.localStorage) {
 			if (MyAMS.dom.root.hasClass('minified')) {
@@ -525,7 +537,7 @@ export const nav = {
 	 *
 	 * @param evt: original click event
 	 */
-	hideMenu: (evt) => {
+	switchMenu: (evt) => {
 		evt && evt.preventDefault();
 		MyAMS.dom.root.toggleClass('hidden-menu');
 		if (window.localStorage) {
@@ -547,7 +559,10 @@ export const nav = {
 		if (window.localStorage) {
 			const state = localStorage.getItem('window-state');
 			if (state === 'minified') {
-				$('#minifyme').click();
+				MyAMS.nav.minifyMenu({
+					currentTarget: $('#minifyme'),
+					preventDefault: () => {}
+				});
 			} else {
 				MyAMS.dom.root.addClass(state);
 			}
