@@ -14,6 +14,7 @@
 
 import "popper.js";
 import "bootstrap";
+import "hammerjs";
 
 
 import MyAMS, { init } from "./ext-base";
