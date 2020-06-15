@@ -16,6 +16,7 @@
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
+  _exports.linkClickHandler = linkClickHandler;
   _exports.nav = _exports.NavigationMenu = void 0;
 
   function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -303,6 +304,96 @@
       window.location = href;
     }
   }
+  /**
+   * Main link click event handler
+   *
+   * @param evt
+   */
+
+
+  function linkClickHandler(evt) {
+    return new Promise(function (resolve, reject) {
+      var link = $(evt.currentTarget),
+          handlers = link.data('ams-disabled-handlers');
+
+      if (handlers === true || handlers === 'click' || handlers === 'all') {
+        return;
+      }
+
+      var href = link.attr('href') || link.data('ams-url');
+
+      if (!href || href.startsWith('javascript:') || link.attr('target') || link.data('ams-context-menu') === true) {
+        return;
+      }
+
+      evt.preventDefault();
+      evt.stopPropagation();
+      var url, target, params;
+
+      if (href.indexOf('?') >= 0) {
+        url = href.split('?');
+        target = url[0];
+        params = url[1].unserialize();
+      } else {
+        target = href;
+        params = undefined;
+      }
+
+      var hrefGetter = MyAMS.core.getFunctionByName(target);
+
+      if (typeof hrefGetter === 'function') {
+        href = hrefGetter(link, params);
+      }
+
+      if (typeof href === 'function') {
+        resolve(href(link, params));
+      } else {
+        // Standard AJAX or browser URL call
+        // Convert %23 characters to #
+        href = href.replace(/%23/, '#');
+
+        if (evt.ctrlKey) {
+          window.open && window.open(href);
+          resolve();
+        } else {
+          var linkTarget = link.data('ams-target') || link.attr('target');
+
+          if (linkTarget) {
+            if (linkTarget === '_blank') {
+              window.open && window.open(href);
+              resolve();
+            } else {
+              if (MyAMS.form) {
+                MyAMS.form.confirmChangedForm().then(function (result) {
+                  if (result !== 'success') {
+                    return;
+                  }
+
+                  MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback')).then(resolve, reject);
+                });
+              } else {
+                MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback')).then(resolve, reject);
+              }
+            }
+          } else {
+            if (MyAMS.form) {
+              MyAMS.form.confirmChangedForm().then(function (result) {
+                if (result !== 'success') {
+                  return;
+                }
+
+                _openPage(href);
+              }).then(resolve);
+            } else {
+              _openPage(href);
+
+              resolve();
+            }
+          }
+        }
+      }
+    });
+  }
 
   var nav = {
     /**
@@ -374,81 +465,14 @@
         }); // Activate clicks
 
         $(document).on('click', 'a[href!="#"]:not([data-toggle]), ' + '[data-ams-url]:not([data-toggle])', function (evt) {
-          var link = $(evt.currentTarget),
-              handlers = link.data('ams-disabled-handlers');
+          // check for specific click handler
+          var handler = $(evt).data('ams-click-handler');
 
-          if (handlers === true || handlers === 'click' || handlers === 'all') {
+          if (handler) {
             return;
           }
 
-          var href = link.attr('href') || link.data('ams-url');
-
-          if (!href || href.startsWith('javascript:') || link.attr('target') || link.data('ams-context-menu') === true) {
-            return;
-          }
-
-          evt.preventDefault();
-          evt.stopPropagation();
-          var url, target, params;
-
-          if (href.indexOf('?') >= 0) {
-            url = href.split('?');
-            target = url[0];
-            params = url[1].unserialize();
-          } else {
-            target = href;
-            params = undefined;
-          }
-
-          var hrefGetter = MyAMS.core.getFunctionByName(target);
-
-          if (typeof hrefGetter === 'function') {
-            href = hrefGetter(link, params);
-          }
-
-          if (typeof href === 'function') {
-            href(link, params);
-          } else {
-            // Standard AJAX or browser URL call
-            // Convert %23 characters to #
-            href = href.replace(/%23/, '#');
-
-            if (evt.ctrlKey) {
-              window.open && window.open(href);
-            } else {
-              var linkTarget = link.data('ams-target') || link.attr('target');
-
-              if (linkTarget) {
-                if (linkTarget === '_blank') {
-                  window.open && window.open(href);
-                } else {
-                  if (MyAMS.form) {
-                    MyAMS.form.confirmChangedForm().then(function (result) {
-                      if (result !== 'success') {
-                        return;
-                      }
-
-                      MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback'));
-                    });
-                  } else {
-                    MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback'));
-                  }
-                }
-              } else {
-                if (MyAMS.form) {
-                  MyAMS.form.confirmChangedForm().then(function (result) {
-                    if (result !== 'success') {
-                      return;
-                    }
-
-                    _openPage(href);
-                  });
-                } else {
-                  _openPage(href);
-                }
-              }
-            }
-          }
+          return linkClickHandler(evt);
         }); // Blank target clicks
 
         $(document).on('click', 'a[target="_blank"]', function (evt) {

@@ -1,6 +1,6 @@
 <h1>MyAMS "modal" module</h1>
 <section>
-	<p>Modals have already discussed partially in the <a href="#navigation.html">navigation</a>
+	<p>Modals have already been discussed partially in the <a href="#navigation.html">navigation</a>
 	section.</p>
 
 	<div class="alert alert-info mx-2" role="alert">
@@ -8,4 +8,190 @@
 		<p>Please note that while Bootstrap natively doesn't support stacked forms, MyAMS provides
 		a hook which is allowing such stacking!</p>
 	</div>
+</section>
+
+<section data-ams-modules="modal">
+	<h2>Stacked modals</h2>
+	<p>Even if this should be used with care because of usability concerns, MyAMS allows you to
+	stack modals:</p>
+	<p><a href="#modal1" class="btn btn-light" data-toggle="modal">Open modal</a></p>
+	<p>There is absolutely no specific code to write to handle modals stacking: each time a new
+	modal is opened, it is automatically stacked over the previous ones!</p>
+	<div id="modal1" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">First modal title</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-times"></i>
+					</button>
+				</div>
+				<form class="ams-form">
+					<div class="modal-body">
+						<p class="mypara">First modal body</p>
+						<div class="form-group row">
+							<label for="form.email"
+								   class="col-sm-2 col-form-label col-form-label-sm">Field 1</label>
+							<div class="col-sm-10">
+								<div class="form-widget">
+									<input type="email" id="form.email"
+										   class="form-control form-control-sm">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+								data-toggle="modal" data-ams-url="#modal2">Open second modal</button>
+						<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="modal2" class="modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Second modal title</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-times"></i>
+					</button>
+				</div>
+				<form class="ams-form">
+					<div class="modal-body">
+						<p class="mypara">Second modal body</p>
+						<div class="form-group row">
+							<label for="form2.email"
+								   class="col-sm-2 col-form-label col-form-label-sm">Field 2</label>
+							<div class="col-sm-10">
+								<div class="form-widget">
+									<input type="email" id="form2.email"
+										   class="form-control form-control-sm">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h2>Module API</h2>
+
+	<section class="m-2" id="modalToggleEventHandler">
+		<h3><code>modalToggleEventHandler(evt): Promise&lt;Boolean&gt;</code></h3>
+		<p>This event handler if the default one used to handle <code>click</code> events on
+		elements with <code>data-toggle="modal"</code> attribute. The default Bootstrap handler
+		is disabled when setting this event handler, so that default Bootstrap behaviour can be
+		cancelled.</p>
+		<p>You can set your own event handler by adding a <code>data-ams-modal-handler</code>
+		attribute on the element used to toggle the modal, with the dotted name of your event
+		handler as value; your handler should then return a Promise.</p>
+		<p>The default event handler is checking for toggle source attributes before calling
+		<a href="#mod-modal.html!open"><code>MyAMS.modal.open()</code></a> to open the modal; if
+		the <code>disabled</code> attribute is set, if the <code>disabled</code> class is set or
+		if the <code>data-ams-disabled-handlers</code> is set to <code>true</code>,
+		<code>click</code> or <code>all</code>, the event handler is cancelled and the promise
+		is resolved with <code>false</code>.</p>
+		<p>You can stop event propagation by setting <code>data-ams-stop-propagation</code> to
+		<code>true</code>.</p>
+	</section>
+
+	<section class="m-2" id="modalShownEventHandler">
+		<h3><code>modalShowEventHandler(evt): Promise</code></h3>
+		<p>This event handler is used to handle <code>shown.bs.modal</code> event on modals; you
+		can use another handler by setting the <code>data-ams-shown-handler</code> attribute
+		on the modal, with the dotted name of your event handler; your handler should return a
+		Promise.</p>
+		<p>The default handler is mainly used to handle modals stacking, by setting a
+		<code>z-index</code> value based on already visible modals; this handler is also
+		removing Bootstrap default handler of elements with <code>data-dismiss="modal"</code> to
+		register <code>modalDismissHandler</code>.</p>
+	</section>
+
+	<section class="m-2" id="dynamicModalShownEventHandler">
+		<h3><code>dynamicModalShownEventHandler(evt): Promise</code></h3>
+		<p>This function is defined as an event handler for <code>show.bs.modal</code>
+		events on modals created by the <code>open()</code> function.</p>
+		<p>Ths function is used to initialize dynamic modal contents, using <a
+		href="#config.html!initContent"><code>MyAMS.config.initContent</code></a>; default
+		behaviour is to use <a href="#core.html!initContent"><code>MyAMS.core.initContent()</code>
+		</a> to initialize all registered modules and plug-ins into the new modal, but you can
+		set <code>data-ams-init-content</code> attribute on the modal with the name of another
+		function to use.</p>
+	</section>
+
+	<section class="m-2" id="modalDismissEventHandler">
+		<h3><code>modalDismissEventHandler(evt): Promise</code></h3>
+		<p>This event handler is the default one used to handle elements used to dismiss modals;
+		you can define another handler by setting the <code>data-ams-dismiss-handler</code>
+		attribute on the element.</p>
+		<p>The default handler is mainly used to check that if <a
+		href="#config.html!warnOnFormChange">forms changes warnings</a> are enabled, and if a
+		modified form is inside a modal, a warning message will be displayed to allow user to
+		cancel modal closing; otherwise the top level modal is closed.</p>
+	</section>
+
+	<section class="m-2" id="modalHiddenEventHandler">
+		<h3><code>modalHiddenEventHandler(evt)</code></h3>
+		<p>This event handler is used to handler <code>hidden.bs.modal</code> event on modals;
+		you can use another handler by setting the <code>data-ams-hidden-handler</code> attribute
+		on the modal, with the dotted name of your event handler.</p>
+		<p>The default handler is checking if other modals are still visible, which can happen
+		if you stack modals; in this case, remaining modals scrollbars are checked and a CSS class
+		<code>modal-open</code> is restored on document body.</p>
+	</section>
+
+	<section class="m-2" id="dynamicModalHiddenEventHandler">
+		<h3><code>dynamicModalEventHandler(evt)</code></h3>
+		<p>This function is defined as an event handler for <code>hidden.bs.modal</code> events
+		on modals created by the <code>open()</code> function.</p>
+		<p>This function is used to clear modal contents before removing it's content from the
+		DOM, using <a href="#config.html!clearContent"><code>MyAMS.config.clearContent</code></a>;
+		default behaviour is to use <a href="#core.html!clearContent"><code>MyAMS.core.clearContent()
+		</code></a>, but you can set <code>data-ams-clear-content</code> attribute on the modal
+		with the name of another function to use.</p>
+	</section>
+
+	<section class="m-2" id="init">
+		<h3><code>MyAMS.modal.init()</code></h3>
+		<p>This function is used to initialize events handlers defined above; see description of
+		each event handler to know how you can override default behaviours.</p>
+	</section>
+
+	<section class="m-2" id="open">
+		<h3><code>MyAMS.modal.open(source, options): Promise</code></h3>
+		<p>This function is used to open a modal.</p>
+		<p>The <code>source</code> can be a JQuery object or a string; if a string is provided,
+		it should be the URL to use to get modal content; otherwise, the JQuery object should
+		contain this URL in it's <code>href</code> or <code>data-ams-url</code> attributes.</p>
+		<p>The URL can be a classic URL, or a function name; if this last case, the function is
+		called to return the final URL.</p>
+		<p>If the URL is starting with a <code>#</code>, it should match a modal which is already
+		defined into HTML page; otherwise, an AJAX call is made to download modal content. When
+		download is complete, the <a href="#mod-ajax.html"><code>ajax</code></a> module is used
+		to handle server's response.</p>
+		<p>If the response is a JSON object, <a href="#mod-ajax.html!handleJSON">
+		<code>MyAMS.ajax.handleJSON</code></a> is used to handle the result; if it is HTML or text,
+		a <code>.modal</code> element is created to contain the result, before calling Bootstrap's
+		<code>.modal()</code>.</p>
+	</section>
+
+	<section class="m-2" id="close">
+		<h3><code>MyAMS.modal.close(element)</code></h3>
+		<p>This function is defined as an event handler for <code>hidden.bs.modal</code> events
+		on modals created by the previous <code>open()</code> function.</p>
+		<p>The provided <code>element</code> can be a JQuery selector or a JQuery object for any
+		element located into the modal which must be closed; if nothing is provided, MyAMS is
+		looking for the last opened modal.</p>
+	</section>
+
 </section>

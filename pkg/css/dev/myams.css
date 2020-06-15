@@ -350,19 +350,25 @@ img {
 .modal-body {
   overflow-y: auto;
   max-height: calc(100vh - 210px); }
+  @media (max-width: 767px) {
+    .modal-body {
+      padding: 0.1rem !important; } }
 
 .modal-backdrop.show {
   opacity: 0.2; }
-  .modal-backdrop.show + .modal-backdrop.show {
-    opacity: 0; }
 
 .btn.btn-light {
   border-color: #ced4da; }
 
+/**
+ * Forms contents style
+ */
 .ams-form {
-  font-size: 90%; }
+  font-size: 95%; }
   .ams-form.border {
     border: 1px solid #dee2e6; }
+  .ams-form .form-group:last-child {
+    margin-bottom: 0.25rem; }
   .ams-form .col-form-label.required {
     font-weight: bold; }
     .ams-form .col-form-label.required .hint {
@@ -380,6 +386,8 @@ img {
     overflow: hidden; }
   .ams-form .form-tabs {
     margin-bottom: 1rem; }
+    .ams-form .form-tabs:last-child {
+      margin-bottom: 0.5rem; }
   .ams-form .nav-link {
     padding: 0.3rem 1rem;
     font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
@@ -392,6 +400,8 @@ img {
     padding: 0.2rem 0.5rem 0.1rem;
     border: 0;
     background: rgba(255, 255, 255, 0.9); }
+    .ams-form fieldset:last-child {
+      padding: 0.2rem 0.5rem 0.5rem; }
     .ams-form fieldset[disabled] > section,
     .ams-form fieldset[disabled] > article,
     .ams-form fieldset[disabled] > div {
@@ -399,6 +409,8 @@ img {
     .ams-form fieldset.border {
       border: 1px solid #dee2e6;
       border-radius: 0.25rem; }
+    .ams-form fieldset.switched legend {
+      margin-bottom: 0.2rem; }
     .ams-form fieldset legend {
       font-size: 0.95rem;
       font-weight: normal; }
@@ -4703,14 +4715,14 @@ a.close.disabled {
 .modal-body {
   position: relative;
   flex: 1 1 auto;
-  padding: 1rem; }
+  padding: 0.5rem; }
 
 .modal-footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  padding: 0.75rem;
+  padding: 0.25rem;
   border-top: 1px solid #dee2e6;
   border-bottom-right-radius: calc(0.3rem - 1px);
   border-bottom-left-radius: calc(0.3rem - 1px); }

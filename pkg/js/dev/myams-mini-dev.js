@@ -7551,17 +7551,141 @@ if (window.MyAMS) {
 /*!*****************************!*\
   !*** ./src/js/mod-modal.js ***!
   \*****************************/
-/*! exports provided: modal */
+/*! exports provided: modalToggleEventHandler, modalShownEventHandler, dynamicModalShownEventHandler, modalDismissEventHandler, modalHiddenEventHandler, dynamicModalHiddenEventHandler, modal */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalToggleEventHandler", function() { return modalToggleEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalShownEventHandler", function() { return modalShownEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicModalShownEventHandler", function() { return dynamicModalShownEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalDismissEventHandler", function() { return modalDismissEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalHiddenEventHandler", function() { return modalHiddenEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicModalHiddenEventHandler", function() { return dynamicModalHiddenEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modal", function() { return modal; });
 /**
  * MyAMS modal dialogs support
  */
 var $ = MyAMS.$;
 var _initialized = false;
+/*
+ * Standard data-toggle="modal" handler
+ */
+
+function modalToggleEventHandler(evt) {
+  return new Promise(function (resolve, reject) {
+    var source = $(evt.currentTarget),
+        handlers = source.data('ams-disabled-handlers');
+
+    if (source.attr('disabled') || source.hasClass('disabled') || handlers === true || handlers === 'click' || handlers === 'all') {
+      resolve(false);
+      return;
+    }
+
+    if (source.data('ams-context-menu') === true) {
+      resolve(false);
+      return;
+    }
+
+    if (source.data('ams-stop-propagation') === true) {
+      evt.stopPropagation();
+    }
+
+    evt.preventDefault();
+    MyAMS.modal.open(source).then(function () {
+      resolve(true);
+    }, reject);
+  });
+}
+/**
+ * Standard modal shown event handler
+ * This handler is used to allow modals stacking
+ */
+
+function modalShownEventHandler(evt) {
+  var zIndexModal = 1100; // Enable modals stacking
+
+  var dialog = $(evt.target),
+      visibleModalsCount = $('.modal:visible').length,
+      zIndex = zIndexModal + 100 * visibleModalsCount;
+  dialog.css('z-index', zIndex);
+  setTimeout(function () {
+    $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
+  }, 0); // Check form contents before closing modals
+
+  $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', function (evt) {
+    var handler = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
+    return MyAMS.core.executeFunctionByName(handler, document, evt);
+  });
+}
+/**
+ * Dynamic modal 'shown' callback
+ * This callback is used to initialize modal's viewport size
+ *
+ * @param evt: source event
+ */
+
+function dynamicModalShownEventHandler(evt) {
+  var dialog = $(evt.target);
+  return MyAMS.core.executeFunctionByName(dialog.data('ams-init-content') || MyAMS.config.initContent, document, dialog);
+}
+/**
+ * Modal dismiss handler
+ */
+
+function modalDismissEventHandler(evt) {
+  return new Promise(function (resolve, reject) {
+    var source = $(evt.currentTarget),
+        dialog = source.parents('.modal').first();
+    dialog.data('modal-result', $(evt.currentTarget).data('modal-dismiss-value'));
+
+    if (MyAMS.form) {
+      MyAMS.form.confirmChangedForm(dialog).then(function (status) {
+        if (status === 'success') {
+          dialog.modal('hide');
+        }
+      }).then(resolve, reject);
+    } else {
+      dialog.modal('hide');
+      resolve();
+    }
+  });
+}
+/**
+ * Standard modal hidden event handler
+ *
+ * If several visible modals are still, a "modal-open" class is added to body to ensure
+ * modals are still visible.
+ */
+
+function modalHiddenEventHandler(evt) {
+  if ($('.modal:visible').length > 0) {
+    $.fn.modal.Constructor.prototype._checkScrollbar();
+
+    $.fn.modal.Constructor.prototype._setScrollbar();
+
+    $('body').addClass('modal-open');
+  }
+}
+/**
+ * Dynamic modal 'hidden' callback
+ * This callback is used to clear and remove dynamic modals
+ *
+ * @param evt: source event
+ */
+
+function dynamicModalHiddenEventHandler(evt) {
+  var dialog = $(evt.target);
+  MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog);
+
+  if (dialog.data('dynamic') === true) {
+    dialog.remove();
+  }
+}
+/**
+ * Main modal module definition
+ */
+
 var modal = {
   init: function init() {
     if (_initialized) {
@@ -7572,72 +7696,24 @@ var modal = {
 
     if (MyAMS.config.ajaxNav) {
       // Initialize modal dialogs links
-      $(document).on('click', '[data-toggle="modal"]', function (evt) {
-        var source = $(evt.currentTarget),
-            handlers = source.data('ams-disabled-handlers');
-
-        if (handlers === true || handlers === 'click' || handlers === 'all') {
-          return;
-        }
-
-        if (source.data('ams-context-menu') === true) {
-          return;
-        }
-
-        if (source.data('ams-stop-propagation') === true) {
-          evt.stopPropagation();
-        }
-
-        evt.preventDefault();
-
-        MyAMS.require('modal').then(function () {
-          MyAMS.modal.open(source);
-        });
+      // Standard Bootstrap handlers are removed!!
+      $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', function (evt) {
+        var handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
+        MyAMS.core.executeFunctionByName(handler, document, evt);
       });
-    }
-    /**
-     * Handle modal events to allow modals stacking
-     */
+    } // Handle modal shown event to allow modals stacking
 
 
-    var zIndexModal = 1100;
     $(document).on('shown.bs.modal', '.modal', function (evt) {
-      // Enable modals stacking
-      var dialog = $(evt.target),
-          visibleModalsCount = $('.modal:visible').length,
-          zIndex = zIndexModal + 100 * visibleModalsCount;
-      dialog.css('z-index', zIndex);
-      setTimeout(function () {
-        $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
-      }, 0); // Check form contents before closing modals
+      var handler = $(evt.currentTarget).data('ams-shown-handler') || modalShownEventHandler;
+      MyAMS.core.executeFunctionByName(handler, document, evt);
+    }); // Handle modal hidden event to check remaining modals
 
-      $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', function (evt) {
-        var source = $(evt.currentTarget),
-            dialog = source.parents('.modal').first();
-        dialog.data('modal-result', $(evt.currentTarget).data('modal-dismiss-value'));
-
-        if (MyAMS.form) {
-          MyAMS.form.confirmChangedForm(dialog).then(function (status) {
-            if (status === 'success') {
-              dialog.modal('hide');
-            }
-          });
-        } else {
-          dialog.modal('hide');
-        }
-      });
-    });
-    $(document).on('hidden.bs.modal', '.modal', function () {
-      if ($('.modal:visible').length > 0) {
-        $.fn.modal.Constructor.prototype._checkScrollbar();
-
-        $.fn.modal.Constructor.prototype._setScrollbar();
-
-        $('body').addClass('modal-open');
-      }
+    $(document).on('hidden.bs.modal', '.modal', function (evt) {
+      var handler = $(evt.currentTarget).data('ams-hidden-handler') || modalHiddenEventHandler;
+      MyAMS.core.executeFunctionByName(handler, document, evt);
     });
   },
-  initElement: function initElement(element) {},
   open: function open(source, options) {
     return new Promise(function (resolve, reject) {
       var sourceData = {},
@@ -7646,11 +7722,12 @@ var modal = {
       if (typeof source !== 'string') {
         sourceData = source.data();
         url = source.attr('href') || sourceData.amsUrl;
-        var urlGetter = MyAMS.core.getFunctionByName(url);
+      }
 
-        if (typeof urlGetter === 'function') {
-          url = urlGetter.call(source);
-        }
+      var urlGetter = MyAMS.core.getFunctionByName(url);
+
+      if (typeof urlGetter === 'function') {
+        url = urlGetter(source);
       }
 
       if (!url) {
@@ -7693,30 +7770,17 @@ var modal = {
                 };
                 var settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                 settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
-                $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', modal.show).on('hidden.bs.modal', modal.hidden).modal(settings);
+                $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 
                 if (MyAMS.stats && !(sourceData.amsLogEvent === false || dialogData.amsLogEvent === false)) {
                   MyAMS.stats.logPageview(url);
                 }
 
             }
-          }).then(function () {
-            resolve();
-          });
+          }).then(resolve);
         });
       }
     });
-  },
-
-  /**
-   * Dynamic modal 'shown' callback
-   * This callback is used to initialize modal's viewport size
-   *
-   * @param evt: source event
-   */
-  show: function show(evt) {
-    var dialog = $(evt.target);
-    MyAMS.core.initContent(dialog);
   },
 
   /**
@@ -7735,21 +7799,6 @@ var modal = {
 
     if (dialog.length > 0) {
       dialog.modal('hide');
-    }
-  },
-
-  /**
-   * Dynamic modal 'hidden' callback
-   * This callback is used to remove dynamic modals
-   *
-   * @param evt: source event
-   */
-  hidden: function hidden(evt) {
-    var dialog = $(evt.target);
-    MyAMS.core.clearContent(dialog);
-
-    if (dialog.data('dynamic') === true) {
-      dialog.remove();
     }
   }
 };
@@ -7770,12 +7819,13 @@ if (MyAMS.env.bundle) {
 /*!***************************!*\
   !*** ./src/js/mod-nav.js ***!
   \***************************/
-/*! exports provided: NavigationMenu, nav */
+/*! exports provided: NavigationMenu, linkClickHandler, nav */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationMenu", function() { return NavigationMenu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linkClickHandler", function() { return linkClickHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nav", function() { return nav; });
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -8060,7 +8110,96 @@ function _openPage(href) {
     window.location = href;
   }
 }
+/**
+ * Main link click event handler
+ *
+ * @param evt
+ */
 
+
+function linkClickHandler(evt) {
+  return new Promise(function (resolve, reject) {
+    var link = $(evt.currentTarget),
+        handlers = link.data('ams-disabled-handlers');
+
+    if (handlers === true || handlers === 'click' || handlers === 'all') {
+      return;
+    }
+
+    var href = link.attr('href') || link.data('ams-url');
+
+    if (!href || href.startsWith('javascript:') || link.attr('target') || link.data('ams-context-menu') === true) {
+      return;
+    }
+
+    evt.preventDefault();
+    evt.stopPropagation();
+    var url, target, params;
+
+    if (href.indexOf('?') >= 0) {
+      url = href.split('?');
+      target = url[0];
+      params = url[1].unserialize();
+    } else {
+      target = href;
+      params = undefined;
+    }
+
+    var hrefGetter = MyAMS.core.getFunctionByName(target);
+
+    if (typeof hrefGetter === 'function') {
+      href = hrefGetter(link, params);
+    }
+
+    if (typeof href === 'function') {
+      resolve(href(link, params));
+    } else {
+      // Standard AJAX or browser URL call
+      // Convert %23 characters to #
+      href = href.replace(/%23/, '#');
+
+      if (evt.ctrlKey) {
+        window.open && window.open(href);
+        resolve();
+      } else {
+        var linkTarget = link.data('ams-target') || link.attr('target');
+
+        if (linkTarget) {
+          if (linkTarget === '_blank') {
+            window.open && window.open(href);
+            resolve();
+          } else {
+            if (MyAMS.form) {
+              MyAMS.form.confirmChangedForm().then(function (result) {
+                if (result !== 'success') {
+                  return;
+                }
+
+                MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback')).then(resolve, reject);
+              });
+            } else {
+              MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback')).then(resolve, reject);
+            }
+          }
+        } else {
+          if (MyAMS.form) {
+            MyAMS.form.confirmChangedForm().then(function (result) {
+              if (result !== 'success') {
+                return;
+              }
+
+              _openPage(href);
+            }).then(resolve);
+          } else {
+            _openPage(href);
+
+            resolve();
+          }
+        }
+      }
+    }
+  });
+}
 var nav = {
   /**
    * initialize navigation throught data attributes
@@ -8131,81 +8270,14 @@ var nav = {
       }); // Activate clicks
 
       $(document).on('click', 'a[href!="#"]:not([data-toggle]), ' + '[data-ams-url]:not([data-toggle])', function (evt) {
-        var link = $(evt.currentTarget),
-            handlers = link.data('ams-disabled-handlers');
+        // check for specific click handler
+        var handler = $(evt).data('ams-click-handler');
 
-        if (handlers === true || handlers === 'click' || handlers === 'all') {
+        if (handler) {
           return;
         }
 
-        var href = link.attr('href') || link.data('ams-url');
-
-        if (!href || href.startsWith('javascript:') || link.attr('target') || link.data('ams-context-menu') === true) {
-          return;
-        }
-
-        evt.preventDefault();
-        evt.stopPropagation();
-        var url, target, params;
-
-        if (href.indexOf('?') >= 0) {
-          url = href.split('?');
-          target = url[0];
-          params = url[1].unserialize();
-        } else {
-          target = href;
-          params = undefined;
-        }
-
-        var hrefGetter = MyAMS.core.getFunctionByName(target);
-
-        if (typeof hrefGetter === 'function') {
-          href = hrefGetter(link, params);
-        }
-
-        if (typeof href === 'function') {
-          href(link, params);
-        } else {
-          // Standard AJAX or browser URL call
-          // Convert %23 characters to #
-          href = href.replace(/%23/, '#');
-
-          if (evt.ctrlKey) {
-            window.open && window.open(href);
-          } else {
-            var linkTarget = link.data('ams-target') || link.attr('target');
-
-            if (linkTarget) {
-              if (linkTarget === '_blank') {
-                window.open && window.open(href);
-              } else {
-                if (MyAMS.form) {
-                  MyAMS.form.confirmChangedForm().then(function (result) {
-                    if (result !== 'success') {
-                      return;
-                    }
-
-                    MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback'));
-                  });
-                } else {
-                  MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback'));
-                }
-              }
-            } else {
-              if (MyAMS.form) {
-                MyAMS.form.confirmChangedForm().then(function (result) {
-                  if (result !== 'success') {
-                    return;
-                  }
-
-                  _openPage(href);
-                });
-              } else {
-                _openPage(href);
-              }
-            }
-          }
-        }
+        return linkClickHandler(evt);
       }); // Blank target clicks
 
       $(document).on('click', 'a[target="_blank"]', function (evt) {

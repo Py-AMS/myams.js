@@ -10,74 +10,74 @@
 			<code>true</code> by default; see <a href="#navigation.html">Links and navigation
 			with MyAMS</a> to know more about how links and navigation are handled.</p>
 		</li>
-		<li>
+		<li id="alertsContainerClass">
 			<p><code>alertsContainerClass</code>: this is the classname of the container used to
 			handle alerts; <code>toast-wrapper</code> by default.</p>
 		</li>
-		<li>
+		<li id="clearContent">
 			<p><code>clearContent</code>: string name of MyAMS function used to clear an HTML
 			element before replacing it's content; <code>MyAMS.core.clearContent</code> by
 			default.</p>
 		</li>
-		<li>
+		<li id="csrfCookieName">
 			<p><code>csrfCookieName</code>: this is the name of a cookie used to send CSRF token;
 			<code>crsf_token</code> by default.</p>
 		</li>
-		<li>
+		<li id="csrfHeaderName">
 			<p><code>csrfHeaderName</code>: this is the name of a HTTP header used to send CSRF
 			token to server; <code>X-CSRF-Token</code> by default.</p>
 		</li>
-		<li>
+		<li id="device">
 			<p><code>device</code>: can be <code>mobile</code> or <code>desktop</code> according
 			to detected platform.</p>
 		</li>
-		<li>
+		<li id="enableTooltips">
 			<p><code>enableTooltips</code>: boolean value specifying if Bootstrap tooltips have to
 			be enabled globally; <code>true</code> by default.</p>
 		</li>
-		<li>
+		<li id="enableHtmlTooltips">
 			<p><code>enableHtmlTooltips</code>: boolean value specifying if HTML code is allowed
 			into tooltips text; <code>true</code> by default. If your tooltips are generated with
 			text which is not secure, you may disable this option to reduce risks of XSS attacks!
 			</p>
 		</li>
-		<li>
+		<li id="formChangeCallback">
 			<p><code>formChangeCallback</code>: if forms changes warning are enabled globally
 			using the <code>warnOnFormChangeCallback</code>, or for a specific form, MyAMS
 			provides a generic callback which can also be replaced globally by giving it's name
 			in this property...</p>
 		</li>
-		<li>
+		<li id="initContent">
 			<p><code>initContent</code>: string name of MyAMS function used to initialize any HTML
 			content; <code>MyAMS.core.initContent</code> by default.</p>
 		</li>
-		<li>
+		<li id="initPage">
 			<p><code>initPage</code>: string name of MyAMS function used to initialize a full HTML
 			page; <code>MyAMS.core.initPage</code> by default.</p>
 		</li>
-		<li>
+		<li id="isMobile">
 			<p><code>isMobile</code>: boolean flag specifying if a mobile platform has been
 			detected</p>
 		</li>
-		<li>
+		<li id="menuSpeed">
 			<p><code>menuSpeed</code>: integer value used to set duration of navigation menu
 			transitions, in milliseconds; <code>235ms</code> by default.</p>
 		</li>
-		<li>
+		<li id="modules">
 			<p><code>modules</code>: list of already loaded MyAMS <a href="#modules.html">modules
 			</a>.</p>
 		</li>
-		<li>
+		<li id="safeMethods">
 			<p><code>safeMethods</code>: this is a list of HTTP verbs which can be used without
 			checking CSRF token; <code>['GET', 'HEAD', 'OPTIONS', 'TRACE']</code> by
 			default.</p>
 		</li>
-		<li>
+		<li id="useRegistry">
 			<p><code>useRegistry</code>: this boolean option is used to specify if plugins
 			registry should be used or not on contents initialization; value is <code>true</code>
 			by default.</p>
 		</li>
-		<li>
+		<li id="warnOnFormChange">
 			<p><code>warnOnFormChange</code>: boolean value specifying if an alert should be
 			displayed when a user is leaving a form without saving modified information; this
 			is <code>true</code> by default. The warning can be handled differently on
