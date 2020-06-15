@@ -1,13 +1,21 @@
+/**
+ * Forms contents style
+ */
 
 @import "variables";
 
 
 .ams-form {
-  font-size: 90%;
+  font-size: 95%;
 
   // Border
   &.border {
     border: 1px solid $fieldset-border;
+  }
+
+  // Groups
+  .form-group:last-child {
+    margin-bottom: 0.25rem;
   }
 
   // Labels
@@ -41,6 +49,10 @@
   // Tabs
   .form-tabs {
     margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0.5rem;
+    }
   }
   .nav-link {
     padding: 0.3rem 1rem;
@@ -59,6 +71,9 @@
     border: 0;
     background: $fieldset-bg;
 
+    &:last-child {
+      padding: $last-fieldset-padding;
+    }
     &[disabled] {
       > section,
       > article,
@@ -69,6 +84,11 @@
     &.border {
       border: 1px solid $fieldset-border;
       @include border-radius($border-radius);
+    }
+    &.switched {
+      legend {
+        margin-bottom: 0.2rem;
+      }
     }
     legend {
       font-size: 0.95rem;

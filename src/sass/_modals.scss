@@ -6,12 +6,12 @@
 .modal-body {
   overflow-y: auto;
   max-height: calc(100vh - 210px);
+
+  @media (max-width: 767px) {
+    padding: 0.1rem!important;
+  }
 }
 
 .modal-backdrop.show {
   opacity: 0.2;
-
-  & + & {
-    opacity: 0;
-  }
 }

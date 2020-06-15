@@ -148,12 +148,17 @@ $fieldset-bg:               rgba(255, 255, 255, .9) !default;
 $fieldset-border:           #dee2e6 !default;
 $fieldset-border-margin:    0 0 0.5rem !default;
 $fieldset-padding:          0.2rem 0.5rem 0.1rem !default;
+$last-fieldset-padding:     0.2rem 0.5rem 0.5rem !default;
 $legend-padding:            0.2rem 0.5rem 0.1rem !default;
 
 
 // Forms styles
 $form-feedback-font-size:    0.8rem !default;
 $error-border:              lighten($red, 20%) !default;
+
+
+// Modals styles
+$modal-inner-padding:        0.5rem !default;
 
 
 @import '../../node_modules/bootstrap/scss/functions';
