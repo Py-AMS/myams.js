@@ -1,3 +1,4 @@
+/* global MyAMS, tinyMCE */
 /**
  * MyAMS forms support
  */
@@ -68,10 +69,7 @@ export const form = {
 				form = $(elt),
 				formData = form.data(),
 				callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
-			$('input, ' +
-			  'select, ' +
-			  'textarea, ' +
-			  '[data-ams-changed-event]', form).each((idx, elt) => {
+			$('input, select, textarea, [data-ams-changed-event]', form).each((idx, elt) => {
 				const
 					input = $(elt),
 					inputData = input.data();
@@ -79,8 +77,8 @@ export const form = {
 					const event = inputData.amsChangedEvent || 'change';
 					input.on(event, () => {
 						MyAMS.form.setChanged(form);
-						MyAMS.core.executeFunctionByName(inputData.amsChangedCallback || callback,
-														 document, form, input);
+						MyAMS.core.executeFunctionByName(inputData.amsChangedCallback ||
+							callback, document, form, input);
 					});
 				}
 			});
@@ -336,7 +334,7 @@ export const form = {
 					// submit form!!
 					settings.submit(form, settings, button, postData, ajaxSettings, target);
 					if (downloadTarget) {
-						settings.resetDownloadTarget(form, settings, downloadTarget, ajaxSettings);
+						settings.resetDownloadTarget(form, settings, button, downloadTarget, ajaxSettings);
 					}
 				});
 			});
@@ -354,7 +352,7 @@ export const form = {
  * @param form: submitted form
  * @param settings: computed form settings
  */
-export function showFormSubmitWarning(form, settings) {
+export function showFormSubmitWarning(form /*, settings */) {
 	return new Promise((resolve, reject) => {
 		if (!form.data('ams-form-hide-submitted')) {
 			MyAMS.require('i18n', 'alert').then(() => {
@@ -365,9 +363,7 @@ export function showFormSubmitWarning(form, settings) {
 					icon: 'fa-save',
 					timeout: form.data('ams-form-alert-timeout') || 5000
 				});
-			}).then(() => {
-				resolve();
-			});
+			}).then(resolve, reject);
 		} else {
 			resolve();
 		}
@@ -382,7 +378,7 @@ export function showFormSubmitWarning(form, settings) {
  * @param settings: computed form settings
  * @returns {Map<any, any>}
  */
-export function getFormValidators(form, settings) {
+export function getFormValidators(form /*, settings */) {
 	const
 		result = new Map(),
 		formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
@@ -531,7 +527,7 @@ export function initFormData(form, settings, button, postData, options, veto) {
 
 
 // get form target
-export function getFormTarget(form, settings, formData, buttonData) {
+export function getFormTarget(form, settings /*, formData, buttonData */) {
 	return $(settings.submitTarget);
 }
 
@@ -578,7 +574,7 @@ export function getFormAjaxSettings(form, settings, button, postData, action, ta
 		cache: false,
 		data: postData,
 		dataType: settings.datatype,
-		beforeSerialize: (form, options) => {
+		beforeSerialize: (form /*, options */) => {
 			const veto = { veto: false };
 			form.trigger('before-serialize.ams.form', [veto]);
 			if (veto.veto) {
@@ -588,7 +584,7 @@ export function getFormAjaxSettings(form, settings, button, postData, action, ta
 				tinyMCE.triggerSave();
 			}
 		},
-		beforeSubmit: (data, form, options) => {
+		beforeSubmit: (data, form /*, options */) => {
 			const veto = { veto: false };
 			form.trigger('before-submit.ams.form', [data, veto]);
 			if (veto.veto) {
@@ -820,7 +816,7 @@ export function initFormDownloadTarget(form, settings, target, ajaxSettings) {
 
 
 // reset if download target
-export function resetFormDownloadTarget(form, settings, target, ajaxSettings) {
+export function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
 	const
 		modal = form.closest('.modal-dialog'),
 		keepModal = settings.keepModalOpen;

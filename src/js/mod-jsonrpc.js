@@ -1,10 +1,9 @@
+/* global MyAMS */
 /**
  * MyAMS JSON-RPC protocol support
  */
 
-if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
-}
+const $ = MyAMS.$;
 
 
 export const jsonrpc = {

@@ -48,6 +48,8 @@
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+  /* global MyAMS, tinyMCE */
+
   /**
    * MyAMS forms support
    */
@@ -111,7 +113,7 @@
         var form = $(elt),
             formData = form.data(),
             callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
-        $('input, ' + 'select, ' + 'textarea, ' + '[data-ams-changed-event]', form).each(function (idx, elt) {
+        $('input, select, textarea, [data-ams-changed-event]', form).each(function (idx, elt) {
           var input = $(elt),
               inputData = input.data();
 
@@ -366,7 +368,7 @@
             settings.submit(form, settings, button, postData, ajaxSettings, target);
 
             if (downloadTarget) {
-              settings.resetDownloadTarget(form, settings, downloadTarget, ajaxSettings);
+              settings.resetDownloadTarget(form, settings, button, downloadTarget, ajaxSettings);
             }
           });
         });
@@ -384,7 +386,9 @@
 
   _exports.form = form;
 
-  function showFormSubmitWarning(form, settings) {
+  function showFormSubmitWarning(form
+  /*, settings */
+  ) {
     return new Promise(function (resolve, reject) {
       if (!form.data('ams-form-hide-submitted')) {
         MyAMS.require('i18n', 'alert').then(function () {
@@ -395,9 +399,7 @@
             icon: 'fa-save',
             timeout: form.data('ams-form-alert-timeout') || 5000
           });
-        }).then(function () {
-          resolve();
-        });
+        }).then(resolve, reject);
       } else {
         resolve();
       }
@@ -412,7 +414,9 @@
    */
 
 
-  function getFormValidators(form, settings) {
+  function getFormValidators(form
+  /*, settings */
+  ) {
     var result = new Map(),
         formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
     var validators = [];
@@ -616,7 +620,9 @@
   } // get form target
 
 
-  function getFormTarget(form, settings, formData, buttonData) {
+  function getFormTarget(form, settings
+  /*, formData, buttonData */
+  ) {
     return $(settings.submitTarget);
   } // initialize form target
 
@@ -655,7 +661,9 @@
       cache: false,
       data: postData,
       dataType: settings.datatype,
-      beforeSerialize: function beforeSerialize(form, options) {
+      beforeSerialize: function beforeSerialize(form
+      /*, options */
+      ) {
         var veto = {
           veto: false
         };
@@ -669,7 +677,9 @@
           tinyMCE.triggerSave();
         }
       },
-      beforeSubmit: function beforeSubmit(data, form, options) {
+      beforeSubmit: function beforeSubmit(data, form
+      /*, options */
+      ) {
         var veto = {
           veto: false
         };
@@ -916,7 +926,7 @@
   } // reset if download target
 
 
-  function resetFormDownloadTarget(form, settings, target, ajaxSettings) {
+  function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
     var modal = form.closest('.modal-dialog'),
         keepModal = settings.keepModalOpen;
 

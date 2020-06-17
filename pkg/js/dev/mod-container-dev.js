@@ -18,13 +18,12 @@
   });
   _exports.container = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS container management
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var container = {};
   /**
    * Global module initialization

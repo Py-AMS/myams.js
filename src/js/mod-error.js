@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS errors management
  */
@@ -65,9 +66,7 @@ export const error = {
 						header: MyAMS.i18n.ERROR_OCCURED,
 						message: errors
 					});
-				}).then(() => {
-					resolve();
-				});
+				}).then(resolve, reject);
 			} else if ($.isArray(errors)) {  // array of messages
 				MyAMS.require('i18n', 'alert').then(() => {
 					MyAMS.alert.alert({
@@ -76,9 +75,7 @@ export const error = {
 						header: MyAMS.i18n.ERRORS_OCCURED,
 						message: errors
 					});
-				}).then(() => {
-					resolve();
-				});
+				}).then(resolve, reject);
 			} else {  // full errors with widgets
 				MyAMS.require('i18n', 'alert', 'form').then(() => {
 					// clear previous alerts
@@ -123,9 +120,7 @@ export const error = {
 							MyAMS.form.setInvalid(parent, input, widget.message);
 						}
 					}
-				}).then(() => {
-					resolve();
-				});
+				}).then(resolve, reject);
 			}
 		});
 	}

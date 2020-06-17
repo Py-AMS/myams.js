@@ -18,6 +18,8 @@
   });
   _exports.clipboard = void 0;
 
+  /* global MyAMS, clipboardData */
+
   /**
    * MyAMS i18n translations
    */

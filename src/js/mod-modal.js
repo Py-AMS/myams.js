@@ -1,8 +1,10 @@
+/* global MyAMS */
 /**
  * MyAMS modal dialogs support
  */
 
 const $ = MyAMS.$;
+
 
 let _initialized = false;
 
@@ -59,10 +61,10 @@ export function modalShownEventHandler(evt) {
 	}, 0);
 	// Check form contents before closing modals
 	$(dialog).off('click', '[data-dismiss="modal"]')
-			 .on('click', '[data-dismiss="modal"]', (evt) => {
-		const handler  = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
-		return MyAMS.core.executeFunctionByName(handler, document, evt);
-	});
+		.on('click', '[data-dismiss="modal"]', (evt) => {
+			const handler = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
+			return MyAMS.core.executeFunctionByName(handler, document, evt);
+		});
 }
 
 
@@ -108,7 +110,7 @@ export function modalDismissEventHandler(evt) {
  * If several visible modals are still, a "modal-open" class is added to body to ensure
  * modals are still visible.
  */
-export function modalHiddenEventHandler(evt) {
+export function modalHiddenEventHandler() {
 	if ($('.modal:visible').length > 0) {
 		$.fn.modal.Constructor.prototype._checkScrollbar();
 		$.fn.modal.Constructor.prototype._setScrollbar();
@@ -149,10 +151,10 @@ export const modal = {
 			// Initialize modal dialogs links
 			// Standard Bootstrap handlers are removed!!
 			$(document).off('click', '[data-toggle="modal"]')
-					   .on('click', '[data-toggle="modal"]', (evt) => {
-				const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
-				MyAMS.core.executeFunctionByName(handler, document, evt);
-			});
+				.on('click', '[data-toggle="modal"]', (evt) => {
+					const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
+					MyAMS.core.executeFunctionByName(handler, document, evt);
+				});
 		}
 
 		// Handle modal shown event to allow modals stacking
@@ -198,6 +200,11 @@ export const modal = {
 							response = MyAMS.ajax.getResponse(request),
 							dataType = response.contentType,
 							result = response.data;
+						let content,
+							dialog,
+							dialogData,
+							dialogOptions,
+							settings;
 						switch (dataType) {
 							case 'json':
 								MyAMS.ajax.handleJSON(result,
@@ -209,24 +216,23 @@ export const modal = {
 							case 'html':
 							case 'text':
 							default:
-								const
-									content = $(result),
-									dialog = $('.modal-dialog', content.wrap('<div></div>').parent()),
-									dialogData = dialog.data() || {},
-									dialogOptions = {
-										backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
-									};
-								let settings = $.extend({}, dialogOptions, dialogData.amsOptions);
+								content = $(result),
+								dialog = $('.modal-dialog', content.wrap('<div></div>').parent()),
+								dialogData = dialog.data() || {},
+								dialogOptions = {
+									backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
+								};
+								settings = $.extend({}, dialogOptions, dialogData.amsOptions);
 								settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
 								$('<div>').addClass('modal fade')
-										  .data('dynamic', true)
-										  .append(content)
-										  .on('show.bs.modal', dynamicModalShownEventHandler)
-										  .on('hidden.bs.modal', dynamicModalHiddenEventHandler)
-										  .modal(settings);
+									.data('dynamic', true)
+									.append(content)
+									.on('show.bs.modal', dynamicModalShownEventHandler)
+									.on('hidden.bs.modal', dynamicModalHiddenEventHandler)
+									.modal(settings);
 								if (MyAMS.stats &&
 									!((sourceData.amsLogEvent === false) ||
-									  (dialogData.amsLogEvent === false))) {
+										(dialogData.amsLogEvent === false))) {
 									MyAMS.stats.logPageview(url);
 								}
 						}

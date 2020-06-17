@@ -20,6 +20,8 @@
 
   var _this = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS generic skin features
    */
@@ -71,7 +73,7 @@
      * triggered when the window location hash is modified; this can notably occur when a
      * navigation menu, for example, is clicked.
      */
-    checkURL: function checkURL(evt) {
+    checkURL: function checkURL() {
       var nav = MyAMS.dom.nav;
       var hash = location.hash,
           url = hash.replace(/^#/, ''),

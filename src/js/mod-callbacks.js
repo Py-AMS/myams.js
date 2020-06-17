@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS callbacks management
  */
@@ -66,9 +67,7 @@ export const callbacks = {
 					}
 				}
 			});
-			$.when.apply($, deferred).then(() => {
-				resolve();
-			});
+			$.when.apply($, deferred).then(resolve, reject);
 		});
 	}
 };

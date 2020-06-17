@@ -4,7 +4,7 @@
 
 import $ from "jquery";
 
-import { init } from "../ext-base";
+import MyAMS, { init } from "../ext-base";
 import { alert } from "../mod-alert";
 import { i18n } from "../mod-i18n";
 import { modal } from "../mod-modal";

@@ -1,3 +1,4 @@
+/* global $, MyAMS */
 /**
  * MyAMS dynamic plug-ins loading management
  */
@@ -57,7 +58,7 @@ class Plugin {
 				result.then(() => {
 					this.loaded = true;
 					resolve();
-				});
+				}, reject);
 			} else {
 				resolve();
 			}
@@ -98,7 +99,7 @@ class PluginsRegistry {
 	 */
 	register(props, name) {
 		// check arguments
-		if (!name && props.hasOwnProperty('name')) {
+		if (!name && Object.prototype.hasOwnProperty.call(props,'name')) {
 			name = props.name;
 		}
 		// check for already registered plug-in
@@ -132,7 +133,7 @@ class PluginsRegistry {
 				callback: props
 			}, true));
 		} else if (typeof props === 'object') {  // plug-in properties object
-			plugins.set(name, new Plugin(name, props, !Boolean(props.src)));
+			plugins.set(name, new Plugin(name, props, !props.src));
 		}
 		// check callback
 		return plugins.get(name);
@@ -145,11 +146,13 @@ class PluginsRegistry {
 	 */
 	load(element) {
 		// scan element for new plug-ins
-		const asyncPlugins = [],
-			  syncPlugins = [];
+		const
+			asyncPlugins = [],
+			syncPlugins = [];
 		$('[data-ams-plugins]', element).each((idx, elt) => {
-			const source = $(elt),
-				  names = source.data('ams-plugins');
+			const
+				source = $(elt),
+				names = source.data('ams-plugins');
 			let plugin,
 				props;
 			if (typeof names === 'string') {
@@ -189,6 +192,7 @@ class PluginsRegistry {
 		});
 		// load plug-ins
 		let result = $.when.apply($, asyncPlugins);
+		// eslint-disable-next-line no-unused-vars
 		for (const plugin of syncPlugins) {
 			result = result.done(() => {});
 		}
@@ -275,11 +279,12 @@ export const registry = {
 	 */
 	initData: function(element) {
 		$('[data-ams-data]', element).each((idx, elt) => {
-			const $elt = $(elt),
-				  data = $elt.data('ams-data');
+			const
+				$elt = $(elt),
+				data = $elt.data('ams-data');
 			if (data) {
 				for (const name in data) {
-					if (!data.hasOwnProperty(name)) {
+					if (!Object.prototype.hasOwnProperty.call(data, name)) {
 						continue;
 					}
 					let elementData = data[name];

@@ -18,6 +18,8 @@
   });
   _exports.i18n = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS i18n translations
    */

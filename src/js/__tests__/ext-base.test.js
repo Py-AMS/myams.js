@@ -1,3 +1,4 @@
+/* global jest, test, expect */
 
 /**
  * MyAMS base package tests
@@ -17,7 +18,6 @@ import MyAMS, {
 	getScript,
 	switchIcon,
 	init,
-	initPage,
 	clearContent,
 	initContent
 } from '../ext-base';
@@ -278,9 +278,10 @@ test("Test MyAMS getModules from body with multiple names", () => {
 // Test MyAMS getObject
 test("Test MyAMS getObject function", () => {
 
-	const name1 = 'window.location.href',
-		  name2 = 'window.undefined',
-		  name3 = 'missing.undefined';
+	const
+		name1 = 'window.location.href',
+		name2 = 'window.undefined',
+		name3 = 'missing.undefined';
 
 	expect(typeof getObject).toBe('function');
 	expect(getObject(undefined)).toBe(undefined);
@@ -296,8 +297,9 @@ test("Test MyAMS getObject function", () => {
 // Test MyAMS getFunctionByName
 test("Test MyAMS getFunctionByName function", () => {
 
-	const name = 'MyAMS.$.fn.removeClassPrefix',
-		  func = getFunctionByName(name);
+	const
+		name = 'MyAMS.$.fn.removeClassPrefix',
+		func = getFunctionByName(name);
 
 	expect(typeof(func)).toBe('function');
 	expect(getFunctionByName(func)).toBe(func);
@@ -322,8 +324,9 @@ test("Test MyAMS executeFunctionByName function", () => {
 		}
 	};
 
-	const name = 'MyAMS.test.testFunction',
-		  result = executeFunctionByName(name, MyAMS, 'value 1', 'value 2');
+	const
+		name = 'MyAMS.test.testFunction',
+		result = executeFunctionByName(name, MyAMS, 'value 1', 'value 2');
 
 	expect(result).toBeInstanceOf(Array);
 	expect(result[0]).toBe('value 1');
@@ -360,16 +363,17 @@ test("Test MyAMS getScript function", () => {
 // Test MyAMS getQueryVar
 test("Test MyAMS getQueryVar function", () => {
 
-	const url1 = null,
-		  url2 = '',
-		  url3 = {},
-		  url4 = 'http://localhost/',
-		  url5 = 'http://localhost/api?',
-		  url6 = 'http://localhost/api?param1',
-		  url7 = 'http://localhost/api?param1=value1',
-		  url8 = 'http://localhost/api?param1=value1&',
-		  url9 = 'http://localhost/api?param1=value1&param2=value2',
-		  url10 = 'http://localhost/api?param1=value1&param1=value2';
+	const
+		url1 = null,
+		url2 = '',
+		url3 = {},
+		url4 = 'http://localhost/',
+		url5 = 'http://localhost/api?',
+		url6 = 'http://localhost/api?param1',
+		url7 = 'http://localhost/api?param1=value1',
+		url8 = 'http://localhost/api?param1=value1&',
+		url9 = 'http://localhost/api?param1=value1&param2=value2',
+		url10 = 'http://localhost/api?param1=value1&param1=value2';
 
 	expect(getQueryVar(url1, 'param1')).toBe(undefined);
 	expect(getQueryVar(url2, 'param1')).toBe(undefined);
@@ -437,11 +441,11 @@ test("Test MyAMS initContent function", () => {
 	MyAMS.require = myams_require;
 	MyAMS.config.useRegistry = false;
 	let beforeInitEvent = false;
-	$(document).on('before-init.ams.content', (evt) => {
+	$(document).on('before-init.ams.content', () => {
 		beforeInitEvent = true;
 	});
 	let afterInitEvent = false;
-	$(document).on('after-init.ams.content', (evt) => {
+	$(document).on('after-init.ams.content', () => {
 		afterInitEvent = true;
 	});
 	const body = $(document.body);
@@ -460,11 +464,11 @@ test("Test MyAMS clearContent function with events", () => {
 		<div class="inner"></div>
 	</div>`;
 	let clearEvent = false;
-	$(document).on('clear.ams.content', (evt, element, veto) => {
+	$(document).on('clear.ams.content', () => {
 		clearEvent = true;
 	});
 	let clearedEvent = false;
-	$(document).on('cleared.ams.content', (evt, element) => {
+	$(document).on('cleared.ams.content', () => {
 		clearedEvent = true;
 	});
 	return clearContent('.body').then((status) => {
@@ -482,12 +486,12 @@ test("Test MyAMS clearContent function veto", () => {
 		<div class="inner"></div>
 	</div>`;
 	let clearEvent = false;
-	$(document).on('clear.ams.content', (evt, veto, element) => {
+	$(document).on('clear.ams.content', (evt, veto) => {
 		veto.veto = true;
 		clearEvent = true;
 	});
 	let clearedEvent = false;
-	$(document).on('cleared.ams.content', (evt, element) => {
+	$(document).on('cleared.ams.content', () => {
 		clearedEvent = true;
 	})
 	const body = $(document.body);
@@ -513,7 +517,7 @@ test("Test MyAMS clearContent function with inner events handlers", () => {
 	let clearEvent = false,
 		clearedEvent = false;
 	MyAMS.app = {
-		clearHandler: (evt, veto) => {
+		clearHandler: (evt) => {
 			$(evt.target).data('clearing', true);
 			clearEvent = true;
 		},
@@ -533,9 +537,9 @@ test("Test MyAMS clearContent function with inner events handlers", () => {
 		expect(inner.data('clearing')).toBe(true);
 		expect(clearedEvent).toBe(true);
 		expect(inner.data('cleared')).toBe(true);
-	});
 
-	delete MyAMS.app;
+		delete MyAMS.app;
+	});
 
 });
 
@@ -573,9 +577,9 @@ test("Test MyAMS clearContent function with inner events handlers and veto", () 
 		expect(inner.data('clearing')).toBe(true);
 		expect(clearedEvent).toBe(false);
 		expect(inner.data('cleared')).toBeUndefined();
-	});
 
-	delete MyAMS.app;
+		delete MyAMS.app;
+	});
 
 });
 

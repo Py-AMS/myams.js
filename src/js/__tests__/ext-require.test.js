@@ -3,7 +3,9 @@
  */
 
 import $ from "jquery";
+
 import MyAMS, { init } from "../ext-base";
+
 import myams_require from "../ext-require";
 
 

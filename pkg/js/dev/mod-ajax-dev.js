@@ -18,12 +18,16 @@
   });
   _exports.ajax = void 0;
 
+  /* global MyAMS, Cookies */
+
   /**
    * MyAMS AJAX features
    */
   var $ = MyAMS.$;
 
-  function checkCsrfHeader(request, options) {
+  function checkCsrfHeader(request
+  /*, options */
+  ) {
     if (window.Cookies) {
       var token = Cookies.get(MyAMS.config.csrfCookieName);
 
@@ -296,20 +300,22 @@
     handleJSON: function handleJSON(result, form, target) {
       function closeForm() {
         if (form !== undefined) {
-          MyAMS.require('form', function () {
+          MyAMS.require('form').then(function () {
             MyAMS.form.resetChanged(form);
+          }).then(function () {
+            if (result.closeForm !== false) {
+              MyAMS.require('modal').then(function () {
+                MyAMS.modal.close(form);
+              });
+            }
           });
-
-          if (result.closeForm !== false) {
-            MyAMS.require('modal', function () {
-              MyAMS.modal.close(form);
-            });
-          }
         }
       }
 
-      var url = null;
-      var status = result.status;
+      var url = null,
+          loadTarget = null;
+      var status = result.status,
+          promises = [];
 
       switch (status) {
         case 'alert':
@@ -321,10 +327,9 @@
           break;
 
         case 'error':
-          MyAMS.require('error').then(function () {
+          promises.push(MyAMS.require('error').then(function () {
             MyAMS.error.showErrors(form, result);
-          });
-
+          }));
           break;
 
         case 'message':
@@ -341,10 +346,9 @@
           break;
 
         case 'modal':
-          MyAMS.require('modal').then(function () {
+          promises.push(MyAMS.require('modal').then(function () {
             MyAMS.modal.open(result.location);
-          });
-
+          }));
           break;
 
         case 'reload':
@@ -355,9 +359,8 @@
             url = url.substr(1);
           }
 
-          var loadTarget = $(result.target || target || '#content');
-
-          MyAMS.require('skin').then(function () {
+          loadTarget = $(result.target || target || '#content');
+          promises.push(MyAMS.require('skin').then(function () {
             MyAMS.skin.loadURL(url, loadTarget, {
               preLoadCallback: MyAMS.core.getFunctionByName(result.preReload || function () {
                 $('[data-ams-pre-reload]', loadTarget).each(function (index, element) {
@@ -372,8 +375,7 @@
               }),
               afterLoadCallbackOptions: result.postReloadOptions
             });
-          });
-
+          }));
           break;
 
         case 'redirect':
@@ -417,11 +419,11 @@
             container.html(content.html);
           }
 
-          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container);
-
-          if (!content.keepHidden) {
-            container.removeClass('hidden');
-          }
+          promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
+            if (!content.keepHidden) {
+              container.removeClass('hidden');
+            }
+          }));
         }
       } // Multiple contents response
 
@@ -432,22 +434,25 @@
         var _iteratorError2 = undefined;
 
         try {
-          for (var _iterator2 = result.contents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _content = _step2.value;
+          var _loop = function _loop() {
+            var content = _step2.value;
+            var container = $(content.target);
 
-            var _container = $(_content.target);
-
-            if (_content.text) {
-              _container.text(_content.text);
+            if (content.text) {
+              container.text(content.text);
             } else {
-              _container.html(_content.html);
+              container.html(content.html);
             }
 
-            MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, _container);
+            promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
+              if (!content.keepHidden) {
+                container.removeClass('hidden');
+              }
+            }));
+          };
 
-            if (!_content.keepHidden) {
-              _container.removeClass('hidden');
-            }
+          for (var _iterator2 = result.contents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            _loop();
           }
         } catch (err) {
           _didIteratorError2 = true;
@@ -467,7 +472,7 @@
 
 
       if (result.message) {
-        MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(function () {
           if (typeof result.message === 'string') {
             MyAMS.alert.smallBox({
               status: status,
@@ -485,12 +490,12 @@
               message: message.message
             });
           }
-        });
+        }));
       } // Response with message box
 
 
       if (result.messagebox) {
-        MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(function () {
           if (typeof result.messagebox === 'string') {
             MyAMS.alert.messageBox({
               status: status,
@@ -510,12 +515,12 @@
               timeout: message.timeout === 0 ? 0 : message.timeout || 10000
             });
           }
-        });
+        }));
       } // Response with small box
 
 
       if (result.smallbox) {
-        MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(function () {
           if (typeof result.smallbox === 'string') {
             MyAMS.alert.smallBox({
               status: status,
@@ -533,7 +538,7 @@
               timeout: message.timeout
             });
           }
-        });
+        }));
       } // Response with single event
 
 
@@ -575,7 +580,7 @@
 
 
       if (result.callback) {
-        MyAMS.core.executeFunctionByName(result.callback, document, form, result.options);
+        promises.push(MyAMS.core.executeFunctionByName(result.callback, document, form, result.options));
       } // Response with multiple callbacks
 
 
@@ -589,9 +594,9 @@
             var callback = _step4.value;
 
             if (typeof callback === 'string') {
-              MyAMS.core.executeFunctionByName(callback, document, form, result.options);
+              promises.push(MyAMS.core.executeFunctionByName(callback, document, form, result.options));
             } else {
-              MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
+              promises.push(MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options));
             }
           }
         } catch (err) {
@@ -609,6 +614,8 @@
           }
         }
       }
+
+      return Promise.all(promises);
     },
 
     /**
@@ -660,7 +667,7 @@
    */
 
   _exports.ajax = ajax;
-  ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.devmode ? '.min' : '', ".js")).then(function () {
+  ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.extext, ".js")).then(function () {
     var _xhr = $.ajaxSettings.xhr;
     $.ajaxSetup({
       beforeSend: function beforeSend(request, options) {

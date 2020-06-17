@@ -24,6 +24,8 @@
   _exports.dynamicModalHiddenEventHandler = dynamicModalHiddenEventHandler;
   _exports.modal = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS modal dialogs support
    */
@@ -123,7 +125,7 @@
    */
 
 
-  function modalHiddenEventHandler(evt) {
+  function modalHiddenEventHandler() {
     if ($('.modal:visible').length > 0) {
       $.fn.modal.Constructor.prototype._checkScrollbar();
 
@@ -216,6 +218,7 @@
               var response = MyAMS.ajax.getResponse(request),
                   dataType = response.contentType,
                   result = response.data;
+              var content, dialog, dialogData, dialogOptions, settings;
 
               switch (dataType) {
                 case 'json':
@@ -229,13 +232,10 @@
                 case 'html':
                 case 'text':
                 default:
-                  var content = $(result),
-                      dialog = $('.modal-dialog', content.wrap('<div></div>').parent()),
-                      dialogData = dialog.data() || {},
-                      dialogOptions = {
+                  content = $(result), dialog = $('.modal-dialog', content.wrap('<div></div>').parent()), dialogData = dialog.data() || {}, dialogOptions = {
                     backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
                   };
-                  var settings = $.extend({}, dialogOptions, dialogData.amsOptions);
+                  settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                   settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
                   $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 

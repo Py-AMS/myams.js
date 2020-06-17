@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS menus management
  */
@@ -37,7 +38,11 @@ function _contextMenuHandler(menu) {
 				const target = menu.data('ams-target');
 				if (target) {
 					MyAMS.form.confirmChangedForm(target).then((status) => {
-						MyAMS.skin.loadURL(href, target, menu.data('ams-link-options'), menu.data('ams-link-callback'));
+						if (status !== 'success') {
+							return;
+						}
+						MyAMS.skin.loadURL(href, target,
+							menu.data('ams-link-options'), menu.data('ams-link-callback'));
 					});
 				} else {
 					MyAMS.form.confirmChangedForm().then((status) => {
@@ -94,8 +99,9 @@ export const menu = {
 			contextMenu: function(settings) {
 
 				function getMenuPosition(mouse, direction) {
-					const win = $(window)[direction](),
-						  menu = $(settings.menuSelector)[direction]();
+					const
+						win = $(window)[direction](),
+						menu = $(settings.menuSelector)[direction]();
 					let position = mouse;
 					// opening menu would pass the side of the page
 					if (mouse + menu > win && menu < mouse) {
@@ -106,8 +112,9 @@ export const menu = {
 
 				return this.each((idx, elt) => {
 
-					const source = $(elt),
-						  menu = $(settings.menuSelector);
+					const
+						source = $(elt),
+						menu = $(settings.menuSelector);
 
 					// Set flag on menu items
 					$('a', menu).each((idx, elt) => {
@@ -146,12 +153,13 @@ export const menu = {
 		// Automatically set orientation of dropdown menus
 		$(document).on('show.bs.dropdown', '.btn-group', (evt) => {
 			// check menu height
-			const menu = $(evt.currentTarget),
-				  ul = menu.children('.dropdown-menu'),
-				  menuRect = menu.get(0).getBoundingClientRect(),
-				  position = menuRect.top,
-				  buttonHeight = menuRect.height,
-				  menuHeight = ul.outerHeight();
+			const
+				menu = $(evt.currentTarget),
+				ul = menu.children('.dropdown-menu'),
+				menuRect = menu.get(0).getBoundingClientRect(),
+				position = menuRect.top,
+				buttonHeight = menuRect.height,
+				menuHeight = ul.outerHeight();
 			if (position > menuHeight && $(window).height() - position < buttonHeight + menuHeight) {
 				menu.addClass("dropup");
 			}
@@ -171,15 +179,6 @@ export const menu = {
 				}
 			}
 		});
-	},
-
-	/**
-	 * Element initialization.
-	 *
-	 * @param element: source element to initialize
-	 */
-	initElement: (element) => {
-
 	}
 };
 

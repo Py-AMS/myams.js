@@ -18,13 +18,12 @@
   });
   _exports.stats = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS stats management
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var stats = {
     logPageview: function logPageview() {},
     logEvent: function logEvent() {}

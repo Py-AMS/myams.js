@@ -1,8 +1,10 @@
+/* global test, expect */
 /**
  * MyAMS form module tests
  */
 
 import $ from "jquery";
+
 import MyAMS, { init } from "../ext-base";
 import { alert } from "../mod-alert";
 import { i18n } from "../mod-i18n";
@@ -1380,7 +1382,7 @@ test("Test MyAMS.form getDownloadTarget/initDownloadTarget/resetDownloadTarget",
 	expect(ajaxSettings.iframe).toBe(true);
 	expect(ajaxSettings.iframeTarget.exists()).toBe(true);
 
-	resetFormDownloadTarget(testForm, settings, target, ajaxSettings);
+	resetFormDownloadTarget(testForm, settings, testButton, target, ajaxSettings);
 
 	delete MyAMS.ajax;
 

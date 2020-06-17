@@ -127,11 +127,15 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/* global FontAwesome */
+
 /**
  * MyAMS base features
  */
+var $;
+
 if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
+  $ = window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
 }
 
 
@@ -283,7 +287,7 @@ function init($) {
               key = _Object$entries2$_i[0],
               value = _Object$entries2$_i[1];
 
-          if (source.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
             source[key] = getter === null ? value : getter(value);
           }
         }
@@ -745,7 +749,9 @@ function getScript(url) {
  */
 
 function getCSS(url, name) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve
+  /*, reject */
+  ) {
     var head = $('HEAD');
     var style = $("style[data-ams-id=\"".concat(name, "\"]"), head);
 
@@ -753,6 +759,7 @@ function getCSS(url, name) {
       style = $('<style>').attr('data-ams-id', name).text("@import \"".concat(getSource(url), "\";")).appendTo(head);
       var styleInterval = setInterval(function () {
         try {
+          // eslint-disable-next-line no-unused-vars
           var _check = style[0].sheet.cssRules; // Is only populated when file is loaded
 
           clearInterval(styleInterval);
@@ -934,7 +941,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
 };
 var MyAMS = {
   $: $,
-  env: getEnv(jQuery),
+  env: getEnv($),
   config: config,
   core: core,
   registry: _ext_registry__WEBPACK_IMPORTED_MODULE_0__["registry"]
@@ -969,6 +976,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/* global $, MyAMS */
 
 /**
  * MyAMS dynamic plug-ins loading management
@@ -1043,7 +1052,7 @@ function () {
           result.then(function () {
             _this.loaded = true;
             resolve();
-          });
+          }, reject);
         } else {
           resolve();
         }
@@ -1117,7 +1126,7 @@ function () {
     key: "register",
     value: function register(props, name) {
       // check arguments
-      if (!name && props.hasOwnProperty('name')) {
+      if (!name && Object.prototype.hasOwnProperty.call(props, 'name')) {
         name = props.name;
       } // check for already registered plug-in
 
@@ -1182,7 +1191,7 @@ function () {
         }, true));
       } else if (_typeof(props) === 'object') {
         // plug-in properties object
-        plugins.set(name, new Plugin(name, props, !Boolean(props.src)));
+        plugins.set(name, new Plugin(name, props, !props.src));
       } // check callback
 
 
@@ -1286,7 +1295,7 @@ function () {
         }
       }); // load plug-ins
 
-      var result = $.when.apply($, asyncPlugins);
+      var result = $.when.apply($, asyncPlugins); // eslint-disable-next-line no-unused-vars
 
       for (var _i = 0, _syncPlugins = syncPlugins; _i < _syncPlugins.length; _i++) {
         var plugin = _syncPlugins[_i];
@@ -1451,7 +1460,7 @@ var registry = {
 
       if (data) {
         for (var name in data) {
-          if (!data.hasOwnProperty(name)) {
+          if (!Object.prototype.hasOwnProperty.call(data, name)) {
             continue;
           }
 
@@ -1498,6 +1507,8 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+/* global MyAMS */
 
 /**
  * MyAMS dynamic module loader
@@ -1671,7 +1682,7 @@ __webpack_require__.r(__webpack_exports__);
 _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"], {
   require: _ext_require__WEBPACK_IMPORTED_MODULE_1__["default"]
 });
-var html = $('html');
+var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);

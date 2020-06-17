@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS alerts management
  */
@@ -197,8 +198,9 @@ export const alert = {
 		props.status = status;
 		let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
 		if (wrapper.length === 0) {
-			wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass)
-									  .appendTo(MyAMS.dom.root);
+			wrapper = $('<div></div>')
+				.addClass(MyAMS.config.alertsContainerClass)
+				.appendTo(MyAMS.dom.root);
 		}
 		$(MESSAGE_TEMPLATE.render(props))
 			.appendTo(wrapper)
@@ -221,8 +223,9 @@ export const alert = {
 		props.status = status;
 		let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
 		if (wrapper.length === 0) {
-			wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass)
-									  .appendTo(MyAMS.dom.root);
+			wrapper = $('<div></div>')
+				.addClass(MyAMS.config.alertsContainerClass)
+				.appendTo(MyAMS.dom.root);
 		}
 		$(SMALLBOX_TEMPLATE.render(props))
 			.appendTo(wrapper)
@@ -246,9 +249,8 @@ export const alert = {
 			}
 			props.status = status;
 			MyAMS.require('modal').then(() => {
-				const alert = $(BIGBOX_TEMPLATE.render(props))
-					.appendTo(MyAMS.dom.root);
-				alert.on('hidden.bs.modal', (evt) => {
+				const alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
+				alert.on('hidden.bs.modal', () => {
 					resolve(alert.data('modal-result'));
 					alert.remove();
 				});

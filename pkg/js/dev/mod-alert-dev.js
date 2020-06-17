@@ -18,6 +18,8 @@
   });
   _exports.alert = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS alerts management
    */
@@ -169,7 +171,7 @@
 
         MyAMS.require('modal').then(function () {
           var alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
-          alert.on('hidden.bs.modal', function (evt) {
+          alert.on('hidden.bs.modal', function () {
             resolve(alert.data('modal-result'));
             alert.remove();
           });

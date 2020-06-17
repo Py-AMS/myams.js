@@ -3,8 +3,9 @@
  */
 
 import $ from "jquery";
+
 import MyAMS, { init } from "../ext-base";
-import { events, getHandlers } from "../mod-events";
+import { events } from "../mod-events";
 
 import myams_require from "../ext-require";
 

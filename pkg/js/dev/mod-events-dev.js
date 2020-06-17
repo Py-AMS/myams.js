@@ -26,6 +26,8 @@
 
   function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+  /* global MyAMS */
+
   /**
    * MyAMS events management
    */

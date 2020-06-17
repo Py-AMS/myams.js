@@ -1,10 +1,9 @@
+/* global MyAMS */
 /**
  * MyAMS container management
  */
 
-if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
-}
+const $ = MyAMS.$;
 
 
 export const container = {

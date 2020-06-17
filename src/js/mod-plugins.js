@@ -1,3 +1,4 @@
+/* global MyAMS, bsCustomFileInput */
 /**
  * MyAMS standard plugins
  */
@@ -119,7 +120,7 @@ function checker(element) {
 					}
 				}
 			});
-			legend.closest('form').on('reset', (evt) => {
+			legend.closest('form').on('reset', () => {
 				const checker = $('.checker', legend);
 				if (checker.prop('checked') !== checked) {
 					checker.click();
@@ -236,7 +237,7 @@ function select2(element) {
 							hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
 							select.data('select2-target', hidden)
 								.removeAttr('name');
-							defaultOptions.templateSelection = (data, container) => {
+							defaultOptions.templateSelection = (data) => {
 								const elt = $(data.element);
 								elt.attr('data-content', elt.html());
 								return data.text;
@@ -297,16 +298,16 @@ function svgPlugin(element) {
 	const svgs = $('.svg-container', element);
 	if (svgs.length > 0) {
 		svgs.each((idx, elt) => {
-			const container = $(elt),
-				  svg = $('svg', container),
-				  width = svg.attr('width'),
-				  height = svg.attr('height');
+			const
+				container = $(elt),
+				svg = $('svg', container),
+				width = svg.attr('width'),
+				height = svg.attr('height');
 			if (width && height) {
 				elt.setAttribute('viewBox',
-								 `0 0 ${Math.round(parseFloat(width))} ${Math.round(parseFloat(height))}`);
+					`0 0 ${Math.round(parseFloat(width))} ${Math.round(parseFloat(height))}`);
 			}
-			svg.attr('width', '100%')
-			   .attr('height', 'auto');
+			svg.attr('width', '100%').attr('height', 'auto');
 		});
 	}
 }

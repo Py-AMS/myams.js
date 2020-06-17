@@ -18,6 +18,8 @@
   });
   _exports.helpers = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS generic helpers
    */

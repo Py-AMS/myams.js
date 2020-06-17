@@ -33,6 +33,8 @@
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+  /* global MyAMS, FontAwesome, Hammer */
+
   /**
    * MyAMS navigation module
    */
@@ -262,7 +264,7 @@
                 var visibleItem = $(visibleElt);
 
                 if (href || !visibleItem.hasClass('active')) {
-                  visibleItem.slideUp(settings.speed, function (slideElt) {
+                  visibleItem.slideUp(settings.speed, function () {
                     visibleItem.parent("li").removeClass('open').find("b:first").delay(settings.speed).html(settings.closedSign);
                   });
                 }
@@ -464,7 +466,7 @@
           evt.preventDefault();
         }); // Activate clicks
 
-        $(document).on('click', 'a[href!="#"]:not([data-toggle]), ' + '[data-ams-url]:not([data-toggle])', function (evt) {
+        $(document).on('click', 'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', function (evt) {
           // check for specific click handler
           var handler = $(evt).data('ams-click-handler');
 
@@ -553,13 +555,13 @@
                   threshold: 200
                 }));
 
-                _hammer.on('panright', function (evt) {
+                _hammer.on('panright', function () {
                   if (!MyAMS.dom.root.hasClass('hidden-menu')) {
                     MyAMS.nav.switchMenu();
                   }
                 });
 
-                _hammer.on('panleft', function (evt) {
+                _hammer.on('panleft', function () {
                   if (MyAMS.dom.root.hasClass('hidden-menu')) {
                     MyAMS.nav.switchMenu();
                   }

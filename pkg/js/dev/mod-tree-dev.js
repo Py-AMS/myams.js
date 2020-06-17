@@ -18,13 +18,12 @@
   });
   _exports.tree = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS tree management
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var tree = {};
   /**
    * Global module initialization

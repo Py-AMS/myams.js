@@ -3,6 +3,7 @@
  */
 
 import $ from "jquery";
+
 import MyAMS, { init } from "../ext-base";
 import { events } from "../mod-events";
 import { form } from "../mod-form";

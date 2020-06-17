@@ -3,7 +3,7 @@
  */
 
 import $ from "jquery";
-import MyAMS, {init} from "../ext-base";
+import MyAMS, { init } from "../ext-base";
 
 import { registry } from "../ext-registry";
 import { i18n } from "../mod-i18n";

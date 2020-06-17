@@ -13,6 +13,8 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
+  /* global MyAMS, bsCustomFileInput */
+
   /**
    * MyAMS standard plugins
    */
@@ -115,7 +117,7 @@
             }
           }
         });
-        legend.closest('form').on('reset', function (evt) {
+        legend.closest('form').on('reset', function () {
           var checker = $('.checker', legend);
 
           if (checker.prop('checked') !== checked) {
@@ -232,7 +234,7 @@
                 hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
                 select.data('select2-target', hidden).removeAttr('name');
 
-                defaultOptions.templateSelection = function (data, container) {
+                defaultOptions.templateSelection = function (data) {
                   var elt = $(data.element);
                   elt.attr('data-content', elt.html());
                   return data.text;

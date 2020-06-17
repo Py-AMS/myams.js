@@ -18,13 +18,12 @@
   });
   _exports.datatable = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS datatables management
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var datatable = {};
   /**
    * Global module initialization

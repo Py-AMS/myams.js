@@ -3,6 +3,7 @@
  */
 
 import $ from "jquery";
+
 import MyAMS, { init } from "../ext-base";
 import { alert } from "../mod-alert";
 import { error } from "../mod-error";

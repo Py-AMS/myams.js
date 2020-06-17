@@ -1,10 +1,9 @@
+/* global MyAMS */
 /**
  * MyAMS datatables management
  */
 
-if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
-}
+const $ = MyAMS.$;
 
 
 export const datatable = {

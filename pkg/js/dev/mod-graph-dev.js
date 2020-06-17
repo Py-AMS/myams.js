@@ -18,13 +18,12 @@
   });
   _exports.graph = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS graphs management
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var graph = {};
   /**
    * Global module initialization

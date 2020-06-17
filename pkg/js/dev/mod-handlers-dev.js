@@ -18,6 +18,8 @@
   });
   _exports.handlers = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS events handlers
    */
@@ -179,8 +181,7 @@
       $(document).on('click', 'input[type="checkbox"][readonly]', function () {
         return false;
       });
-    },
-    initElement: function initElement(element) {}
+    }
   };
   /**
    * Global module initialization

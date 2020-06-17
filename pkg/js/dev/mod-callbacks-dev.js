@@ -18,6 +18,8 @@
   });
   _exports.callbacks = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS callbacks management
    */
@@ -116,9 +118,7 @@
             }
           }
         });
-        $.when.apply($, deferred).then(function () {
-          resolve();
-        });
+        $.when.apply($, deferred).then(resolve, reject);
       });
     }
   };

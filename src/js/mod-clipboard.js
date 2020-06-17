@@ -1,3 +1,4 @@
+/* global MyAMS, clipboardData */
 /**
  * MyAMS i18n translations
  */

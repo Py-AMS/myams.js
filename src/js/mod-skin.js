@@ -1,8 +1,10 @@
+/* global MyAMS */
 /**
  * MyAMS generic skin features
  */
 
 const $ = MyAMS.$;
+
 
 let _initialized = false;
 
@@ -55,7 +57,7 @@ export const skin = {
 	 * triggered when the window location hash is modified; this can notably occur when a
 	 * navigation menu, for example, is clicked.
 	 */
-	checkURL: (evt) => {
+	checkURL: () => {
 		const nav = MyAMS.dom.nav;
 		let hash = location.hash,
 			url = hash.replace(/^#/, ''),
@@ -86,7 +88,7 @@ export const skin = {
 					prefix = $('html head title').data('ams-title-prefix'),
 					fullPrefix = prefix ? `${prefix} > ` : '';
 				document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') ||
-					 menu.attr('title') || document.title}`;
+					menu.attr('title') || document.title}`;
 				if (tag) {
 					const anchor = $(`#${tag}`);
 					if (anchor.exists()) {

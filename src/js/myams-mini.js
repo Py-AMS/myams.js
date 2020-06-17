@@ -62,7 +62,7 @@ MyAMS.$.extend(MyAMS, {
 	xmlrpc: xmlrpc
 });
 
-const html = $('html');
+const html = MyAMS.$('html');
 if (html.data('ams-init') !== false) {
 	init(MyAMS.$);
 }

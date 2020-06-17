@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS events management
  */

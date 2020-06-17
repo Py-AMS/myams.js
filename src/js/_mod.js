@@ -1,5 +1,6 @@
+/* global MyAMS */
 /**
- * MyAMS
+ * MyAMS xxx module
  */
 
 const $ = MyAMS.$;

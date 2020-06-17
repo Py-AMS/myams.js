@@ -18,13 +18,12 @@
   });
   _exports.xmlrpc = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS XML-RPC protocol support
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var xmlrpc = {};
   /**
    * Global module initialization

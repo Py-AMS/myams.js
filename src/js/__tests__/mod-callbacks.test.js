@@ -3,9 +3,11 @@
  */
 
 import $ from "jquery";
-import { init } from "../ext-base";
+
+import MyAMS, { init } from "../ext-base";
 import { callbacks } from "../mod-callbacks";
 import { i18n } from "../mod-i18n";
+
 import myams_require from "../ext-require";
 
 

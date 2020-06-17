@@ -1,3 +1,4 @@
+/* global MyAMS, FontAwesome, Hammer */
 /**
  * MyAMS navigation module
  */
@@ -150,7 +151,7 @@ export class NavigationMenu {
 					if (close && (parentUL !== visibleElt)) {
 						const visibleItem = $(visibleElt);
 						if (href || !visibleItem.hasClass('active')) {
-							visibleItem.slideUp(settings.speed, (slideElt) => {
+							visibleItem.slideUp(settings.speed, () => {
 								visibleItem.parent("li")
 									.removeClass('open')
 									.find("b:first")
@@ -352,8 +353,8 @@ export const nav = {
 			});
 
 			// Activate clicks
-			$(document).on('click', 'a[href!="#"]:not([data-toggle]), ' +
-								   '[data-ams-url]:not([data-toggle])', (evt) => {
+			$(document).on('click',
+				'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', (evt) => {
 				// check for specific click handler
 				const handler = $(evt).data('ams-click-handler');
 				if (handler) {
@@ -438,12 +439,12 @@ export const nav = {
 								direction: Hammer.DIRECTION_HORIZONTAL,
 								threshold: 200
 							}));
-							_hammer.on('panright', (evt) => {
+							_hammer.on('panright', () => {
 								if (!MyAMS.dom.root.hasClass('hidden-menu')) {
 									MyAMS.nav.switchMenu();
 								}
 							});
-							_hammer.on('panleft', (evt) => {
+							_hammer.on('panleft', () => {
 								if (MyAMS.dom.root.hasClass('hidden-menu')) {
 									MyAMS.nav.switchMenu();
 								}
@@ -515,15 +516,16 @@ export const nav = {
 			crumb.append($(template));
 		}
 		$('li.active >a', MyAMS.dom.nav).each((idx, elt) => {
-			const menu = $(elt),
-				  text = $.trim(menu.clone()
-					  				.children('.badge')
-									.remove()
-									.end()
-									.text()),
-				  href = menu.attr('href'),
-				  item = $('<li class="breadcrumb-item"></li>').append(href.replace(/^#/, '') ?
-				  		   $('<a></a>').html(text).attr('href', href) : text);
+			const
+				menu = $(elt),
+				text = $.trim(menu.clone()
+					.children('.badge')
+					.remove()
+					.end()
+					.text()),
+				href = menu.attr('href'),
+				item = $('<li class="breadcrumb-item"></li>').append(href.replace(/^#/, '') ?
+					$('<a></a>').html(text).attr('href', href) : text);
 			crumb.append(item);
 		});
 	},

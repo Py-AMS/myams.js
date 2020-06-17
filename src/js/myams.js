@@ -16,7 +16,6 @@ import "popper.js";
 import "bootstrap";
 import "hammerjs";
 
-
 import MyAMS, { init } from "./ext-base";
 import myams_require from "./ext-require";
 
@@ -76,7 +75,7 @@ MyAMS.$.extend(MyAMS, {
 	xmlrpc: xmlrpc
 });
 
-const html = $('html');
+const html = MyAMS.$('html');
 if (html.data('ams-init') !== false) {
 	init(MyAMS.$);
 }

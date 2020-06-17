@@ -1,9 +1,11 @@
+/* global FontAwesome */
 /**
  * MyAMS base features
  */
 
+let $;
 if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
+	$ = window.$ = window.jQuery = require('jquery');
 }
 
 
@@ -112,7 +114,7 @@ export function init($) {
 		extendOnly: function(source, getter, ...extensions) {
 			for (const extension of extensions) {
 				for (const [key, value] of Object.entries(extension)) {
-					if (source.hasOwnProperty(key)) {
+					if (Object.prototype.hasOwnProperty.call(source, key)) {
 						source[key] = getter === null ? value : getter(value);
 					}
 				}
@@ -396,8 +398,9 @@ export function getFunctionByName(functionName, context) {
 	} else if (typeof functionName !== 'string') {
 		return undefined;
 	}
-	const namespaces = functionName.split("."),
-		  func = namespaces.pop();
+	const
+		namespaces = functionName.split("."),
+		func = namespaces.pop();
 	context = (context === undefined || context === null) ? window : context;
 	for (const name of namespaces) {
 		try {
@@ -477,7 +480,7 @@ export function getScript(url, options={}) {
  */
 export function getCSS(url, name) {
 
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve /*, reject */) => {
 		const head = $('HEAD');
 		let style = $(`style[data-ams-id="${name}"]`, head);
 		if (style.length === 0) {
@@ -486,6 +489,7 @@ export function getCSS(url, name) {
 								.appendTo(head);
 			const styleInterval = setInterval(() => {
 				try {
+					// eslint-disable-next-line no-unused-vars
 					const _check = style[0].sheet.cssRules;  // Is only populated when file is loaded
 					clearInterval(styleInterval);
 					resolve(true);
@@ -579,11 +583,13 @@ export function switchIcon(element, fromClass, toClass) {
  * @type {{devmode: boolean, baseURL: string, devext: string}}
  */
 function getEnv($) {
-	const script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' +
-					 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' +
-					 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
-		  src = script.attr('src'),
-		  devmode = src ? src.indexOf('-dev.js') >= 0 : true;  // testing mode
+	const
+		script = $(
+			'script[src*="/myams.js"], script[src*="/myams-dev.js"], ' +
+			'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' +
+			'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
+		src = script.attr('src'),
+		devmode = src ? src.indexOf('-dev.js') >= 0 : true;  // testing mode
 	return {
 		bundle: src ? src.indexOf('-core') < 0 : true,  // testing mode
 		devmode: devmode,
@@ -637,8 +643,8 @@ const
 		modules: [],
 		ajaxNav: true,
 		enableFastclick: true,
-		useSVGIcons: (window.FontAwesome !== undefined) &&
-					 (FontAwesome.config.autoReplaceSvg === 'nest'),
+		useSVGIcons:
+			(window.FontAwesome !== undefined) && (FontAwesome.config.autoReplaceSvg === 'nest'),
 		menuSpeed: 235,
 		initPage: 'MyAMS.core.initPage',
 		initContent: 'MyAMS.core.initContent',
@@ -674,7 +680,7 @@ const
 
 const MyAMS = {
 	$: $,
-	env: getEnv(jQuery),
+	env: getEnv($),
 	config: config,
 	core: core,
 	registry: registry

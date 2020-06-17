@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS i18n translations
  */
@@ -26,8 +27,9 @@ export const i18n = {
 	ERRORS_OCCURED: "Some errors occured!",
 
 	BAD_LOGIN_TITLE: "Bad login!",
-	BAD_LOGIN_MESSAGE: "Your anthentication credentials didn't allow you to open a session; " +
-					   "please check your credentials or contact administrator.",
+	BAD_LOGIN_MESSAGE:
+		"Your anthentication credentials didn't allow you to open a session; " +
+		"please check your credentials or contact administrator.",
 
 	CONFIRM: "Confirm",
 	CONFIRM_REMOVE: "Removing this content can't be undone. Do you confirm?",
@@ -65,11 +67,12 @@ export const i18n = {
 				return;
 			}
 			_initialized = true;
-			const html = $('html'),
-				  lang = html.attr('lang') || html.attr('xml:lang');
+			const
+				html = $('html'),
+				lang = html.attr('lang') || html.attr('xml:lang');
 			if (lang && !lang.startsWith('en')) {
 				MyAMS.core.getScript(`${MyAMS.env.baseURL}i18n/myams-${lang.substr(0, 2)}.js`)
-						  .then(resolve, reject);
+					.then(resolve, reject);
 			} else {
 				resolve();
 			}

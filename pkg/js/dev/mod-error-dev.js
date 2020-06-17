@@ -18,6 +18,8 @@
   });
   _exports.error = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS errors management
    */
@@ -45,9 +47,7 @@
               header: MyAMS.i18n.ERROR_OCCURED,
               message: errors
             });
-          }).then(function () {
-            resolve();
-          });
+          }).then(resolve, reject);
         } else if ($.isArray(errors)) {
           // array of messages
           MyAMS.require('i18n', 'alert').then(function () {
@@ -57,9 +57,7 @@
               header: MyAMS.i18n.ERRORS_OCCURED,
               message: errors
             });
-          }).then(function () {
-            resolve();
-          });
+          }).then(resolve, reject);
         } else {
           // full errors with widgets
           MyAMS.require('i18n', 'alert', 'form').then(function () {
@@ -168,9 +166,7 @@
                 }
               }
             }
-          }).then(function () {
-            resolve();
-          });
+          }).then(resolve, reject);
         }
       });
     }

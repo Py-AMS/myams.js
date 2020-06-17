@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS notifications handlers
  */
@@ -103,7 +104,7 @@ export const notifications = {
 				current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
 		MyAMS.require('ajax').then(() => {
 			MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '',
-				current.data('ams-notifications-options') || {}).then((result, status, xhr) => {
+				current.data('ams-notifications-options') || {}).then((result) => {
 				const tab = $(target.data('ams-notifications-target') ||
 					target.parents('[data-ams-notifications-target]').data('ams-notifications-target') ||
 					current.attr('href'));

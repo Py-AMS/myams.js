@@ -1,3 +1,4 @@
+/* global MyAMS */
 /**
  * MyAMS generic helpers
  */
@@ -16,7 +17,7 @@ export const helpers = {
 	moveElementToParentEnd: (element) => {
 		const parent = element.parent();
 		return element.detach()
-					  .appendTo(parent);
+			.appendTo(parent);
 	},
 
 	/**

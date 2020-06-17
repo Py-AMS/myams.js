@@ -1,3 +1,4 @@
+/* global MyAMS, Cookies */
 /**
  * MyAMS AJAX features
  */
@@ -5,7 +6,7 @@
 const $ = MyAMS.$;
 
 
-function checkCsrfHeader(request, options) {
+function checkCsrfHeader(request /*, options */) {
 	if (window.Cookies) {
 		const token = Cookies.get(MyAMS.config.csrfCookieName);
 		if (token) {
@@ -258,19 +259,23 @@ export const ajax = {
 
 		function closeForm() {
 			if (form !== undefined) {
-				MyAMS.require('form', () => {
+				MyAMS.require('form').then(() => {
 					MyAMS.form.resetChanged(form);
+				}).then(() => {
+					if (result.closeForm !== false) {
+						MyAMS.require('modal').then(() => {
+							MyAMS.modal.close(form);
+						});
+					}
 				});
-				if (result.closeForm !== false) {
-					MyAMS.require('modal', () => {
-						MyAMS.modal.close(form);
-					});
-				}
 			}
 		}
 
-		let url = null;
-		const status = result.status;
+		let url = null,
+			loadTarget = null;
+		const
+			status = result.status,
+			promises = [];
 
 		switch (status) {
 
@@ -282,9 +287,9 @@ export const ajax = {
 				break;
 
 			case 'error':
-				MyAMS.require('error').then(() => {
+				promises.push(MyAMS.require('error').then(() => {
 					MyAMS.error.showErrors(form, result);
-				});
+				}));
 				break;
 
 			case 'message':
@@ -301,9 +306,9 @@ export const ajax = {
 				break;
 
 			case 'modal':
-				MyAMS.require('modal').then(() => {
+				promises.push(MyAMS.require('modal').then(() => {
 					MyAMS.modal.open(result.location);
-				});
+				}));
 				break;
 
 			case 'reload':
@@ -312,8 +317,8 @@ export const ajax = {
 				if (url.startsWith('#')) {
 					url = url.substr(1);
 				}
-				const loadTarget = $(result.target || target || '#content');
-				MyAMS.require('skin').then(() => {
+				loadTarget = $(result.target || target || '#content');
+				promises.push(MyAMS.require('skin').then(() => {
 					MyAMS.skin.loadURL(url, loadTarget, {
 						preLoadCallback: MyAMS.core.getFunctionByName(result.preReload || function() {
 							$('[data-ams-pre-reload]', loadTarget).each((index, element) => {
@@ -328,7 +333,7 @@ export const ajax = {
 						}),
 						afterLoadCallbackOptions: result.postReloadOptions
 					});
-				});
+				}));
 				break;
 
 			case 'redirect':
@@ -367,10 +372,12 @@ export const ajax = {
 				} else {
 					container.html(content.html);
 				}
-				MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container);
-				if (!content.keepHidden) {
-					container.removeClass('hidden');
-				}
+				promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
+					document, container).then(() => {
+					if (!content.keepHidden) {
+						container.removeClass('hidden');
+					}
+				}));
 			}
 		}
 
@@ -383,16 +390,18 @@ export const ajax = {
 				} else {
 					container.html(content.html);
 				}
-				MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container);
-				if (!content.keepHidden) {
-					container.removeClass('hidden');
-				}
+				promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
+					document, container).then(() => {
+					if (!content.keepHidden) {
+						container.removeClass('hidden');
+					}
+				}));
 			}
 		}
 
 		// Response with message
 		if (result.message) {
-			MyAMS.require('alert').then(() => {
+			promises.push(MyAMS.require('alert').then(() => {
 				if (typeof result.message === 'string') {
 					MyAMS.alert.smallBox({
 						status: status,
@@ -410,12 +419,12 @@ export const ajax = {
 						message: message.message
 					});
 				}
-			});
+			}));
 		}
 
 		// Response with message box
 		if (result.messagebox) {
-			MyAMS.require('alert').then(() => {
+			promises.push(MyAMS.require('alert').then(() => {
 				if (typeof result.messagebox === 'string') {
 					MyAMS.alert.messageBox({
 						status: status,
@@ -435,12 +444,12 @@ export const ajax = {
 						timeout: message.timeout === 0 ? 0 : (message.timeout || 10000)
 					});
 				}
-			});
+			}));
 		}
 
 		// Response with small box
 		if (result.smallbox) {
-			MyAMS.require('alert').then(() => {
+			promises.push(MyAMS.require('alert').then(() => {
 				if (typeof result.smallbox === 'string') {
 					MyAMS.alert.smallBox({
 						status: status,
@@ -458,7 +467,7 @@ export const ajax = {
 						timeout: message.timeout
 					});
 				}
-			});
+			}));
 		}
 
 		// Response with single event
@@ -479,19 +488,24 @@ export const ajax = {
 
 		// Response with single callback
 		if (result.callback) {
-			MyAMS.core.executeFunctionByName(result.callback, document, form, result.options);
+			promises.push(MyAMS.core.executeFunctionByName(result.callback, document, form,
+				result.options));
 		}
 
 		// Response with multiple callbacks
 		if (result.callbacks) {
 			for (const callback of result.callbacks) {
 				if (typeof callback === 'string') {
-					MyAMS.core.executeFunctionByName(callback, document, form, result.options);
+					promises.push(MyAMS.core.executeFunctionByName(callback, document, form,
+						result.options));
 				} else {
-					MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
+					promises.push(MyAMS.core.executeFunctionByName(callback.callback, document,
+						form, callback.options));
 				}
 			}
 		}
+
+		return Promise.all(promises);
 	},
 
 	/**
@@ -511,8 +525,9 @@ export const ajax = {
 				MyAMS.ajax.handleJSON(parsedResponse.data);
 			} else {
 				MyAMS.require('i18n', 'alert').then(() => {
-					const title = error || event.statusText || event.type,
-						  message = parsedResponse.responseText;
+					const
+						title = error || event.statusText || event.type,
+						message = parsedResponse.responseText;
 					MyAMS.alert.messageBox({
 						status: 'error',
 						title: MyAMS.i18n.ERROR_OCCURED,
@@ -540,7 +555,7 @@ export const ajax = {
 /**
  * AJAX events callbacks
  */
-ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.devmode ? '.min' : ''}.js`)
+ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`)
 	.then(() => {
 		const xhr = $.ajaxSettings.xhr;
 		$.ajaxSetup({

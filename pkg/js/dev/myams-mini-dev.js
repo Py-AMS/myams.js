@@ -3064,11 +3064,15 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/* global FontAwesome */
+
 /**
  * MyAMS base features
  */
+var $;
+
 if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
+  $ = window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
 }
 
 
@@ -3220,7 +3224,7 @@ function init($) {
               key = _Object$entries2$_i[0],
               value = _Object$entries2$_i[1];
 
-          if (source.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
             source[key] = getter === null ? value : getter(value);
           }
         }
@@ -3682,7 +3686,9 @@ function getScript(url) {
  */
 
 function getCSS(url, name) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve
+  /*, reject */
+  ) {
     var head = $('HEAD');
     var style = $("style[data-ams-id=\"".concat(name, "\"]"), head);
 
@@ -3690,6 +3696,7 @@ function getCSS(url, name) {
       style = $('<style>').attr('data-ams-id', name).text("@import \"".concat(getSource(url), "\";")).appendTo(head);
       var styleInterval = setInterval(function () {
         try {
+          // eslint-disable-next-line no-unused-vars
           var _check = style[0].sheet.cssRules; // Is only populated when file is loaded
 
           clearInterval(styleInterval);
@@ -3871,7 +3878,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
 };
 var MyAMS = {
   $: $,
-  env: getEnv(jQuery),
+  env: getEnv($),
   config: config,
   core: core,
   registry: _ext_registry__WEBPACK_IMPORTED_MODULE_0__["registry"]
@@ -3906,6 +3913,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/* global $, MyAMS */
 
 /**
  * MyAMS dynamic plug-ins loading management
@@ -3980,7 +3989,7 @@ function () {
           result.then(function () {
             _this.loaded = true;
             resolve();
-          });
+          }, reject);
         } else {
           resolve();
         }
@@ -4054,7 +4063,7 @@ function () {
     key: "register",
     value: function register(props, name) {
       // check arguments
-      if (!name && props.hasOwnProperty('name')) {
+      if (!name && Object.prototype.hasOwnProperty.call(props, 'name')) {
         name = props.name;
       } // check for already registered plug-in
 
@@ -4119,7 +4128,7 @@ function () {
         }, true));
       } else if (_typeof(props) === 'object') {
         // plug-in properties object
-        plugins.set(name, new Plugin(name, props, !Boolean(props.src)));
+        plugins.set(name, new Plugin(name, props, !props.src));
       } // check callback
 
 
@@ -4223,7 +4232,7 @@ function () {
         }
       }); // load plug-ins
 
-      var result = $.when.apply($, asyncPlugins);
+      var result = $.when.apply($, asyncPlugins); // eslint-disable-next-line no-unused-vars
 
       for (var _i = 0, _syncPlugins = syncPlugins; _i < _syncPlugins.length; _i++) {
         var plugin = _syncPlugins[_i];
@@ -4388,7 +4397,7 @@ var registry = {
 
       if (data) {
         for (var name in data) {
-          if (!data.hasOwnProperty(name)) {
+          if (!Object.prototype.hasOwnProperty.call(data, name)) {
             continue;
           }
 
@@ -4435,6 +4444,8 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+/* global MyAMS */
 
 /**
  * MyAMS dynamic module loader
@@ -4594,12 +4605,16 @@ function myams_require() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ajax", function() { return ajax; });
+/* global MyAMS, Cookies */
+
 /**
  * MyAMS AJAX features
  */
 var $ = MyAMS.$;
 
-function checkCsrfHeader(request, options) {
+function checkCsrfHeader(request
+/*, options */
+) {
   if (window.Cookies) {
     var token = Cookies.get(MyAMS.config.csrfCookieName);
 
@@ -4872,20 +4887,22 @@ var ajax = {
   handleJSON: function handleJSON(result, form, target) {
     function closeForm() {
       if (form !== undefined) {
-        MyAMS.require('form', function () {
+        MyAMS.require('form').then(function () {
           MyAMS.form.resetChanged(form);
+        }).then(function () {
+          if (result.closeForm !== false) {
+            MyAMS.require('modal').then(function () {
+              MyAMS.modal.close(form);
+            });
+          }
         });
-
-        if (result.closeForm !== false) {
-          MyAMS.require('modal', function () {
-            MyAMS.modal.close(form);
-          });
-        }
       }
     }
 
-    var url = null;
-    var status = result.status;
+    var url = null,
+        loadTarget = null;
+    var status = result.status,
+        promises = [];
 
     switch (status) {
       case 'alert':
@@ -4897,10 +4914,9 @@ var ajax = {
         break;
 
       case 'error':
-        MyAMS.require('error').then(function () {
+        promises.push(MyAMS.require('error').then(function () {
           MyAMS.error.showErrors(form, result);
-        });
-
+        }));
         break;
 
       case 'message':
@@ -4917,10 +4933,9 @@ var ajax = {
         break;
 
       case 'modal':
-        MyAMS.require('modal').then(function () {
+        promises.push(MyAMS.require('modal').then(function () {
           MyAMS.modal.open(result.location);
-        });
-
+        }));
         break;
 
       case 'reload':
@@ -4931,9 +4946,8 @@ var ajax = {
           url = url.substr(1);
         }
 
-        var loadTarget = $(result.target || target || '#content');
-
-        MyAMS.require('skin').then(function () {
+        loadTarget = $(result.target || target || '#content');
+        promises.push(MyAMS.require('skin').then(function () {
           MyAMS.skin.loadURL(url, loadTarget, {
             preLoadCallback: MyAMS.core.getFunctionByName(result.preReload || function () {
               $('[data-ams-pre-reload]', loadTarget).each(function (index, element) {
@@ -4948,8 +4962,7 @@ var ajax = {
             }),
             afterLoadCallbackOptions: result.postReloadOptions
           });
-        });
-
+        }));
         break;
 
       case 'redirect':
@@ -4993,11 +5006,11 @@ var ajax = {
           container.html(content.html);
         }
 
-        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container);
-
-        if (!content.keepHidden) {
-          container.removeClass('hidden');
-        }
+        promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
+          if (!content.keepHidden) {
+            container.removeClass('hidden');
+          }
+        }));
       }
     } // Multiple contents response
 
@@ -5008,22 +5021,25 @@ var ajax = {
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = result.contents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var _content = _step2.value;
+        var _loop = function _loop() {
+          var content = _step2.value;
+          var container = $(content.target);
 
-          var _container = $(_content.target);
-
-          if (_content.text) {
-            _container.text(_content.text);
+          if (content.text) {
+            container.text(content.text);
           } else {
-            _container.html(_content.html);
+            container.html(content.html);
           }
 
-          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, _container);
+          promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
+            if (!content.keepHidden) {
+              container.removeClass('hidden');
+            }
+          }));
+        };
 
-          if (!_content.keepHidden) {
-            _container.removeClass('hidden');
-          }
+        for (var _iterator2 = result.contents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          _loop();
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -5043,7 +5059,7 @@ var ajax = {
 
 
     if (result.message) {
-      MyAMS.require('alert').then(function () {
+      promises.push(MyAMS.require('alert').then(function () {
         if (typeof result.message === 'string') {
           MyAMS.alert.smallBox({
             status: status,
@@ -5061,12 +5077,12 @@ var ajax = {
             message: message.message
           });
         }
-      });
+      }));
     } // Response with message box
 
 
     if (result.messagebox) {
-      MyAMS.require('alert').then(function () {
+      promises.push(MyAMS.require('alert').then(function () {
         if (typeof result.messagebox === 'string') {
           MyAMS.alert.messageBox({
             status: status,
@@ -5086,12 +5102,12 @@ var ajax = {
             timeout: message.timeout === 0 ? 0 : message.timeout || 10000
           });
         }
-      });
+      }));
     } // Response with small box
 
 
     if (result.smallbox) {
-      MyAMS.require('alert').then(function () {
+      promises.push(MyAMS.require('alert').then(function () {
         if (typeof result.smallbox === 'string') {
           MyAMS.alert.smallBox({
             status: status,
@@ -5109,7 +5125,7 @@ var ajax = {
             timeout: message.timeout
           });
         }
-      });
+      }));
     } // Response with single event
 
 
@@ -5151,7 +5167,7 @@ var ajax = {
 
 
     if (result.callback) {
-      MyAMS.core.executeFunctionByName(result.callback, document, form, result.options);
+      promises.push(MyAMS.core.executeFunctionByName(result.callback, document, form, result.options));
     } // Response with multiple callbacks
 
 
@@ -5165,9 +5181,9 @@ var ajax = {
           var callback = _step4.value;
 
           if (typeof callback === 'string') {
-            MyAMS.core.executeFunctionByName(callback, document, form, result.options);
+            promises.push(MyAMS.core.executeFunctionByName(callback, document, form, result.options));
           } else {
-            MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
+            promises.push(MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options));
           }
         }
       } catch (err) {
@@ -5185,6 +5201,8 @@ var ajax = {
         }
       }
     }
+
+    return Promise.all(promises);
   },
 
   /**
@@ -5235,7 +5253,7 @@ var ajax = {
  * AJAX events callbacks
  */
 
-ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.devmode ? '.min' : '', ".js")).then(function () {
+ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.extext, ".js")).then(function () {
   var _xhr = $.ajaxSettings.xhr;
   $.ajaxSetup({
     beforeSend: function beforeSend(request, options) {
@@ -5292,6 +5310,8 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "alert", function() { return alert; });
+/* global MyAMS */
+
 /**
  * MyAMS alerts management
  */
@@ -5443,7 +5463,7 @@ var alert = {
 
       MyAMS.require('modal').then(function () {
         var alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
-        alert.on('hidden.bs.modal', function (evt) {
+        alert.on('hidden.bs.modal', function () {
           resolve(alert.data('modal-result'));
           alert.remove();
         });
@@ -5479,6 +5499,8 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "callbacks", function() { return callbacks; });
+/* global MyAMS */
+
 /**
  * MyAMS callbacks management
  */
@@ -5577,9 +5599,7 @@ var callbacks = {
           }
         }
       });
-      $.when.apply($, deferred).then(function () {
-        resolve();
-      });
+      $.when.apply($, deferred).then(resolve, reject);
     });
   }
 };
@@ -5608,6 +5628,8 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clipboard", function() { return clipboard; });
+/* global MyAMS, clipboardData */
+
 /**
  * MyAMS i18n translations
  */
@@ -5701,13 +5723,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "container", function() { return container; });
+/* global MyAMS */
+
 /**
  * MyAMS container management
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var container = {};
 /**
  * Global module initialization
@@ -5734,13 +5755,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "datatable", function() { return datatable; });
+/* global MyAMS */
+
 /**
  * MyAMS datatables management
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var datatable = {};
 /**
  * Global module initialization
@@ -5769,6 +5789,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "error", function() { return error; });
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
+/* global MyAMS */
+
 /**
  * MyAMS errors management
  */
@@ -5797,9 +5819,7 @@ var error = {
             header: MyAMS.i18n.ERROR_OCCURED,
             message: errors
           });
-        }).then(function () {
-          resolve();
-        });
+        }).then(resolve, reject);
       } else if ($.isArray(errors)) {
         // array of messages
         MyAMS.require('i18n', 'alert').then(function () {
@@ -5809,9 +5829,7 @@ var error = {
             header: MyAMS.i18n.ERRORS_OCCURED,
             message: errors
           });
-        }).then(function () {
-          resolve();
-        });
+        }).then(resolve, reject);
       } else {
         // full errors with widgets
         MyAMS.require('i18n', 'alert', 'form').then(function () {
@@ -5920,9 +5938,7 @@ var error = {
               }
             }
           }
-        }).then(function () {
-          resolve();
-        });
+        }).then(resolve, reject);
       }
     });
   }
@@ -5959,6 +5975,8 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+/* global MyAMS */
 
 /**
  * MyAMS events management
@@ -6075,6 +6093,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+/* global MyAMS, tinyMCE */
+
 /**
  * MyAMS forms support
  */
@@ -6138,7 +6158,7 @@ var form = {
       var form = $(elt),
           formData = form.data(),
           callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
-      $('input, ' + 'select, ' + 'textarea, ' + '[data-ams-changed-event]', form).each(function (idx, elt) {
+      $('input, select, textarea, [data-ams-changed-event]', form).each(function (idx, elt) {
         var input = $(elt),
             inputData = input.data();
 
@@ -6393,7 +6413,7 @@ var form = {
           settings.submit(form, settings, button, postData, ajaxSettings, target);
 
           if (downloadTarget) {
-            settings.resetDownloadTarget(form, settings, downloadTarget, ajaxSettings);
+            settings.resetDownloadTarget(form, settings, button, downloadTarget, ajaxSettings);
           }
         });
       });
@@ -6409,7 +6429,9 @@ var form = {
  * @param settings: computed form settings
  */
 
-function showFormSubmitWarning(form, settings) {
+function showFormSubmitWarning(form
+/*, settings */
+) {
   return new Promise(function (resolve, reject) {
     if (!form.data('ams-form-hide-submitted')) {
       MyAMS.require('i18n', 'alert').then(function () {
@@ -6420,9 +6442,7 @@ function showFormSubmitWarning(form, settings) {
           icon: 'fa-save',
           timeout: form.data('ams-form-alert-timeout') || 5000
         });
-      }).then(function () {
-        resolve();
-      });
+      }).then(resolve, reject);
     } else {
       resolve();
     }
@@ -6436,7 +6456,9 @@ function showFormSubmitWarning(form, settings) {
  * @returns {Map<any, any>}
  */
 
-function getFormValidators(form, settings) {
+function getFormValidators(form
+/*, settings */
+) {
   var result = new Map(),
       formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
   var validators = [];
@@ -6634,7 +6656,9 @@ function initFormData(form, settings, button, postData, options, veto) {
   form.trigger('init-data.ams.form', [postData, veto]);
 } // get form target
 
-function getFormTarget(form, settings, formData, buttonData) {
+function getFormTarget(form, settings
+/*, formData, buttonData */
+) {
   return $(settings.submitTarget);
 } // initialize form target
 
@@ -6669,7 +6693,9 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
     cache: false,
     data: postData,
     dataType: settings.datatype,
-    beforeSerialize: function beforeSerialize(form, options) {
+    beforeSerialize: function beforeSerialize(form
+    /*, options */
+    ) {
       var veto = {
         veto: false
       };
@@ -6683,7 +6709,9 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
         tinyMCE.triggerSave();
       }
     },
-    beforeSubmit: function beforeSubmit(data, form, options) {
+    beforeSubmit: function beforeSubmit(data, form
+    /*, options */
+    ) {
       var veto = {
         veto: false
       };
@@ -6921,7 +6949,7 @@ function initFormDownloadTarget(form, settings, target, ajaxSettings) {
   });
 } // reset if download target
 
-function resetFormDownloadTarget(form, settings, target, ajaxSettings) {
+function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
   var modal = form.closest('.modal-dialog'),
       keepModal = settings.keepModalOpen;
 
@@ -6963,13 +6991,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "graph", function() { return graph; });
+/* global MyAMS */
+
 /**
  * MyAMS graphs management
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var graph = {};
 /**
  * Global module initialization
@@ -6996,6 +7023,8 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handlers", function() { return handlers; });
+/* global MyAMS */
+
 /**
  * MyAMS events handlers
  */
@@ -7157,8 +7186,7 @@ var handlers = {
     $(document).on('click', 'input[type="checkbox"][readonly]', function () {
       return false;
     });
-  },
-  initElement: function initElement(element) {}
+  }
 };
 /**
  * Global module initialization
@@ -7183,6 +7211,8 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
+/* global MyAMS */
+
 /**
  * MyAMS generic helpers
  */
@@ -7233,6 +7263,8 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i18n", function() { return i18n; });
+/* global MyAMS */
+
 /**
  * MyAMS i18n translations
  */
@@ -7318,13 +7350,12 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "jsonrpc", function() { return jsonrpc; });
+/* global MyAMS */
+
 /**
  * MyAMS JSON-RPC protocol support
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var jsonrpc = {};
 /**
  * Global module initialization
@@ -7351,6 +7382,8 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "menu", function() { return menu; });
+/* global MyAMS */
+
 /**
  * MyAMS menus management
  */
@@ -7396,6 +7429,10 @@ function _contextMenuHandler(menu) {
 
         if (target) {
           MyAMS.form.confirmChangedForm(target).then(function (status) {
+            if (status !== 'success') {
+              return;
+            }
+
             MyAMS.skin.loadURL(href, target, menu.data('ams-link-options'), menu.data('ams-link-callback'));
           });
         } else {
@@ -7523,14 +7560,7 @@ var menu = {
         }
       }
     });
-  },
-
-  /**
-   * Element initialization.
-   *
-   * @param element: source element to initialize
-   */
-  initElement: function initElement(element) {}
+  }
 };
 /**
  * Global module initialization
@@ -7563,6 +7593,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalHiddenEventHandler", function() { return modalHiddenEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicModalHiddenEventHandler", function() { return dynamicModalHiddenEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modal", function() { return modal; });
+/* global MyAMS */
+
 /**
  * MyAMS modal dialogs support
  */
@@ -7658,7 +7690,7 @@ function modalDismissEventHandler(evt) {
  * modals are still visible.
  */
 
-function modalHiddenEventHandler(evt) {
+function modalHiddenEventHandler() {
   if ($('.modal:visible').length > 0) {
     $.fn.modal.Constructor.prototype._checkScrollbar();
 
@@ -7749,6 +7781,7 @@ var modal = {
             var response = MyAMS.ajax.getResponse(request),
                 dataType = response.contentType,
                 result = response.data;
+            var content, dialog, dialogData, dialogOptions, settings;
 
             switch (dataType) {
               case 'json':
@@ -7762,13 +7795,10 @@ var modal = {
               case 'html':
               case 'text':
               default:
-                var content = $(result),
-                    dialog = $('.modal-dialog', content.wrap('<div></div>').parent()),
-                    dialogData = dialog.data() || {},
-                    dialogOptions = {
+                content = $(result), dialog = $('.modal-dialog', content.wrap('<div></div>').parent()), dialogData = dialog.data() || {}, dialogOptions = {
                   backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
                 };
-                var settings = $.extend({}, dialogOptions, dialogData.amsOptions);
+                settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                 settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
                 $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 
@@ -7840,6 +7870,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/* global MyAMS, FontAwesome, Hammer */
 
 /**
  * MyAMS navigation module
@@ -8070,7 +8102,7 @@ function () {
               var visibleItem = $(visibleElt);
 
               if (href || !visibleItem.hasClass('active')) {
-                visibleItem.slideUp(settings.speed, function (slideElt) {
+                visibleItem.slideUp(settings.speed, function () {
                   visibleItem.parent("li").removeClass('open').find("b:first").delay(settings.speed).html(settings.closedSign);
                 });
               }
@@ -8269,7 +8301,7 @@ var nav = {
         evt.preventDefault();
       }); // Activate clicks
 
-      $(document).on('click', 'a[href!="#"]:not([data-toggle]), ' + '[data-ams-url]:not([data-toggle])', function (evt) {
+      $(document).on('click', 'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', function (evt) {
         // check for specific click handler
         var handler = $(evt).data('ams-click-handler');
 
@@ -8358,13 +8390,13 @@ var nav = {
                 threshold: 200
               }));
 
-              _hammer.on('panright', function (evt) {
+              _hammer.on('panright', function () {
                 if (!MyAMS.dom.root.hasClass('hidden-menu')) {
                   MyAMS.nav.switchMenu();
                 }
               });
 
-              _hammer.on('panleft', function (evt) {
+              _hammer.on('panleft', function () {
                 if (MyAMS.dom.root.hasClass('hidden-menu')) {
                   MyAMS.nav.switchMenu();
                 }
@@ -8531,6 +8563,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/* global MyAMS */
+
 /**
  * MyAMS notifications handlers
  */
@@ -8604,7 +8638,7 @@ var notifications = {
         remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
 
     MyAMS.require('ajax').then(function () {
-      MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(function (result, status, xhr) {
+      MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(function (result) {
         var tab = $(target.data('ams-notifications-target') || target.parents('[data-ams-notifications-target]').data('ams-notifications-target') || current.attr('href'));
         new NotificationsList(result, data).render(tab);
       });
@@ -8630,6 +8664,8 @@ if (MyAMS.env.bundle) {
   \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
+
+/* global MyAMS, bsCustomFileInput */
 
 /**
  * MyAMS standard plugins
@@ -8733,7 +8769,7 @@ function checker(element) {
           }
         }
       });
-      legend.closest('form').on('reset', function (evt) {
+      legend.closest('form').on('reset', function () {
         var checker = $('.checker', legend);
 
         if (checker.prop('checked') !== checked) {
@@ -8850,7 +8886,7 @@ function select2(element) {
               hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
               select.data('select2-target', hidden).removeAttr('name');
 
-              defaultOptions.templateSelection = function (data, container) {
+              defaultOptions.templateSelection = function (data) {
                 var elt = $(data.element);
                 elt.attr('data-content', elt.html());
                 return data.text;
@@ -9112,6 +9148,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "skin", function() { return skin; });
 var _this = undefined;
 
+/* global MyAMS */
+
 /**
  * MyAMS generic skin features
  */
@@ -9163,7 +9201,7 @@ var skin = {
    * triggered when the window location hash is modified; this can notably occur when a
    * navigation menu, for example, is clicked.
    */
-  checkURL: function checkURL(evt) {
+  checkURL: function checkURL() {
     var nav = MyAMS.dom.nav;
     var hash = location.hash,
         url = hash.replace(/^#/, ''),
@@ -9374,13 +9412,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stats", function() { return stats; });
+/* global MyAMS */
+
 /**
  * MyAMS stats management
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var stats = {
   logPageview: function logPageview() {},
   logEvent: function logEvent() {}
@@ -9410,13 +9447,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tree", function() { return tree; });
+/* global MyAMS */
+
 /**
  * MyAMS tree management
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var tree = {};
 /**
  * Global module initialization
@@ -9443,13 +9479,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "xmlrpc", function() { return xmlrpc; });
+/* global MyAMS */
+
 /**
  * MyAMS XML-RPC protocol support
  */
-if (!window.jQuery) {
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
-}
-
+var $ = MyAMS.$;
 var xmlrpc = {};
 /**
  * Global module initialization
@@ -9559,7 +9594,7 @@ _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IM
   tree: _mod_tree__WEBPACK_IMPORTED_MODULE_20__["tree"],
   xmlrpc: _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_22__["xmlrpc"]
 });
-var html = $('html');
+var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);

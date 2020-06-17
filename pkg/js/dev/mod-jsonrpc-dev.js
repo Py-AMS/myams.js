@@ -18,13 +18,12 @@
   });
   _exports.jsonrpc = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS JSON-RPC protocol support
    */
-  if (!window.jQuery) {
-    window.$ = window.jQuery = require('jquery');
-  }
-
+  var $ = MyAMS.$;
   var jsonrpc = {};
   /**
    * Global module initialization

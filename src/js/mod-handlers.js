@@ -1,8 +1,10 @@
+/* global MyAMS */
 /**
  * MyAMS events handlers
  */
 
 const $ = MyAMS.$;
+
 
 let _initialized = false;
 
@@ -18,8 +20,9 @@ export const handlers = {
 
 		// Initialize custom click handlers
 		$(document).on('click', '[data-ams-click-handler]', (evt) => {
-			const source = $(evt.currentTarget),
-				  handlers = source.data('ams-disabled-handlers');
+			const
+				source = $(evt.currentTarget),
+				handlers = source.data('ams-disabled-handlers');
 			if ((handlers === true) || (handlers === 'click') || (handlers === 'all')) {
 				return;
 			}
@@ -77,9 +80,10 @@ export const handlers = {
 				$('LABEL.state-error', form).removeClass('state-error');
 				form.find('.select2').trigger('change');
 				$('[data-ams-reset-callback]', form).each((idx, elt) => {
-					const element = $(elt),
-						  data = element.data(),
-						  callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
+					const
+						element = $(elt),
+						data = element.data(),
+						callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
 					if (callback !== undefined) {
 						callback.call(form, element, data.amsResetCallbackOptions);
 					}
@@ -90,8 +94,9 @@ export const handlers = {
 
 		// Initialize custom reset handlers
 		$(document).on('reset', '[data-ams-reset-handler]', (evt) => {
-			const form = $(evt.currentTarget),
-				  data = form.data();
+			const
+				form = $(evt.currentTarget),
+				data = form.data();
 			if (data.amsResetHandler) {
 				if ((data.amsKeepDefault !== true) && (data.amsResetKeepDefault !== true)) {
 					evt.preventDefault();
@@ -107,16 +112,13 @@ export const handlers = {
 		$(document).on('click', '[data-ams-click-event]', (evt) => {
 			const source = $(evt.currentTarget);
 			$(evt.target).trigger(source.data('ams-click-event'),
-								  source.data('ams-click-event-options'));
+				source.data('ams-click-event-options'));
 		});
 
 		// Cancel clicks on readonly checkbox
 		$(document).on('click', 'input[type="checkbox"][readonly]', function() {
 			return false;
 		});
-	},
-
-	initElement: (element) => {
 	}
 };
 

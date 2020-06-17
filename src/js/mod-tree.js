@@ -1,10 +1,9 @@
+/* global MyAMS */
 /**
  * MyAMS tree management
  */
 
-if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
-}
+const $ = MyAMS.$;
 
 
 export const tree = {

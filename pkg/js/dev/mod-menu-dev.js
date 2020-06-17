@@ -18,6 +18,8 @@
   });
   _exports.menu = void 0;
 
+  /* global MyAMS */
+
   /**
    * MyAMS menus management
    */
@@ -63,6 +65,10 @@
 
           if (target) {
             MyAMS.form.confirmChangedForm(target).then(function (status) {
+              if (status !== 'success') {
+                return;
+              }
+
               MyAMS.skin.loadURL(href, target, menu.data('ams-link-options'), menu.data('ams-link-callback'));
             });
           } else {
@@ -190,14 +196,7 @@
           }
         }
       });
-    },
-
-    /**
-     * Element initialization.
-     *
-     * @param element: source element to initialize
-     */
-    initElement: function initElement(element) {}
+    }
   };
   /**
    * Global module initialization

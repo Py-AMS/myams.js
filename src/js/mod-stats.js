@@ -1,10 +1,9 @@
+/* global MyAMS */
 /**
  * MyAMS stats management
  */
 
-if (!window.jQuery) {
-	window.$ = window.jQuery = require('jquery');
-}
+const $ = MyAMS.$;
 
 
 export const stats = {
