@@ -39,20 +39,24 @@ export const form = {
 
 	initElement: (element) => {
 
+		if (typeof element === 'string') {
+			element = $(element);
+		}
+
 		// Submit form when CTRL+Enter key is pressed in textarea
-		$(element).on('keydown', 'textarea', (evt) => {
+		element.on('keydown', 'textarea', (evt) => {
 			if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
 				$(evt.currentTarget).closest('form').submit();
 			}
 		});
 
 		// Always blur readonly inputs
-		$(element).on('focus', 'input[readonly="readonly"]', (evt) => {
+		element.on('focus', 'input[readonly="readonly"]', (evt) => {
 			$(evt.currentTarget).blur();
 		});
 
 		// Prevent bootstrap dialog from blocking TinyMCE focus
-		$(element).on('focusin', (evt) => {
+		element.on('focusin', (evt) => {
 			if ($(evt.target).closest('.mce-window').length >= 0) {
 				evt.stopImmediatePropagation();
 			}

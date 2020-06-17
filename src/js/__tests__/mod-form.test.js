@@ -1,4 +1,4 @@
-/* global test, expect */
+/* global jest, test, expect */
 /**
  * MyAMS form module tests
  */
@@ -100,7 +100,7 @@ test("Test MyAMS.form initElement function", () => {
 		body = $(document.body),
 		testForm = $('form', body),
 		testInput = $('input', testForm);
-	form.initElement(body);
+	form.initElement('body');
 
 	// test change event
 	expect(MyAMS.config.warnOnFormChange).toBe(true);

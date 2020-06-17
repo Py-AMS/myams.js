@@ -85,18 +85,22 @@
       $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
     },
     initElement: function initElement(element) {
-      // Submit form when CTRL+Enter key is pressed in textarea
-      $(element).on('keydown', 'textarea', function (evt) {
+      if (typeof element === 'string') {
+        element = $(element);
+      } // Submit form when CTRL+Enter key is pressed in textarea
+
+
+      element.on('keydown', 'textarea', function (evt) {
         if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
           $(evt.currentTarget).closest('form').submit();
         }
       }); // Always blur readonly inputs
 
-      $(element).on('focus', 'input[readonly="readonly"]', function (evt) {
+      element.on('focus', 'input[readonly="readonly"]', function (evt) {
         $(evt.currentTarget).blur();
       }); // Prevent bootstrap dialog from blocking TinyMCE focus
 
-      $(element).on('focusin', function (evt) {
+      element.on('focusin', function (evt) {
         if ($(evt.target).closest('.mce-window').length >= 0) {
           evt.stopImmediatePropagation();
         }
