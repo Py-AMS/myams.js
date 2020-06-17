@@ -9,7 +9,8 @@
   "scripts": {
     "gulp": "gulp",
     "test": "jest --coverage --watch",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "eslint": "eslint src/js/*.js"
   },
   "repository": {
     "type": "git",

@@ -37,6 +37,7 @@ test:
         - anybadge --label=Coverage --file=./coverage/coverage.svg --value="$GLOBAL_COVER" coverage
     artifacts:
         paths:
+            - ./node_modules/
             - ./coverage/
 
 dist:
@@ -49,6 +50,17 @@ dist:
     only:
         refs:
             - tags
+
+eslint:
+    image: node:12.17.0
+    stage: quality
+    allow_failure: true
+    script:
+        - npm install --no-audit
+        - npm run eslint
+    artifacts:
+        paths:
+            - ./node_modules/
 
 pylint:
     stage: quality
