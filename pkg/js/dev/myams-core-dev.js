@@ -127,15 +127,13 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/* global FontAwesome */
+/* global $, FontAwesome */
 
 /**
  * MyAMS base features
  */
-var $;
-
 if (!window.jQuery) {
-  $ = window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
+  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
 }
 
 

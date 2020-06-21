@@ -753,7 +753,14 @@ export function formSubmitCallback(form, settings, target, result, status, reque
 			target.html(result)
 				.delay(50)
 				.animate({ opacity: '1.0' }, 250);
-			MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target);
+			MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(() => {
+				MyAMS.require('ajax').then(() => {
+					MyAMS.ajax.check($.fn.scrollTo,
+						`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+						$('#main').scrollTo(target, { offset: -15 });
+					});
+				});
+			});
 	}
 
 	const callback = request.getResponseHeader('X-AMS-Callback');

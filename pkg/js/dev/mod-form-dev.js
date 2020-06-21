@@ -868,7 +868,15 @@
         target.html(result).delay(50).animate({
           opacity: '1.0'
         }, 250);
-        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target);
+        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(function () {
+          MyAMS.require('ajax').then(function () {
+            MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+              $('#main').scrollTo(target, {
+                offset: -15
+              });
+            });
+          });
+        });
     }
 
     var callback = request.getResponseHeader('X-AMS-Callback');

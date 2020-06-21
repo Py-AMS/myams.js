@@ -228,46 +228,50 @@
      * Extract datatype and result from response object
      */
     getResponse: function getResponse(request) {
-      var contentType = request.getResponseHeader('content-type');
-      var dataType, result;
+      var dataType = 'unknown',
+          result;
 
-      if (contentType) {
-        // Get server response
-        if (contentType.startsWith('application/javascript')) {
-          result = request.responseText;
-          dataType = 'script';
-        } else if (contentType.startsWith('text/html')) {
-          result = request.responseText;
-          dataType = 'html';
-        } else if (contentType.startsWith('text/xml')) {
-          result = request.responseText;
-          dataType = 'xml';
-        } else {
-          // Supposed to be JSON...
-          result = request.responseJSON;
+      if (request) {
+        var contentType = request.getResponseHeader('content-type');
 
-          if (result) {
-            dataType = 'json';
+        if (contentType) {
+          // Get server response
+          if (contentType.startsWith('application/javascript')) {
+            result = request.responseText;
+            dataType = 'script';
+          } else if (contentType.startsWith('text/html')) {
+            result = request.responseText;
+            dataType = 'html';
+          } else if (contentType.startsWith('text/xml')) {
+            result = request.responseText;
+            dataType = 'xml';
           } else {
-            try {
-              result = JSON.parse(request.responseText);
+            // Supposed to be JSON...
+            result = request.responseJSON;
+
+            if (result) {
               dataType = 'json';
-            } catch (e) {
-              result = request.responseText;
-              dataType = 'text';
+            } else {
+              try {
+                result = JSON.parse(request.responseText);
+                dataType = 'json';
+              } catch (e) {
+                result = request.responseText;
+                dataType = 'text';
+              }
             }
           }
+        } else {
+          // Probably no response from server...
+          result = {
+            status: 'alert',
+            alert: {
+              title: MyAMS.i18n.ERROR_OCCURED,
+              content: MyAMS.i18n.NO_SERVER_RESPONSE
+            }
+          };
+          dataType = 'json';
         }
-      } else {
-        // Probably no response from server...
-        result = {
-          status: 'alert',
-          alert: {
-            title: MyAMS.i18n.ERROR_OCCURED,
-            content: MyAMS.i18n.NO_SERVER_RESPONSE
-          }
-        };
-        dataType = 'json';
       }
 
       return {
@@ -299,17 +303,23 @@
      */
     handleJSON: function handleJSON(result, form, target) {
       function closeForm() {
-        if (form !== undefined) {
-          MyAMS.require('form').then(function () {
-            MyAMS.form.resetChanged(form);
-          }).then(function () {
-            if (result.closeForm !== false) {
-              MyAMS.require('modal').then(function () {
-                MyAMS.modal.close(form);
-              });
-            }
-          });
-        }
+        return new Promise(function (resolve, reject) {
+          if (form !== undefined) {
+            MyAMS.require('form').then(function () {
+              MyAMS.form.resetChanged(form);
+            }).then(function () {
+              if (result.closeForm !== false) {
+                MyAMS.require('modal').then(function () {
+                  MyAMS.modal.close(form);
+                }).then(resolve, reject);
+              } else {
+                resolve();
+              }
+            });
+          } else {
+            resolve();
+          }
+        });
       }
 
       var url = null,
@@ -342,7 +352,7 @@
         case 'notify':
         case 'callback':
         case 'callbacks':
-          closeForm();
+          promises.push(closeForm());
           break;
 
         case 'modal':

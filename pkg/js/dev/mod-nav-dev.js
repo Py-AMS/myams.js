@@ -298,7 +298,7 @@
    */
 
   function _openPage(href) {
-    if (href.startsWith('#')) {
+    if (location && href.startsWith('#')) {
       if (href !== location.hash) {
         window.location.hash = href;
       }

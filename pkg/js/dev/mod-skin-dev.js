@@ -20,6 +20,14 @@
 
   var _this = void 0;
 
+  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+  function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
   /* global MyAMS */
 
   /**
@@ -74,82 +82,87 @@
      * navigation menu, for example, is clicked.
      */
     checkURL: function checkURL() {
-      var nav = MyAMS.dom.nav;
-      var hash = location.hash,
-          url = hash.replace(/^#/, ''),
-          tag = null;
-      var tagPosition = url.indexOf('!');
+      return new Promise(function (resolve, reject) {
+        var nav = MyAMS.dom.nav;
+        var hash = location.hash,
+            url = hash.replace(/^#/, ''),
+            tag = null;
+        var tagPosition = url.indexOf('!');
 
-      if (tagPosition > 0) {
-        hash = hash.substring(0, tagPosition + 1);
-        tag = url.substring(tagPosition + 1);
-        url = url.substring(0, tagPosition);
-      }
+        if (tagPosition > 0) {
+          hash = hash.substring(0, tagPosition + 1);
+          tag = url.substring(tagPosition + 1);
+          url = url.substring(0, tagPosition);
+        }
 
-      var menu;
+        var menu;
 
-      if (url) {
-        // new hash
-        var container = $('#content');
+        if (url) {
+          // new hash
+          var container = $('#content');
 
-        if (!container.exists()) {
-          container = MyAMS.dom.root;
-        } // try to activate matching navigation menu
+          if (!container.exists()) {
+            container = MyAMS.dom.root;
+          }
 
+          menu = $("a[href=\"".concat(hash, "\"]"), nav); // load specified URL into '#content'
 
-        menu = $("a[href=\"".concat(hash, "\"]"), nav);
+          MyAMS.skin.loadURL(url, container).then(function () {
+            var prefix = $('html head title').data('ams-title-prefix'),
+                fullPrefix = prefix ? "".concat(prefix, " > ") : '';
+            document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
 
-        if (menu.exists()) {
-          MyAMS.require('nav').then(function () {
-            MyAMS.nav.setActiveMenu(menu);
-          });
-        } // load specified URL into '#content'
+            if (tag) {
+              var anchor = $("#".concat(tag));
 
-
-        skin.loadURL(url, container).then(function () {
-          var prefix = $('html head title').data('ams-title-prefix'),
-              fullPrefix = prefix ? "".concat(prefix, " > ") : '';
-          document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
-
-          if (tag) {
-            var anchor = $("#".concat(tag));
-
-            if (anchor.exists()) {
-              MyAMS.require('ajax').then(function () {
-                MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-                  $('#main').scrollTo(anchor, {
-                    offset: -15
+              if (anchor.exists()) {
+                MyAMS.require('ajax').then(function () {
+                  MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+                    $('#main').scrollTo(anchor, {
+                      offset: -15
+                    });
                   });
                 });
-              });
+              }
             }
-          }
-        }, function () {});
-      } else {
-        // empty hash! We try to check if a specific menu was activated with a custom
-        // data attribute, otherwise we go to the first navigation menu!
-        var activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
-
-        if (activeUrl) {
-          menu = $("a[href=\"".concat(activeUrl, "\"]"), nav);
-        } else {
-          menu = $('>ul >li >a[href!="#"]', nav).first();
-        }
-
-        if (menu.exists()) {
-          MyAMS.require('nav').then(function () {
-            MyAMS.nav.setActiveMenu(menu);
-
-            if (activeUrl) {
-              MyAMS.nav.drawBreadcrumbs();
+          }, reject).then(function () {
+            // try to activate matching navigation menu
+            if (menu.exists()) {
+              MyAMS.require('nav').then(function () {
+                MyAMS.nav.setActiveMenu(menu);
+              }).then(resolve);
             } else {
-              // we use location.replace to avoid storing intermediate URL
-              // into browser's history
-              window.location.replace(window.location.href + menu.attr('href'));
+              resolve();
             }
           });
+        } else {
+          // empty hash! We try to check if a specific menu was activated with a custom
+          // data attribute, otherwise we go to the first navigation menu!
+          var activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
+
+          if (activeUrl) {
+            menu = $("a[href=\"".concat(activeUrl, "\"]"), nav);
+          } else {
+            menu = $('>ul >li >a[href!="#"]', nav).first();
+          }
+
+          if (menu.exists()) {
+            MyAMS.require('nav').then(function () {
+              MyAMS.nav.setActiveMenu(menu);
+
+              if (activeUrl) {
+                MyAMS.nav.drawBreadcrumbs();
+              } else {
+                // we use location.replace to avoid storing intermediate URL
+                // into browser's history
+                window.location.replace(window.location.href + menu.attr('href'));
+              }
+            }).then(resolve, reject);
+          } else {
+            resolve();
+          }
         }
-      }
+      });
     },
 
     /**
@@ -213,23 +226,33 @@
           }
 
           $.ajax(settings).then(function (result, status, xhr) {
+            if ($.isArray(result)) {
+              var _result = result;
+
+              var _result2 = _slicedToArray(_result, 3);
+
+              result = _result2[0];
+              status = _result2[1];
+              xhr = _result2[2];
+            }
+
             MyAMS.require('ajax').then(function () {
               var response = MyAMS.ajax.getResponse(xhr);
 
               if (response) {
                 var dataType = response.contentType,
-                    _result = response.data;
+                    _result3 = response.data;
                 $('.loading', target).remove();
 
                 switch (dataType) {
                   case 'json':
-                    MyAMS.ajax.handleJSON(_result, target);
-                    resolve(_result, status, xhr);
+                    MyAMS.ajax.handleJSON(_result3, target);
+                    resolve(_result3, status, xhr);
                     break;
 
                   case 'script':
                   case 'xml':
-                    resolve(_result, status, xhr);
+                    resolve(_result3, status, xhr);
                     break;
 
                   case 'html':
@@ -238,13 +261,13 @@
                     target.parents('.hidden').removeClass('hidden');
                     target.css({
                       opacity: '0.0'
-                    }).html(_result).removeClass('hidden').delay(30).animate({
+                    }).html(_result3).removeClass('hidden').delay(30).animate({
                       opacity: '1.0'
                     }, 300);
                     MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(function () {
                       MyAMS.form && MyAMS.form.setFocus(target);
                       target.trigger('after-load.ams.content');
-                      resolve(_result, status, xhr);
+                      resolve(_result3, status, xhr);
                     });
                 }
 

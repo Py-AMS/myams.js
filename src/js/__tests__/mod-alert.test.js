@@ -1,3 +1,4 @@
+/* global test, expect */
 /**
  * MyAMS alert module tests
  */

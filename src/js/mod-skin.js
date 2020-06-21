@@ -58,71 +58,78 @@ export const skin = {
 	 * navigation menu, for example, is clicked.
 	 */
 	checkURL: () => {
-		const nav = MyAMS.dom.nav;
-		let hash = location.hash,
-			url = hash.replace(/^#/, ''),
-			tag = null;
-		const tagPosition = url.indexOf('!');
-		if (tagPosition > 0) {
-			hash = hash.substring(0, tagPosition + 1);
-			tag = url.substring(tagPosition + 1);
-			url = url.substring(0, tagPosition);
-		}
-		let menu;
-		if (url) {
-			// new hash
-			let container = $('#content');
-			if (!container.exists()) {
-				container = MyAMS.dom.root;
+		return new Promise((resolve, reject) => {
+			const nav = MyAMS.dom.nav;
+			let hash = location.hash,
+				url = hash.replace(/^#/, ''),
+				tag = null;
+			const tagPosition = url.indexOf('!');
+			if (tagPosition > 0) {
+				hash = hash.substring(0, tagPosition + 1);
+				tag = url.substring(tagPosition + 1);
+				url = url.substring(0, tagPosition);
 			}
-			// try to activate matching navigation menu
-			menu = $(`a[href="${hash}"]`, nav);
-			if (menu.exists()) {
-				MyAMS.require('nav').then(() => {
-					MyAMS.nav.setActiveMenu(menu);
-				});
-			}
-			// load specified URL into '#content'
-			skin.loadURL(url, container).then(() => {
-				const
-					prefix = $('html head title').data('ams-title-prefix'),
-					fullPrefix = prefix ? `${prefix} > ` : '';
-				document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') ||
-					menu.attr('title') || document.title}`;
-				if (tag) {
-					const anchor = $(`#${tag}`);
-					if (anchor.exists()) {
-						MyAMS.require('ajax').then(() => {
-							MyAMS.ajax.check($.fn.scrollTo,
-								`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
-								$('#main').scrollTo(anchor, { offset: -15 });
-							});
-						})
-					}
+			let menu;
+			if (url) {
+				// new hash
+				let container = $('#content');
+				if (!container.exists()) {
+					container = MyAMS.dom.root;
 				}
-			}, () => {});
-		} else {
-			// empty hash! We try to check if a specific menu was activated with a custom
-			// data attribute, otherwise we go to the first navigation menu!
-			const activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
-			if (activeUrl) {
-				menu = $(`a[href="${activeUrl}"]`, nav);
-			} else {
-				menu = $('>ul >li >a[href!="#"]', nav).first();
-			}
-			if (menu.exists()) {
-				MyAMS.require('nav').then(() => {
-					MyAMS.nav.setActiveMenu(menu);
-					if (activeUrl) {
-						MyAMS.nav.drawBreadcrumbs();
+				menu = $(`a[href="${hash}"]`, nav);
+				// load specified URL into '#content'
+				MyAMS.skin.loadURL(url, container).then(() => {
+					const
+						prefix = $('html head title').data('ams-title-prefix'),
+						fullPrefix = prefix ? `${prefix} > ` : '';
+					document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') ||
+						menu.attr('title') || document.title}`;
+					if (tag) {
+						const anchor = $(`#${tag}`);
+						if (anchor.exists()) {
+							MyAMS.require('ajax').then(() => {
+								MyAMS.ajax.check($.fn.scrollTo,
+									`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+									$('#main').scrollTo(anchor, {offset: -15});
+								});
+							});
+						}
+					}
+				}, reject).then(() => {
+					// try to activate matching navigation menu
+					if (menu.exists()) {
+						MyAMS.require('nav').then(() => {
+							MyAMS.nav.setActiveMenu(menu);
+						}).then(resolve);
 					} else {
-						// we use location.replace to avoid storing intermediate URL
-						// into browser's history
-						window.location.replace(window.location.href + menu.attr('href'));
+						resolve();
 					}
 				});
+			} else {
+				// empty hash! We try to check if a specific menu was activated with a custom
+				// data attribute, otherwise we go to the first navigation menu!
+				const activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
+				if (activeUrl) {
+					menu = $(`a[href="${activeUrl}"]`, nav);
+				} else {
+					menu = $('>ul >li >a[href!="#"]', nav).first();
+				}
+				if (menu.exists()) {
+					MyAMS.require('nav').then(() => {
+						MyAMS.nav.setActiveMenu(menu);
+						if (activeUrl) {
+							MyAMS.nav.drawBreadcrumbs();
+						} else {
+							// we use location.replace to avoid storing intermediate URL
+							// into browser's history
+							window.location.replace(window.location.href + menu.attr('href'));
+						}
+					}).then(resolve, reject);
+				} else {
+					resolve();
+				}
 			}
-		}
+		});
 	},
 
 	/**
@@ -176,6 +183,9 @@ export const skin = {
 					return;
 				}
 				$.ajax(settings).then((result, status, xhr) => {
+					if ($.isArray(result)) {
+						[result, status, xhr] = result;
+					}
 					MyAMS.require('ajax').then(() => {
 						const response = MyAMS.ajax.getResponse(xhr);
 						if (response) {

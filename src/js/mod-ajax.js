@@ -187,46 +187,47 @@ export const ajax = {
 	 * Extract datatype and result from response object
 	 */
 	getResponse: function(request) {
-		const contentType = request.getResponseHeader('content-type');
-		let dataType,
+		let dataType = 'unknown',
 			result;
-		if (contentType) {
-			// Get server response
-			if (contentType.startsWith('application/javascript')) {
-				result = request.responseText;
-				dataType = 'script';
-			} else if (contentType.startsWith('text/html')) {
-				result = request.responseText;
-				dataType = 'html';
-			} else if (contentType.startsWith('text/xml')) {
-				result = request.responseText;
-				dataType = 'xml';
-			} else {
-				// Supposed to be JSON...
-				result = request.responseJSON;
-				if (result) {
-					dataType = 'json';
+		if (request) {
+			const contentType = request.getResponseHeader('content-type');
+			if (contentType) {
+				// Get server response
+				if (contentType.startsWith('application/javascript')) {
+					result = request.responseText;
+					dataType = 'script';
+				} else if (contentType.startsWith('text/html')) {
+					result = request.responseText;
+					dataType = 'html';
+				} else if (contentType.startsWith('text/xml')) {
+					result = request.responseText;
+					dataType = 'xml';
 				} else {
-					try {
-						result = JSON.parse(request.responseText);
+					// Supposed to be JSON...
+					result = request.responseJSON;
+					if (result) {
 						dataType = 'json';
-					}
-					catch (e) {
-						result = request.responseText;
-						dataType = 'text';
+					} else {
+						try {
+							result = JSON.parse(request.responseText);
+							dataType = 'json';
+						} catch (e) {
+							result = request.responseText;
+							dataType = 'text';
+						}
 					}
 				}
-			}
-		} else {
-			// Probably no response from server...
-			result = {
-				status: 'alert',
-				alert: {
-					title: MyAMS.i18n.ERROR_OCCURED,
-					content: MyAMS.i18n.NO_SERVER_RESPONSE
+			} else {
+				// Probably no response from server...
+				result = {
+					status: 'alert',
+					alert: {
+						title: MyAMS.i18n.ERROR_OCCURED,
+						content: MyAMS.i18n.NO_SERVER_RESPONSE
+					}
 				}
+				dataType = 'json';
 			}
-			dataType = 'json';
 		}
 		return {
 			contentType: dataType,
@@ -258,17 +259,23 @@ export const ajax = {
 	handleJSON: function(result, form, target) {
 
 		function closeForm() {
-			if (form !== undefined) {
-				MyAMS.require('form').then(() => {
-					MyAMS.form.resetChanged(form);
-				}).then(() => {
-					if (result.closeForm !== false) {
-						MyAMS.require('modal').then(() => {
-							MyAMS.modal.close(form);
-						});
-					}
-				});
-			}
+			return new Promise((resolve, reject) => {
+				if (form !== undefined) {
+					MyAMS.require('form').then(() => {
+						MyAMS.form.resetChanged(form);
+					}).then(() => {
+						if (result.closeForm !== false) {
+							MyAMS.require('modal').then(() => {
+								MyAMS.modal.close(form);
+							}).then(resolve, reject);
+						} else {
+							resolve();
+						}
+					});
+				} else {
+					resolve();
+				}
+			});
 		}
 
 		let url = null,
@@ -302,7 +309,7 @@ export const ajax = {
 			case 'notify':
 			case 'callback':
 			case 'callbacks':
-				closeForm();
+				promises.push(closeForm());
 				break;
 
 			case 'modal':

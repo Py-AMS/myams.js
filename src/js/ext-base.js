@@ -1,11 +1,10 @@
-/* global FontAwesome */
+/* global $, FontAwesome */
 /**
  * MyAMS base features
  */
 
-let $;
 if (!window.jQuery) {
-	$ = window.$ = window.jQuery = require('jquery');
+	window.$ = window.jQuery = require('jquery');
 }
 
 

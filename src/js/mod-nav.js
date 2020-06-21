@@ -194,7 +194,7 @@ let _initialized = false,
  */
 
 function _openPage(href) {
-	if (href.startsWith('#')) {
+	if (location && href.startsWith('#')) {
 		if (href !== location.hash) {
 			window.location.hash = href;
 		}
@@ -210,7 +210,8 @@ function _openPage(href) {
  */
 export function linkClickHandler(evt) {
 	return new Promise((resolve, reject) => {
-		const link = $(evt.currentTarget),
+		const
+			link = $(evt.currentTarget),
 			handlers = link.data('ams-disabled-handlers');
 		if ((handlers === true) || (handlers === 'click') || (handlers === 'all')) {
 			return;
