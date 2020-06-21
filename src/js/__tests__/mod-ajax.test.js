@@ -748,8 +748,8 @@ describe("MyAMS.ajax unit tests", () => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body)); //.then(() => {
 			// 	expect($('.result').exists()).toBe(true);
 			// 	expect($('.result').text()).toBe('This is my result!');
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -793,8 +793,8 @@ describe("MyAMS.ajax unit tests", () => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body));  //.then(() => {
 			// 	expect($('.result', '#target').exists()).toBe(true);
 			// 	expect($('.result', '#target').text()).toBe('This is my result!');
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -834,8 +834,8 @@ describe("MyAMS.ajax unit tests", () => {
 		}).then(() => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body));  //.then(() => {
 			// 	expect($('.toast').exists()).toBe(true);
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -880,8 +880,8 @@ describe("MyAMS.ajax unit tests", () => {
 		}).then(() => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body));  //.then(() => {
 			// 	expect(event).toBe(true);
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -937,8 +937,8 @@ describe("MyAMS.ajax unit tests", () => {
 			// 	expect(events.length).toBe(2);
 			// 	expect(events.indexOf('test1')).toBeGreaterThan(-1);
 			// 	expect(events.indexOf('test2')).toBeGreaterThan(-1);
-			//  $.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -986,9 +986,9 @@ describe("MyAMS.ajax unit tests", () => {
 		}).then(() => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body));  //.then(() => {
 			// 	expect(called).toBe('Value 1');
-			// 	delete MyAMS.test;
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			delete MyAMS.test;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 
@@ -1047,9 +1047,9 @@ describe("MyAMS.ajax unit tests", () => {
 			MyAMS.ajax.handleJSON(ajaxResponse.data, $(document.body));  //.then(() => {
 			// 	expect(called1).toBe('Value 1');
 			// 	expect(called2).toBe('Value 2');
-			// 	delete MyAMS.test;
-			// 	$.ajax = oldAjax;
-			// 	window.XMLHttpRequest = oldXHR;
+			delete MyAMS.test;
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
 			// });
 		});
 

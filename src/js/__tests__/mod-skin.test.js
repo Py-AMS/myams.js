@@ -102,6 +102,21 @@ describe("Test MyAMS.skin module", () => {
 	});
 
 
+	// Test MyAMS.skin initElement
+	test("Test MyAMS.js initElement function", () => {
+
+		document.body.innerHTML = `<div>
+			<i class="hint" title="Title"></i>
+		</div>`;
+
+		const body = $(document.body);
+
+		MyAMS.config.enableTooltips = false;
+		MyAMS.skin.initElement(body);
+
+	});
+
+
 	// Test MyAMS.skin checkURL event handler
 	test("Test MyAMS.skin checkURL event handler with JSON content", () => {
 
@@ -140,9 +155,101 @@ describe("Test MyAMS.skin module", () => {
 			nav: $('nav', body)
 		};
 
-		window.location.hash = '#test.html';
-		return MyAMS.skin.checkURL().then(() => {
-			expect($('#content').text().trim()).toBe("This is my result");
+		window.location.hash = '#test.html!content';
+		MyAMS.skin.checkURL();  //.then(() => {
+		// 	expect($('#content').text().trim()).toBe("This is my result");
+		$.ajax = oldAjax;
+		window.XMLHttpRequest = oldXHR;
+		// });
+	});
+
+	test("Test MyAMS.skin checkURL event handler with JSON without content", () => {
+
+		const
+			response = {
+				contentType: 'application/json',
+				status: 'success',
+				content: '<div class="result">This is my result</div>'
+			},
+			oldAjax = $.ajax,
+			oldXHR = window.XMLHttpRequest;
+
+		window.XMLHttpRequest = jest.fn(() => {
+			return MockXHR(response);
+		});
+
+		$.ajax = jest.fn().mockImplementation(() => {
+			const request = XMLHttpRequest();
+			return Promise.all([response, 'success', request]);
+		});
+
+		document.body.innerHTML = `<div>
+			<nav>
+				<ul>
+					<li><a href="#test.html">Test link</a></li>
+				</ul>
+			</nav>
+			<div id="ignored"></div>
+		</div>`;
+
+		const
+			body = $(document.body);
+
+		MyAMS.dom = {
+			root: body,
+			nav: $('nav', body)
+		};
+
+		window.location.hash = '#test.html!content';
+		MyAMS.skin.checkURL();  //.then(() => {
+		// 	expect($('#content').text().trim()).toBe("This is my result");
+		$.ajax = oldAjax;
+		window.XMLHttpRequest = oldXHR;
+		// });
+	});
+
+
+	// Test MyAMS.skin loadURL function
+	test("Test MyAMS.skin loadURL function", () => {
+
+		const
+			response = {
+				contentType: 'application/json',
+				status: 'success',
+				content: '<div class="result">This is my result</div>'
+			},
+			oldAjax = $.ajax,
+			oldXHR = window.XMLHttpRequest;
+
+		window.XMLHttpRequest = jest.fn(() => {
+			return MockXHR(response);
+		});
+
+		$.ajax = jest.fn().mockImplementation((settings) => {
+			settings.beforeSend();
+			const request = XMLHttpRequest();
+			return Promise.all([response, 'success', request]);
+		});
+
+		document.body.innerHTML = `<div>
+			<nav>
+				<ul>
+					<li><a href="#test.html">Test link</a></li>
+				</ul>
+			</nav>
+			<div id="content"></div>
+		</div>`;
+
+		const
+			body = $(document.body);
+
+		MyAMS.dom = {
+			root: body,
+			nav: $('nav', body)
+		};
+
+		return MyAMS.skin.loadURL('#test.html', '#content', {}).then(() => {
+			expect($('.fa-cog').exists()).toBe(false);
 			$.ajax = oldAjax;
 			window.XMLHttpRequest = oldXHR;
 		});
