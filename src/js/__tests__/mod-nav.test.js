@@ -1,4 +1,4 @@
-/* global describe, jest, test, expect */
+/* global describe, beforeAll, afterAll, jest, test, expect */
 /*
  * MyAMS nav module tests
  */
@@ -234,6 +234,10 @@ describe("MyAMS.ajax unit tests", () => {
 							label: "What is MyAMS?",
 							href: "#summary.html",
 							icon: "fa fa-question-circle",
+							badge: {
+								value: "1",
+								status: "danger"
+							},
 							attrs: {
 								id: 'menu1'
 							}

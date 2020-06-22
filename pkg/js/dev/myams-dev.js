@@ -29783,14 +29783,11 @@ var nav = {
         var settings = $.extend({}, defaults, options);
 
         if (data.amsMenuConfig) {
-          MyAMS.require('ajax').then(function () {
+          MyAMS.require('ajax', 'skin').then(function () {
             MyAMS.ajax.get(data.amsMenuConfig).then(function (result) {
               var menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
               new menuFactory(result, $(_this), settings).render();
-
-              MyAMS.require('skin').then(function () {
-                MyAMS.skin.checkURL();
-              });
+              MyAMS.skin.checkURL();
             });
           });
         } else {
@@ -30764,17 +30761,18 @@ var skin = {
                 });
               });
             }
-          }
-        }, reject).then(function () {
-          // try to activate matching navigation menu
+          } // try to activate matching navigation menu
+
+
           if (menu.exists()) {
             MyAMS.require('nav').then(function () {
               MyAMS.nav.setActiveMenu(menu);
+              MyAMS.nav.drawBreadcrumbs();
             }).then(resolve);
           } else {
             resolve();
           }
-        });
+        }, reject);
       } else {
         // empty hash! We try to check if a specific menu was activated with a custom
         // data attribute, otherwise we go to the first navigation menu!
@@ -30842,9 +30840,8 @@ var skin = {
               MyAMS.core.executeFunctionByName(options.preLoadCallback, _this, options.preLoadCallbackOptions);
             }
 
-            if (target[0] === $('#content')[0]) {
+            if (target.attr('id') === 'content') {
               MyAMS.require('nav').then(function () {
-                MyAMS.nav.drawBreadcrumbs();
                 var prefix = $('html head title').data('ams-title-prefix'),
                     fullPrefix = prefix ? "".concat(prefix, " > ") : '';
                 document.title = "".concat(fullPrefix).concat($('.breadcrumb li:last-child').text());

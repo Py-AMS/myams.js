@@ -442,14 +442,11 @@
           var settings = $.extend({}, defaults, options);
 
           if (data.amsMenuConfig) {
-            MyAMS.require('ajax').then(function () {
+            MyAMS.require('ajax', 'skin').then(function () {
               MyAMS.ajax.get(data.amsMenuConfig).then(function (result) {
                 var menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
                 new menuFactory(result, $(_this), settings).render();
-
-                MyAMS.require('skin').then(function () {
-                  MyAMS.skin.checkURL();
-                });
+                MyAMS.skin.checkURL();
               });
             });
           } else {
