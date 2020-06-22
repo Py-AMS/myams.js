@@ -330,14 +330,12 @@ export const nav = {
 				}
 				const settings = $.extend({}, defaults, options);
 				if (data.amsMenuConfig) {
-					MyAMS.require('ajax').then(() => {
+					MyAMS.require('ajax', 'skin').then(() => {
 						MyAMS.ajax.get(data.amsMenuConfig).then(result => {
 							const menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
 							new menuFactory(result, $(this), settings).render();
-							MyAMS.require('skin').then(() => {
-								MyAMS.skin.checkURL();
-							})
-						})
+							MyAMS.skin.checkURL();
+						});
 					});
 				} else {  // static menus
 					const menus = $('ul', this);
