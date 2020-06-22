@@ -8575,8 +8575,6 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "notifications", function() { return notifications; });
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-/* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -8588,11 +8586,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 /**
  * MyAMS notifications handlers
  */
-
 var $ = MyAMS.$;
+
+if (!$.templates) {
+  var jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
+
+  $.templates = jsrender.templates;
+}
 /**
  * Notifications list template string
  */
+
 
 var ITEM_TEMPLATE_STRING = "\n\t<li class=\"p-1\">\n\t\t<a class=\"d-flex flex-row\"{{if url}} href=\"{{:url}}\"{{/if}}>\n\t\t\t{{if source.avatar}}\n\t\t\t<img class=\"avatar mx-1 mt-1\" src=\"{{:source.avatar}}\" />\n\t\t\t{{else}}\n\t\t\t<i class=\"avatar fa fa-fw fa-2x fa-user mx-1 mt-1\"></i>\n\t\t\t{{/if}}\n\t\t\t<div class=\"flex-grow-1 ml-2\">\n\t\t\t\t<small class=\"timestamp float-right text-muted\">\n\t\t\t\t\t{{*: new Date(data.timestamp).toLocaleString()}}\n\t\t\t\t</small>\n\t\t\t\t<strong class=\"title d-block\">\n\t\t\t\t\t{{:source.title}}\n\t\t\t\t</strong>\n\t\t\t\t<p class=\"text-muted mb-2\">{{:message}}</p>\n\t\t\t</div>\n\t\t</a>\n\t</li>";
 var ITEM_TEMPLATE = $.templates({
@@ -8656,12 +8660,14 @@ var notifications = {
         target = $(evt.target),
         current = $(evt.currentTarget),
         remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
-
-    MyAMS.require('ajax').then(function () {
-      MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(function (result) {
-        var tab = $(target.data('ams-notifications-target') || target.parents('[data-ams-notifications-target]').data('ams-notifications-target') || current.attr('href'));
-        new NotificationsList(result, data).render(tab);
-      });
+    return new Promise(function (resolve, reject) {
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(function (result) {
+          var tab = $(target.data('ams-notifications-target') || target.parents('[data-ams-notifications-target]').data('ams-notifications-target') || current.attr('href'));
+          new NotificationsList(result, data).render(tab);
+          resolve();
+        }, reject);
+      }, reject);
     });
   }
 };

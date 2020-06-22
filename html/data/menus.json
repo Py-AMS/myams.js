@@ -265,6 +265,10 @@
 						"href": "#mod-nav.html"
 					},
 					{
+						"label": "notifications",
+						"href": "#mod-notifications.html"
+					},
+					{
 						"label": "plugins",
 						"href": "#mod-plugins.html"
 					},

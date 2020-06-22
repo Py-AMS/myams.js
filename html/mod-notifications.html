@@ -1,0 +1,58 @@
+<h1>MyAMS "notifications" module</h1>
+<section>
+	<p>This small module is used to handle "notifications", which have been described into
+	MyAMS's <a href="#notifications.html">notifications</a> page.</p>
+</section>
+
+<section>
+	<h2><code>MyAMS.notifications.getNotifications(evt, options): Promise</code></h2>
+	<p>This function is the default handler used to load and display notifications.<br />
+	Notifications format API is described into notifications page given above.</p>
+	<p>By default, this handler is used as an event handler on <code>show.bs.dropdown</code>
+	event:</p>
+	<pre>	&lt;div id="user-notifications" class="ml-1"
+	   data-ams-events-handlers='{"show.bs.dropdown": "MyAMS.notifications.getNotifications"}'
+	   data-ams-events-options='{"localTimestamp": "true"}'
+	   data-ams-notifications-target="#notifications-pane"
+	   data-ams-notifications-source="data/user-notifications.json"&gt;
+	  ...
+	&lt;/div&gt;</pre>
+	<p>The function relies on other modules; she returns a Promise which is resolved when
+	<a href="#mod-ajax.html">ajax</a> module is loaded and when all notifications have been
+	loaded from remote URL.</p>
+	<p>Handler options and data attributes include:</p>
+	<ul>
+		<li>
+			<code>ams-notifications-source</code>: URL of the remote service providing
+			notifications contents in JSON format;
+		</li>
+		<li>
+			<code>ams-notifications-params</code>: additional parameters, if required, used to
+			get data from remote service;
+		</li>
+		<li>
+			<code>ams-notifications-options</code>: additional AJAX settings used by
+			<a href="#mod-ajax.html!get">MyAMS.ajax.get</a> to load remote data;
+		</li>
+		<li>
+			<code>ams-notifications-target</code>: JQuery selector of the DOM element where
+			notifications may be inserted.
+		</li>
+	</ul>
+	<p><code>options</code> is an object which can contain several attributes; if using MyAMS
+	<a href="#mod-events.html">events handlers</a>, it can be stored into
+	<code>ams-events-options</code> data attribute:</p>
+	<ul>
+		<li>
+			<code>localTimestamp</code>: boolean flag used to specify if timestamp displayed
+			below the notifications list is the one which is provided by the server
+			(default, <code>false</code> value), or if a locally generated timestamp should be used
+			(<code>true</code> value);
+		</li>
+		<li>
+			<code>hideTimestamp</code>: if <code>false</code> (default value), a timestamp is
+			displayed next to each item in the notifications list, otherwise this information is
+			hidden.
+		</li>
+	</ul>
+</section>

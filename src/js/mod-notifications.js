@@ -3,9 +3,12 @@
  * MyAMS notifications handlers
  */
 
-import 'jsrender';
-
 const $ = MyAMS.$;
+
+if (!$.templates) {
+	const jsrender = require('jsrender');
+	$.templates = jsrender.templates;
+}
 
 
 /**
@@ -102,14 +105,17 @@ export const notifications = {
 			current = $(evt.currentTarget),
 			remote = current.data('ams-notifications-source') ||
 				current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
-		MyAMS.require('ajax').then(() => {
-			MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '',
-				current.data('ams-notifications-options') || {}).then((result) => {
-				const tab = $(target.data('ams-notifications-target') ||
-					target.parents('[data-ams-notifications-target]').data('ams-notifications-target') ||
-					current.attr('href'));
-				new NotificationsList(result, data).render(tab);
-			});
+		return new Promise((resolve, reject) => {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '',
+					current.data('ams-notifications-options') || {}).then((result) => {
+					const tab = $(target.data('ams-notifications-target') ||
+						target.parents('[data-ams-notifications-target]').data('ams-notifications-target') ||
+						current.attr('href'));
+					new NotificationsList(result, data).render(tab);
+					resolve();
+				}, reject);
+			}, reject);
 		});
 	}
 }
