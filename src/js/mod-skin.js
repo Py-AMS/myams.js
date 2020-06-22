@@ -95,16 +95,16 @@ export const skin = {
 							});
 						}
 					}
-				}, reject).then(() => {
 					// try to activate matching navigation menu
 					if (menu.exists()) {
 						MyAMS.require('nav').then(() => {
 							MyAMS.nav.setActiveMenu(menu);
+							MyAMS.nav.drawBreadcrumbs();
 						}).then(resolve);
 					} else {
 						resolve();
 					}
-				});
+				}, reject);
 			} else {
 				// empty hash! We try to check if a specific menu was activated with a custom
 				// data attribute, otherwise we go to the first navigation menu!
@@ -163,9 +163,8 @@ export const skin = {
 						if (options && options.preLoadCallback) {
 							MyAMS.core.executeFunctionByName(options.preLoadCallback, this, options.preLoadCallbackOptions);
 						}
-						if (target[0] === $('#content')[0]) {
+						if (target.attr('id') === 'content') {
 							MyAMS.require('nav').then(() => {
-								MyAMS.nav.drawBreadcrumbs();
 								const
 									prefix = $('html head title').data('ams-title-prefix'),
 									fullPrefix = prefix ? `${prefix} > ` : '';
