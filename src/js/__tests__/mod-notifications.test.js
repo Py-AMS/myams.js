@@ -158,4 +158,72 @@ describe("Test MyAMS.notifications module", () => {
 		});
 	});
 
+	test("Test MyAMS.notifications getNotifications with event data", () => {
+
+		const
+			response = {
+				timestamp: 1587644933164,
+				notifications: [
+					{
+						timestamp: 1587644933164,
+						source: {
+							title: "MyAMS.js",
+							id: "user.id",
+							avatar: "resources/img/profile.png"
+						},
+						host: "localhost",
+						title: "Notification title",
+						message: "Notification message",
+						status: "success",
+						url: "#test.html"
+					},
+					{
+						timestamp: 1587644933164,
+						source: {
+							title: "MyAMS.js",
+							id: "unknown"
+						},
+						host: "localhost",
+						title: "Notification title",
+						message: "Notification message",
+						status: "success",
+						url: "#test.html"
+					}
+				]
+			},
+			oldAjax = $.ajax,
+			oldXHR = window.XMLHttpRequest;
+
+		window.XMLHttpRequest = jest.fn(() => {
+			return MockXHR(response);
+		});
+
+		$.ajax = jest.fn().mockImplementation(() => {
+			return Promise.resolve(response);
+		});
+		document.body.innerHTML = `
+		<div data-ams-notifications-source="data/notifications.json"
+			 data-ams-notifications-target="#target">
+			<a class="link">Link</a>
+			<div id="target"></div>
+		</div>`;
+
+		const
+			body = $(document.body),
+			link = $('.link', body);
+		const event = $.Event('click', {
+			data: {
+				localTimestamp: true,
+				hideTimestamp: true
+			},
+			target: link,
+			currentTarget: link
+		});
+
+		return MyAMS.notifications.getNotifications(event).then(() => {
+			expect($('.timestamp', body).length).toBe(2);
+			$.ajax = oldAjax;
+			window.XMLHttpRequest = oldXHR;
+		});
+	});
 });

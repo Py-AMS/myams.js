@@ -30142,7 +30142,7 @@ var notifications = {
    * @param options: notifications options (which can also be extracted from event data)
    */
   getNotifications: function getNotifications(evt, options) {
-    var data = options || evt.data,
+    var data = $.extend({}, options, evt.data),
         target = $(evt.target),
         current = $(evt.currentTarget),
         remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');

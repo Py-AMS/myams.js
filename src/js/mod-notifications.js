@@ -100,7 +100,7 @@ export const notifications = {
 	 */
 	getNotifications: (evt, options) => {
 		const
-			data = options || evt.data,
+			data = $.extend({}, options, evt.data),
 			target = $(evt.target),
 			current = $(evt.currentTarget),
 			remote = current.data('ams-notifications-source') ||
@@ -109,7 +109,8 @@ export const notifications = {
 			MyAMS.require('ajax').then(() => {
 				MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '',
 					current.data('ams-notifications-options') || {}).then((result) => {
-					const tab = $(target.data('ams-notifications-target') ||
+					const
+						tab = $(target.data('ams-notifications-target') ||
 						target.parents('[data-ams-notifications-target]').data('ams-notifications-target') ||
 						current.attr('href'));
 					new NotificationsList(result, data).render(tab);
