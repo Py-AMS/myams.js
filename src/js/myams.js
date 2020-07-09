@@ -28,7 +28,6 @@ import { alert } from "./mod-alert";
 import { modal } from "./mod-modal";
 import { form } from "./mod-form";
 import { events } from "./mod-events";
-import { handlers } from "./mod-handlers";
 import { callbacks } from "./mod-callbacks";
 import { clipboard } from "./mod-clipboard";
 import { container } from "./mod-container";
@@ -61,7 +60,6 @@ MyAMS.$.extend(MyAMS, {
 	events: events,
 	form: form,
 	graph: graph,
-	handlers: handlers,
 	helpers: helpers,
 	i18n: i18n,
 	jsonrpc: jsonrpc,

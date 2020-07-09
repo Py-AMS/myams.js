@@ -1,4 +1,4 @@
-/* global describe, jest, test, expect */
+/* global describe, beforeAll, afterAll, jest, test, expect */
 /**
  * MyAMS form module tests
  */
@@ -63,8 +63,6 @@ if (!MyAMS.modal) {
 MyAMS.require = myams_require;
 
 
-
-
 describe("Test MyAMS.skin module", () => {
 
 	let oldOpen = null,
@@ -104,8 +102,8 @@ describe("Test MyAMS.skin module", () => {
 			</form>
 		</div>`;
 
+		MyAMS.form.init();
 		const body = $(document.body);
-		form.init();
 		$('.submit', body).click();
 		expect($('form', body).data('ams-submit-button').exists()).toBe(true);
 
@@ -127,6 +125,8 @@ describe("Test MyAMS.skin module", () => {
 			form.addClass('modified');
 			input.addClass('modified');
 		}
+
+		MyAMS.form.init();
 
 		const
 			body = $(document.body),
@@ -335,6 +335,89 @@ describe("Test MyAMS.skin module", () => {
 		form.initElement(body);
 		MyAMS.form.setFocus(testForm);
 		expect(focused).toBe(true);
+
+	});
+
+
+	// Test MyAMS.form reset handler
+	test("Test MyAMS.form reset handlers", () => {
+
+		document.body.innerHTML = `<div>
+			<form>
+				<div class="alert-danger persistent">Persistent alert</div>
+				<div class="alert-danger">Temporary alert</div>
+				<input type="text" name="input1" value="Value 1" />
+				<label class="state-error">State error</label>
+				<input type="text" name="input2" value="Value 2"
+					   data-ams-reset-callback="MyAMS.test.resetHandler"
+					   data-ams-reset-callback-options='{
+						"source": "input2",
+						"value": "Value 3"
+					   }' />
+			</form>
+		</div>`;
+
+		const form = $('form');
+		MyAMS.test = {
+			resetHandler: (form, source, options) => {
+				form.data('reset', true);
+				$(source).val(options.value);
+			}
+		};
+
+		jest.useFakeTimers();
+		try {
+			MyAMS.form.init();
+			form.trigger('reset');
+			jest.runAllTimers();
+			expect(form.data('reset')).toBe(true);
+			expect($('.alert-danger', form).length).toBe(1);
+			expect($('input[name="input2"]', form).val()).toBe('Value 3');
+		} finally {
+			jest.useRealTimers();
+			delete MyAMS.test;
+		}
+
+	});
+
+
+	// Test MyAMS.handlers custom reset handlers
+	test("Test MyAMS.handlers custom reset handler", () => {
+
+		document.body.innerHTML = `<div>
+			<form data-ams-reset-handler="MyAMS.test.resetHandler"
+				  data-ams-reset-handler-options='{
+					"source": "form",
+					"value": "resetHandler"
+				  }'
+				  data-ams-reset-keep-default="false">
+				<input type="test" name="input1" />
+			</form>
+		</div>`;
+
+		const form = $('form');
+
+		MyAMS.test = {
+			resetHandler: (evt, form, options) => {
+				form.data('reset', true);
+				form.data('values', options);
+			}
+		};
+
+		jest.useFakeTimers();
+		try {
+			MyAMS.form.init();
+			form.trigger('reset');
+			jest.runAllTimers();
+
+			expect(form.data('reset')).toBe(true);
+			const values = form.data('values');
+			expect(values.source).toBe('form');
+			expect(values.value).toBe('resetHandler');
+		} finally {
+			jest.useRealTimers();
+			delete MyAMS.test;
+		}
 
 	});
 

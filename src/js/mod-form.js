@@ -20,6 +20,7 @@ let _initialized = false;
 export const form = {
 
 	init: () => {
+
 		if (_initialized) {
 			return;
 		}
@@ -32,6 +33,15 @@ export const form = {
 				$(button).closest('form').data('ams-submit-button', button);
 			}
 		});
+
+		// Cancel clicks on readonly checkbox
+		$(document).on('click', 'input[type="checkbox"][readonly]', () => {
+			return false;
+		});
+
+		// Initialize generic and custom reset handlers
+		$(document).on('reset', MyAMS.form.resetHandler);
+		$(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler);
 
 		// Add unload event listener to check for modified forms
 		$(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
@@ -51,7 +61,7 @@ export const form = {
 		});
 
 		// Always blur readonly inputs
-		element.on('focus', 'input[readonly="readonly"]', (evt) => {
+		element.on('focus', 'input[readonly]', (evt) => {
 			$(evt.currentTarget).blur();
 		});
 
@@ -86,11 +96,6 @@ export const form = {
 					});
 				}
 			});
-			form.on('reset', (evt) => {
-				const form = $(evt.currentTarget);
-				MyAMS.form.clearAlerts(form);
-				MyAMS.form.resetChanged(form);
-			})
 		});
 
 		MyAMS.form.setFocus(element);
@@ -149,11 +154,69 @@ export const form = {
 	},
 
 	/**
+	 * Default form reset handler
+	 *
+	 * @param event: the original reset event
+	 */
+	resetHandler: (event) => {
+		const form = $(event.target);
+		MyAMS.form.clearAlerts(form);
+		MyAMS.form.handleDefaultReset(form);
+		MyAMS.form.resetChanged(form);
+	},
+
+	/**
+	 * Clear remaining form alerts before submitting form
+	 */
+	clearAlerts: (form) => {
+		$('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
+		$('.state-error', form).removeClassPrefix('state-');
+		$('.invalid-feedback', form).remove();
+		$('.is-invalid', form).removeClass('is-invalid');
+	},
+
+	/**
+	 * Call reset callbacks defined on a form
+	 */
+	handleDefaultReset: (form) => {
+		setTimeout(() => {
+			form.find('.select2').trigger('change');
+			$('[data-ams-reset-callback]', form).each((idx, elt) => {
+				const
+					element = $(elt),
+					data = element.data(),
+					callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
+				if (callback !== undefined) {
+					callback.call(document, form, element, data.amsResetCallbackOptions);
+				}
+			});
+		}, 10);
+	},
+
+	/**
 	 * Reset form changed flag
 	 */
 	resetChanged: (form) => {
 		if (form !== undefined) {
 			$(form).removeAttr('data-ams-form-changed');
+		}
+	},
+
+	/**
+	 * Custom reset handler
+	 */
+	customResetHandler: (event) => {
+		const
+			form = $(event.target),
+			data = form.data();
+		if (data.amsResetHandler) {
+			if ((data.amsKeepDefault !== true) && (data.amsResetKeepDefault !== true)) {
+				event.preventDefault();
+			}
+			const callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
+			if (callback !== undefined) {
+				callback.call(document, event, form, data.amsResetHandlerOptions);
+			}
 		}
 	},
 
@@ -178,16 +241,6 @@ export const form = {
 			input.removeClass('valid')
 				.addClass('is-invalid');
 		}
-	},
-
-	/**
-	 * Clear remaining form alerts before submitting form
-	 */
-	clearAlerts: (form) => {
-		$('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
-		$('.state-error', form).removeClassPrefix('state-');
-		$('.invalid-feedback', form).remove();
-		$('.is-invalid', form).removeClass('is-invalid');
 	},
 
 	/**

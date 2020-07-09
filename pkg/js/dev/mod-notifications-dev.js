@@ -52,9 +52,7 @@
     allowCode: true
   });
 
-  var NotificationsList =
-  /*#__PURE__*/
-  function () {
+  var NotificationsList = /*#__PURE__*/function () {
     /**
      * List constructor
      *

@@ -11,10 +11,21 @@ let _initialized = false;
 export const events = {
 
 	init: () => {
+
 		if (_initialized) {
 			return;
 		}
 		_initialized = true;
+
+		// Initialize custom click handlers
+		$(document).on('click', '[data-ams-click-handler]', MyAMS.events.clickHandler);
+
+		// Initialize custom change handlers
+		$(document).on('change', '[data-ams-change-handler]', MyAMS.events.changeHandler);
+
+		// Initialize custom event on click
+		$(document).on('click', '[data-ams-click-event]', MyAMS.events.triggerEvent);
+
 	},
 
 	initElement: (element) => {
@@ -57,6 +68,73 @@ export const events = {
 			}
 		});
 		return result;
+	},
+
+	/**
+	 * Generic click event handler
+	 */
+	clickHandler: (event) => {
+		const
+			source = $(event.currentTarget),
+			handlers = source.data('ams-disabled-handlers');
+		if ((handlers === true) || (handlers === 'click') || (handlers === 'all')) {
+			return;
+		}
+		const data = source.data();
+		if (data.amsClickHandler) {
+			if ((data.amsPreventDefault !== false) && (data.amsClickPreventDefault !== false)) {
+				event.preventDefault();
+			}
+			if ((data.amsStopPropagation !== false) && (data.amsClickStopPropagation !== false)) {
+				event.stopPropagation();
+			}
+			for (const handler of data.amsClickHandler.split(/[\s,;]+/)) {
+				const callback = MyAMS.core.getFunctionByName(handler);
+				if (callback !== undefined) {
+					callback.call(document, event, source, data.amsClickHandlerOptions);
+				}
+			}
+		}
+	},
+
+	/**
+	 * Generic change event handler
+	 */
+	changeHandler: (event) => {
+		const source = $(event.currentTarget);
+		// Disable change handlers for readonly inputs
+		// These change handlers are activated by IE!!!
+		if (source.prop('readonly')) {
+			return;
+		}
+		const handlers = source.data('ams-disabled-handlers');
+		if ((handlers === true) || (handlers === 'change') || (handlers === 'all')) {
+			return;
+		}
+		const data = source.data();
+		if (data.amsChangeHandler) {
+			if ((data.amsKeepDefault !== false) && (data.amsChangeKeepDefault !== false)) {
+				event.preventDefault();
+			}
+			if ((data.amsStopPropagation !== false) && (data.amsChangeStopPropagation !== false)) {
+				event.stopPropagation();
+			}
+			for (const handler of data.amsChangeHandler.split(/[\s,;]+/)) {
+				const callback = MyAMS.core.getFunctionByName(handler);
+				if (callback !== undefined) {
+					callback.call(document, event, source, data.amsChangeHandlerOptions);
+				}
+			}
+		}
+	},
+
+	/**
+	 * Genenric click event trigger
+	 */
+	triggerEvent: (event) => {
+		const source = $(event.currentTarget);
+		$(event.target).trigger(source.data('ams-click-event'),
+			source.data('ams-click-event-options'));
 	}
 };
 

@@ -1,5 +1,7 @@
 <h1>MyAMS "events" module</h1>
-<section>
+
+<section id="handlers">
+	<h2>Generic events handlers</h2>
 	<p>The <code>events</code> module allows to define custom handlers for any event which can
 	be triggered on a DOM element.</p>
 	<p>Configuration is done using <code>data-ams-events-handlers</code> attribute; the value
@@ -30,9 +32,6 @@
 	   data-ams-events-handlers='{"click": "MyAMS.app.handlers.clickWithObjectOptions"}'
 	   data-ams-events-options='{"status": "danger", "icon": "fa-cog"}'&gt;Click with object!&lt;/a&gt;
 </pre>
-	<p>Please not that generic handlers are already available for basic events like
-	<code>click</code> or <code>change</code>; so it would probably be better to use their
-	lighter syntax here... (see <a href="#mod-handlers.html"><code>handlers</code> module</a>).</p>
 </section>
 
 <section id="getHandlers">
@@ -41,4 +40,63 @@
 	it's inner elements, to handle the given event.</p>
 	<p>The function returns an array of all JQuery elements on which an handler is defined for
 	the given event.</p>
+</section>
+
+<section id="clickHandler">
+	<h2><code>MyAMS.events.clickHandler(evt)</code></h2>
+	<p>This event handler is used to handle <code>click</code> events on any DOM element;
+	the <code>data-ams-click-handler</code> attribute is used to provide the dotted name of a
+	function which will be used to handle the event; several functions can be provided by
+	separating their names with spaces, commas or semicolons. Each function may receive three
+	parameters which are the original click event, the source element, and the value of it's
+	<code>data-ams-click-handler-options</code> attribute, if any.</p>
+	<p>By default, <code>preventDefault()</code> and <code>stopPropagation()</code> methods are
+	called on the initial event; you can prevent this behaviour by setting
+	<code>data-ams-prevent-default</code> or <code>data-ams-click-prevent-default</code>, and/or
+	<code>data-ams-stop-propagation</code> or <code>data-ams-click-stop-propagation</code>, to
+	<code>true</code>.</p>
+	<p>If you need to disable a click handler temporarily, you can set the element's
+	<code>ams-disabled-handlers</code> data property to <code>true</code>, <code>click</code> or
+	<code>all</code>.</p>
+</section>
+
+<section id="changeHandler">
+	<h2><code>MyAMS.events.changeHandler(evt)</code></h2>
+	<p>This event handler is used to handle <code>change</code> events on any DOM element;
+	the <code>data-ams-change-handler</code> attribute is used to provide the dotted name of a
+	function which will be used to handle the event; several functions can be provided by
+	separating their names with spaces, commas or semicolons. Each function may receive three
+	parameters which are the original change event, the source element, and the value of it's
+	<code>data-ams-change-handler-options</code> attribute, if any.</p>
+	<p>By default, <code>preventDefault()</code> and <code>stopPropagation()</code> methods are
+	called on the initial event; you can prevent this behaviour by setting
+	<code>data-ams-prevent-default</code> or <code>data-ams-change-prevent-default</code>, and/or
+	<code>data-ams-stop-propagation</code> or <code>data-ams-click-stop-propagation</code>, to
+	<code>true</code>.</p>
+	<p>If you need to disable a click handler temporarily, you can set the element's
+	<code>ams-disabled-handlers</code> data property to <code>true</code>, <code>change</code> or
+	<code>all</code>.</p>
+	<p>Please note also that some browsers can generate change events for read-only elements; this
+	handler is checking that inputs are not in read-only before calling selected handlers.</p>
+</section>
+
+<section id="formResetHandler">
+	<h2><code>MyAMS.events.formResetHandler(evt)</code></h2>
+	<p>This event handler is used as default to handle <code>reset</code> events on forms.</p>
+	<p>On reset, all remaining error messages are cleared, and focus is restored on the first
+	input. You can also register custom reset event handlers in any form by setting a
+	<code>data-ams-reset-callback</code> attribute on any element located inside the form; the
+	attribute's value is the dotted name of a function which will be called on reset; this
+	function will receive several parameters which are the form, the element on which the
+	handler is set, and the options defined into <code>data-ams-reset-callback-options</code>,
+	if any.</p>
+</section>
+
+<section id="triggerEvent">
+	<h2><code>MyAMS.events.triggerEvent(evt)</code></h2>
+	<p>This event handler is used to handle triggering of custom events on click. By setting a
+	<code>data-ams-click-event</code> attribute on any DOM element, a click on this element will
+	trigger another event whose name is the attribute value; you can add options to this event
+	by setting another <code>data-ams-click-event-options</code> attribute on the same element.
+	</p>
 </section>

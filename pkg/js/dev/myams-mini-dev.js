@@ -3048,21 +3048,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateUUID", function() { return generateUUID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchIcon", function() { return switchIcon; });
 /* harmony import */ var _ext_registry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ext-registry */ "./src/js/ext-registry.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /* global $, FontAwesome */
 
@@ -3131,12 +3137,12 @@ function init($) {
       var str = decodeURIComponent(this),
           chunks = str.split('&'),
           obj = {};
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+
+      var _iterator = _createForOfIteratorHelper(chunks),
+          _step;
 
       try {
-        for (var _iterator = chunks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var chunk = _step.value;
 
           var _chunk$split = chunk.split('=', 2),
@@ -3147,18 +3153,9 @@ function init($) {
           obj[key] = val;
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
 
       return obj;
@@ -3373,28 +3370,18 @@ function initPage() {
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(MyAMS.config.modules),
+          _step2;
 
       try {
-        for (var _iterator2 = MyAMS.config.modules[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var moduleName = _step2.value;
           executeFunctionByName("MyAMS.".concat(moduleName, ".init"));
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
 
       MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
@@ -3418,28 +3405,18 @@ function initContent() {
   element = $(element);
 
   function initElementModules() {
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iterator3 = _createForOfIteratorHelper(MyAMS.config.modules),
+        _step3;
 
     try {
-      for (var _iterator3 = MyAMS.config.modules[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var moduleName = _step3.value;
         executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
       }
     } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
+      _iterator3.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-          _iterator3["return"]();
-        }
-      } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
-        }
-      }
+      _iterator3.f();
     }
   }
 
@@ -3535,12 +3512,12 @@ function getObject(objectName, context) {
 
   var namespaces = objectName.split('.');
   context = context === undefined || context === null ? window : context;
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
+
+  var _iterator4 = _createForOfIteratorHelper(namespaces),
+      _step4;
 
   try {
-    for (var _iterator4 = namespaces[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var name = _step4.value;
 
       try {
@@ -3550,18 +3527,9 @@ function getObject(objectName, context) {
       }
     }
   } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
+    _iterator4.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-        _iterator4["return"]();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
-    }
+    _iterator4.f();
   }
 
   return context;
@@ -3586,12 +3554,12 @@ function getFunctionByName(functionName, context) {
   var namespaces = functionName.split("."),
       func = namespaces.pop();
   context = context === undefined || context === null ? window : context;
-  var _iteratorNormalCompletion5 = true;
-  var _didIteratorError5 = false;
-  var _iteratorError5 = undefined;
+
+  var _iterator5 = _createForOfIteratorHelper(namespaces),
+      _step5;
 
   try {
-    for (var _iterator5 = namespaces[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
       var name = _step5.value;
 
       try {
@@ -3601,18 +3569,9 @@ function getFunctionByName(functionName, context) {
       }
     }
   } catch (err) {
-    _didIteratorError5 = true;
-    _iteratorError5 = err;
+    _iterator5.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-        _iterator5["return"]();
-      }
-    } finally {
-      if (_didIteratorError5) {
-        throw _iteratorError5;
-      }
-    }
+    _iterator5.f();
   }
 
   try {
@@ -3896,15 +3855,21 @@ window.MyAMS = MyAMS;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registry", function() { return registry; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3932,9 +3897,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 /**
  * Base plug-in class
  */
-var Plugin =
-/*#__PURE__*/
-function () {
+var Plugin = /*#__PURE__*/function () {
   function Plugin(name) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var loaded = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -4002,12 +3965,11 @@ function () {
   }, {
     key: "run",
     value: function run(element) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(this.callbacks),
+          _step;
 
       try {
-        for (var _iterator = this.callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var callback = _step.value;
 
           if (typeof callback.callback === 'string') {
@@ -4018,18 +3980,9 @@ function () {
           callback.callback(element, callback.context);
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     }
   }]);
@@ -4041,9 +3994,7 @@ function () {
  */
 
 
-var PluginsRegistry =
-/*#__PURE__*/
-function () {
+var PluginsRegistry = /*#__PURE__*/function () {
   function PluginsRegistry() {
     _classCallCheck(this, PluginsRegistry);
 
@@ -4075,12 +4026,12 @@ function () {
 
         var plugin = plugins.get(name);
         var addContext = true;
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+
+        var _iterator2 = _createForOfIteratorHelper(plugin.callbacks),
+            _step2;
 
         try {
-          for (var _iterator2 = plugin.callbacks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
             var callback = _step2.value;
 
             if (callback.callback === props.callback && callback.context === props.context) {
@@ -4089,18 +4040,9 @@ function () {
             }
           }
         } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
+          _iterator2.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
+          _iterator2.f();
         }
 
         if (addContext) {
@@ -4152,12 +4094,11 @@ function () {
         var plugin, props;
 
         if (typeof names === 'string') {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iterator3 = _createForOfIteratorHelper(names.split(/[\s,;]+/)),
+              _step3;
 
           try {
-            for (var _iterator3 = names.split(/[\s,;]+/)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var name = _step3.value;
               var lowerName = name.toLowerCase();
               props = {
@@ -4178,27 +4119,17 @@ function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _iterator3.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-                _iterator3["return"]();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
+            _iterator3.f();
           }
         } else {
           // JSON plug-in declaration
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+          var _iterator4 = _createForOfIteratorHelper($.isArray(names) ? names : [names]),
+              _step4;
 
           try {
-            for (var _iterator4 = ($.isArray(names) ? names : [names])[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
               props = _step4.value;
               $.extend(props, {
                 context: source
@@ -4214,18 +4145,9 @@ function () {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _iterator4.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-                _iterator4["return"]();
-              }
-            } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
-              }
-            }
+            _iterator4.f();
           }
         }
       }); // load plug-ins
@@ -4254,40 +4176,30 @@ function () {
       var disabled = new Set();
       $('[data-ams-plugins-disabled]', element).each(function (idx, elt) {
         var names = $(elt).data('ams-plugins-disabled').split(/[\s,;]+/);
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+
+        var _iterator5 = _createForOfIteratorHelper(names),
+            _step5;
 
         try {
-          for (var _iterator5 = names[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
             var name = _step5.value;
             disabled.add(name);
           }
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _iterator5.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-              _iterator5["return"]();
-            }
-          } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
-            }
-          }
+          _iterator5.f();
         }
       });
       var plugins = this.plugins;
 
       if (names) {
         // only run given plug-ins, EVEN DISABLED ONES
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iterator6 = _createForOfIteratorHelper(names),
+            _step6;
 
         try {
-          for (var _iterator6 = names[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
             var name = _step6.value;
 
             if (plugins.has(name)) {
@@ -4295,27 +4207,17 @@ function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _iterator6.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
-              _iterator6["return"]();
-            }
-          } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
-            }
-          }
+          _iterator6.f();
         }
       } else {
         // run all plug-ins, except disabled ones
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iterator7 = _createForOfIteratorHelper(plugins.entries()),
+            _step7;
 
         try {
-          for (var _iterator7 = plugins.entries()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
             var _step7$value = _slicedToArray(_step7.value, 2),
                 _name = _step7$value[0],
                 plugin = _step7$value[1];
@@ -4327,18 +4229,9 @@ function () {
             plugin.run(element);
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _iterator7.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
-              _iterator7["return"]();
-            }
-          } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
-            }
-          }
+          _iterator7.f();
         }
       }
     }
@@ -4435,13 +4328,19 @@ var registry = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return myams_require; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /* global MyAMS */
 
@@ -4484,12 +4383,12 @@ function myams_require() {
     var names = [],
         deferred = [],
         loaded = MyAMS.config.modules;
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+
+    var _iterator = _createForOfIteratorHelper(modules),
+        _step;
 
     try {
-      for (var _iterator = modules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var module = _step.value;
 
         if (typeof module === 'string') {
@@ -4499,12 +4398,11 @@ function myams_require() {
           }
         } else if ($.isArray(module)) {
           // strings array
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iterator3 = _createForOfIteratorHelper(module),
+              _step3;
 
           try {
-            for (var _iterator3 = module[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var name = _step3.value;
 
               if (loaded.indexOf(name) < 0) {
@@ -4513,18 +4411,9 @@ function myams_require() {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _iterator3.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-                _iterator3["return"]();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
+            _iterator3.f();
           }
         } else {
           // object
@@ -4541,27 +4430,17 @@ function myams_require() {
         }
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-          _iterator["return"]();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     $.when.apply($, deferred).then(function () {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(names),
+          _step2;
 
       try {
-        for (var _iterator2 = names[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var moduleName = _step2.value;
 
           if (loaded.indexOf(moduleName) < 0) {
@@ -4570,18 +4449,9 @@ function myams_require() {
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
 
       resolve();
@@ -4603,6 +4473,12 @@ function myams_require() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ajax", function() { return ajax; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /* global MyAMS, Cookies */
 
 /**
@@ -4642,28 +4518,18 @@ var ajax = {
           source = [source];
         }
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iterator = _createForOfIteratorHelper(source),
+            _step;
 
         try {
-          for (var _iterator = source[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var src = _step.value;
             deferred.push(MyAMS.core.getScript(src));
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _iterator.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+          _iterator.f();
         }
       } else {
         if (!(checker instanceof Array)) {
@@ -5024,9 +4890,8 @@ var ajax = {
 
 
     if (result.contents) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(result.contents),
+          _step2;
 
       try {
         var _loop = function _loop() {
@@ -5046,22 +4911,13 @@ var ajax = {
           }));
         };
 
-        for (var _iterator2 = result.contents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           _loop();
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     } // Response with message
 
@@ -5143,12 +4999,11 @@ var ajax = {
 
 
     if (result.events) {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iterator3 = _createForOfIteratorHelper(result.events),
+          _step3;
 
       try {
-        for (var _iterator3 = result.events[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var event = _step3.value;
 
           if (typeof event === 'string') {
@@ -5158,18 +5013,9 @@ var ajax = {
           }
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-            _iterator3["return"]();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
     } // Response with single callback
 
@@ -5180,12 +5026,11 @@ var ajax = {
 
 
     if (result.callbacks) {
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iterator4 = _createForOfIteratorHelper(result.callbacks),
+          _step4;
 
       try {
-        for (var _iterator4 = result.callbacks[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
           var callback = _step4.value;
 
           if (typeof callback === 'string') {
@@ -5195,18 +5040,9 @@ var ajax = {
           }
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _iterator4.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-            _iterator4["return"]();
-          }
-        } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
-          }
-        }
+        _iterator4.f();
       }
     }
 
@@ -5507,6 +5343,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "callbacks", function() { return callbacks; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /* global MyAMS */
 
 /**
@@ -5541,9 +5383,8 @@ var callbacks = {
           callbacks = [callbacks];
         }
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iterator = _createForOfIteratorHelper(callbacks),
+            _step;
 
         try {
           var _loop = function _loop() {
@@ -5589,22 +5430,13 @@ var callbacks = {
             }
           };
 
-          for (var _iterator = callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
             _loop();
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _iterator.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+          _iterator.f();
         }
       });
       $.when.apply($, deferred).then(resolve, reject);
@@ -5797,6 +5629,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "error", function() { return error; });
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /* global MyAMS */
 
 /**
@@ -5845,12 +5683,12 @@ var error = {
           MyAMS.form.clearAlerts(parent); // create new alert
 
           var messages = [];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+
+          var _iterator = _createForOfIteratorHelper(errors.messages || []),
+              _step;
 
           try {
-            for (var _iterator = (errors.messages || [])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var message = _step.value;
 
               if (typeof message === 'string') {
@@ -5863,26 +5701,16 @@ var error = {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _iterator.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                _iterator["return"]();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
+            _iterator.f();
           }
 
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iterator2 = _createForOfIteratorHelper(errors.widgets || []),
+              _step2;
 
           try {
-            for (var _iterator2 = (errors.widgets || [])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
               var widget = _step2.value;
               messages.push({
                 header: widget.label,
@@ -5890,18 +5718,9 @@ var error = {
               });
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _iterator2.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-                _iterator2["return"]();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
+            _iterator2.f();
           }
 
           var header = errors.header || (messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
@@ -5913,12 +5732,11 @@ var error = {
           };
           $(ERROR_TEMPLATE.render(props)).prependTo(parent); // update status of invalid widgets
 
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iterator3 = _createForOfIteratorHelper(errors.widgets || []),
+              _step3;
 
           try {
-            for (var _iterator3 = (errors.widgets || [])[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var _widget = _step3.value;
               var input = void 0;
 
@@ -5933,18 +5751,9 @@ var error = {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _iterator3.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-                _iterator3["return"]();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
+            _iterator3.f();
           }
         }).then(resolve, reject);
       }
@@ -5976,11 +5785,17 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "events", function() { return events; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -5997,7 +5812,13 @@ var events = {
       return;
     }
 
-    _initialized = true;
+    _initialized = true; // Initialize custom click handlers
+
+    $(document).on('click', '[data-ams-click-handler]', MyAMS.events.clickHandler); // Initialize custom change handlers
+
+    $(document).on('change', '[data-ams-change-handler]', MyAMS.events.changeHandler); // Initialize custom event on click
+
+    $(document).on('click', '[data-ams-click-event]', MyAMS.events.triggerEvent);
   },
   initElement: function initElement(element) {
     $('[data-ams-events-handlers]', element).each(function (idx, elt) {
@@ -6046,6 +5867,104 @@ var events = {
       }
     });
     return result;
+  },
+
+  /**
+   * Generic click event handler
+   */
+  clickHandler: function clickHandler(event) {
+    var source = $(event.currentTarget),
+        handlers = source.data('ams-disabled-handlers');
+
+    if (handlers === true || handlers === 'click' || handlers === 'all') {
+      return;
+    }
+
+    var data = source.data();
+
+    if (data.amsClickHandler) {
+      if (data.amsPreventDefault !== false && data.amsClickPreventDefault !== false) {
+        event.preventDefault();
+      }
+
+      if (data.amsStopPropagation !== false && data.amsClickStopPropagation !== false) {
+        event.stopPropagation();
+      }
+
+      var _iterator = _createForOfIteratorHelper(data.amsClickHandler.split(/[\s,;]+/)),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var handler = _step.value;
+          var callback = MyAMS.core.getFunctionByName(handler);
+
+          if (callback !== undefined) {
+            callback.call(document, event, source, data.amsClickHandlerOptions);
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    }
+  },
+
+  /**
+   * Generic change event handler
+   */
+  changeHandler: function changeHandler(event) {
+    var source = $(event.currentTarget); // Disable change handlers for readonly inputs
+    // These change handlers are activated by IE!!!
+
+    if (source.prop('readonly')) {
+      return;
+    }
+
+    var handlers = source.data('ams-disabled-handlers');
+
+    if (handlers === true || handlers === 'change' || handlers === 'all') {
+      return;
+    }
+
+    var data = source.data();
+
+    if (data.amsChangeHandler) {
+      if (data.amsKeepDefault !== false && data.amsChangeKeepDefault !== false) {
+        event.preventDefault();
+      }
+
+      if (data.amsStopPropagation !== false && data.amsChangeStopPropagation !== false) {
+        event.stopPropagation();
+      }
+
+      var _iterator2 = _createForOfIteratorHelper(data.amsChangeHandler.split(/[\s,;]+/)),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var handler = _step2.value;
+          var callback = MyAMS.core.getFunctionByName(handler);
+
+          if (callback !== undefined) {
+            callback.call(document, event, source, data.amsChangeHandlerOptions);
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+  },
+
+  /**
+   * Genenric click event trigger
+   */
+  triggerEvent: function triggerEvent(event) {
+    var source = $(event.currentTarget);
+    $(event.target).trigger(source.data('ams-click-event'), source.data('ams-click-event-options'));
   }
 };
 /**
@@ -6091,13 +6010,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormDownloadTarget", function() { return getFormDownloadTarget; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initFormDownloadTarget", function() { return initFormDownloadTarget; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetFormDownloadTarget", function() { return resetFormDownloadTarget; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -6133,7 +6058,14 @@ var form = {
       if (button.exists()) {
         $(button).closest('form').data('ams-submit-button', button);
       }
-    }); // Add unload event listener to check for modified forms
+    }); // Cancel clicks on readonly checkbox
+
+    $(document).on('click', 'input[type="checkbox"][readonly]', function () {
+      return false;
+    }); // Initialize generic and custom reset handlers
+
+    $(document).on('reset', MyAMS.form.resetHandler);
+    $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler); // Add unload event listener to check for modified forms
 
     $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
   },
@@ -6149,7 +6081,7 @@ var form = {
       }
     }); // Always blur readonly inputs
 
-    element.on('focus', 'input[readonly="readonly"]', function (evt) {
+    element.on('focus', 'input[readonly]', function (evt) {
       $(evt.currentTarget).blur();
     }); // Prevent bootstrap dialog from blocking TinyMCE focus
 
@@ -6181,11 +6113,6 @@ var form = {
             MyAMS.core.executeFunctionByName(inputData.amsChangedCallback || callback, document, form, input);
           });
         }
-      });
-      form.on('reset', function (evt) {
-        var form = $(evt.currentTarget);
-        MyAMS.form.clearAlerts(form);
-        MyAMS.form.resetChanged(form);
       });
     });
     MyAMS.form.setFocus(element);
@@ -6246,11 +6173,71 @@ var form = {
   },
 
   /**
+   * Default form reset handler
+   *
+   * @param event: the original reset event
+   */
+  resetHandler: function resetHandler(event) {
+    var form = $(event.target);
+    MyAMS.form.clearAlerts(form);
+    MyAMS.form.handleDefaultReset(form);
+    MyAMS.form.resetChanged(form);
+  },
+
+  /**
+   * Clear remaining form alerts before submitting form
+   */
+  clearAlerts: function clearAlerts(form) {
+    $('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
+    $('.state-error', form).removeClassPrefix('state-');
+    $('.invalid-feedback', form).remove();
+    $('.is-invalid', form).removeClass('is-invalid');
+  },
+
+  /**
+   * Call reset callbacks defined on a form
+   */
+  handleDefaultReset: function handleDefaultReset(form) {
+    setTimeout(function () {
+      form.find('.select2').trigger('change');
+      $('[data-ams-reset-callback]', form).each(function (idx, elt) {
+        var element = $(elt),
+            data = element.data(),
+            callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
+
+        if (callback !== undefined) {
+          callback.call(document, form, element, data.amsResetCallbackOptions);
+        }
+      });
+    }, 10);
+  },
+
+  /**
    * Reset form changed flag
    */
   resetChanged: function resetChanged(form) {
     if (form !== undefined) {
       $(form).removeAttr('data-ams-form-changed');
+    }
+  },
+
+  /**
+   * Custom reset handler
+   */
+  customResetHandler: function customResetHandler(event) {
+    var form = $(event.target),
+        data = form.data();
+
+    if (data.amsResetHandler) {
+      if (data.amsKeepDefault !== true && data.amsResetKeepDefault !== true) {
+        event.preventDefault();
+      }
+
+      var callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
+
+      if (callback !== undefined) {
+        callback.call(document, event, form, data.amsResetHandlerOptions);
+      }
     }
   },
 
@@ -6272,16 +6259,6 @@ var form = {
       $('<span>').text(message).addClass('is-invalid invalid-feedback').appendTo(widget);
       input.removeClass('valid').addClass('is-invalid');
     }
-  },
-
-  /**
-   * Clear remaining form alerts before submitting form
-   */
-  clearAlerts: function clearAlerts(form) {
-    $('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
-    $('.state-error', form).removeClassPrefix('state-');
-    $('.invalid-feedback', form).remove();
-    $('.is-invalid', form).removeClass('is-invalid');
   },
 
   /**
@@ -6523,53 +6500,34 @@ function checkFormValidators(form, settings) {
     }
 
     var checks = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+
+    var _iterator = _createForOfIteratorHelper(validators.entries()),
+        _step;
 
     try {
-      for (var _iterator = validators.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var _step$value = _slicedToArray(_step.value, 2),
             context = _step$value[0],
             contextValidators = _step$value[1];
 
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+        var _iterator2 = _createForOfIteratorHelper(contextValidators),
+            _step2;
 
         try {
-          for (var _iterator2 = contextValidators[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
             var validator = _step2.value;
             checks.push(MyAMS.core.executeFunctionByName(validator, document, form, context));
           }
         } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
+          _iterator2.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
+          _iterator2.f();
         }
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-          _iterator["return"]();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     $.when.apply($, checks).then(function () {
@@ -7029,194 +6987,6 @@ if (window.MyAMS) {
     MyAMS.graph = graph;
     console.debug("MyAMS: graph module loaded...");
   }
-}
-
-/***/ }),
-
-/***/ "./src/js/mod-handlers.js":
-/*!********************************!*\
-  !*** ./src/js/mod-handlers.js ***!
-  \********************************/
-/*! exports provided: handlers */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handlers", function() { return handlers; });
-/* global MyAMS */
-
-/**
- * MyAMS events handlers
- */
-var $ = MyAMS.$;
-var _initialized = false;
-var handlers = {
-  init: function init() {
-    if (_initialized) {
-      return;
-    }
-
-    _initialized = true; // Initialize custom click handlers
-
-    $(document).on('click', '[data-ams-click-handler]', function (evt) {
-      var source = $(evt.currentTarget),
-          handlers = source.data('ams-disabled-handlers');
-
-      if (handlers === true || handlers === 'click' || handlers === 'all') {
-        return;
-      }
-
-      var data = source.data();
-
-      if (data.amsClickHandler) {
-        if (data.amsPreventDefault !== false && data.amsClickPreventDefault !== false) {
-          evt.preventDefault();
-        }
-
-        if (data.amsStopPropagation !== false && data.amsClickStopPropagation !== false) {
-          evt.stopPropagation();
-        }
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = data.amsClickHandler.split(/[\s,;]+/)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var handler = _step.value;
-            var callback = MyAMS.core.getFunctionByName(handler);
-
-            if (callback !== undefined) {
-              callback.call(source, evt, data.amsClickHandlerOptions);
-            }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      }
-    }); // Initialize custom change handlers
-
-    $(document).on('change', '[data-ams-change-handler]', function (evt) {
-      var source = $(evt.currentTarget); // Disable change handlers for readonly inputs
-      // These change handlers are activated by IE!!!
-
-      if (source.prop('readonly')) {
-        return;
-      }
-
-      var handlers = source.data('ams-disabled-handlers');
-
-      if (handlers === true || handlers === 'change' || handlers === 'all') {
-        return;
-      }
-
-      var data = source.data();
-
-      if (data.amsChangeHandler) {
-        if (data.amsKeepDefault !== false && data.amsChangeKeepDefault !== false) {
-          evt.preventDefault();
-        }
-
-        if (data.amsStopPropagation !== false && data.amsChangeStopPropagation !== false) {
-          evt.stopPropagation();
-        }
-
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = data.amsChangeHandler.split(/[\s,;]+/)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var handler = _step2.value;
-            var callback = MyAMS.core.getFunctionByName(handler);
-
-            if (callback !== undefined) {
-              callback.call(source, evt, data.amsChangeHandlerOptions);
-            }
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-      }
-    }); // Notify reset to update Select2 widgets
-
-    $(document).on('reset', 'form', function (evt) {
-      var form = $(evt.currentTarget);
-      setTimeout(function () {
-        $('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
-        $('LABEL.state-error', form).removeClass('state-error');
-        form.find('.select2').trigger('change');
-        $('[data-ams-reset-callback]', form).each(function (idx, elt) {
-          var element = $(elt),
-              data = element.data(),
-              callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
-
-          if (callback !== undefined) {
-            callback.call(form, element, data.amsResetCallbackOptions);
-          }
-        });
-      }, 10);
-      MyAMS.form && MyAMS.form.setFocus(form);
-    }); // Initialize custom reset handlers
-
-    $(document).on('reset', '[data-ams-reset-handler]', function (evt) {
-      var form = $(evt.currentTarget),
-          data = form.data();
-
-      if (data.amsResetHandler) {
-        if (data.amsKeepDefault !== true && data.amsResetKeepDefault !== true) {
-          evt.preventDefault();
-        }
-
-        var callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
-
-        if (callback !== undefined) {
-          callback.call(form, data.amsResetHandlerOptions);
-        }
-      }
-    }); // Initialize custom event on click
-
-    $(document).on('click', '[data-ams-click-event]', function (evt) {
-      var source = $(evt.currentTarget);
-      $(evt.target).trigger(source.data('ams-click-event'), source.data('ams-click-event-options'));
-    }); // Cancel clicks on readonly checkbox
-
-    $(document).on('click', 'input[type="checkbox"][readonly]', function () {
-      return false;
-    });
-  }
-};
-/**
- * Global module initialization
- */
-
-if (MyAMS.env.bundle) {
-  MyAMS.config.modules.push('handlers');
-} else {
-  MyAMS.handlers = handlers;
-  console.debug("MyAMS: handlers module loaded...");
 }
 
 /***/ }),
@@ -7877,13 +7647,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationMenu", function() { return NavigationMenu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linkClickHandler", function() { return linkClickHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nav", function() { return nav; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7901,9 +7677,7 @@ var $ = MyAMS.$;
  * Dynamic navigation menu class
  */
 
-var MenuHeader =
-/*#__PURE__*/
-function () {
+var MenuHeader = /*#__PURE__*/function () {
   function MenuHeader(props) {
     _classCallCheck(this, MenuHeader);
 
@@ -7920,9 +7694,7 @@ function () {
   return MenuHeader;
 }();
 
-var MenuDivider =
-/*#__PURE__*/
-function () {
+var MenuDivider = /*#__PURE__*/function () {
   function MenuDivider() {
     _classCallCheck(this, MenuDivider);
   }
@@ -7937,9 +7709,7 @@ function () {
   return MenuDivider;
 }();
 
-var Menu =
-/*#__PURE__*/
-function () {
+var Menu = /*#__PURE__*/function () {
   function Menu(items) {
     _classCallCheck(this, Menu);
 
@@ -7950,12 +7720,12 @@ function () {
     key: "render",
     value: function render() {
       var menu = $('<div></div>');
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+
+      var _iterator = _createForOfIteratorHelper(this.items),
+          _step;
 
       try {
-        for (var _iterator = this.items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var item = _step.value;
 
           if (item.label) {
@@ -7992,18 +7762,9 @@ function () {
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
 
       return menu.children();
@@ -8013,9 +7774,7 @@ function () {
   return Menu;
 }();
 
-var NavigationMenu =
-/*#__PURE__*/
-function () {
+var NavigationMenu = /*#__PURE__*/function () {
   function NavigationMenu(menus, parent, settings) {
     _classCallCheck(this, NavigationMenu);
 
@@ -8028,12 +7787,12 @@ function () {
     key: "getMenus",
     value: function getMenus() {
       var nav = $('<ul></ul>');
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+
+      var _iterator2 = _createForOfIteratorHelper(this.menus),
+          _step2;
 
       try {
-        for (var _iterator2 = this.menus[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var props = _step2.value;
 
           if (props.header !== undefined) {
@@ -8043,18 +7802,9 @@ function () {
           nav.append(new Menu(props.items).render());
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
 
       return nav;
@@ -8606,9 +8356,7 @@ var LIST_TEMPLATE = $.templates({
   allowCode: true
 });
 
-var NotificationsList =
-/*#__PURE__*/
-function () {
+var NotificationsList = /*#__PURE__*/function () {
   /**
    * List constructor
    *
@@ -8687,6 +8435,12 @@ if (MyAMS.env.bundle) {
   \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /* global MyAMS, bsCustomFileInput */
 
@@ -9061,12 +8815,12 @@ function validate(element) {
               // automatically display hidden fields with errors!
               $('span.is-invalid', form).remove();
               $('.is-invalid', form).removeClass('is-invalid');
-              var _iteratorNormalCompletion = true;
-              var _didIteratorError = false;
-              var _iteratorError = undefined;
+
+              var _iterator = _createForOfIteratorHelper(validator.errorList),
+                  _step;
 
               try {
-                for (var _iterator = validator.errorList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
                   var error = _step.value;
 
                   var _element = $(error.element),
@@ -9084,18 +8838,9 @@ function validate(element) {
                   });
                 }
               } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _iterator.e(err);
               } finally {
-                try {
-                  if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                    _iterator["return"]();
-                  }
-                } finally {
-                  if (_didIteratorError) {
-                    throw _iteratorError;
-                  }
-                }
+                _iterator.f();
               }
             },
             errorElement: data.amsValidateErrorElement || 'span',
@@ -9171,11 +8916,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "skin", function() { return skin; });
 var _this = undefined;
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -9567,21 +9316,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mod_modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mod-modal */ "./src/js/mod-modal.js");
 /* harmony import */ var _mod_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./mod-form */ "./src/js/mod-form.js");
 /* harmony import */ var _mod_events__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./mod-events */ "./src/js/mod-events.js");
-/* harmony import */ var _mod_handlers__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mod-handlers */ "./src/js/mod-handlers.js");
-/* harmony import */ var _mod_callbacks__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./mod-callbacks */ "./src/js/mod-callbacks.js");
-/* harmony import */ var _mod_clipboard__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./mod-clipboard */ "./src/js/mod-clipboard.js");
-/* harmony import */ var _mod_container__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./mod-container */ "./src/js/mod-container.js");
-/* harmony import */ var _mod_datatable__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./mod-datatable */ "./src/js/mod-datatable.js");
-/* harmony import */ var _mod_graph__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mod-graph */ "./src/js/mod-graph.js");
-/* harmony import */ var _mod_helpers__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./mod-helpers */ "./src/js/mod-helpers.js");
-/* harmony import */ var _mod_menu__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./mod-menu */ "./src/js/mod-menu.js");
-/* harmony import */ var _mod_notifications__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./mod-notifications */ "./src/js/mod-notifications.js");
-/* harmony import */ var _mod_tree__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./mod-tree */ "./src/js/mod-tree.js");
-/* harmony import */ var _mod_jsonrpc__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./mod-jsonrpc */ "./src/js/mod-jsonrpc.js");
-/* harmony import */ var _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./mod-xmlrpc */ "./src/js/mod-xmlrpc.js");
-/* harmony import */ var _mod_stats__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./mod-stats */ "./src/js/mod-stats.js");
-/* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./mod-plugins */ "./src/js/mod-plugins.js");
-/* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(_mod_plugins__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var _mod_callbacks__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mod-callbacks */ "./src/js/mod-callbacks.js");
+/* harmony import */ var _mod_clipboard__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./mod-clipboard */ "./src/js/mod-clipboard.js");
+/* harmony import */ var _mod_container__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./mod-container */ "./src/js/mod-container.js");
+/* harmony import */ var _mod_datatable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./mod-datatable */ "./src/js/mod-datatable.js");
+/* harmony import */ var _mod_graph__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./mod-graph */ "./src/js/mod-graph.js");
+/* harmony import */ var _mod_helpers__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mod-helpers */ "./src/js/mod-helpers.js");
+/* harmony import */ var _mod_menu__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./mod-menu */ "./src/js/mod-menu.js");
+/* harmony import */ var _mod_notifications__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./mod-notifications */ "./src/js/mod-notifications.js");
+/* harmony import */ var _mod_tree__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./mod-tree */ "./src/js/mod-tree.js");
+/* harmony import */ var _mod_jsonrpc__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./mod-jsonrpc */ "./src/js/mod-jsonrpc.js");
+/* harmony import */ var _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./mod-xmlrpc */ "./src/js/mod-xmlrpc.js");
+/* harmony import */ var _mod_stats__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./mod-stats */ "./src/js/mod-stats.js");
+/* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./mod-plugins */ "./src/js/mod-plugins.js");
+/* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(_mod_plugins__WEBPACK_IMPORTED_MODULE_23__);
 /**
  * MyAMS core features
  *
@@ -9614,31 +9362,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"], {
   require: _ext_require__WEBPACK_IMPORTED_MODULE_1__["default"],
   ajax: _mod_ajax__WEBPACK_IMPORTED_MODULE_3__["ajax"],
   alert: _mod_alert__WEBPACK_IMPORTED_MODULE_7__["alert"],
-  callbacks: _mod_callbacks__WEBPACK_IMPORTED_MODULE_12__["callbacks"],
-  clipboard: _mod_clipboard__WEBPACK_IMPORTED_MODULE_13__["clipboard"],
-  container: _mod_container__WEBPACK_IMPORTED_MODULE_14__["container"],
-  datatable: _mod_datatable__WEBPACK_IMPORTED_MODULE_15__["datatable"],
+  callbacks: _mod_callbacks__WEBPACK_IMPORTED_MODULE_11__["callbacks"],
+  clipboard: _mod_clipboard__WEBPACK_IMPORTED_MODULE_12__["clipboard"],
+  container: _mod_container__WEBPACK_IMPORTED_MODULE_13__["container"],
+  datatable: _mod_datatable__WEBPACK_IMPORTED_MODULE_14__["datatable"],
   error: _mod_error__WEBPACK_IMPORTED_MODULE_2__["error"],
   events: _mod_events__WEBPACK_IMPORTED_MODULE_10__["events"],
   form: _mod_form__WEBPACK_IMPORTED_MODULE_9__["form"],
-  graph: _mod_graph__WEBPACK_IMPORTED_MODULE_16__["graph"],
-  handlers: _mod_handlers__WEBPACK_IMPORTED_MODULE_11__["handlers"],
-  helpers: _mod_helpers__WEBPACK_IMPORTED_MODULE_17__["helpers"],
+  graph: _mod_graph__WEBPACK_IMPORTED_MODULE_15__["graph"],
+  helpers: _mod_helpers__WEBPACK_IMPORTED_MODULE_16__["helpers"],
   i18n: _mod_i18n__WEBPACK_IMPORTED_MODULE_4__["i18n"],
-  jsonrpc: _mod_jsonrpc__WEBPACK_IMPORTED_MODULE_21__["jsonrpc"],
-  menu: _mod_menu__WEBPACK_IMPORTED_MODULE_18__["menu"],
+  jsonrpc: _mod_jsonrpc__WEBPACK_IMPORTED_MODULE_20__["jsonrpc"],
+  menu: _mod_menu__WEBPACK_IMPORTED_MODULE_17__["menu"],
   modal: _mod_modal__WEBPACK_IMPORTED_MODULE_8__["modal"],
   nav: _mod_nav__WEBPACK_IMPORTED_MODULE_5__["nav"],
-  notifications: _mod_notifications__WEBPACK_IMPORTED_MODULE_19__["notifications"],
+  notifications: _mod_notifications__WEBPACK_IMPORTED_MODULE_18__["notifications"],
   skin: _mod_skin__WEBPACK_IMPORTED_MODULE_6__["skin"],
-  stats: _mod_stats__WEBPACK_IMPORTED_MODULE_23__["stats"],
-  tree: _mod_tree__WEBPACK_IMPORTED_MODULE_20__["tree"],
-  xmlrpc: _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_22__["xmlrpc"]
+  stats: _mod_stats__WEBPACK_IMPORTED_MODULE_22__["stats"],
+  tree: _mod_tree__WEBPACK_IMPORTED_MODULE_19__["tree"],
+  xmlrpc: _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_21__["xmlrpc"]
 });
 var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 
