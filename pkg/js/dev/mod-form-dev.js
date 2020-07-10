@@ -178,7 +178,7 @@
               message: MyAMS.i18n.FORM_CHANGED_WARNING
             }).then(function (button) {
               if (button === 'success') {
-                form.resetChanged(forms);
+                MyAMS.form.resetChanged(forms);
               }
 
               resolve(button);
@@ -209,7 +209,6 @@
       var form = $(event.target);
       MyAMS.form.clearAlerts(form);
       MyAMS.form.handleDefaultReset(form);
-      MyAMS.form.resetChanged(form);
     },
 
     /**
@@ -237,6 +236,7 @@
             callback.call(document, form, element, data.amsResetCallbackOptions);
           }
         });
+        MyAMS.form.resetChanged(form);
       }, 10);
     },
 
