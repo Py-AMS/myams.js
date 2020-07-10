@@ -1,1 +1,132 @@
 <h1>MyAMS "form" module API</h1>
+
+<section>
+	<p>MyAMS "form" module contains many functions which are used to handle forms in all their
+	aspects, from user inputs checking to submission and handling of server's response.</p>
+	<p>Many forms management features can be overriden using data attributes assigned to a form,
+	to the button used to submit a form or via the "options" object provided when you submit a
+	form by code.</p>
+	<p>See <a href="#mod-form-options.html">form options</a> to get the list of available
+	settings.</p>
+</section>
+
+<section id="init">
+	<h2><code>MyAMS.form.init()</code></h2>
+	<p>This function is called automatically by MyAMS after module loading; it is used to define
+	global JQuery events handlers.</p>
+</section>
+
+<section id="initElement">
+	<h2><code>MyAMS.form.initElement(element)</code></h2>
+	<p>This function is used to initialize forms located inside the given element. The main
+	responsibility of the function is to add handlers to forms inputs to handle changes, to be
+	able to display a warning when a modified form is leaved without being saved.</p>
+	<p>You can </p>
+</section>
+
+<section id="setFocus">
+	<h2><code>MyAMS.form.setFocus(element)</code></h2>
+	<p>When a form is displayed, MyAMS tries to give focus to the first editable element located
+	inside the form.</p>
+	<p>This function is used to give focus to this first input; if you want to give focus to a
+	specific element, you can just define it's <code>data-ams-focus-target</code> attribute,
+	without any value.</p>
+</section>
+
+<section id="checkBeforeUnload">
+	<h2><code>MyAMS.form.checkBeforeUnload()</code></h2>
+	<p>This function is called when the browser's window is closed; if a modified form is found
+	into this window, the function will return a string message which will be displayed
+	by the browser to be able to cancel the operation.</p>
+</section>
+
+
+<section id="confirmChangedForm">
+	<h2><code>MyAMS.form.confirmChangedForm(element): Promise&lt;string&gt;</code></h2>
+	<p>This function is used to display a confirmation message if a modified form is located
+	into the provided <code>element</code>; if so, the function returns a Promise which is
+	resolved with a value matching the user's decision, which can be <code>success</code> if
+	the form confirmed that the form can be closed, or <code>cancel</code> otherwise; if no
+	form is found, the function returns a Promise which is resolved directly with a
+	<code>success</code> value.</p>
+</section>
+
+<section id="setChanged">
+	<h2><code>MyAMS.form.setChanged(form)</code></h2>
+	<p>This function is used to set the <code>data-ams-form-changed</code> flag of the form given
+	as argument to <code>true</code>, to mark it as being changed.</p>
+</section>
+
+<section id="resetHandler">
+	<h2><code>MyAMS.form.resetHandler(event)</code></h2>
+	<p>This handler is used to handle forms <code>reset</code> events; it is used to clear
+	alerts and validation error messages displayed into a form, before calling the
+	<a href="#mod-form-api.html!handleDefaultReset"><code>handleDefaultReset</code></a>
+	function.</p>
+</section>
+
+<section id="clearAlerts">
+	<h2><code>MyAMS.form.clearAlerts(form)</code></h2>
+	<p>This function is used to remove alerts and validation error messages located into a
+	form; only <i>danger</i> alerts using <code>alert-danger</code> CSS class are removed; if you
+	need to keep these alerts visible after reset, just add a <code>persistent</code> class to
+	them</p>
+</section>
+
+<section id="handleDefaultReset">
+	<h2><code>MyAMS.form.handleDefaultReset(form)</code></h2>
+	<p>This function is used to handle <i>default</i> reset events on the given form; if required,
+	you can define additional callbacks which will be called on reset, by giving their names
+	in a <code>data-ams-reset-callback</code> attribute, separated by spaces, commas or semicolons;
+	these callbacks will be called with three arguments which are the form, the source element on
+	which the callback was applied and the content of <code>data-ams-reset-callback-options</code>
+	attribute, if any.</p>
+</section>
+
+<section id="resetChanged">
+	<h2><code>MyAMS.form.resetChanged(form)</code></h2>
+	<p>This function is used to reset the <i>changed</i> flag of the given form, by removing
+	it's <code>data-ams-form-changed</code> attribute.</p>
+</section>
+
+<section id="customResetHandler">
+	<h2><code>MyAMS.form.customResetHandler(event)</code></h2>
+	<p>In addition to default reset handlers, you can add a custom reset handler on a form using
+	a <code>data-ams-reset-handler</code> attribute on a form; the value of the attribute is the
+	dotted name of a callback which will be called on reset; callback arguments are the original
+	event, the form and the value of <code>data-ams-reset-handler-options</code> attribute, if
+	any.</p>
+</section>
+
+<section id="setInvalid">
+	<h2><code>MyAMS.form.setInvalid(form, input, message)</code></h2>
+	<p>This function is used to add an invalid marker on a form input; this input can be provided
+	as a JQuery object, or as an input <code>name</code> attribute. The provided message is added
+	to input's wrapper element.</p>
+</section>
+
+<section id="getSettings">
+	<h2><code>MyAMS.form.getSettings(form, formData, button, buttonData, options): object</code></h2>
+	<p>This function is used to get a form's settings object, and is called automatically by MyAMS
+	when a form is submitted; see <a href="#mod-form-options.html">form options</a> to get the
+	list of available options.</p>
+	<p><code>form</code> is the form for which we want to get settings, and <code>formData</code>
+	is the value of it's data attributes; <code>button</code> is the button used to submit the
+	form, and <code>buttonData</code> is the value of it's data attributes; <code>options</code>
+	is an object which can be provided when a form is submitted using custom javascript code.</p>
+	<p>The provided arguments are merged together to create a completed settings object;
+	default settings are overwritten by all form's data attributes starting with
+	<code>ams-form-*</code>, then by button's data attributes starting with <code>ams-form-*</code>
+	and finally by <code>options</code> properties; please note however that <code>options</code>
+	object can only override settings with existing properties: properties which don't exist in
+	the settings object will not be added.</p>
+</section>
+
+<section id="submit">
+	<h2><code>MyAMS.form.submit(form, handler, options): boolean</code></h2>
+	<p>This function is used to submit a form; as forms are submitted with AJAX, it returns a
+	boolean value which is always <code>false</code> to prevent the default browser's form
+	submission process.</p>
+	<p>The whole submission process is described in <a href="#mod-form.html">form module
+	introduction</a>.</p>
+</section>

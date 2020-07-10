@@ -215,6 +215,10 @@
 								"href": "#mod-form-errors.html"
 							},
 							{
+								"label": "Notifying forms changes",
+								"href": "#mod-form-changes.html"
+							},
+							{
 								"label": "Progress indicators",
 								"href": "#mod-form-progress.html"
 							},

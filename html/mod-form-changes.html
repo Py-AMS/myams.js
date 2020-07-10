@@ -1,0 +1,21 @@
+<h1>Notifying forms changes</h1>
+
+<section>
+	<p>It's always disapointing to update data in a form, but to click somewhere else before
+	saving these modifications!</p>
+	<p>MyAMS helps you to prevent such behaviour, by displaying a confirmation message when
+	you are trying to leave a form without saving your modifications...</p>
+	<p>This behaviour is activated by default; you can disable it completely by setting
+	<code>MyAMS.config.warnOnFormChange</code> to <code>false</code>, or on a specific form by
+	setting <code>data-ams-warn-on-change</code> to <code>false</code>; if disabled globally,
+	you can reactivate it on a specific form, by setting <code>data-ams-warn-on-change</code>
+	to <code>true</code>.</p>
+	<p>The <code>change</code> event is used by default on any standard input to detect form's
+	modification; you can provide another event name for a given element, by setting it's
+	<code>data-ams-changed-event</code> with the name of the event which will "activate" this
+	modification</p>
+	<p>When a form is changed, it's <code>data-ams-form-changed</code> attribute is set to
+	<code>true</code>; when a navigation link is used, when a modal is closed or when the
+	browser's window is closed, MyAMS is checking for any updated form: if a form is found,
+	a confirmation message is displayed and the user can cancel the operation.</p>
+</section>

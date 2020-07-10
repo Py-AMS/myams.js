@@ -1,3 +1,4 @@
+/* global test, expect */
 /*
  * MyAMS modal module tests
  */

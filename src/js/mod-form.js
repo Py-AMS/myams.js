@@ -132,7 +132,7 @@ export const form = {
 						message: MyAMS.i18n.FORM_CHANGED_WARNING
 					}).then((button) => {
 						if (button === 'success') {
-							form.resetChanged(forms);
+							MyAMS.form.resetChanged(forms);
 						}
 						resolve(button);
 					});
@@ -162,7 +162,6 @@ export const form = {
 		const form = $(event.target);
 		MyAMS.form.clearAlerts(form);
 		MyAMS.form.handleDefaultReset(form);
-		MyAMS.form.resetChanged(form);
 	},
 
 	/**
@@ -190,6 +189,7 @@ export const form = {
 					callback.call(document, form, element, data.amsResetCallbackOptions);
 				}
 			});
+			MyAMS.form.resetChanged(form);
 		}, 10);
 	},
 

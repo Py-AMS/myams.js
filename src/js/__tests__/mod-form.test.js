@@ -126,33 +126,37 @@ describe("Test MyAMS.skin module", () => {
 			input.addClass('modified');
 		}
 
-		MyAMS.form.init();
+		jest.useFakeTimers();
+		try {
+			MyAMS.form.init();
 
-		const
-			body = $(document.body),
-			testForm = $('form', body),
-			testInput = $('input', testForm);
-		form.initElement('body');
+			const
+				body = $(document.body),
+				testForm = $('form', body),
+				testInput = $('input', testForm);
+			form.initElement('body');
 
-		// test change event
-		expect(MyAMS.config.warnOnFormChange).toBe(true);
-		testInput.trigger('change')
-		expect(testForm.attr('data-ams-form-changed')).toBe('true');
-		expect(testForm.hasClass('modified')).toBe(true);
-		expect(testInput.hasClass('modified')).toBe(true);
-		delete MyAMS.testCallback;
+			// test change event
+			expect(MyAMS.config.warnOnFormChange).toBe(true);
+			testInput.trigger('change')
+			expect(testForm.attr('data-ams-form-changed')).toBe('true');
+			expect(testForm.hasClass('modified')).toBe(true);
+			expect(testInput.hasClass('modified')).toBe(true);
+			delete MyAMS.testCallback;
 
-		// test form unload
-		const unload = form.checkBeforeUnload();
-		expect(unload).toBe(i18n.FORM_CHANGED_WARNING);
+			// test form unload
+			const unload = form.checkBeforeUnload();
+			expect(unload).toBe(i18n.FORM_CHANGED_WARNING);
 
-		// test reset event
-		testForm.trigger('reset');
-		expect($('.alert', testForm).exists()).toBe(false);
-		expect(testForm.attr('data-ams-form-changed')).toBe(undefined);
-
-		delete MyAMS.testCallback;
-
+			// test reset event
+			testForm.trigger('reset');
+			jest.runAllTimers();
+			expect($('.alert', testForm).exists()).toBe(false);
+			expect(testForm.attr('data-ams-form-changed')).toBe(undefined);
+		} finally {
+			jest.useRealTimers();
+			delete MyAMS.testCallback;
+		}
 	});
 
 
