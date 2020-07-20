@@ -1,0 +1,53 @@
+<h1>Managing file downloads</h1>
+
+<section>
+	<p>It's a common use case when submitting a form returns a dynamically generated file
+	which must be downloaded and vizualized into the browser or saved on the file system.
+	While that is quite easy when doing a "classic" form submit, it's a little more complicated
+	when doing an AJAX submit.</p>
+	<p>The easiest way to handle this is to create a hidden iframe which will be the target of
+	the submitted form. By adding a few settings to a form (see <a href="#mod-form-options.html">
+	forms options</a>), this will be handled automatically by MyAMS!</p>
+</section>
+
+<section>
+	<h2>Sample form</h2>
+	<form action="data/json.zip" data-async
+		  class="ams-form"
+		  data-ams-form-download-target="form-download-frame">
+		<fieldset>
+			<p>Submit the form to download a small ZIP file...</p>
+		</fieldset>
+		<footer>
+			<button type="submit" class="btn btn-primary"
+					name="form.actions.submit" value="submit">Submit</button>
+		</footer>
+	</form>
+</section>
+
+<section class="p-3">
+	<pre>&lt;form action="data/json.zip" data-async
+      class="ams-form"
+      data-ams-form-download-target="form-download-frame"&gt;
+  &lt;footer&gt;
+    &lt;button type="submit" class="btn btn-primary"
+            name="form.actions.submit" value="submit"&gt;Submit&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/form&gt;</pre>
+</section>
+
+<section>
+	<p>A few points must be known when managing downloads from forms:</p>
+	<ul>
+		<li>
+			<p>when sending "standard" web file formats like images, or JSON files, the web server
+			must provide an HTTP "content-disposition" header of "attachment" type; otherwise, the
+			web browser may display the received file into the hidden iframe!</p>
+		</li>
+		<li>
+			<p>you can also force a "binary" content type, by setting the
+			<code>data-ams-form-datatype</code> form's (or submit button) attribute to
+			<code>binary</code>.</p>
+		</li>
+	</ul>
+</section>
