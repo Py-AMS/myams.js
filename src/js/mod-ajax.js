@@ -190,7 +190,14 @@ export const ajax = {
 		let dataType = 'unknown',
 			result;
 		if (request) {
-			const contentType = request.getResponseHeader('content-type');
+			let contentType = request.getResponseHeader('content-type');
+			if (!contentType) {
+				try {
+					contentType = request.responseXML.contentType;
+				} catch (e) {
+					contentType = null;
+				}
+			}
 			if (contentType) {
 				// Get server response
 				if (contentType.startsWith('application/javascript')) {
@@ -213,7 +220,7 @@ export const ajax = {
 							dataType = 'json';
 						} catch (e) {
 							result = request.responseText;
-							dataType = 'text';
+							dataType = 'binary';
 						}
 					}
 				}

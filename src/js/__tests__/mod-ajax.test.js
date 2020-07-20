@@ -461,7 +461,7 @@ describe("MyAMS.ajax unit tests", () => {
 			expect(xhr.getResponseHeader('content-type')).toBe('text/plain');
 
 			const response = MyAMS.ajax.getResponse(xhr);
-			expect(response.contentType).toBe('text');
+			expect(response.contentType).toBe('binary');
 			expect(response.data).toBe('This is text');
 
 			$.ajax = oldAjax;

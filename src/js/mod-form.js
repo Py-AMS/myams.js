@@ -791,11 +791,12 @@ export function formSubmitCallback(form, settings, target, result, status, reque
 	}
 
 	switch (dataType) {
-		case 'json':
-			MyAMS.ajax.handleJSON(result, form, target);
-			break;
+		case 'binary':
 		case 'script':
 		case 'xml':
+			break;
+		case 'json':
+			MyAMS.ajax.handleJSON(result, form, target);
 			break;
 		default:  // text or html
 			MyAMS.form.resetChanged(form);
@@ -892,6 +893,7 @@ export function resetFormDownloadTarget(form, settings, button, target, ajaxSett
 	if (!ajaxSettings.progress) {
 		setTimeout(() => {
 			settings.resetAfterSubmit(form, settings, button);
+			MyAMS.ajax && MyAMS.ajax.stop();
 			MyAMS.form.resetChanged(form);
 		}, settings.resetTimeout);
 	}
