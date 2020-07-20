@@ -889,12 +889,13 @@
     }
 
     switch (dataType) {
-      case 'json':
-        MyAMS.ajax.handleJSON(result, form, target);
-        break;
-
+      case 'binary':
       case 'script':
       case 'xml':
+        break;
+
+      case 'json':
+        MyAMS.ajax.handleJSON(result, form, target);
         break;
 
       default:
@@ -990,6 +991,7 @@
     if (!ajaxSettings.progress) {
       setTimeout(function () {
         settings.resetAfterSubmit(form, settings, button);
+        MyAMS.ajax && MyAMS.ajax.stop();
         MyAMS.form.resetChanged(form);
       }, settings.resetTimeout);
     }

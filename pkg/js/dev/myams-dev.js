@@ -26066,6 +26066,14 @@ var ajax = {
     if (request) {
       var contentType = request.getResponseHeader('content-type');
 
+      if (!contentType) {
+        try {
+          contentType = request.responseXML.contentType;
+        } catch (e) {
+          contentType = null;
+        }
+      }
+
       if (contentType) {
         // Get server response
         if (contentType.startsWith('application/javascript')) {
@@ -26089,7 +26097,7 @@ var ajax = {
               dataType = 'json';
             } catch (e) {
               result = request.responseText;
-              dataType = 'text';
+              dataType = 'binary';
             }
           }
         }
@@ -28225,12 +28233,13 @@ function formSubmitCallback(form, settings, target, result, status, request) {
   }
 
   switch (dataType) {
-    case 'json':
-      MyAMS.ajax.handleJSON(result, form, target);
-      break;
-
+    case 'binary':
     case 'script':
     case 'xml':
+      break;
+
+    case 'json':
+      MyAMS.ajax.handleJSON(result, form, target);
       break;
 
     default:
@@ -28321,6 +28330,7 @@ function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
   if (!ajaxSettings.progress) {
     setTimeout(function () {
       settings.resetAfterSubmit(form, settings, button);
+      MyAMS.ajax && MyAMS.ajax.stop();
       MyAMS.form.resetChanged(form);
     }, settings.resetTimeout);
   }

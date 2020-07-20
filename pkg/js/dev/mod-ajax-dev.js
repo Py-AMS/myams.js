@@ -230,6 +230,14 @@
       if (request) {
         var contentType = request.getResponseHeader('content-type');
 
+        if (!contentType) {
+          try {
+            contentType = request.responseXML.contentType;
+          } catch (e) {
+            contentType = null;
+          }
+        }
+
         if (contentType) {
           // Get server response
           if (contentType.startsWith('application/javascript')) {
@@ -253,7 +261,7 @@
                 dataType = 'json';
               } catch (e) {
                 result = request.responseText;
-                dataType = 'text';
+                dataType = 'binary';
               }
             }
           }
