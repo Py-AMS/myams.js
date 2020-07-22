@@ -5,6 +5,11 @@
 
 const $ = MyAMS.$;
 
+if (!$.templates) {
+	const jsrender = require('jsrender');
+	$.templates = jsrender.templates;
+}
+
 
 /**
  * Fieldset checker plug-in
@@ -60,7 +65,7 @@ const CHECKER_TEMPLATE = $.templates({
 	markup: CHECKER_TEMPLATE_STRING
 });
 
-function checker(element) {
+export function checker(element) {
 	$('legend.checker', element).each((idx, elt) => {
 		const
 			legend = $(elt),
@@ -143,7 +148,7 @@ function checker(element) {
  * Context menu plug-in
  */
 
-function contextMenu(element) {
+export function contextMenu(element) {
 	const menus = $('.context-menu', element);
 	if (menus.length > 0) {
 		MyAMS.require('menu').then(() => {
@@ -170,7 +175,7 @@ function contextMenu(element) {
  * Bootstrap custom file input manager
  */
 
-function fileInput(element) {
+export function fileInput(element) {
 	const inputs = $('.custom-file-input', element);
 	if (inputs.length > 0) {
 		MyAMS.require('ajax').then(() => {
@@ -207,7 +212,7 @@ const _select2Helpers = {
 	}
 };
 
-function select2(element) {
+export function select2(element) {
 	const selects = $('.select2', element);
 	if (selects.length > 0) {
 		MyAMS.require('ajax', 'helpers').then(() => {
@@ -294,7 +299,7 @@ function select2(element) {
  * SVG image plug-in
  */
 
-function svgPlugin(element) {
+export function svgPlugin(element) {
 	const svgs = $('.svg-container', element);
 	if (svgs.length > 0) {
 		svgs.each((idx, elt) => {
@@ -317,7 +322,7 @@ function svgPlugin(element) {
  * Fieldset switcher plug-in
  */
 
-function switcher(element) {
+export function switcher(element) {
 	$('legend.switcher', element).each((idx, elt) => {
 		const
 			legend = $(elt),
@@ -367,7 +372,7 @@ function switcher(element) {
  * Form validation plug-in
  */
 
-function validate(element) {
+export function validate(element) {
 	const forms = $('form:not([novalidate])', element);
 	if (forms.length > 0) {
 		MyAMS.require('ajax', 'i18n').then(() => {
