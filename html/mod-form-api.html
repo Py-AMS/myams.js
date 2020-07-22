@@ -10,29 +10,6 @@
 	settings.</p>
 </section>
 
-<section id="init">
-	<h2><code>MyAMS.form.init()</code></h2>
-	<p>This function is called automatically by MyAMS after module loading; it is used to define
-	global JQuery events handlers.</p>
-</section>
-
-<section id="initElement">
-	<h2><code>MyAMS.form.initElement(element)</code></h2>
-	<p>This function is used to initialize forms located inside the given element. The main
-	responsibility of the function is to add handlers to forms inputs to handle changes, to be
-	able to display a warning when a modified form is leaved without being saved.</p>
-	<p>You can </p>
-</section>
-
-<section id="setFocus">
-	<h2><code>MyAMS.form.setFocus(element)</code></h2>
-	<p>When a form is displayed, MyAMS tries to give focus to the first editable element located
-	inside the form.</p>
-	<p>This function is used to give focus to this first input; if you want to give focus to a
-	specific element, you can just define it's <code>data-ams-focus-target</code> attribute,
-	without any value.</p>
-</section>
-
 <section id="checkBeforeUnload">
 	<h2><code>MyAMS.form.checkBeforeUnload()</code></h2>
 	<p>This function is called when the browser's window is closed; if a modified form is found
@@ -40,6 +17,13 @@
 	by the browser to be able to cancel the operation.</p>
 </section>
 
+<section id="clearAlerts">
+	<h2><code>MyAMS.form.clearAlerts(form)</code></h2>
+	<p>This function is used to remove alerts and validation error messages located into a
+	form; only <i>danger</i> alerts using <code>alert-danger</code> CSS class are removed; if you
+	need to keep these alerts visible after reset, just add a <code>persistent</code> class to
+	them</p>
+</section>
 
 <section id="confirmChangedForm">
 	<h2><code>MyAMS.form.confirmChangedForm(element): Promise&lt;string&gt;</code></h2>
@@ -51,44 +35,6 @@
 	<code>success</code> value.</p>
 </section>
 
-<section id="setChanged">
-	<h2><code>MyAMS.form.setChanged(form)</code></h2>
-	<p>This function is used to set the <code>data-ams-form-changed</code> flag of the form given
-	as argument to <code>true</code>, to mark it as being changed.</p>
-</section>
-
-<section id="resetHandler">
-	<h2><code>MyAMS.form.resetHandler(event)</code></h2>
-	<p>This handler is used to handle forms <code>reset</code> events; it is used to clear
-	alerts and validation error messages displayed into a form, before calling the
-	<a href="#mod-form-api.html!handleDefaultReset"><code>handleDefaultReset</code></a>
-	function.</p>
-</section>
-
-<section id="clearAlerts">
-	<h2><code>MyAMS.form.clearAlerts(form)</code></h2>
-	<p>This function is used to remove alerts and validation error messages located into a
-	form; only <i>danger</i> alerts using <code>alert-danger</code> CSS class are removed; if you
-	need to keep these alerts visible after reset, just add a <code>persistent</code> class to
-	them</p>
-</section>
-
-<section id="handleDefaultReset">
-	<h2><code>MyAMS.form.handleDefaultReset(form)</code></h2>
-	<p>This function is used to handle <i>default</i> reset events on the given form; if required,
-	you can define additional callbacks which will be called on reset, by giving their names
-	in a <code>data-ams-reset-callback</code> attribute, separated by spaces, commas or semicolons;
-	these callbacks will be called with three arguments which are the form, the source element on
-	which the callback was applied and the content of <code>data-ams-reset-callback-options</code>
-	attribute, if any.</p>
-</section>
-
-<section id="resetChanged">
-	<h2><code>MyAMS.form.resetChanged(form)</code></h2>
-	<p>This function is used to reset the <i>changed</i> flag of the given form, by removing
-	it's <code>data-ams-form-changed</code> attribute.</p>
-</section>
-
 <section id="customResetHandler">
 	<h2><code>MyAMS.form.customResetHandler(event)</code></h2>
 	<p>In addition to default reset handlers, you can add a custom reset handler on a form using
@@ -96,13 +42,6 @@
 	dotted name of a callback which will be called on reset; callback arguments are the original
 	event, the form and the value of <code>data-ams-reset-handler-options</code> attribute, if
 	any.</p>
-</section>
-
-<section id="setInvalid">
-	<h2><code>MyAMS.form.setInvalid(form, input, message)</code></h2>
-	<p>This function is used to add an invalid marker on a form input; this input can be provided
-	as a JQuery object, or as an input <code>name</code> attribute. The provided message is added
-	to input's wrapper element.</p>
 </section>
 
 <section id="getSettings">
@@ -120,6 +59,66 @@
 	and finally by <code>options</code> properties; please note however that <code>options</code>
 	object can only override settings with existing properties: properties which don't exist in
 	the settings object will not be added.</p>
+</section>
+
+<section id="handleDefaultReset">
+	<h2><code>MyAMS.form.handleDefaultReset(form)</code></h2>
+	<p>This function is used to handle <i>default</i> reset events on the given form; if required,
+	you can define additional callbacks which will be called on reset, by giving their names
+	in a <code>data-ams-reset-callback</code> attribute, separated by spaces, commas or semicolons;
+	these callbacks will be called with three arguments which are the form, the source element on
+	which the callback was applied and the content of <code>data-ams-reset-callback-options</code>
+	attribute, if any.</p>
+</section>
+
+<section id="init">
+	<h2><code>MyAMS.form.init()</code></h2>
+	<p>This function is called automatically by MyAMS after module loading; it is used to define
+	global JQuery events handlers.</p>
+</section>
+
+<section id="initElement">
+	<h2><code>MyAMS.form.initElement(element)</code></h2>
+	<p>This function is used to initialize forms located inside the given element. The main
+	responsibility of the function is to add handlers to forms inputs to handle changes, to be
+	able to display a warning when a modified form is leaved without being saved.</p>
+	<p>You can </p>
+</section>
+
+<section id="resetChanged">
+	<h2><code>MyAMS.form.resetChanged(form)</code></h2>
+	<p>This function is used to reset the <i>changed</i> flag of the given form, by removing
+	it's <code>data-ams-form-changed</code> attribute.</p>
+</section>
+
+<section id="resetHandler">
+	<h2><code>MyAMS.form.resetHandler(event)</code></h2>
+	<p>This handler is used to handle forms <code>reset</code> events; it is used to clear
+	alerts and validation error messages displayed into a form, before calling the
+	<a href="#mod-form-api.html!handleDefaultReset"><code>handleDefaultReset</code></a>
+	function.</p>
+</section>
+
+<section id="setChanged">
+	<h2><code>MyAMS.form.setChanged(form)</code></h2>
+	<p>This function is used to set the <code>data-ams-form-changed</code> flag of the form given
+	as argument to <code>true</code>, to mark it as being changed.</p>
+</section>
+
+<section id="setFocus">
+	<h2><code>MyAMS.form.setFocus(element)</code></h2>
+	<p>When a form is displayed, MyAMS tries to give focus to the first editable element located
+	inside the form.</p>
+	<p>This function is used to give focus to this first input; if you want to give focus to a
+	specific element, you can just define it's <code>data-ams-focus-target</code> attribute,
+	without any value.</p>
+</section>
+
+<section id="setInvalid">
+	<h2><code>MyAMS.form.setInvalid(form, input, message)</code></h2>
+	<p>This function is used to add an invalid marker on a form input; this input can be provided
+	as a JQuery object, or as an input <code>name</code> attribute. The provided message is added
+	to input's wrapper element.</p>
 </section>
 
 <section id="submit">
