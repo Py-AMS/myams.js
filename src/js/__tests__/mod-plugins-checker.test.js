@@ -41,6 +41,7 @@ test("Test MyAMS.plugins checker plug-in", () => {
 	});
 
 	checker(body);
+	checker(body);  // test multiple inits
 
 	expect(legend.data('after-init')).toBe(true);
 	expect(fieldset.hasClass('switched')).toBe(true);

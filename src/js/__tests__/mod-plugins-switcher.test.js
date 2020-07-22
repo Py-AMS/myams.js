@@ -38,6 +38,7 @@ test("Test MyAMS.plugins basic switcher", () => {
 	});
 
 	switcher(body);
+	switcher(body);  // test multiple inits
 
 	expect(legend.data('after-init')).toBe(true);
 	expect(fieldset.hasClass('switched')).toBe(true);
