@@ -5,21 +5,21 @@
 --> "getFormSettings()"
 
 If "formData.submitted?" then
-    -left-> [Yes] submitWarning()
+    -left-> [yes] submitWarning()
     --> (*)
 else
     --> checkValidators()
     If "status == 'success' ?" then
-        --> [Yes] "<u>clearAlerts</u>()"
+        --> [yes] "<u>clearAlerts</u>()"
         --> "<u>initSubmitButton</u>()"
         --> "<u>getData()"
         --> "<u>initData(veto)"
-        If "veto.veto ?" then
-            -left-> [true] "<u>resetSubmitButton</u>()" as rsb1
+        If "veto.veto?" then
+            -left-> [yes] "<u>resetSubmitButton</u>()" as rsb1
             --> (*)
         else
             --> "<u>getTarget</u>()"
-            If "target ?" then
+            If "target?" then
                 -right-> [yes] "<u>initTarget</u>()"
                 --> "<u>getAction</u>()"
             else
@@ -28,49 +28,52 @@ else
             --> "<u>getAjaxSettings</u>()"
             --> "<u>getDownloadTarget</u>()"
             If "download target ?" then
-                -right-> [true] "<u>initDownloadTarget</u>()"
+                -right-> [yes] "<u>initDownloadTarget</u>()"
                 --> "<u>getProgressSettings</u>()"
             else
                 --> "<u>getProgressSettings</u>()"
             Endif
             --> "<u>submit</u>()"
-            If "has progress handler ?" then
-                -right-> [true] "<u>getProgressState</u>()"
+            If "has progress handler?" then
+                -right-> [yes] "<u>getProgressState</u>()"
                 --> "ajaxSubmit()"
             else
-                --> "ajaxSubmit()"
+                --> [no] "ajaxSubmit()"
             Endif
             If "download target?" then
-                --> "<u>resetDownloadTarget</u>()"
+                -right-> [yes] "<u>resetDownloadTarget</u>()"
+                --> "<i>AJAX status handler</i>"
+            else
+                --> [no] "<i>AJAX status handler</i>"
             End If
-            If "submit status ?" then
-                --> [success] "<b>event</b>\nsubmit-success.ams.form"
+            If "" then
+                -right-> [success] "<b>event</b>\nsubmit-success.ams.form"
                 If "veto.veto?" then
                     -right-> [true] (*)
                 else
                     If "modal form?" then
-                        -right-> [true] "modal.close()"
+                        -right-> [yes] "modal.close()"
                         --> "<u>submitCallback</u>()" as sc
                     else
-                        --> sc
+                        --> [no] sc
                     Endif
                     --> "<u>resetAfterSubmit</u>()" as ras2
                     --> "<u>resetChanged</u>()" as rc2
                     --> (*)
                 Endif
             else
-                --> [error] "<b>event</b>\nsubmit-error.ams.form"
+                -left-> [error] "<b>event</b>\nsubmit-error.ams.form"
                 If "target?" then
-                    -right-> [true] "<u>resetAfterError</u>()" as rae3
+                    -right-> [yes] "<u>resetAfterError</u>()" as rae3
                     --> "<u>resetAfterSubmit</u>()" as ras3
                 else
-                    --> ras3
+                    --> [no] ras3
                 Endif
                 --> (*)
             Endif
         Endif
     else
-        --> (*)
+        --> [no] (*)
     Endif
 Endif
 
