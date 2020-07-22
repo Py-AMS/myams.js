@@ -1,17 +1,28 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define([], factory);
+    define(["exports"], factory);
   } else if (typeof exports !== "undefined") {
-    factory();
+    factory(exports);
   } else {
     var mod = {
       exports: {}
     };
-    factory();
+    factory(mod.exports);
     global.modPlugins = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports) {
   "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.checker = checker;
+  _exports.contextMenu = contextMenu;
+  _exports.fileInput = fileInput;
+  _exports.select2 = select2;
+  _exports.svgPlugin = svgPlugin;
+  _exports.switcher = switcher;
+  _exports.validate = validate;
 
   function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -25,6 +36,12 @@
    * MyAMS standard plugins
    */
   var $ = MyAMS.$;
+
+  if (!$.templates) {
+    var jsrender = require('jsrender');
+
+    $.templates = jsrender.templates;
+  }
   /**
    * Fieldset checker plug-in
    * A checker is like a simple switcher, but also provides a checkbox which is used
@@ -49,6 +66,7 @@
    *  - change-handler: this optional handler will be called on checker switch
    *  - cancel-default: if "true", the default behaviour will not be executed on checker switch
    */
+
 
   var CHECKER_TEMPLATE_STRING = "\n\t<span class=\"custom-control custom-switch\">\n\t\t<input type=\"checkbox\"\n\t\t\t   id=\"{{: fieldId }}\" name=\"{{: fieldName }}\"\n\t\t\t   class=\"custom-control-input checker\"\n\t\t\t   {{if checked}}checked{{/if}}\n\t\t\t   {{if readonly}}disabled{{/if}}\n\t\t\t   value=\"{{: value }}\" />\n\t\t{{if prefix}}\n\t\t<input type=\"hidden\" class=\"prefix\"\n\t\t\t   id=\"{{: prefix}}{{: fieldName}}_prefix\"\n\t\t\t   name=\"{{: prefix}}{{: fieldName}}\"\n\t\t\t   value=\"{{if state==='on'}}{{: checkedValue}}{{else}}{{: uncheckedValue}}{{/if}}\" />\n\t\t{{else marker}}\n\t\t<input type=\"hidden\" class=\"marker\"\n\t\t\t   name=\"{{: fieldName}}{{: marker}}\"\n\t\t\t   value=\"1\" />\n\t\t{{/if}}\n\t\t<label for=\"{{: fieldId }}\"\n\t\t\t   class=\"custom-control-label\">\n\t\t\t{{: legend }}\n\t\t</label>\n\t</span>\n";
   var CHECKER_TEMPLATE = $.templates({
@@ -345,7 +363,7 @@
             var id = legend.attr('id');
 
             if (id) {
-              $("legend.swicther[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
+              $("legend.switcher[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
                 var switcher = $(elt);
 
                 if (switcher.parents('fieldset').hasClass('switched')) {

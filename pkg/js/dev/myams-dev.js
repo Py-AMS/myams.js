@@ -29824,9 +29824,18 @@ if (MyAMS.env.bundle) {
 /*!*******************************!*\
   !*** ./src/js/mod-plugins.js ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: checker, contextMenu, fileInput, select2, svgPlugin, switcher, validate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checker", function() { return checker; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contextMenu", function() { return contextMenu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileInput", function() { return fileInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "select2", function() { return select2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svgPlugin", function() { return svgPlugin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switcher", function() { return switcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validate", function() { return validate; });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -29839,6 +29848,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * MyAMS standard plugins
  */
 var $ = MyAMS.$;
+
+if (!$.templates) {
+  var jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
+
+  $.templates = jsrender.templates;
+}
 /**
  * Fieldset checker plug-in
  * A checker is like a simple switcher, but also provides a checkbox which is used
@@ -29864,11 +29879,11 @@ var $ = MyAMS.$;
  *  - cancel-default: if "true", the default behaviour will not be executed on checker switch
  */
 
+
 var CHECKER_TEMPLATE_STRING = "\n\t<span class=\"custom-control custom-switch\">\n\t\t<input type=\"checkbox\"\n\t\t\t   id=\"{{: fieldId }}\" name=\"{{: fieldName }}\"\n\t\t\t   class=\"custom-control-input checker\"\n\t\t\t   {{if checked}}checked{{/if}}\n\t\t\t   {{if readonly}}disabled{{/if}}\n\t\t\t   value=\"{{: value }}\" />\n\t\t{{if prefix}}\n\t\t<input type=\"hidden\" class=\"prefix\"\n\t\t\t   id=\"{{: prefix}}{{: fieldName}}_prefix\"\n\t\t\t   name=\"{{: prefix}}{{: fieldName}}\"\n\t\t\t   value=\"{{if state==='on'}}{{: checkedValue}}{{else}}{{: uncheckedValue}}{{/if}}\" />\n\t\t{{else marker}}\n\t\t<input type=\"hidden\" class=\"marker\"\n\t\t\t   name=\"{{: fieldName}}{{: marker}}\"\n\t\t\t   value=\"1\" />\n\t\t{{/if}}\n\t\t<label for=\"{{: fieldId }}\"\n\t\t\t   class=\"custom-control-label\">\n\t\t\t{{: legend }}\n\t\t</label>\n\t</span>\n";
 var CHECKER_TEMPLATE = $.templates({
   markup: CHECKER_TEMPLATE_STRING
 });
-
 function checker(element) {
   $('legend.checker', element).each(function (idx, elt) {
     var legend = $(elt),
@@ -29961,7 +29976,6 @@ function checker(element) {
  * Context menu plug-in
  */
 
-
 function contextMenu(element) {
   var menus = $('.context-menu', element);
 
@@ -29984,7 +29998,6 @@ function contextMenu(element) {
 /**
  * Bootstrap custom file input manager
  */
-
 
 function fileInput(element) {
   var inputs = $('.custom-file-input', element);
@@ -30009,7 +30022,6 @@ function fileInput(element) {
  * Select2 plug-in integration
  */
 
-
 var _select2Helpers = {
   select2UpdateHiddenField: function select2UpdateHiddenField(input) {
     var values = [];
@@ -30019,7 +30031,6 @@ var _select2Helpers = {
     input.data('select2-target').val(values.join(input.data('ams-select2-separator') || ','));
   }
 };
-
 function select2(element) {
   var selects = $('.select2', element);
 
@@ -30109,7 +30120,6 @@ function select2(element) {
  * SVG image plug-in
  */
 
-
 function svgPlugin(element) {
   var svgs = $('.svg-container', element);
 
@@ -30131,7 +30141,6 @@ function svgPlugin(element) {
 /**
  * Fieldset switcher plug-in
  */
-
 
 function switcher(element) {
   $('legend.switcher', element).each(function (idx, elt) {
@@ -30159,7 +30168,7 @@ function switcher(element) {
           var id = legend.attr('id');
 
           if (id) {
-            $("legend.swicther[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
+            $("legend.switcher[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
               var switcher = $(elt);
 
               if (switcher.parents('fieldset').hasClass('switched')) {
@@ -30185,7 +30194,6 @@ function switcher(element) {
 /**
  * Form validation plug-in
  */
-
 
 function validate(element) {
   var forms = $('form:not([novalidate])', element);
@@ -30274,7 +30282,6 @@ function validate(element) {
 /**
  * Global module initialization
  */
-
 
 if (window.MyAMS) {
   // register loaded plug-ins
@@ -30725,7 +30732,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./mod-xmlrpc */ "./src/js/mod-xmlrpc.js");
 /* harmony import */ var _mod_stats__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./mod-stats */ "./src/js/mod-stats.js");
 /* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./mod-plugins */ "./src/js/mod-plugins.js");
-/* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_26___default = /*#__PURE__*/__webpack_require__.n(_mod_plugins__WEBPACK_IMPORTED_MODULE_26__);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_css__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @fortawesome/fontawesome-free/css/all.css */ "./node_modules/@fortawesome/fontawesome-free/css/all.css");
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_css__WEBPACK_IMPORTED_MODULE_27___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_css__WEBPACK_IMPORTED_MODULE_27__);
 /* harmony import */ var _pkg_css_dev_myams_css__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../../pkg/css/dev/myams.css */ "./pkg/css/dev/myams.css");
