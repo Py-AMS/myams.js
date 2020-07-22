@@ -23,7 +23,7 @@ from pyams_utils.fanstatic import ResourceWithData
 __docformat__ = 'restructuredtext'
 
 
-library = Library('myams', '../pkg')
+library = Library('myams', '../../pkg')
 
 
 #
@@ -33,6 +33,11 @@ library = Library('myams', '../pkg')
 jquery = Resource(library, 'js/ext/jquery.js',
                   minified='js/ext/jquery.min.js',
                   bottom=True)
+
+jsrender = Resource(library, 'js/ext/jsrender.js',
+                    minified='js/ext/jsrender.min.js',
+                    depends=(jquery,),
+                    bottom=True)
 
 bootstrap_css = Resource(library, 'css/ext/bootstrap.css',
                          minified='css/ext/bootstrap.min.css')
@@ -75,10 +80,10 @@ myams_mini_svg_bundle = Resource(library, 'js/dev/myams-mini-dev.js',
 
 myams_core_bundle = Resource(library, 'js/dev/myams-core-dev.js',
                              minified='js/prod/myams-core.js',
-                             depends=(jquery, bootstrap, fontawesome_css, myams_css),
+                             depends=(jquery, jsrender, bootstrap, fontawesome_css, myams_css),
                              bottom=True)
 
 myams_core_svg_bundle = Resource(library, 'js/dev/myams-core-dev.js',
                                  minified='js/prod/myams-core.js',
-                                 depends=(jquery, bootstrap, fontawesome_js, myams_css),
+                                 depends=(jquery, jsrender, bootstrap, fontawesome_js, myams_css),
                                  bottom=True)
