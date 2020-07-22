@@ -227,10 +227,6 @@
 								"href": "#mod-form-download.html"
 							},
 							{
-								"label": "Tabs inside forms",
-								"href": "#mod-form-tabs.html"
-							},
-							{
 								"label": "Module API",
 								"href": "#mod-form-api.html"
 							}
