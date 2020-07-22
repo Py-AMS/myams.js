@@ -346,7 +346,7 @@ export function switcher(element) {
 					legend.trigger('opened.ams.switcher', [legend]);
 					const id = legend.attr('id');
 					if (id) {
-						$(`legend.swicther[data-ams-switcher-sync="${id}"]`, fieldset).each((idx, elt) => {
+						$(`legend.switcher[data-ams-switcher-sync="${id}"]`, fieldset).each((idx, elt) => {
 							const switcher = $(elt);
 							if (switcher.parents('fieldset').hasClass('switched')) {
 								switcher.click();
