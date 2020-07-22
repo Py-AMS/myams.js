@@ -33,8 +33,13 @@ test("Test MyAMS.plugins basic switcher", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
+	legend.on('after-init.ams.switcher', (evt, legend) => {
+		legend.data('after-init', true);
+	});
+
 	switcher(body);
 
+	expect(legend.data('after-init')).toBe(true);
 	expect(fieldset.hasClass('switched')).toBe(true);
 	expect($('i.fa-plus', legend).exists()).toBe(true);
 
@@ -49,7 +54,32 @@ test("Test MyAMS.plugins basic switcher", () => {
 });
 
 
-test("Test MyAMS.plugins basic switcher with veto", () => {
+test("Test MyAMS.plugins basic switcher with global veto", () => {
+
+	document.body.innerHTML = `<div>
+		<fieldset>
+			<legend class="switcher"></legend>
+			<div class="panel"></div>
+		</fieldset>
+	</div>`;
+
+	const
+		body = $(document.body),
+		fieldset = $('fieldset', body),
+		legend = $('legend', fieldset);
+
+	legend.on('before-init.ams.switcher', (evt, legend, data, veto) => {
+		veto.veto = true;
+	});
+
+	switcher(body);
+
+	expect($('i.fa-plus', legend).exists()).toBe(false);
+
+});
+
+
+test("Test MyAMS.plugins basic switcher with veto on click", () => {
 
 	document.body.innerHTML = `<div>
 		<fieldset>
@@ -129,9 +159,7 @@ test("Test MyAMS.plugins synced switchers", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend[id="parent-switch-id"]', fieldset),
 		inner1 = $('#inner1', fieldset),
-		legend1 = $('legend', inner1),
-		inner2 = $('#inner2', fieldset),
-		legend2 = $('legend', inner2);
+		inner2 = $('#inner2', fieldset);
 
 	switcher(body);
 

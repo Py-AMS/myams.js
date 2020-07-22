@@ -93,7 +93,12 @@ export function checker(element) {
 					checkedValue: checkedValue,
 					uncheckedValue: uncheckedValue,
 					marker: marker
-				};
+				},
+				veto = { veto: false };
+			legend.trigger('before-init.ams.checker', [legend, props, veto]);
+			if (veto.veto) {
+				return;
+			}
 			legend.html(CHECKER_TEMPLATE.render(props));
 			$('input', legend).change((evt) => {
 				const
@@ -138,6 +143,7 @@ export function checker(element) {
 					fieldset.prop('disabled', true);
 				}
 			}
+			legend.trigger('after-init.ams.checker', [legend]);
 			legend.data('ams-checker', true);
 		}
 	});
@@ -161,10 +167,16 @@ export function contextMenu(element) {
 					};
 				let settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
 				settings = MyAMS.core.executeFunctionByName(
-					data.amsContextmenuinitCallback || data.amsInit, menu, settings) || settings;
+					data.amsContextmenuInitCallback || data.amsInit, menu, settings) || settings;
+				const veto = { veto: false };
+				menu.trigger('before-init.ams.contextmenu', [menu, settings, veto]);
+				if (veto.veto) {
+					return;
+				}
 				const plugin = menu.contextMenu(settings);
 				MyAMS.core.executeFunctionByName(
-					data.amsContextmenuAfterInitCallback || data.amsAfterinit, menu, plugin, settings);
+					data.amsContextmenuAfterInitCallback || data.amsAfterInit, menu, plugin, settings);
+				menu.trigger('after-init.ams.contextmenu', [menu]);
 			});
 		});
 	}
@@ -188,8 +200,14 @@ export function fileInput(element) {
 						inputSelector = inputId ? `#${inputId}` : input.attr('name'),
 						form = $(elt.form),
 						formId = form.attr('id'),
-						formSelector = formId ? `#${formId}` : form.attr('name');
+						formSelector = formId ? `#${formId}` : form.attr('name'),
+						veto = { veto: false };
+					input.trigger('before-init.ams.fileinput', [input, veto]);
+					if (veto.veto) {
+						return;
+					}
 					bsCustomFileInput.init(inputSelector, formSelector);
+					input.trigger('after-init.ams.fileinput', [input]);
 				});
 			});
 		})
@@ -251,6 +269,11 @@ export function select2(element) {
 						let settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
 						settings = MyAMS.core.executeFunctionByName(
 							data.amsSelect2InitCallback || data.amsInit, select, settings) || settings;
+						const veto = { veto: false };
+						select.trigger('before-init.ams.select2', [select, settings, veto]);
+						if (veto.veto) {
+							return;
+						}
 						const plugin = select.select2(settings);
 						select.on('select2:opening select2:selecting select2:unselecting select2:clearing', (evt) => {
 							if ($(evt.target).is(':disabled')) {
@@ -287,6 +310,7 @@ export function select2(element) {
 						MyAMS.core.executeFunctionByName(
 							data.amsSelect2AfterInitCallback || data.amsAfterInit,
 							select, plugin, settings);
+						select.trigger('after-init.ams.select2', [select]);
 					})
 				});
 			})
@@ -331,6 +355,11 @@ export function switcher(element) {
 			minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
 			plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
 		if (!data.amsSwitcher) {
+			const veto = { veto: false };
+			legend.trigger('before-init.ams.switcher', [legend, data, veto]);
+			if (veto.veto) {
+				return;
+			}
 			$(`<i class="fa fa-${data.amsSwitcherState === 'open' ? minusClass : plusClass} mr-2"></i>`)
 				.prependTo(legend);
 			legend.on('click', (evt) => {
@@ -362,6 +391,7 @@ export function switcher(element) {
 			if (data.amsSwitcherState !== 'open') {
 				fieldset.addClass('switched');
 			}
+			legend.trigger('after-init.ams.switcher', [legend]);
 			legend.data('ams-switcher', true);
 		}
 	});
@@ -446,9 +476,15 @@ export function validate(element) {
 					let settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
 					settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback ||
 						data.amsInit, form, settings) || settings;
+					const veto = { veto: false };
+					form.trigger('before-init.ams.validate', [form, settings, veto]);
+					if (veto.veto) {
+						return;
+					}
 					const plugin = form.validate(settings);
 					MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback ||
 						data.amsAfterInit, form, plugin, settings);
+					form.trigger('after-init.ams.validate', [form]);
 				});
 			});
 		});

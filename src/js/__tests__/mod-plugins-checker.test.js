@@ -36,8 +36,13 @@ test("Test MyAMS.plugins checker plug-in", () => {
 		fieldset = $('fieldset', form),
 		legend = $('legend', fieldset);
 
+	legend.on('after-init.ams.checker', (evt, legend) => {
+		legend.data('after-init', true);
+	});
+
 	checker(body);
 
+	expect(legend.data('after-init')).toBe(true);
 	expect(fieldset.hasClass('switched')).toBe(true);
 
 	const checkbox = $('input[type="checkbox"]', legend);
@@ -195,7 +200,35 @@ test("Test MyAMS.plugins checker plug-in with marker", () => {
 });
 
 
-test("Test MyAMS.plugins checker plug-in with veto", () => {
+test("Test MyAMS.plugins checker plug-in with global veto", () => {
+
+	document.body.innerHTML = `<div>
+		<form>
+			<fieldset>
+				<legend class="checker"></legend>
+				<div class="panel"></div>
+			</fieldset>
+		</form>
+	</div>`;
+
+	const
+		body = $(document.body),
+		fieldset = $('fieldset', body),
+		legend = $('legend', fieldset);
+
+	legend.on('before-init.ams.checker', (evt, legend, props, veto) => {
+		veto.veto = true;
+	});
+
+	checker(body);
+
+	const checkbox = $('input[type="checkbox"]', legend);
+	expect(checkbox.exists()).toBe(false);
+
+});
+
+
+test("Test MyAMS.plugins checker plug-in with veto on click", () => {
 
 	document.body.innerHTML = `<div>
 		<form>
