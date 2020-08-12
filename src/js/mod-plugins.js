@@ -566,7 +566,7 @@ export function validate(element) {
 					}
 					const plugin = form.validate(settings);
 					MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback ||
-						data.amsAfterInit, document, proxyform, plugin, settings);
+						data.amsAfterInit, document, form, plugin, settings);
 					form.trigger('after-init.ams.validate', [form, plugin]);
 				});
 			});
