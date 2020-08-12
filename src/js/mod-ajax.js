@@ -121,7 +121,7 @@ export const ajax = {
 				url: addr,
 				type: 'get',
 				cache: false,
-				data: $.param(params),
+				data: $.param(params || null),
 				dataType: 'json',
 				beforeSend: checkCsrfHeader
 			};
@@ -156,7 +156,7 @@ export const ajax = {
 				url: addr,
 				type: 'post',
 				cache: false,
-				data: $.param(data),
+				data: $.param(data || null),
 				dataType: 'json',
 				beforeSend: checkCsrfHeader
 			};
