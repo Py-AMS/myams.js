@@ -91,7 +91,7 @@ export const events = {
 			for (const handler of data.amsClickHandler.split(/[\s,;]+/)) {
 				const callback = MyAMS.core.getFunctionByName(handler);
 				if (callback !== undefined) {
-					callback.call(document, event, source, data.amsClickHandlerOptions);
+					callback.call(document, event, data.amsClickHandlerOptions);
 				}
 			}
 		}
@@ -122,7 +122,7 @@ export const events = {
 			for (const handler of data.amsChangeHandler.split(/[\s,;]+/)) {
 				const callback = MyAMS.core.getFunctionByName(handler);
 				if (callback !== undefined) {
-					callback.call(document, event, source, data.amsChangeHandlerOptions);
+					callback.call(document, event, data.amsChangeHandlerOptions);
 				}
 			}
 		}

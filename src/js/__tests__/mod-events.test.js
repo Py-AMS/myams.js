@@ -115,7 +115,7 @@ test("Test MyAMS.handlers click handler", () => {
 	</div>`;
 
 	MyAMS.test = {
-		clickHandler: (evt, source, options) => {
+		clickHandler: (evt, options) => {
 			$(evt.currentTarget).data('click-options', options);
 		}
 	}
@@ -145,7 +145,7 @@ test("Test MyAMS.handlers disabled click handler", () => {
 	</div>`;
 
 	MyAMS.test = {
-		clickHandler: (evt, source, options) => {
+		clickHandler: (evt, options) => {
 			$(evt.currentTarget).data('click-options', options);
 		}
 	};
@@ -176,7 +176,7 @@ test("Test MyAMS.handlers change handler on readonly input", () => {
 		input = $('input', form);
 
 	MyAMS.test = {
-		changeHandler: (evt, source, options) => {
+		changeHandler: (evt, options) => {
 			form.data('changed', true);
 		}
 	};
@@ -206,9 +206,9 @@ test("Test MyAMS.handlers change handler on standard input", () => {
 		input = $('input', form);
 
 	MyAMS.test = {
-		changeHandler: (evt, source, options) => {
+		changeHandler: (evt, options) => {
 			form.data('changed', true);
-			$(source).data('change-options', options);
+			$(evt.target).data('change-options', options);
 		}
 	};
 
@@ -241,7 +241,7 @@ test("Test MyAMS.handlers disabled change handler on standard input", () => {
 		input = $('input', form);
 
 	MyAMS.test = {
-		changeHandler: (evt, source, options) => {
+		changeHandler: (evt, options) => {
 			form.data('changed', true);
 			$(source).data('change-options', options);
 		}
@@ -311,4 +311,4 @@ test("Test MyAMS.handlers click on readony checkbox", () => {
 
 	$('input').trigger('click');
 
-})
+});
