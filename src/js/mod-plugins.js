@@ -110,8 +110,8 @@ export function checker(element) {
 					input.prop('checked', !checked);
 					return;
 				}
-				MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler, document,
-					legend, checked);
+				MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler,
+					document, legend, checked);
 				if (!data.amsCheckerCancelDefault) {
 					const prefix = input.siblings('.prefix');
 					if (checkerMode === 'hide') {
@@ -167,7 +167,8 @@ export function contextMenu(element) {
 					};
 				let settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
 				settings = MyAMS.core.executeFunctionByName(
-					data.amsContextmenuInitCallback || data.amsInit, menu, settings) || settings;
+					data.amsContextmenuInitCallback || data.amsInit,
+					document, menu, settings) || settings;
 				const veto = { veto: false };
 				menu.trigger('before-init.ams.contextmenu', [menu, settings, veto]);
 				if (veto.veto) {
@@ -175,8 +176,89 @@ export function contextMenu(element) {
 				}
 				const plugin = menu.contextMenu(settings);
 				MyAMS.core.executeFunctionByName(
-					data.amsContextmenuAfterInitCallback || data.amsAfterInit, menu, plugin, settings);
-				menu.trigger('after-init.ams.contextmenu', [menu]);
+					data.amsContextmenuAfterInitCallback || data.amsAfterInit,
+					document, menu, plugin, settings);
+				menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
+			});
+		});
+	}
+}
+
+
+/**
+ * JQuery-UI draggable plug-in
+ */
+
+export function draggable(element) {
+	const draggables = $('.draggable', element);
+	if (draggables.length > 0) {
+		MyAMS.ajax.check($.fn.draggable,
+			`${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
+			draggables.each((idx, elt) => {
+				const
+					draggable = $(elt),
+					data = draggable.data(),
+					defaultOptions = {
+						cursor: data.amsDraggableCursor || 'move',
+						containment: data.amsDraggableContainment,
+						handle: data.amsDraggableHandle,
+						connectToSortable: data.amsDraggableConnectSortable,
+						helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
+						start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
+						stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+					};
+				let settings = $.extend({}, defaultOptions, data.amsDraggableOptions || data.amsOptions);
+				settings = MyAMS.core.executeFunctionByName(
+					data.amsDraggableInitCallback || data.amsInit,
+					document, draggable, settings) || settings;
+				const veto = { veto: false };
+				draggable.trigger('before-init.ams.draggable', [draggable, settings, veto]);
+				if (veto.veto) {
+					return;
+				}
+				const plugin = draggable.draggable(settings);
+				draggable.disableSelection();
+				MyAMS.core.executeFunctionByName(
+					data.amsDraggableAfterInitCallback || data.amsAfterInit,
+					document, draggable, plugin, settings);
+				draggable.trigger('after-init.ams.draggable', [draggable, plugin]);
+			});
+		});
+	}
+}
+
+
+/**
+ * JQuery-ui droppable plug-in
+ */
+
+export function droppable(element) {
+	const droppables = $('.droppable', element);
+	if (droppables.length > 0) {
+		MyAMS.ajax.check($.fn.droppable,
+			`${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
+			droppables.each((idx, elt) => {
+				const
+					droppable = $(elt),
+					data = droppable.data(),
+					defaultOptions = {
+						accept: data.amsDroppableAccept,
+						drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
+					};
+				let settings = $.extend({}, defaultOptions, data.amsDroppableOptions || data.amsOptions);
+				settings = MyAMS.core.executeFunctionByName(
+					data.amsDroppableInitCallback || data.amsInit,
+					document, droppable, settings) || settings;
+				const veto = { veto: false };
+				droppable.trigger('before-init.ams.droppable', [droppable, settings, veto]);
+				if (veto.veto) {
+					return;
+				}
+				const plugin = droppable.droppable(settings);
+				MyAMS.core.executeFunctionByName(
+					data.amsDroppableAfterInitCallback || data.amsAfterInit,
+					document, droppable, plugin, settings);
+				droppable.trigger('after-init.ams.droppable', [droppable, plugin]);
 			});
 		});
 	}
@@ -193,7 +275,7 @@ export function fileInput(element) {
 		MyAMS.require('ajax').then(() => {
 			MyAMS.ajax.check(window.bsCustomFileInput,
 				`${MyAMS.env.baseURL}../ext/bs-custom-file-input${MyAMS.env.extext}.js`).then(() => {
-				$(inputs).each((idx, elt) => {
+				inputs.each((idx, elt) => {
 					const
 						input = $(elt),
 						inputId = input.attr('id'),
@@ -251,7 +333,7 @@ export function select2(element) {
 							return;  // already initialized
 						}
 						const defaultOptions = {
-							theme: 'bootstrap4',
+							theme: data.amsSelect2Theme || 'bootstrap4',
 							language: MyAMS.i18n.language
 						};
 						if (select.hasClass('sortable')) {
@@ -268,7 +350,8 @@ export function select2(element) {
 						}
 						let settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
 						settings = MyAMS.core.executeFunctionByName(
-							data.amsSelect2InitCallback || data.amsInit, select, settings) || settings;
+							data.amsSelect2InitCallback || data.amsInit,
+							document, select, settings) || settings;
 						const veto = { veto: false };
 						select.trigger('before-init.ams.select2', [select, settings, veto]);
 						if (veto.veto) {
@@ -309,8 +392,8 @@ export function select2(element) {
 						}
 						MyAMS.core.executeFunctionByName(
 							data.amsSelect2AfterInitCallback || data.amsAfterInit,
-							select, plugin, settings);
-						select.trigger('after-init.ams.select2', [select]);
+							document, select, plugin, settings);
+						select.trigger('after-init.ams.select2', [select, plugin]);
 					})
 				});
 			})
@@ -475,7 +558,7 @@ export function validate(element) {
 					});
 					let settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
 					settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback ||
-						data.amsInit, form, settings) || settings;
+						data.amsInit, document, form, settings) || settings;
 					const veto = { veto: false };
 					form.trigger('before-init.ams.validate', [form, settings, veto]);
 					if (veto.veto) {
@@ -483,8 +566,8 @@ export function validate(element) {
 					}
 					const plugin = form.validate(settings);
 					MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback ||
-						data.amsAfterInit, form, plugin, settings);
-					form.trigger('after-init.ams.validate', [form]);
+						data.amsAfterInit, document, proxyform, plugin, settings);
+					form.trigger('after-init.ams.validate', [form, plugin]);
 				});
 			});
 		});
@@ -501,6 +584,8 @@ if (window.MyAMS) {
 	// register loaded plug-ins
 	MyAMS.registry.register(checker, 'checker');
 	MyAMS.registry.register(contextMenu, 'contextMenu');
+	MyAMS.registry.register(draggable, 'draggable');
+	MyAMS.registry.register(droppable, 'droppable');
 	MyAMS.registry.register(fileInput, 'fileInput');
 	MyAMS.registry.register(select2, 'select2');
 	MyAMS.registry.register(svgPlugin, 'svg');
