@@ -1,0 +1,88 @@
+<h1>MyAMS components registry</h1>
+
+<section>
+	<p>MyAMS provides a components registry which is used to register "plug-ins"; once registered,
+	a plug-in is always available until next page reload.</p>
+	<p>When a piece of HTML code is initialized (see <a href="#content-init.html">content
+	initialization</a>), MyAMS is calling all registered plug-ins with the initialized element as
+	first argument; there is no specific order to call these plug-ins.</p>
+	<p>The <a href="#mod-plugins.html">plugins</a> module provides several "standard" plug-ins,
+	but the registry API allows you to register your own plug-ins.</p>
+</section>
+
+<section>
+	<h2>Plug-in anatomy</h2>
+	<p>A plug-in is nothing but a Javascript function; it is called with an <i>element</i>
+	argument, which is the root of the initialized element.</p>
+	<p>Standard plug-ins provided by MyAMS all follow the same process:</p>
+	<ul>
+		<li>
+			<p>a JQuery selection is made to find objects matching this plug-in; this is
+			generally done using a class selector (for example, the <code>select2</code> class
+			for the <code>select2</code> plug-in); if this selection is empty, nothing happens!</p>
+		</li>
+		<li>
+			<p>a call to <a href="#mod-ajax.html!check">MyAMS.ajax.check</a> is made to check
+			that external Javascript code is available for the given plug-in; if not, the
+			required files are loaded;</p>
+		</li>
+		<li>
+			<p>for each element of the selection, a default configuration is built, merged with
+			individual data attributes extracted from the element, and merged with the value of
+			an optional <code>data-ams-options</code> attribute containing a serialized JSON
+			object, to create final plug-in initialization settings (you can also use an attribute
+			called <code>data-ams-<i>plugin</i>-options</code>, where <i>plugin</i> is the name
+			of the plug-in)</p>
+		</li>
+		<li>
+			<p>an optional initialization callback, if defined, is called, with the element and
+			these settings as arguments; the settings argument can then be updated by the
+			callback; the name of the callback can be defined in a <code>data-ams-init</code>
+			attribute or, for compatibility with previous releases,
+			<code>data-ams-<i>plugin</i>-init-callback</code>, where <i>plugin</i> is the name of
+			the plug-in;</p>
+		</li>
+		<li>
+			<p>a <code>before-init.ams.<i>plugin</i></code> event is triggered on the element;
+			it's arguments are the element, the settings object and a <i>veto</i> object; if the
+			<i>veto</i> object is modified and a <code>true</code> value is set in it's
+			<code>veto</code> attribute, the plug-in initialization is cancelled;</p>
+		</li>
+		<li>
+			<p>the plug-in is initialized; for example, in the <i>select2</i> plug-in, the
+			<code>$.fn.select2</code> function is called on the selected element;</p>
+		</li>
+		<li>
+			<p>another optional "after-init" callback is called; the name of the callback can
+			be defined in a <code>data-ams-after-init</code> attribute (or
+			<code>data-ams-<i>plugin</i>-after-init-callback</code>, for compatibility), with
+			the element, the initialized plug-in value and the settings as arguments;</p>
+		</li>
+		<li>
+			<p>an <code>after-init.ams.<i>plugin</i></code> event is triggered on the element;
+			it's arguments are the element and the initialized plug-in value.</p>
+		</li>
+	</ul>
+</section>
+<section>
+	<h2>Registering plug-in from Javascript code</h2>
+	<p>You can register a plug-in using Javascript code; this is done using
+	<code>MyAMS.registry.register</code> function, with arguments which are the plug-in callable,
+	and the name given to the plug-in; for example:</p>
+	<pre>	function myplugin(element) {
+	  // plug-in code...
+	}
+
+	MyAMS.registry.register(myplugin, 'My plug-in');
+</pre>
+</section>
+
+<section>
+	<h2>Registering plug-in from HTML code</h2>
+	<p></p>
+</section>
+
+<section>
+	<h2>Plug-in initialization</h2>
+	<p></p>
+</section>

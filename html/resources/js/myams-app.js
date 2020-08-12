@@ -1,3 +1,4 @@
+/* global MyAMS */
 
 
 const $ = MyAMS.$;

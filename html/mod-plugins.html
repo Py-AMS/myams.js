@@ -1,0 +1,55 @@
+<h1>MyAMS "plugins" module</h1>
+
+<section>
+	<p>MyAMS "plugins" module is used to register a small set of "standard" plug-ins into MyAMS
+	plug-ins <a href="#registry.html">registry</a>.</p>
+	<p>Each plug-in can be configured in several ways:</p>
+	<ul>
+		<li>
+			<p>by setting individual data-attributes on the source element;</p>
+		</li>
+		<li>
+			<p>by setting a <code>data-ams-options</code> attribute, containing a serialized
+			JSON object with the same attributes;</p>
+		</li>
+		<li>
+			<p>by defining a callback function with the <code>data-ams-init</code> attribute;
+			this callback will receive the default settings object as argument, which can be
+			updated by the callback; if the callback returns a value, this value will be used
+			as new settings;</p>
+		</li>
+		<li>
+			<p>by adding a handler of the <code>before-init.ams.<i>plugin</i></code> event,
+			which is triggered on the source element when the initialization is finished; this
+			handler will receive the source element, the settings object and a <i>veto</i> object
+			as arguments; the settings can be updated by the handler; if the veto object returns
+			with a <i>true</i> value set in it's <code>veto</code> attribute, the plug-in is not
+			activated.</p>
+		</li>
+	</ul>
+	<p>If we take the <i>select2</i> plug-in as example, we can set the "theme" attribute, for
+	example, in several ways:</p>
+	<ul>
+		<li>
+			<p><code>&lt;select class="select2" data-ams-select2-theme="bootstrap4"&gt;</code></p>
+		</li>
+		<li>
+			<p><code>&lt;select class="select2" data-ams-select2-options='{"theme": "bootstrap4"}'&gt;</code></p>
+		</li>
+		<li>
+			<p><code>&lt;select class="select2" data-ams-init="MyApp.initCallback"&gt;</code></p>
+			<pre>	MyAMS.initCallback = (select, settings) => {
+	  settings.theme = "bootstrap4";
+	  return settings;
+	}
+</pre>
+		</li>
+		<li>
+			<p><code>&lt;select class="select2" data-ams-events-handlers='{"before-init.ams.select2": "MyApp.initHandler"}'&gt;</code></p>
+			<pre>	MyAMS.initHandler = (evt, select, settings, veto) => {
+	  settings.theme = "bootstrap4";
+	}
+</pre>
+		</li>
+	</ul>
+</section>

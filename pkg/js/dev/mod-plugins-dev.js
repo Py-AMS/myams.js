@@ -18,6 +18,8 @@
   });
   _exports.checker = checker;
   _exports.contextMenu = contextMenu;
+  _exports.draggable = draggable;
+  _exports.droppable = droppable;
   _exports.fileInput = fileInput;
   _exports.select2 = select2;
   _exports.svgPlugin = svgPlugin;
@@ -188,7 +190,7 @@
             menuSelector: data.amsContextmenuSelector || data.amsMenuSelector
           };
           var settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
-          settings = MyAMS.core.executeFunctionByName(data.amsContextmenuInitCallback || data.amsInit, menu, settings) || settings;
+          settings = MyAMS.core.executeFunctionByName(data.amsContextmenuInitCallback || data.amsInit, document, menu, settings) || settings;
           var veto = {
             veto: false
           };
@@ -199,8 +201,84 @@
           }
 
           var plugin = menu.contextMenu(settings);
-          MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, menu, plugin, settings);
-          menu.trigger('after-init.ams.contextmenu', [menu]);
+          MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
+          menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
+        });
+      });
+    }
+  }
+  /**
+   * JQuery-UI draggable plug-in
+   */
+
+
+  function draggable(element) {
+    var draggables = $('.draggable', element);
+
+    if (draggables.length > 0) {
+      MyAMS.ajax.check($.fn.draggable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
+        draggables.each(function (idx, elt) {
+          var draggable = $(elt),
+              data = draggable.data(),
+              defaultOptions = {
+            cursor: data.amsDraggableCursor || 'move',
+            containment: data.amsDraggableContainment,
+            handle: data.amsDraggableHandle,
+            connectToSortable: data.amsDraggableConnectSortable,
+            helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
+            start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
+            stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+          };
+          var settings = $.extend({}, defaultOptions, data.amsDraggableOptions || data.amsOptions);
+          settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, draggable, settings) || settings;
+          var veto = {
+            veto: false
+          };
+          draggable.trigger('before-init.ams.draggable', [draggable, settings, veto]);
+
+          if (veto.veto) {
+            return;
+          }
+
+          var plugin = draggable.draggable(settings);
+          draggable.disableSelection();
+          MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, draggable, plugin, settings);
+          draggable.trigger('after-init.ams.draggable', [draggable, plugin]);
+        });
+      });
+    }
+  }
+  /**
+   * JQuery-ui droppable plug-in
+   */
+
+
+  function droppable(element) {
+    var droppables = $('.droppable', element);
+
+    if (droppables.length > 0) {
+      MyAMS.ajax.check($.fn.droppable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
+        droppables.each(function (idx, elt) {
+          var droppable = $(elt),
+              data = droppable.data(),
+              defaultOptions = {
+            accept: data.amsDroppableAccept,
+            drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
+          };
+          var settings = $.extend({}, defaultOptions, data.amsDroppableOptions || data.amsOptions);
+          settings = MyAMS.core.executeFunctionByName(data.amsDroppableInitCallback || data.amsInit, document, droppable, settings) || settings;
+          var veto = {
+            veto: false
+          };
+          droppable.trigger('before-init.ams.droppable', [droppable, settings, veto]);
+
+          if (veto.veto) {
+            return;
+          }
+
+          var plugin = droppable.droppable(settings);
+          MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, droppable, plugin, settings);
+          droppable.trigger('after-init.ams.droppable', [droppable, plugin]);
         });
       });
     }
@@ -216,7 +294,7 @@
     if (inputs.length > 0) {
       MyAMS.require('ajax').then(function () {
         MyAMS.ajax.check(window.bsCustomFileInput, "".concat(MyAMS.env.baseURL, "../ext/bs-custom-file-input").concat(MyAMS.env.extext, ".js")).then(function () {
-          $(inputs).each(function (idx, elt) {
+          inputs.each(function (idx, elt) {
             var input = $(elt),
                 inputId = input.attr('id'),
                 inputSelector = inputId ? "#".concat(inputId) : input.attr('name'),
@@ -278,7 +356,7 @@
               }
 
               var defaultOptions = {
-                theme: 'bootstrap4',
+                theme: data.amsSelect2Theme || 'bootstrap4',
                 language: MyAMS.i18n.language
               };
 
@@ -296,7 +374,7 @@
               }
 
               var settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
-              settings = MyAMS.core.executeFunctionByName(data.amsSelect2InitCallback || data.amsInit, select, settings) || settings;
+              settings = MyAMS.core.executeFunctionByName(data.amsSelect2InitCallback || data.amsInit, document, select, settings) || settings;
               var veto = {
                 veto: false
               };
@@ -341,8 +419,8 @@
                 });
               }
 
-              MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, select, plugin, settings);
-              select.trigger('after-init.ams.select2', [select]);
+              MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
+              select.trigger('after-init.ams.select2', [select, plugin]);
             });
           });
         });
@@ -517,7 +595,7 @@
               dataOptions.messages[$(elt).attr('name')] = $(elt).data('ams-validate-messages');
             });
             var settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
-            settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback || data.amsInit, form, settings) || settings;
+            settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback || data.amsInit, document, form, settings) || settings;
             var veto = {
               veto: false
             };
@@ -528,8 +606,8 @@
             }
 
             var plugin = form.validate(settings);
-            MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, form, plugin, settings);
-            form.trigger('after-init.ams.validate', [form]);
+            MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
+            form.trigger('after-init.ams.validate', [form, plugin]);
           });
         });
       });
@@ -544,6 +622,8 @@
     // register loaded plug-ins
     MyAMS.registry.register(checker, 'checker');
     MyAMS.registry.register(contextMenu, 'contextMenu');
+    MyAMS.registry.register(draggable, 'draggable');
+    MyAMS.registry.register(droppable, 'droppable');
     MyAMS.registry.register(fileInput, 'fileInput');
     MyAMS.registry.register(select2, 'select2');
     MyAMS.registry.register(svgPlugin, 'svg');

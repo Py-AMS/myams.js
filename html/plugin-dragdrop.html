@@ -1,0 +1,139 @@
+<h1>MyAMS "drap &amp; drop" plug-ins</h1>
+
+<section data-ams-modules='{ "app": "resources/js/myams-app.js" }'>
+	<p>MyAMS drag &amp; drop features are actually based on JQuery UI package. MyAMS is just a
+	thin wrapper around JQuery UI plug-ins, and their documentation is the best source of
+	information to know how they work.</p>
+	<p>A simple draggable element can be created like this:</p>
+<pre>
+	&lt;div class="border border-danger width-100px height-100px mouse-move draggable"&gt;&lt;/div&gt;
+</pre>
+	<div class="border border-danger ml-3 mb-3 width-100px height-100px mouse-move draggable"></div>
+
+	<p>This is another draggable with a droppable:</p>
+<pre>
+	&lt;div class="parent clearfix"&gt;
+	  &lt;div class="float-left border border-danger ml-3 mb-3 width-100px height-100px mouse-move draggable"
+	     data-ams-draggable-containment="parent"
+	     data-ams-draggable-helper="clone"&gt;
+	  &lt;/div&gt;
+	  &lt;div class="float-left border ml-3 mb-3 width-100px height-100px droppable"
+	     data-ams-droppable-accept=".draggable"
+	     data-ams-droppable-options='{
+	       "classes": {
+	         "ui-droppable-hover": "border-info"
+	       }
+	     }'&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;
+</pre>
+	<div class="parent clearfix">
+		<div class="float-left border border-danger ml-3 mb-3 width-100px height-100px mouse-move draggable"
+			 data-ams-draggable-containment="parent"
+			 data-ams-draggable-helper="clone">
+		</div>
+		<div class="float-left border ml-3 mb-3 width-100px height-100px droppable"
+			 data-ams-droppable-accept=".draggable"
+			 data-ams-droppable-options='{
+			 	"classes": {
+			 		"ui-droppable-hover": "border-info"
+				}
+			 }'>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h2>MyAMS <code>draggable</code> plug-in options</h2>
+	<p>These plug-in options are available as data attributes prefixed by
+	<code>data-ams-draggable-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>connectSortable</code></td>
+			<td>false</td>
+			<td>allows the draggable to be connected to the specified sortable, and to become
+			part of it when the element is dropped; the <code>helper</code> option must be set to
+			<code>clone</code> for this to work correctly; look at
+			<a href="#plugin-sortable.html">sortables plug-in</a> to know more about
+			sortables</td>
+		</tr>
+		<tr>
+			<td><code>containment</code></td>
+			<td>false</td>
+			<td>constrains dragging to the bounds of the element specified by this option; can be
+			a JQuery selector, a DOM element, a custom string ("parent", "document" or "window")
+			or a bounding box in the form of an array of coordinates [x1, y1, x2, y2]</td>
+		</tr>
+		<tr>
+			<td><code>cursor</code></td>
+			<td>"move"</td>
+			<td>mouse cursor to use when the element is moved</td>
+		</tr>
+		<tr>
+			<td><code>handle</code></td>
+			<td>false</td>
+			<td>if indicated, specifies a child element on which the mouse cursur must be clicked
+			for the dragging to start</td>
+		</tr>
+		<tr>
+			<td><code>helper</code></td>
+			<td>"original"</td>
+			<td>allows for a helper element to be used when dragging; can be set to
+			<code>clone</code> to drag a clone of the original element</td>
+		</tr>
+		<tr>
+			<td><code>options</code></td>
+			<td>undefined</td>
+			<td>serialized JSON object containing additional draggable settings; see
+			<a href="https://api.jqueryui.com/draggable/" target="_blank">JQuery-UI draggable
+			documentation</a></td>
+		</tr>
+		<tr>
+			<td><code>start</code></td>
+			<td>undefined</td>
+			<td>name of a callable, called when dragging starts</td>
+		</tr>
+		<tr>
+			<td><code>stop</code></td>
+			<td>undefined</td>
+			<td>name of a callable, called when dragging stops </td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h2>MyAMS <code>droppable</code> plug-in options</h2>
+	<p>These plug-in options are available as data attributes prefixed by
+	<code>data-ams-droppable-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>accept</code></td>
+			<td>undefined</td>
+			<td>selector or callable used to define which elements are accepted by the
+			droppable</td>
+		</tr>
+		<tr>
+			<td><code>drop</code></td>
+			<td>undefined</td>
+			<td>name of a callable, called when an accepted draggable is dropped on the
+			droppable</td>
+		</tr>
+		<tr>
+			<td><code>options</code></td>
+			<td>undefined</td>
+			<td>serialized JSON object containing additional droppable settings; see
+			<a href="https://api.jqueryui.com/droppable/" target="_blank">JQuery-UI droppable
+			documentation</a></td>
+		</tr>
+	</table>
+</section>

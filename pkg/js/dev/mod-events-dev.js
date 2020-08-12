@@ -133,7 +133,7 @@
             var callback = MyAMS.core.getFunctionByName(handler);
 
             if (callback !== undefined) {
-              callback.call(document, event, source, data.amsClickHandlerOptions);
+              callback.call(document, event, data.amsClickHandlerOptions);
             }
           }
         } catch (err) {
@@ -181,7 +181,7 @@
             var callback = MyAMS.core.getFunctionByName(handler);
 
             if (callback !== undefined) {
-              callback.call(document, event, source, data.amsChangeHandlerOptions);
+              callback.call(document, event, data.amsChangeHandlerOptions);
             }
           }
         } catch (err) {

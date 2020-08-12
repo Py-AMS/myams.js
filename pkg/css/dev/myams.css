@@ -185,6 +185,45 @@
 .width-100 {
   width: 100% !important; }
 
+.width-100px {
+  width: 100px !important; }
+
+.width-200px {
+  width: 200px !important; }
+
+.width-300px {
+  width: 300px !important; }
+
+.width-400px {
+  width: 400px !important; }
+
+.height-0 {
+  height: 0 !important; }
+
+.height-25 {
+  height: 25% !important; }
+
+.height-50 {
+  height: 50% !important; }
+
+.height-75 {
+  height: 75% !important; }
+
+.height-100 {
+  height: 100% !important; }
+
+.height-100px {
+  height: 100px !important; }
+
+.height-200px {
+  height: 200px !important; }
+
+.height-300px {
+  height: 300px !important; }
+
+.height-400px {
+  height: 400px !important; }
+
 @media (min-width: 576px) {
   .width-sm-0 {
     width: 0 !important; }
@@ -195,7 +234,33 @@
   .width-sm-75 {
     width: 75% !important; }
   .width-sm-100 {
-    width: 100% !important; } }
+    width: 100% !important; }
+  .width-sm-100px {
+    width: 100px !important; }
+  .width-sm-200px {
+    width: 200px !important; }
+  .width-sm-300px {
+    width: 300px !important; }
+  .width-sm-400px {
+    width: 400px !important; }
+  .height-sm-0 {
+    height: 0 !important; }
+  .height-sm-25 {
+    height: 25% !important; }
+  .height-sm-50 {
+    height: 50% !important; }
+  .height-sm-75 {
+    height: 75% !important; }
+  .height-sm-100 {
+    height: 100% !important; }
+  .height-sm-100px {
+    height: 100px !important; }
+  .height-sm-200px {
+    height: 200px !important; }
+  .height-sm-300px {
+    height: 300px !important; }
+  .height-sm-400px {
+    height: 400px !important; } }
 
 @media (min-width: 768px) {
   .width-md-0 {
@@ -207,7 +272,33 @@
   .width-md-75 {
     width: 75% !important; }
   .width-md-100 {
-    width: 100% !important; } }
+    width: 100% !important; }
+  .width-md-100px {
+    width: 100px !important; }
+  .width-md-200px {
+    width: 200px !important; }
+  .width-md-300px {
+    width: 300px !important; }
+  .width-md-400px {
+    width: 400px !important; }
+  .height-md-0 {
+    height: 0 !important; }
+  .height-md-25 {
+    height: 25% !important; }
+  .height-md-50 {
+    height: 50% !important; }
+  .height-md-75 {
+    height: 75% !important; }
+  .height-md-100 {
+    height: 100% !important; }
+  .height-md-100px {
+    height: 100px !important; }
+  .height-md-200px {
+    height: 200px !important; }
+  .height-md-300px {
+    height: 300px !important; }
+  .height-md-400px {
+    height: 400px !important; } }
 
 @media (min-width: 992px) {
   .width-lg-0 {
@@ -219,7 +310,33 @@
   .width-lg-75 {
     width: 75% !important; }
   .width-lg-100 {
-    width: 100% !important; } }
+    width: 100% !important; }
+  .width-lg-100px {
+    width: 100px !important; }
+  .width-lg-200px {
+    width: 200px !important; }
+  .width-lg-300px {
+    width: 300px !important; }
+  .width-lg-400px {
+    width: 400px !important; }
+  .height-lg-0 {
+    height: 0 !important; }
+  .height-lg-25 {
+    height: 25% !important; }
+  .height-lg-50 {
+    height: 50% !important; }
+  .height-lg-75 {
+    height: 75% !important; }
+  .height-lg-100 {
+    height: 100% !important; }
+  .height-lg-100px {
+    height: 100px !important; }
+  .height-lg-200px {
+    height: 200px !important; }
+  .height-lg-300px {
+    height: 300px !important; }
+  .height-lg-400px {
+    height: 400px !important; } }
 
 @media (min-width: 1200px) {
   .width-xl-0 {
@@ -231,7 +348,33 @@
   .width-xl-75 {
     width: 75% !important; }
   .width-xl-100 {
-    width: 100% !important; } }
+    width: 100% !important; }
+  .width-xl-100px {
+    width: 100px !important; }
+  .width-xl-200px {
+    width: 200px !important; }
+  .width-xl-300px {
+    width: 300px !important; }
+  .width-xl-400px {
+    width: 400px !important; }
+  .height-xl-0 {
+    height: 0 !important; }
+  .height-xl-25 {
+    height: 25% !important; }
+  .height-xl-50 {
+    height: 50% !important; }
+  .height-xl-75 {
+    height: 75% !important; }
+  .height-xl-100 {
+    height: 100% !important; }
+  .height-xl-100px {
+    height: 100px !important; }
+  .height-xl-200px {
+    height: 200px !important; }
+  .height-xl-300px {
+    height: 300px !important; }
+  .height-xl-400px {
+    height: 400px !important; } }
 
 /**
  * Custom classes
@@ -239,6 +382,9 @@
 .mouse-pointer,
 [data-ams-click-handler] {
   cursor: pointer !important; }
+
+.mouse-move {
+  cursor: move !important; }
 
 .list-style-none {
   list-style-type: none; }
