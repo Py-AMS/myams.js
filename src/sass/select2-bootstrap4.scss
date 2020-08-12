@@ -137,11 +137,11 @@
     .select2-selection__clear {
         width: 1.2em;
         height: 1.2em;
-        line-height: 1.15em;
+        line-height: 1.4em;
         //padding-left: 0.3em;
         margin-top: 0.5em;
         //border-radius: 100%;
-        border-radius: 50%;
+        border-radius: 30%;
         text-align: center;
 
         background-color: $secondary;
@@ -151,6 +151,9 @@
 
         &:hover {
             background-color: darken($primary, 20%);
+        }
+        &::content {
+            display: none;
         }
     }
 }
