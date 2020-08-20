@@ -8443,15 +8443,14 @@ if (MyAMS.env.bundle) {
 /*!*******************************!*\
   !*** ./src/js/mod-plugins.js ***!
   \*******************************/
-/*! exports provided: checker, contextMenu, draggable, droppable, fileInput, select2, svgPlugin, switcher, validate */
+/*! exports provided: checker, contextMenu, dragdrop, fileInput, select2, svgPlugin, switcher, validate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checker", function() { return checker; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contextMenu", function() { return contextMenu; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "draggable", function() { return draggable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "droppable", function() { return droppable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dragdrop", function() { return dragdrop; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileInput", function() { return fileInput; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "select2", function() { return select2; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svgPlugin", function() { return svgPlugin; });
@@ -8506,100 +8505,109 @@ var CHECKER_TEMPLATE = $.templates({
   markup: CHECKER_TEMPLATE_STRING
 });
 function checker(element) {
-  $('legend.checker', element).each(function (idx, elt) {
-    var legend = $(elt),
-        data = legend.data();
+  return new Promise(function (resolve, reject) {
+    var checkers = $('legend.checker', element);
 
-    if (!data.amsChecker) {
-      var fieldset = legend.parent('fieldset'),
-          checked = fieldset.hasClass('switched') || data.amsCheckerState === 'on',
-          fieldName = data.amsCheckerFieldname || "checker_".concat(MyAMS.core.generateId()),
-          fieldId = fieldName.replace(/\./g, '_'),
-          prefix = data.amsCheckerHiddenPrefix,
-          marker = data.amsCheckerMarker || false,
-          checkerMode = data.amsCheckerMode || 'hide',
-          checkedValue = data.amsCheckerValueOn || 'true',
-          uncheckedValue = data.amsCheckerValueOff || 'false',
-          props = {
-        legend: legend.text(),
-        fieldName: fieldName,
-        fieldId: fieldId,
-        value: data.amsCheckerValue || true,
-        checked: checked,
-        readonly: data.amsCheckerReadonly,
-        prefix: prefix,
-        state: data.amsCheckerState,
-        checkedValue: checkedValue,
-        uncheckedValue: uncheckedValue,
-        marker: marker
-      },
-          veto = {
-        veto: false
-      };
-      legend.trigger('before-init.ams.checker', [legend, props, veto]);
+    if (checkers.length > 0) {
+      checkers.each(function (idx, elt) {
+        var legend = $(elt),
+            data = legend.data();
 
-      if (veto.veto) {
-        return;
-      }
+        if (!data.amsChecker) {
+          var fieldset = legend.parent('fieldset'),
+              checked = fieldset.hasClass('switched') || data.amsCheckerState === 'on',
+              fieldName = data.amsCheckerFieldname || "checker_".concat(MyAMS.core.generateId()),
+              fieldId = fieldName.replace(/\./g, '_'),
+              prefix = data.amsCheckerHiddenPrefix,
+              marker = data.amsCheckerMarker || false,
+              checkerMode = data.amsCheckerMode || 'hide',
+              checkedValue = data.amsCheckerValueOn || 'true',
+              uncheckedValue = data.amsCheckerValueOff || 'false',
+              props = {
+            legend: legend.text(),
+            fieldName: fieldName,
+            fieldId: fieldId,
+            value: data.amsCheckerValue || true,
+            checked: checked,
+            readonly: data.amsCheckerReadonly,
+            prefix: prefix,
+            state: data.amsCheckerState,
+            checkedValue: checkedValue,
+            uncheckedValue: uncheckedValue,
+            marker: marker
+          },
+              veto = {
+            veto: false
+          };
+          legend.trigger('before-init.ams.checker', [legend, props, veto]);
 
-      legend.html(CHECKER_TEMPLATE.render(props));
-      $('input', legend).change(function (evt) {
-        var input = $(evt.target),
-            checked = input.is(':checked'),
-            veto = {
-          veto: false
-        };
-        legend.trigger('before-switch.ams.checker', [legend, veto]);
-
-        if (veto.veto) {
-          input.prop('checked', !checked);
-          return;
-        }
-
-        MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler, document, legend, checked);
-
-        if (!data.amsCheckerCancelDefault) {
-          var _prefix = input.siblings('.prefix');
-
-          if (checkerMode === 'hide') {
-            if (checked) {
-              fieldset.removeClass('switched');
-
-              _prefix.val(checkedValue);
-
-              legend.trigger('opened.ams.checker', [legend]);
-            } else {
-              fieldset.addClass('switched');
-
-              _prefix.val(uncheckedValue);
-
-              legend.trigger('closed.ams.checker', [legend]);
-            }
-          } else {
-            fieldset.prop('disabled', !checked);
-
-            _prefix.val(checked ? checkedValue : uncheckedValue);
+          if (veto.veto) {
+            return;
           }
+
+          legend.html(CHECKER_TEMPLATE.render(props));
+          $('input', legend).change(function (evt) {
+            var input = $(evt.target),
+                checked = input.is(':checked'),
+                veto = {
+              veto: false
+            };
+            legend.trigger('before-switch.ams.checker', [legend, veto]);
+
+            if (veto.veto) {
+              input.prop('checked', !checked);
+              return;
+            }
+
+            MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler, document, legend, checked);
+
+            if (!data.amsCheckerCancelDefault) {
+              var _prefix = input.siblings('.prefix');
+
+              if (checkerMode === 'hide') {
+                if (checked) {
+                  fieldset.removeClass('switched');
+
+                  _prefix.val(checkedValue);
+
+                  legend.trigger('opened.ams.checker', [legend]);
+                } else {
+                  fieldset.addClass('switched');
+
+                  _prefix.val(uncheckedValue);
+
+                  legend.trigger('closed.ams.checker', [legend]);
+                }
+              } else {
+                fieldset.prop('disabled', !checked);
+
+                _prefix.val(checked ? checkedValue : uncheckedValue);
+              }
+            }
+          });
+          legend.closest('form').on('reset', function () {
+            var checker = $('.checker', legend);
+
+            if (checker.prop('checked') !== checked) {
+              checker.click();
+            }
+          });
+
+          if (!checked) {
+            if (checkerMode === 'hide') {
+              fieldset.addClass('switched');
+            } else {
+              fieldset.prop('disabled', true);
+            }
+          }
+
+          legend.trigger('after-init.ams.checker', [legend]);
+          legend.data('ams-checker', true);
         }
       });
-      legend.closest('form').on('reset', function () {
-        var checker = $('.checker', legend);
-
-        if (checker.prop('checked') !== checked) {
-          checker.click();
-        }
-      });
-
-      if (!checked) {
-        if (checkerMode === 'hide') {
-          fieldset.addClass('switched');
-        } else {
-          fieldset.prop('disabled', true);
-        }
-      }
-
-      legend.trigger('after-init.ams.checker', [legend]);
-      legend.data('ams-checker', true);
+      resolve(checkers);
+    } else {
+      resolve(null);
     }
   });
 }
@@ -8608,140 +8616,185 @@ function checker(element) {
  */
 
 function contextMenu(element) {
-  var menus = $('.context-menu', element);
+  return new Promise(function (resolve, reject) {
+    var menus = $('.context-menu', element);
 
-  if (menus.length > 0) {
-    MyAMS.require('menu').then(function () {
-      menus.each(function (idx, elt) {
-        var menu = $(elt),
-            data = menu.data(),
-            options = {
-          menuSelector: data.amsContextmenuSelector || data.amsMenuSelector
-        };
-        var settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
-        settings = MyAMS.core.executeFunctionByName(data.amsContextmenuInitCallback || data.amsInit, document, menu, settings) || settings;
-        var veto = {
-          veto: false
-        };
-        menu.trigger('before-init.ams.contextmenu', [menu, settings, veto]);
+    if (menus.length > 0) {
+      MyAMS.require('menu').then(function () {
+        menus.each(function (idx, elt) {
+          var menu = $(elt),
+              data = menu.data(),
+              options = {
+            menuSelector: data.amsContextmenuSelector || data.amsMenuSelector
+          };
+          var settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
+          settings = MyAMS.core.executeFunctionByName(data.amsContextmenuInitCallback || data.amsInit, document, menu, settings) || settings;
+          var veto = {
+            veto: false
+          };
+          menu.trigger('before-init.ams.contextmenu', [menu, settings, veto]);
 
-        if (veto.veto) {
-          return;
-        }
+          if (veto.veto) {
+            return;
+          }
 
-        var plugin = menu.contextMenu(settings);
-        MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
-        menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
+          var plugin = menu.contextMenu(settings);
+          MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
+          menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
+        });
+      }, reject).then(function () {
+        resolve(menus);
       });
-    });
-  }
+    } else {
+      resolve(null);
+    }
+  });
 }
 /**
- * JQuery-UI draggable plug-in
+ * JQuery-UI drag and drop plug-ins
  */
 
-function draggable(element) {
-  var draggables = $('.draggable', element);
+function dragdrop(element) {
+  return new Promise(function (resolve, reject) {
+    var dragitems = $('.draggable, .droppable, .sortable', element);
 
-  if (draggables.length > 0) {
-    MyAMS.ajax.check($.fn.draggable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
-      draggables.each(function (idx, elt) {
-        var draggable = $(elt),
-            data = draggable.data(),
-            defaultOptions = {
-          cursor: data.amsDraggableCursor || 'move',
-          containment: data.amsDraggableContainment,
-          handle: data.amsDraggableHandle,
-          connectToSortable: data.amsDraggableConnectSortable,
-          helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
-          start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
-          stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
-        };
-        var settings = $.extend({}, defaultOptions, data.amsDraggableOptions || data.amsOptions);
-        settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, draggable, settings) || settings;
-        var veto = {
-          veto: false
-        };
-        draggable.trigger('before-init.ams.draggable', [draggable, settings, veto]);
+    if (dragitems.length > 0) {
+      MyAMS.ajax.check($.fn.draggable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
+        dragitems.each(function (idx, elt) {
+          var item = $(elt),
+              data = item.data(); // draggable components
 
-        if (veto.veto) {
-          return;
-        }
+          if (item.hasClass('draggable')) {
+            var dragOptions = {
+              cursor: data.amsDraggableCursor || 'move',
+              containment: data.amsDraggableContainment,
+              handle: data.amsDraggableHandle,
+              connectToSortable: data.amsDraggableConnectSortable,
+              helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
+              start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
+              stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+            };
+            var settings = $.extend({}, dragOptions, data.amsDraggableOptions || data.amsOptions);
+            settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, item, settings) || settings;
+            var veto = {
+              veto: false
+            };
+            item.trigger('before-init.ams.draggable', [item, settings, veto]);
 
-        var plugin = draggable.draggable(settings);
-        draggable.disableSelection();
-        MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, draggable, plugin, settings);
-        draggable.trigger('after-init.ams.draggable', [draggable, plugin]);
+            if (veto.veto) {
+              return;
+            }
+
+            var plugin = item.draggable(settings);
+            item.disableSelection();
+            MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
+            item.trigger('after-init.ams.draggable', [item, plugin]);
+          } // droppable components
+
+
+          if (item.hasClass('droppable')) {
+            var dropOptions = {
+              accept: data.amsDroppableAccept || data.amsAccept,
+              drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
+            };
+
+            var _settings = $.extend({}, dropOptions, data.amsDroppableOptions || data.amsOptions);
+
+            _settings = MyAMS.core.executeFunctionByName(data.amsDroppableInitCallback || data.amsInit, document, item, _settings) || _settings;
+            var _veto = {
+              veto: false
+            };
+            item.trigger('before-init.ams.droppable', [item, _settings, _veto]);
+
+            if (_veto.veto) {
+              return;
+            }
+
+            var _plugin = item.droppable(_settings);
+
+            MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, item, _plugin, _settings);
+            item.trigger('after-init.ams.droppable', [item, _plugin]);
+          } // sortable components
+
+
+          if (item.hasClass('sortable')) {
+            var sortOptions = {
+              items: data.amsSortableItems,
+              handle: data.amsSortableHandle,
+              helper: MyAMS.core.getFunctionByName(data.amsSortableHelper) || data.amsSortableHelper,
+              connectWith: data.amsSortableConnectwith,
+              containment: data.amsSortableContainment,
+              placeholder: data.amsSortablePlaceholder,
+              start: MyAMS.core.getFunctionByName(data.amsSortableStart),
+              over: MyAMS.core.getFunctionByName(data.amsSortableOver),
+              stop: MyAMS.core.getFunctionByName(data.amsSortableStop)
+            };
+
+            var _settings2 = $.extend({}, sortOptions, data.amsSortableOptions || data.amsOptions);
+
+            _settings2 = MyAMS.core.executeFunctionByName(data.amsSortableInitCallback || data.amsInit, document, item, _settings2) || _settings2;
+            var _veto2 = {
+              veto: false
+            };
+            item.trigger('before-init.ams.sortable', [item, _settings2, _veto2]);
+
+            if (_veto2.veto) {
+              return;
+            }
+
+            var _plugin2 = item.sortable(_settings2);
+
+            item.disableSelection();
+            MyAMS.core.executeFunctionByName(data.amsSortableAfterInitCallback || data.amsAfterInit, document, item, _plugin2, _settings2);
+            item.trigger('after-init.ams.sortable', [item, _plugin2]);
+          }
+        });
+      }, reject).then(function () {
+        resolve(dragitems);
       });
-    });
-  }
-}
-/**
- * JQuery-ui droppable plug-in
- */
-
-function droppable(element) {
-  var droppables = $('.droppable', element);
-
-  if (droppables.length > 0) {
-    MyAMS.ajax.check($.fn.droppable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
-      droppables.each(function (idx, elt) {
-        var droppable = $(elt),
-            data = droppable.data(),
-            defaultOptions = {
-          accept: data.amsDroppableAccept,
-          drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
-        };
-        var settings = $.extend({}, defaultOptions, data.amsDroppableOptions || data.amsOptions);
-        settings = MyAMS.core.executeFunctionByName(data.amsDroppableInitCallback || data.amsInit, document, droppable, settings) || settings;
-        var veto = {
-          veto: false
-        };
-        droppable.trigger('before-init.ams.droppable', [droppable, settings, veto]);
-
-        if (veto.veto) {
-          return;
-        }
-
-        var plugin = droppable.droppable(settings);
-        MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, droppable, plugin, settings);
-        droppable.trigger('after-init.ams.droppable', [droppable, plugin]);
-      });
-    });
-  }
+    } else {
+      resolve(null);
+    }
+  });
 }
 /**
  * Bootstrap custom file input manager
  */
 
 function fileInput(element) {
-  var inputs = $('.custom-file-input', element);
+  return new Promise(function (resolve, reject) {
+    var inputs = $('.custom-file-input', element);
 
-  if (inputs.length > 0) {
-    MyAMS.require('ajax').then(function () {
-      MyAMS.ajax.check(window.bsCustomFileInput, "".concat(MyAMS.env.baseURL, "../ext/bs-custom-file-input").concat(MyAMS.env.extext, ".js")).then(function () {
-        inputs.each(function (idx, elt) {
-          var input = $(elt),
-              inputId = input.attr('id'),
-              inputSelector = inputId ? "#".concat(inputId) : input.attr('name'),
-              form = $(elt.form),
-              formId = form.attr('id'),
-              formSelector = formId ? "#".concat(formId) : form.attr('name'),
-              veto = {
-            veto: false
-          };
-          input.trigger('before-init.ams.fileinput', [input, veto]);
+    if (inputs.length > 0) {
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.check(window.bsCustomFileInput, "".concat(MyAMS.env.baseURL, "../ext/bs-custom-file-input").concat(MyAMS.env.extext, ".js")).then(function () {
+          inputs.each(function (idx, elt) {
+            var input = $(elt),
+                inputId = input.attr('id'),
+                inputSelector = inputId ? "#".concat(inputId) : input.attr('name'),
+                form = $(elt.form),
+                formId = form.attr('id'),
+                formSelector = formId ? "#".concat(formId) : form.attr('name'),
+                veto = {
+              veto: false
+            };
+            input.trigger('before-init.ams.fileinput', [input, veto]);
 
-          if (veto.veto) {
-            return;
-          }
+            if (veto.veto) {
+              return;
+            }
 
-          bsCustomFileInput.init(inputSelector, formSelector);
-          input.trigger('after-init.ams.fileinput', [input]);
+            bsCustomFileInput.init(inputSelector, formSelector);
+            input.trigger('after-init.ams.fileinput', [input]);
+          });
+        }, reject).then(function () {
+          resolve(inputs);
         });
-      });
-    });
-  }
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
 }
 /**
  * Select2 plug-in integration
@@ -8757,182 +8810,202 @@ var _select2Helpers = {
   }
 };
 function select2(element) {
-  var selects = $('.select2', element);
+  return new Promise(function (resolve, reject) {
+    var selects = $('.select2', element);
 
-  if (selects.length > 0) {
-    MyAMS.require('ajax', 'helpers').then(function () {
-      MyAMS.ajax.check($.fn.select2, "".concat(MyAMS.env.baseURL, "../ext/select2/select2").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
-        var required = [];
+    if (selects.length > 0) {
+      MyAMS.require('ajax', 'helpers').then(function () {
+        MyAMS.ajax.check($.fn.select2, "".concat(MyAMS.env.baseURL, "../ext/select2/select2").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+          var required = [];
 
-        if (firstLoad) {
-          required.push(MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "../ext/select2/i18n/").concat(MyAMS.i18n.language, ".js")));
-          required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/select2").concat(MyAMS.env.extext, ".css"), 'select2'));
-          required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/select2-bootstrap4").concat(MyAMS.env.extext, ".css"), 'select2_bs4'));
-        }
+          if (firstLoad) {
+            required.push(MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "../ext/select2/i18n/").concat(MyAMS.i18n.language, ".js")));
+            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/select2").concat(MyAMS.env.extext, ".css"), 'select2'));
+            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/select2-bootstrap4").concat(MyAMS.env.extext, ".css"), 'select2_bs4'));
+          }
 
-        $.when.apply($, required).then(function () {
-          selects.each(function (idx, elt) {
-            var select = $(elt),
-                data = select.data();
+          $.when.apply($, required).then(function () {
+            selects.each(function (idx, elt) {
+              var select = $(elt),
+                  data = select.data();
 
-            if (data.select2) {
-              return; // already initialized
-            }
+              if (data.select2) {
+                return; // already initialized
+              }
 
-            var defaultOptions = {
-              theme: data.amsSelect2Theme || 'bootstrap4',
-              language: MyAMS.i18n.language
-            };
-
-            if (select.hasClass('sortable')) {
-              // create hidden input for sortable selections
-              var hidden = $("<input type=\"hidden\" name=\"".concat(select.attr('name'), "\">")).insertAfter(select);
-              hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
-              select.data('select2-target', hidden).removeAttr('name');
-
-              defaultOptions.templateSelection = function (data) {
-                var elt = $(data.element);
-                elt.attr('data-content', elt.html());
-                return data.text;
+              var defaultOptions = {
+                theme: data.amsSelect2Theme || 'bootstrap4',
+                language: MyAMS.i18n.language
               };
-            }
 
-            var settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
-            settings = MyAMS.core.executeFunctionByName(data.amsSelect2InitCallback || data.amsInit, document, select, settings) || settings;
-            var veto = {
-              veto: false
-            };
-            select.trigger('before-init.ams.select2', [select, settings, veto]);
+              if (select.hasClass('sortable')) {
+                // create hidden input for sortable selections
+                var hidden = $("<input type=\"hidden\" name=\"".concat(select.attr('name'), "\">")).insertAfter(select);
+                hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
+                select.data('select2-target', hidden).removeAttr('name');
 
-            if (veto.veto) {
-              return;
-            }
-
-            var plugin = select.select2(settings);
-            select.on('select2:opening select2:selecting select2:unselecting select2:clearing', function (evt) {
-              if ($(evt.target).is(':disabled')) {
-                return false;
+                defaultOptions.templateSelection = function (data) {
+                  var elt = $(data.element);
+                  elt.attr('data-content', elt.html());
+                  return data.text;
+                };
               }
-            });
-            select.on('select2:opening', function (evt) {
-              var modal = $(evt.currentTarget).parents('.modal').first();
 
-              if (modal.exists()) {
-                var zIndex = parseInt(modal.css('z-index'));
-                plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
+              var settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
+              settings = MyAMS.core.executeFunctionByName(data.amsSelect2InitCallback || data.amsInit, document, select, settings) || settings;
+              var veto = {
+                veto: false
+              };
+              select.trigger('before-init.ams.select2', [select, settings, veto]);
+
+              if (veto.veto) {
+                return;
               }
-            });
 
-            if (select.hasClass('sortable')) {
-              MyAMS.ajax.check($.fn.sortable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
-                select.parent().find('ul.select2-selection__rendered').sortable({
-                  containment: 'parent',
-                  update: function update() {
-                    _select2Helpers.select2UpdateHiddenField(select);
-                  }
-                });
-                select.on('select2:select select2:unselect', function (evt) {
-                  var id = evt.params.data.id,
-                      target = $(evt.currentTarget),
-                      option = target.children("option[value=\"".concat(id, "\"]"));
-                  MyAMS.helpers.moveElementToParentEnd(option);
-                  target.trigger('change');
-
-                  _select2Helpers.select2UpdateHiddenField(target);
-                });
+              var plugin = select.select2(settings);
+              select.on('select2:opening select2:selecting select2:unselecting select2:clearing', function (evt) {
+                if ($(evt.target).is(':disabled')) {
+                  return false;
+                }
               });
-            }
+              select.on('select2:opening', function (evt) {
+                var modal = $(evt.currentTarget).parents('.modal').first();
 
-            MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
-            select.trigger('after-init.ams.select2', [select, plugin]);
+                if (modal.exists()) {
+                  var zIndex = parseInt(modal.css('z-index'));
+                  plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
+                }
+              });
+
+              if (select.hasClass('sortable')) {
+                MyAMS.ajax.check($.fn.sortable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
+                  select.parent().find('ul.select2-selection__rendered').sortable({
+                    containment: 'parent',
+                    update: function update() {
+                      _select2Helpers.select2UpdateHiddenField(select);
+                    }
+                  });
+                  select.on('select2:select select2:unselect', function (evt) {
+                    var id = evt.params.data.id,
+                        target = $(evt.currentTarget),
+                        option = target.children("option[value=\"".concat(id, "\"]"));
+                    MyAMS.helpers.moveElementToParentEnd(option);
+                    target.trigger('change');
+
+                    _select2Helpers.select2UpdateHiddenField(target);
+                  });
+                });
+              }
+
+              MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
+              select.trigger('after-init.ams.select2', [select, plugin]);
+            });
+          }, reject).then(function () {
+            resolve(selects);
           });
-        });
-      });
-    });
-  }
+        }, reject);
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
 }
 /**
  * SVG image plug-in
  */
 
 function svgPlugin(element) {
-  var svgs = $('.svg-container', element);
+  return new Promise(function (resolve, reject) {
+    var svgs = $('.svg-container', element);
 
-  if (svgs.length > 0) {
-    svgs.each(function (idx, elt) {
-      var container = $(elt),
-          svg = $('svg', container),
-          width = svg.attr('width'),
-          height = svg.attr('height');
+    if (svgs.length > 0) {
+      svgs.each(function (idx, elt) {
+        var container = $(elt),
+            svg = $('svg', container),
+            width = svg.attr('width'),
+            height = svg.attr('height');
 
-      if (width && height) {
-        elt.setAttribute('viewBox', "0 0 ".concat(Math.round(parseFloat(width)), " ").concat(Math.round(parseFloat(height))));
-      }
+        if (width && height) {
+          elt.setAttribute('viewBox', "0 0 ".concat(Math.round(parseFloat(width)), " ").concat(Math.round(parseFloat(height))));
+        }
 
-      svg.attr('width', '100%').attr('height', 'auto');
-    });
-  }
+        svg.attr('width', '100%').attr('height', 'auto');
+      });
+      resolve(svgs);
+    } else {
+      resolve(null);
+    }
+  });
 }
 /**
  * Fieldset switcher plug-in
  */
 
 function switcher(element) {
-  $('legend.switcher', element).each(function (idx, elt) {
-    var legend = $(elt),
-        fieldset = legend.parent('fieldset'),
-        data = legend.data(),
-        minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
-        plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
+  return new Promise(function (resolve, reject) {
+    var switchers = $('legend.switcher', element);
 
-    if (!data.amsSwitcher) {
-      var veto = {
-        veto: false
-      };
-      legend.trigger('before-init.ams.switcher', [legend, data, veto]);
+    if (switchers.length > 0) {
+      switchers.each(function (idx, elt) {
+        var legend = $(elt),
+            fieldset = legend.parent('fieldset'),
+            data = legend.data(),
+            minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
+            plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
 
-      if (veto.veto) {
-        return;
-      }
+        if (!data.amsSwitcher) {
+          var veto = {
+            veto: false
+          };
+          legend.trigger('before-init.ams.switcher', [legend, data, veto]);
 
-      $("<i class=\"fa fa-".concat(data.amsSwitcherState === 'open' ? minusClass : plusClass, " mr-2\"></i>")).prependTo(legend);
-      legend.on('click', function (evt) {
-        evt.preventDefault();
-        var veto = {};
-        legend.trigger('before-switch.ams.switcher', [legend, veto]);
-
-        if (veto.veto) {
-          return;
-        }
-
-        if (fieldset.hasClass('switched')) {
-          fieldset.removeClass('switched');
-          MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
-          legend.trigger('opened.ams.switcher', [legend]);
-          var id = legend.attr('id');
-
-          if (id) {
-            $("legend.switcher[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
-              var switcher = $(elt);
-
-              if (switcher.parents('fieldset').hasClass('switched')) {
-                switcher.click();
-              }
-            });
+          if (veto.veto) {
+            return;
           }
-        } else {
-          fieldset.addClass('switched');
-          MyAMS.core.switchIcon($('i', legend), minusClass, plusClass);
-          legend.trigger('closed.ams.switcher', [legend]);
+
+          $("<i class=\"fa fa-".concat(data.amsSwitcherState === 'open' ? minusClass : plusClass, " mr-2\"></i>")).prependTo(legend);
+          legend.on('click', function (evt) {
+            evt.preventDefault();
+            var veto = {};
+            legend.trigger('before-switch.ams.switcher', [legend, veto]);
+
+            if (veto.veto) {
+              return;
+            }
+
+            if (fieldset.hasClass('switched')) {
+              fieldset.removeClass('switched');
+              MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
+              legend.trigger('opened.ams.switcher', [legend]);
+              var id = legend.attr('id');
+
+              if (id) {
+                $("legend.switcher[data-ams-switcher-sync=\"".concat(id, "\"]"), fieldset).each(function (idx, elt) {
+                  var switcher = $(elt);
+
+                  if (switcher.parents('fieldset').hasClass('switched')) {
+                    switcher.click();
+                  }
+                });
+              }
+            } else {
+              fieldset.addClass('switched');
+              MyAMS.core.switchIcon($('i', legend), minusClass, plusClass);
+              legend.trigger('closed.ams.switcher', [legend]);
+            }
+          });
+
+          if (data.amsSwitcherState !== 'open') {
+            fieldset.addClass('switched');
+          }
+
+          legend.trigger('after-init.ams.switcher', [legend]);
+          legend.data('ams-switcher', true);
         }
       });
-
-      if (data.amsSwitcherState !== 'open') {
-        fieldset.addClass('switched');
-      }
-
-      legend.trigger('after-init.ams.switcher', [legend]);
-      legend.data('ams-switcher', true);
+      resolve(switchers);
+    } else {
+      resolve(null);
     }
   });
 }
@@ -8941,98 +9014,102 @@ function switcher(element) {
  */
 
 function validate(element) {
-  var forms = $('form:not([novalidate])', element);
+  return new Promise(function (resolve, reject) {
+    var forms = $('form:not([novalidate])', element);
 
-  if (forms.length > 0) {
-    MyAMS.require('ajax', 'i18n').then(function () {
-      MyAMS.ajax.check($.fn.validate, "".concat(MyAMS.env.baseURL, "../ext/validate/jquery-validate").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
-        if (firstLoad && MyAMS.i18n.language !== 'en') {
-          MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "../ext/validate/i18n/messages_").concat(MyAMS.i18n.language).concat(MyAMS.env.extext, ".js")).then(function () {});
-        }
-
-        forms.each(function (idx, elt) {
-          var form = $(elt),
-              data = form.data(),
-              dataOptions = {
-            ignore: null,
-            invalidHandler: MyAMS.core.getFunctionByName(data.amsValidateInvalidHandler) || function (evt, validator) {
-              // automatically display hidden fields with errors!
-              $('span.is-invalid', form).remove();
-              $('.is-invalid', form).removeClass('is-invalid');
-
-              var _iterator = _createForOfIteratorHelper(validator.errorList),
-                  _step;
-
-              try {
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  var error = _step.value;
-
-                  var _element = $(error.element),
-                      panels = _element.parents('.tab-pane'),
-                      fieldsets = _element.parents('fieldset.switched');
-
-                  fieldsets.each(function (idx, elt) {
-                    $('legend.switcher', elt).click();
-                  });
-                  panels.each(function (idx, elt) {
-                    var panel = $(elt),
-                        tabs = panel.parents('.tab-content').siblings('.nav-tabs');
-                    $("li:nth-child(".concat(panel.index() + 1, ")"), tabs).addClass('is-invalid');
-                    $('li.is-invalid:first a', tabs).click();
-                  });
-                }
-              } catch (err) {
-                _iterator.e(err);
-              } finally {
-                _iterator.f();
-              }
-            },
-            errorElement: data.amsValidateErrorElement || 'span',
-            errorClass: data.amsValidateErrorClass || 'is-invalid',
-            errorPlacement: MyAMS.core.getFunctionByName(data.amsvalidateErrorPlacement) || function (error, element) {
-              error.addClass('invalid-feedback');
-              element.closest('.form-widget').append(error);
-            },
-            submitHandler: MyAMS.core.getFunctionByName(data.amsValidateSubmitHandler) || (form.attr('data-async') !== undefined ? function () {
-              MyAMS.require('form').then(function () {
-                MyAMS.form.submit(form);
-              });
-            } : function () {
-              form.get(0).submit();
-            })
-          };
-          $('[data-ams-validate-rules]', form).each(function (idx, elt) {
-            if (idx === 0) {
-              dataOptions.rules = {};
-            }
-
-            dataOptions.rules[$(elt).attr('name')] = $(elt).data('ams-validate-rules');
-          });
-          $('[data-ams-validate-messages]', form).each(function (idx, elt) {
-            if (idx === 0) {
-              dataOptions.messages = {};
-            }
-
-            dataOptions.messages[$(elt).attr('name')] = $(elt).data('ams-validate-messages');
-          });
-          var settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
-          settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback || data.amsInit, document, form, settings) || settings;
-          var veto = {
-            veto: false
-          };
-          form.trigger('before-init.ams.validate', [form, settings, veto]);
-
-          if (veto.veto) {
-            return;
+    if (forms.length > 0) {
+      MyAMS.require('ajax', 'i18n').then(function () {
+        MyAMS.ajax.check($.fn.validate, "".concat(MyAMS.env.baseURL, "../ext/validate/jquery-validate").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+          if (firstLoad && MyAMS.i18n.language !== 'en') {
+            MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "../ext/validate/i18n/messages_").concat(MyAMS.i18n.language).concat(MyAMS.env.extext, ".js")).then(function () {});
           }
 
-          var plugin = form.validate(settings);
-          MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
-          form.trigger('after-init.ams.validate', [form, plugin]);
+          forms.each(function (idx, elt) {
+            var form = $(elt),
+                data = form.data(),
+                dataOptions = {
+              ignore: null,
+              invalidHandler: MyAMS.core.getFunctionByName(data.amsValidateInvalidHandler) || function (evt, validator) {
+                // automatically display hidden fields with errors!
+                $('span.is-invalid', form).remove();
+                $('.is-invalid', form).removeClass('is-invalid');
+
+                var _iterator = _createForOfIteratorHelper(validator.errorList),
+                    _step;
+
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    var error = _step.value;
+
+                    var _element = $(error.element),
+                        panels = _element.parents('.tab-pane'),
+                        fieldsets = _element.parents('fieldset.switched');
+
+                    fieldsets.each(function (idx, elt) {
+                      $('legend.switcher', elt).click();
+                    });
+                    panels.each(function (idx, elt) {
+                      var panel = $(elt),
+                          tabs = panel.parents('.tab-content').siblings('.nav-tabs');
+                      $("li:nth-child(".concat(panel.index() + 1, ")"), tabs).addClass('is-invalid');
+                      $('li.is-invalid:first a', tabs).click();
+                    });
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
+                }
+              },
+              errorElement: data.amsValidateErrorElement || 'span',
+              errorClass: data.amsValidateErrorClass || 'is-invalid',
+              errorPlacement: MyAMS.core.getFunctionByName(data.amsvalidateErrorPlacement) || function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-widget').append(error);
+              },
+              submitHandler: MyAMS.core.getFunctionByName(data.amsValidateSubmitHandler) || (form.attr('data-async') !== undefined ? function () {
+                MyAMS.require('form').then(function () {
+                  MyAMS.form.submit(form);
+                });
+              } : function () {
+                form.get(0).submit();
+              })
+            };
+            $('[data-ams-validate-rules]', form).each(function (idx, elt) {
+              if (idx === 0) {
+                dataOptions.rules = {};
+              }
+
+              dataOptions.rules[$(elt).attr('name')] = $(elt).data('ams-validate-rules');
+            });
+            $('[data-ams-validate-messages]', form).each(function (idx, elt) {
+              if (idx === 0) {
+                dataOptions.messages = {};
+              }
+
+              dataOptions.messages[$(elt).attr('name')] = $(elt).data('ams-validate-messages');
+            });
+            var settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
+            settings = MyAMS.core.executeFunctionByName(data.amsValidateInitCallback || data.amsInit, document, form, settings) || settings;
+            var veto = {
+              veto: false
+            };
+            form.trigger('before-init.ams.validate', [form, settings, veto]);
+
+            if (veto.veto) {
+              return;
+            }
+
+            var plugin = form.validate(settings);
+            MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
+            form.trigger('after-init.ams.validate', [form, plugin]);
+          });
+        }, reject).then(function () {
+          resolve(forms);
         });
-      });
-    });
-  }
+      }, reject);
+    }
+  });
 }
 /**
  * Global module initialization
@@ -9042,8 +9119,7 @@ if (window.MyAMS) {
   // register loaded plug-ins
   MyAMS.registry.register(checker, 'checker');
   MyAMS.registry.register(contextMenu, 'contextMenu');
-  MyAMS.registry.register(draggable, 'draggable');
-  MyAMS.registry.register(droppable, 'droppable');
+  MyAMS.registry.register(dragdrop, 'dragdrop');
   MyAMS.registry.register(fileInput, 'fileInput');
   MyAMS.registry.register(select2, 'select2');
   MyAMS.registry.register(svgPlugin, 'svg');

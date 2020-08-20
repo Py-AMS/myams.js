@@ -1,6 +1,6 @@
 <h1>MyAMS "drap &amp; drop" plug-ins</h1>
 
-<section data-ams-modules='{ "app": "resources/js/myams-app.js" }'>
+<section>
 	<p>MyAMS drag &amp; drop features are actually based on JQuery UI package. MyAMS is just a
 	thin wrapper around JQuery UI plug-ins, and their documentation is the best source of
 	information to know how they work.</p>
@@ -84,7 +84,8 @@
 			<td><code>helper</code></td>
 			<td>"original"</td>
 			<td>allows for a helper element to be used when dragging; can be set to
-			<code>clone</code> to drag a clone of the original element</td>
+			<code>clone</code> to drag a copy of the original element, or to a function which
+			will return a DOM element used for dragging</td>
 		</tr>
 		<tr>
 			<td><code>options</code></td>

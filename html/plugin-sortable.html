@@ -1,0 +1,99 @@
+<h1>MyAMS "sortable" plug-ins</h1>
+
+<section>
+	<p>MyAMS sortable features are also based on JQuery UI package. MyAMS is just a
+	thin wrapper around JQuery UI sortable plug-in, and his documentation is the best source of
+	information to know how it work.</p>
+	<p>A simple sortable element can be created like this:</p>
+<pre>	&lt;div class="parent clearfix"&gt;
+	  &lt;div class="sortable"&gt;
+	    &lt;div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center"&gt;1&lt;/div&gt;
+	    &lt;div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center"&gt;2&lt;/div&gt;
+	    &lt;div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center"&gt;3&lt;/div&gt;
+	    &lt;div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center"&gt;4&lt;/div&gt;
+	    &lt;div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center"&gt;5&lt;/div&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;
+</pre>
+	<div class="parent clearfix">
+		<div class="sortable"
+			 data-ams-sortable-containment="parent">
+			<div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center">1</div>
+			<div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center">2</div>
+			<div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center">3</div>
+			<div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center">4</div>
+			<div class="border mouse-move ml-3 mb-3 width-200px height-100px text-center">5</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h2>MyAMS <code>sortable</code> plug-in options</h2>
+	<p>These plug-in options are available as data attributes prefixed by
+	<code>data-ams-sortable-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>connectWith</code></td>
+			<td>false</td>
+			<td>selector of other sortable elements that the items from this list should be
+			connected to</td>
+		</tr>
+		<tr>
+			<td><code>containment</code></td>
+			<td>false</td>
+			<td>constrains dragging to the bounds of the element specified by this option; can be
+			a JQuery selector, a DOM element or a custom string ("parent", "document" or
+			"window")</td>
+		</tr>
+		<tr>
+			<td><code>handle</code></td>
+			<td>false</td>
+			<td>if specified, restricts sort start click to the specified element</td>
+		</tr>
+		<tr>
+			<td><code>helper</code></td>
+			<td>"original"</td>
+			<td>allows for a helper element to be used when dragging; can be set to
+			<code>clone</code> to drag a copy of the original element, or to a function which
+			will return a DOM element used for dragging</td>
+		</tr>
+		<tr>
+			<td><code>items</code></td>
+			<td>"&gt; *"</td>
+			<td>specifies which elements inside the sortable should be sortable</td>
+		</tr>
+		<tr>
+			<td><code>options</code></td>
+			<td>undefined</td>
+			<td>serialized JSON object containing additional sortable settings; see
+			<a href="https://api.jqueryui.com/sortable/" target="_blank">JQuery-UI sortable
+			documentation</a></td>
+		</tr>
+		<tr>
+			<td><code>over</code></td>
+			<td>undefined</td>
+			<td>name of an event handler triggered when a sortable item is moved over a
+			sortable list</td>
+		</tr>
+		<tr>
+			<td><code>placeholder</code></td>
+			<td>false</td>
+			<td>class name that is applied to the otherwise white space during dragging</td>
+		</tr>
+		<tr>
+			<td><code>start</code></td>
+			<td>undefined</td>
+			<td>name of an event handler triggered when sorting starts</td>
+		</tr>
+		<tr>
+			<td><code>stop</code></td>
+			<td>undefined</td>
+			<td>name of an event handler triggered when sorting stops</td>
+		</tr>
+	</table>
+</section>
