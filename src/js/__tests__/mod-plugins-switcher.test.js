@@ -6,7 +6,7 @@
 import $ from "jquery";
 
 import MyAMS, { init } from "../ext-base";
-import { switcher } from "../mod-plugins";
+import {checker, switcher} from "../mod-plugins";
 
 import myams_require from "../ext-require";
 
@@ -17,6 +17,34 @@ if (!MyAMS.plugins) {
 	MyAMS.config.modules.push('plugins');
 }
 MyAMS.require = myams_require;
+
+
+test("Test MyAMS.plugins without switcher", () => {
+
+	document.body.innerHTML = `<div>
+		<form>
+			<fieldset>
+				<legend>Legend</legend>
+				<div class="panel"></div>
+			</fieldset>
+		</form>
+	</div>`;
+
+	const
+		body = $(document.body),
+		form = $('form', body),
+		fieldset = $('fieldset', form),
+		legend = $('legend', fieldset);
+
+	legend.on('after-init.ams.switcher', (evt, legend) => {
+		legend.data('after-init', true);
+	});
+
+	return switcher(body).then((result) => {
+		expect(result).toBeNull();
+		expect(legend.data('after-init')).toBeUndefined();
+	});
+});
 
 
 test("Test MyAMS.plugins basic switcher", () => {
@@ -37,21 +65,23 @@ test("Test MyAMS.plugins basic switcher", () => {
 		legend.data('after-init', true);
 	});
 
-	switcher(body);
 	switcher(body);  // test multiple inits
+	return switcher(body).then((result) => {
 
-	expect(legend.data('after-init')).toBe(true);
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect(result.length).toBe(1);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(false);
-	expect($('i.fa-minus', legend).exists()).toBe(true);
+		expect(legend.data('after-init')).toBe(true);
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect($('i.fa-plus', legend).exists()).toBe(true);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect($('i.fa-minus', legend).exists()).toBe(false);
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(false);
+		expect($('i.fa-minus', legend).exists()).toBe(true);
 
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect($('i.fa-minus', legend).exists()).toBe(false);
+	});
 });
 
 
@@ -73,10 +103,12 @@ test("Test MyAMS.plugins basic switcher with global veto", () => {
 		veto.veto = true;
 	});
 
-	switcher(body);
+	return switcher(body).then((result) => {
 
-	expect($('i.fa-plus', legend).exists()).toBe(false);
+		expect(result.length).toBe(1);
 
+		expect($('i.fa-plus', legend).exists()).toBe(false);
+	});
 });
 
 
@@ -98,14 +130,16 @@ test("Test MyAMS.plugins basic switcher with veto on click", () => {
 		veto.veto = true;
 	});
 
-	switcher(body);
+	return switcher(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect(result.length).toBe(1);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(true);
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect($('i.fa-plus', legend).exists()).toBe(true);
 
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(true);
+	});
 });
 
 
@@ -124,15 +158,17 @@ test("Test MyAMS.plugins basic switcher with pre-switched state", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	switcher(body);
+	return switcher(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(false);
-	expect($('i.fa-minus', legend).exists()).toBe(true);
+		expect(result.length).toBe(1);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect(fieldset.hasClass('switched')).toBe(false);
+		expect($('i.fa-minus', legend).exists()).toBe(true);
 
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect($('i.fa-plus', legend).exists()).toBe(true);
+	});
 });
 
 
@@ -162,20 +198,22 @@ test("Test MyAMS.plugins synced switchers", () => {
 		inner1 = $('#inner1', fieldset),
 		inner2 = $('#inner2', fieldset);
 
-	switcher(body);
+	return switcher(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect(inner1.hasClass('switched')).toBe(true);
-	expect(inner2.hasClass('switched')).toBe(true);
+		expect(result.length).toBe(3);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(false);
-	expect(inner1.hasClass('switched')).toBe(false);
-	expect(inner2.hasClass('switched')).toBe(false);
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect(inner1.hasClass('switched')).toBe(true);
+		expect(inner2.hasClass('switched')).toBe(true);
 
-	legend.trigger('click');
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect(inner1.hasClass('switched')).toBe(false);
-	expect(inner2.hasClass('switched')).toBe(false);
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(false);
+		expect(inner1.hasClass('switched')).toBe(false);
+		expect(inner2.hasClass('switched')).toBe(false);
 
+		legend.trigger('click');
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect(inner1.hasClass('switched')).toBe(false);
+		expect(inner2.hasClass('switched')).toBe(false);
+	});
 });

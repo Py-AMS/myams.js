@@ -19,6 +19,34 @@ if (!MyAMS.plugins) {
 MyAMS.require = myams_require;
 
 
+test("Test MyAMS.plugins without checker", () => {
+
+	document.body.innerHTML = `<div>
+		<form>
+			<fieldset>
+				<legend>Legend</legend>
+				<div class="panel"></div>
+			</fieldset>
+		</form>
+	</div>`;
+
+	const
+		body = $(document.body),
+		form = $('form', body),
+		fieldset = $('fieldset', form),
+		legend = $('legend', fieldset);
+
+	legend.on('after-init.ams.checker', (evt, legend) => {
+		legend.data('after-init', true);
+	});
+
+	return checker(body).then((result) => {
+		expect(result).toBeNull();
+		expect(legend.data('after-init')).toBeUndefined();
+	});
+});
+
+
 test("Test MyAMS.plugins checker plug-in", () => {
 
 	document.body.innerHTML = `<div>
@@ -40,40 +68,42 @@ test("Test MyAMS.plugins checker plug-in", () => {
 		legend.data('after-init', true);
 	});
 
-	checker(body);
-	checker(body);  // test multiple inits
+	checker(body);  // test multiple initializations
+	return checker(body).then((result) => {
 
-	expect(legend.data('after-init')).toBe(true);
-	expect(fieldset.hasClass('switched')).toBe(true);
+		expect(result.length).toBe(1);
 
-	const checkbox = $('input[type="checkbox"]', legend);
-	expect(checkbox.exists()).toBe(true);
-	expect(checkbox.hasClass('checker')).toBe(true);
-	expect(checkbox.attr('name').startsWith('checker_')).toBe(true);
-	expect(checkbox.val()).toBe('true');
+		expect(legend.data('after-init')).toBe(true);
+		expect(fieldset.hasClass('switched')).toBe(true);
 
-	const prefix = $('input.prefix', legend);
-	expect(prefix.exists()).toBe(false);
+		const checkbox = $('input[type="checkbox"]', legend);
+		expect(checkbox.exists()).toBe(true);
+		expect(checkbox.hasClass('checker')).toBe(true);
+		expect(checkbox.attr('name').startsWith('checker_')).toBe(true);
+		expect(checkbox.val()).toBe('true');
 
-	const marker = $('input.marker', legend);
-	expect(marker.exists()).toBe(false);
+		const prefix = $('input.prefix', legend);
+		expect(prefix.exists()).toBe(false);
 
-	const label = $('label', legend);
-	expect(label.exists()).toBe(true);
-	expect(label.attr('for')).toBe(checkbox.attr('id'));
+		const marker = $('input.marker', legend);
+		expect(marker.exists()).toBe(false);
 
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(false);
+		const label = $('label', legend);
+		expect(label.exists()).toBe(true);
+		expect(label.attr('for')).toBe(checkbox.attr('id'));
 
-	checkbox.prop('checked', false).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(true);
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(false);
 
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(false);
+		checkbox.prop('checked', false).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(true);
 
-	form.trigger('reset');
-	expect(fieldset.hasClass('switched')).toBe(true);
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(false);
 
+		form.trigger('reset');
+		expect(fieldset.hasClass('switched')).toBe(true);
+	});
 });
 
 
@@ -94,18 +124,19 @@ test("Test MyAMS.plugins checker plug-in in disabled mode", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	checker(body);
+	return checker(body).then((result) => {
 
-	expect(fieldset.prop('disabled')).toBe(true);
+		expect(result.length).toBe(1);
+		expect(fieldset.prop('disabled')).toBe(true);
 
-	const checkbox = $('input[type="checkbox"]', legend);
+		const checkbox = $('input[type="checkbox"]', legend);
 
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.prop('disabled')).toBe(false);
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.prop('disabled')).toBe(false);
 
-	checkbox.prop('checked', false).trigger('change');
-	expect(fieldset.prop('disabled')).toBe(true);
-
+		checkbox.prop('checked', false).trigger('change');
+		expect(fieldset.prop('disabled')).toBe(true);
+	});
 });
 
 
@@ -127,33 +158,35 @@ test("Test MyAMS.plugins checker plug-in with prefix and field name", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	checker(body);
+	return checker(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(true);
+		expect(result.length).toBe(1);
 
-	const checkbox = $('input[type="checkbox"]', legend);
-	expect(checkbox.exists()).toBe(true);
-	expect(checkbox.hasClass('checker')).toBe(true);
-	expect(checkbox.attr('name')).toBe('form.widgets.myfield');
-	expect(checkbox.val()).toBe('true');
+		expect(fieldset.hasClass('switched')).toBe(true);
 
-	const prefix = $('input.prefix', legend);
-	expect(prefix.exists()).toBe(true);
-	expect(prefix.attr('id')).toBe('prefix_form.widgets.myfield_prefix');
-	expect(prefix.attr('name')).toBe('prefix_form.widgets.myfield');
-	expect(prefix.val()).toBe('false');
+		const checkbox = $('input[type="checkbox"]', legend);
+		expect(checkbox.exists()).toBe(true);
+		expect(checkbox.hasClass('checker')).toBe(true);
+		expect(checkbox.attr('name')).toBe('form.widgets.myfield');
+		expect(checkbox.val()).toBe('true');
 
-	const marker = $('input.marker', legend);
-	expect(marker.exists()).toBe(false);
+		const prefix = $('input.prefix', legend);
+		expect(prefix.exists()).toBe(true);
+		expect(prefix.attr('id')).toBe('prefix_form.widgets.myfield_prefix');
+		expect(prefix.attr('name')).toBe('prefix_form.widgets.myfield');
+		expect(prefix.val()).toBe('false');
 
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.prop('disabled')).toBe(false);
-	expect(prefix.val()).toBe('true');
+		const marker = $('input.marker', legend);
+		expect(marker.exists()).toBe(false);
 
-	checkbox.prop('checked', false).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(true);
-	expect(prefix.val()).toBe('false');
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.prop('disabled')).toBe(false);
+		expect(prefix.val()).toBe('true');
 
+		checkbox.prop('checked', false).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(true);
+		expect(prefix.val()).toBe('false');
+	});
 });
 
 
@@ -175,29 +208,31 @@ test("Test MyAMS.plugins checker plug-in with marker", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	checker(body);
+	return checker(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(true);
+		expect(result.length).toBe(1);
 
-	const checkbox = $('input[type="checkbox"]', legend);
-	expect(checkbox.exists()).toBe(true);
-	expect(checkbox.hasClass('checker')).toBe(true);
-	expect(checkbox.attr('name')).toBe('form.widgets.myfield');
-	expect(checkbox.val()).toBe('true');
+		expect(fieldset.hasClass('switched')).toBe(true);
 
-	const prefix = $('input.prefix', legend);
-	expect(prefix.exists()).toBe(false);
+		const checkbox = $('input[type="checkbox"]', legend);
+		expect(checkbox.exists()).toBe(true);
+		expect(checkbox.hasClass('checker')).toBe(true);
+		expect(checkbox.attr('name')).toBe('form.widgets.myfield');
+		expect(checkbox.val()).toBe('true');
 
-	const marker = $('input.marker', legend);
-	expect(marker.exists()).toBe(true);
-	expect(marker.attr('name')).toBe('form.widgets.myfield_marker');
+		const prefix = $('input.prefix', legend);
+		expect(prefix.exists()).toBe(false);
 
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.prop('disabled')).toBe(false);
+		const marker = $('input.marker', legend);
+		expect(marker.exists()).toBe(true);
+		expect(marker.attr('name')).toBe('form.widgets.myfield_marker');
 
-	checkbox.prop('checked', false).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(true);
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.prop('disabled')).toBe(false);
 
+		checkbox.prop('checked', false).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(true);
+	});
 });
 
 
@@ -221,11 +256,13 @@ test("Test MyAMS.plugins checker plug-in with global veto", () => {
 		veto.veto = true;
 	});
 
-	checker(body);
+	return checker(body).then((result) => {
 
-	const checkbox = $('input[type="checkbox"]', legend);
-	expect(checkbox.exists()).toBe(false);
+		expect(result.length).toBe(1);
 
+		const checkbox = $('input[type="checkbox"]', legend);
+		expect(checkbox.exists()).toBe(false);
+	});
 });
 
 
@@ -245,17 +282,20 @@ test("Test MyAMS.plugins checker plug-in with veto on click", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	checker(body);
 	legend.on('before-switch.ams.checker', (evt, legend, veto) => {
 		veto.veto = true;
 	});
 
-	expect(fieldset.hasClass('switched')).toBe(true);
+	return checker(body).then((result) => {
 
-	const checkbox = $('input[type="checkbox"]', legend);
-	checkbox.prop('checked', true).trigger('change');
-	expect(fieldset.hasClass('switched')).toBe(true);
+		expect(result.length).toBe(1);
 
+		expect(fieldset.hasClass('switched')).toBe(true);
+
+		const checkbox = $('input[type="checkbox"]', legend);
+		checkbox.prop('checked', true).trigger('change');
+		expect(fieldset.hasClass('switched')).toBe(true);
+	});
 });
 
 
@@ -276,8 +316,10 @@ test("Test MyAMS.plugins checker plug-in with pre-checked state", () => {
 		fieldset = $('fieldset', body),
 		legend = $('legend', fieldset);
 
-	checker(body);
+	return checker(body).then((result) => {
 
-	expect(fieldset.hasClass('switched')).toBe(false);
+		expect(result.length).toBe(1);
 
+		expect(fieldset.hasClass('switched')).toBe(false);
+	});
 });
