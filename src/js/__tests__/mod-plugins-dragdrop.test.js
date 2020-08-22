@@ -46,7 +46,8 @@ describe("MyAMS.plugins.dragdrop unit tests", () => {
 
 	let oldOpen = null,
 		oldAlert = null,
-		oldLocation = null;
+		oldLocation = null,
+		oldAjax = null;
 
 	beforeAll(() => {
 		oldOpen = window.open;
@@ -63,13 +64,33 @@ describe("MyAMS.plugins.dragdrop unit tests", () => {
 			hash: oldLocation.hash,
 			reload: jest.fn()
 		}
+
+		oldAjax = $.ajax;
+		$.ajax = jest.fn().mockImplementation((settings) => {
+			return Promise.resolve({settings: settings, status: 'success'});
+		});
 	});
 
 	afterAll(() => {
 		window.open = oldOpen;
 		window.alert = oldAlert;
 		window.location = oldLocation;
+		$.ajax = oldAjax;
 	});
+
+
+	// Test MyAMS.plugins without any draggable/droppable/sortable
+	test("Test MyAMS.plugins without draggable", () => {
+
+		document.body.innerHTML = `<div></div>`;
+
+		const body = $(document.body);
+
+		return dragdrop(body).then((result) => {
+			expect(result).toBeNull();
+		});
+	});
+
 
 	// Test MyAMS.plugins draggables
 	test("Test MyAMS.plugins draggable plug-in", () => {
@@ -82,14 +103,37 @@ describe("MyAMS.plugins.dragdrop unit tests", () => {
 			body = $(document.body),
 			dragitem = $('.draggable', body);
 
-		dragitem.on('after-init.ams.draggable', (evt, legend) => {
+		dragitem.on('after-init.ams.draggable', (evt, item) => {
 			dragitem.data('after-init', true);
 		});
 
-		return dragdrop(body).then(() => {
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
 			expect(dragitem.data('after-init')).toBe(true);
 		});
+	});
 
+	test("Test MyAMS.plugins draggable plug-in with initialization veto", () => {
+
+		document.body.innerHTML = `<div>
+			<div class="draggable"></div>
+		</div>`;
+
+		const
+			body = $(document.body),
+			dragitem = $('.draggable', body);
+
+		dragitem.on('before-init.ams.draggable', (evt, item, settings, veto) => {
+			veto.veto = true;
+		});
+		dragitem.on('after-init.ams.draggable', (evt, item) => {
+			dragitem.data('after-init', true);
+		});
+
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
+			expect(dragitem.data('after-init')).toBeUndefined();
+		});
 	});
 
 
@@ -104,14 +148,37 @@ describe("MyAMS.plugins.dragdrop unit tests", () => {
 			body = $(document.body),
 			dropitem = $('.droppable', body);
 
-		dropitem.on('after-init.ams.droppable', (evt, legend) => {
+		dropitem.on('after-init.ams.droppable', (evt, item) => {
 			dropitem.data('after-init', true);
 		});
 
-		return dragdrop(body).then(() => {
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
 			expect(dropitem.data('after-init')).toBe(true);
 		});
+	});
 
+	test("Test MyAMS.plugins droppable plug-in with initialization veto", () => {
+
+		document.body.innerHTML = `<div>
+			<div class="droppable"></div>
+		</div>`;
+
+		const
+			body = $(document.body),
+			dropitem = $('.droppable', body);
+
+		dropitem.on('before-init.ams.droppable', (evt, item, settings, veto) => {
+			veto.veto = true;
+		});
+		dropitem.on('after-init.ams.droppable', (evt, item) => {
+			dropitem.data('after-init', true);
+		});
+
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
+			expect(dropitem.data('after-init')).toBeUndefined();
+		});
 	});
 
 
@@ -119,21 +186,80 @@ describe("MyAMS.plugins.dragdrop unit tests", () => {
 	test("Test MyAMS.plugins sortable plug-in", () => {
 
 		document.body.innerHTML = `<div>
-			<div class="sortable"></div>
+			<div class="sortable">
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>
+			</div>
 		</div>`;
 
 		const
 			body = $(document.body),
 			sortitem = $('.sortable', body);
 
-		sortitem.on('after-init.ams.sortable', (evt, legend) => {
+		sortitem.on('after-init.ams.sortable', (evt, item) => {
 			sortitem.data('after-init', true);
 		});
 
-		return dragdrop(body).then(() => {
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
 			expect(sortitem.data('after-init')).toBe(true);
 		});
-
 	});
 
+	test("Test MyAMS.plugins sortable plug-in with initialization veto", () => {
+
+		document.body.innerHTML = `<div>
+			<div class="sortable">
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>
+			</div>
+		</div>`;
+
+		const
+			body = $(document.body),
+			sortitem = $('.sortable', body);
+
+		sortitem.on('before-init.ams.sortable', (evt, item, settings, veto) => {
+			veto.veto = true;
+		});
+		sortitem.on('after-init.ams.sortable', (evt, item) => {
+			sortitem.data('after-init', true);
+		});
+
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(1);
+			expect(sortitem.data('after-init')).toBeUndefined();
+		});
+	});
+
+
+	// Test MyAMS.plugins draggable with droppable
+	test("Test MyAMS.plugins draggable with droppable", () => {
+
+		document.body.innerHTML = `<div>
+			<div class="draggable"></div>
+			<div class="droppable"
+				 data-ams-droppable-accept=".draggable"></div>
+		</div>`;
+
+		const
+			body = $(document.body),
+			dragitem = $('.draggable', body),
+			dropitem = $('.droppable', body);
+
+		dragitem.on('after-init.ams.draggable', (evt, item) => {
+			dragitem.data('after-init', true);
+		});
+		dropitem.on('after-init.ams.droppable', (evt, item) => {
+			dropitem.data('after-init', true);
+		});
+
+		return dragdrop(body).then((result) => {
+			expect(result.length).toBe(2);
+			expect(dragitem.data('after-init')).toBe(true);
+			expect(dropitem.data('after-init')).toBe(true);
+		});
+	});
 });
