@@ -77,7 +77,21 @@
 	<code>MyAMS.registry.register</code> function, with arguments which are the plug-in callable,
 	and the name given to the plug-in; for example:</p>
 	<pre>	function myplugin(element) {
-	  // plug-in code...
+	  return new Promise((resolve, reject) => {
+	    try {
+	      const childs = $('.myclass', element);
+	      if (childs.length > 0) {
+	        childs.each((idx, elt) => {
+	          // plug-in code...
+	        });
+	        resolve(childs);
+	      } else {
+	        resolve(null);
+	      }
+	    } catch {
+	      reject();
+	    }
+	  });
 	}
 
 	MyAMS.registry.register(myplugin, 'My plug-in');
