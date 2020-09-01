@@ -11,6 +11,9 @@ cache:
         - eggs/
         - parts/
 
+variables:
+    GIT_DEPTH: 0
+
 before_script:
     - /bin/ping -W 1 -c 1 172.17.0.1 && export http_proxy=http://172.17.0.1:3128/
     - /bin/ping -W 1 -c 1 172.17.0.1 && export HTTP_PROXY=http://172.17.0.1:3128/
