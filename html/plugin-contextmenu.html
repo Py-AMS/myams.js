@@ -1,0 +1,58 @@
+<h1>MyAMS "context menu" plug-in</h1>
+
+<section>
+	<p>MyAMS "context menu" plug-in is based on standard Bootstrap dropdown menu; it allows
+	to assign a contextual menu, available via a right mouse button click, to any element.</p>
+	<p>Creating a context menu is very simple:</p>
+<pre>
+	&lt;div class="context-menu"
+	   data-ams-contextmenu-selector="#myDropdownMenu"&gt;
+	  Element with context menu
+	&lt;/div&gt;
+	&lt;div class="dropdown-menu" id="myDropdownMenu"&gt;
+	  &lt;a class="dropdown-item" href="#"&gt;First menu option&lt;/a&gt;
+	  &lt;a class="dropdown-item" href="#"&gt;Second menu option&lt;/a&gt;
+	  &lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+	  &lt;a class="dropdown-item" href="#"&gt;Third menu option&lt;/a&gt;
+	&lt;/div&gt;
+</pre>
+	<div class="float-left border border-danger p-3 m-3 context-menu"
+		 data-ams-contextmenu-selector="#dropdownMenu">
+		Element with context menu (right-click to display!)
+	</div>
+	<div class="clearfix"></div>
+	<div class="dropdown-menu" id="dropdownMenu">
+		<a class="dropdown-item" href="#core.html">MyAMS core</a>
+		<a class="dropdown-item" href="#modules.html">MyAMS modules</a>
+		<div class="dropdown-divider"></div>
+		<a class="dropdown-item" href="#registry.html">MyAMS components registry</a>
+	</div>
+
+	<p>Menu options are handled as usual, see <a href="#navigation.html">Navigation</a> to
+		get more information.</p>
+</section>
+
+<section>
+	<h2>MyAMS <code>contextMenu</code> plug-in options</h2>
+	<p>This plug-in options are available as data attributes prefixed by
+		<code>data-ams-contextmenu-</code> or <code>data-ams-menu-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>selector</code></td>
+			<td>null</td>
+			<td>JQuery selector of associated dropdown menu</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<p>Please note that context menu position should be automatic, based on click event
+	position and browser window size.</p>
+	<p>You can also get access to native browser's context menu by pressing the
+	<code>&lt;ctrl&gt;</code> key while clicking on the right mouse button.</p>
+</section>

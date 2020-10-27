@@ -341,6 +341,11 @@
 						"icon": "fa fa-table"
 					},
 					{
+						"label": "Context menus",
+						"href": "#plugin-contextmenu.html",
+						"icon": "fa fa-mouse-pointer"
+					},
+					{
 						"label": ""
 					},
 					{
