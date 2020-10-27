@@ -594,7 +594,7 @@ export function validate(element) {
 								),
 								errorElement: data.amsValidateErrorElement || 'span',
 								errorClass: data.amsValidateErrorClass || 'is-invalid',
-								errorPlacement: MyAMS.core.getFunctionByName(data.amsvalidateErrorPlacement) ||
+								errorPlacement: MyAMS.core.getFunctionByName(data.amsValidateErrorPlacement) ||
 									((error, element) => {
 										error.addClass('invalid-feedback');
 										element.closest('.form-widget').append(error);
