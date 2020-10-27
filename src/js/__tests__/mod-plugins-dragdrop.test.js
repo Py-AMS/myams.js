@@ -18,16 +18,29 @@ require("jquery-ui/ui/widgets/sortable");
 
 import MyAMS, { init } from "../ext-base";
 import { ajax } from "../mod-ajax";
+import { alert } from "../mod-alert";
 import { i18n } from "../mod-i18n";
 
 import { dragdrop } from "../mod-plugins";
 
 import myams_require from "../ext-require";
 
+const bs = require("bootstrap");
+
+// Bootstrap toasts are required...
+$.fn.toast = bs.Toast._jQueryInterface;
+$.fn.toast.Constructor = bs.Toast;
+
+
+init($);
 
 if (!MyAMS.ajax) {
 	MyAMS.ajax = ajax;
 	MyAMS.config.modules.push('ajax');
+}
+if (!MyAMS.alert) {
+	MyAMS.alert = alert;
+	MyAMS.config.modules.push('alert');
 }
 if (!MyAMS.i18n) {
 	MyAMS.i18n = i18n;
@@ -37,9 +50,6 @@ if (!MyAMS.plugins) {
 	MyAMS.config.modules.push('plugins');
 }
 MyAMS.require = myams_require;
-
-
-init($);
 
 
 describe("MyAMS.plugins.dragdrop unit tests", () => {
