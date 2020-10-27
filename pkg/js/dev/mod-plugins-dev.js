@@ -641,7 +641,7 @@
                 },
                 errorElement: data.amsValidateErrorElement || 'span',
                 errorClass: data.amsValidateErrorClass || 'is-invalid',
-                errorPlacement: MyAMS.core.getFunctionByName(data.amsvalidateErrorPlacement) || function (error, element) {
+                errorPlacement: MyAMS.core.getFunctionByName(data.amsValidateErrorPlacement) || function (error, element) {
                   error.addClass('invalid-feedback');
                   element.closest('.form-widget').append(error);
                 },
