@@ -14,8 +14,13 @@
   }
 
   // Groups
-  .form-group:last-child {
-    margin-bottom: 0.25rem;
+  .form-group {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+    &:last-child {
+      margin-bottom: 0.25rem;
+    }
   }
 
   // Labels
