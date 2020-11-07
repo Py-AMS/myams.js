@@ -651,37 +651,42 @@
    */
 
   _exports.ajax = ajax;
-  ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.extext, ".js")).then(function () {
-    var _xhr = $.ajaxSettings.xhr;
-    $.ajaxSetup({
-      beforeSend: function beforeSend(request, options) {
-        if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
-          if (window.Cookies !== undefined) {
-            var token = Cookies.get(MyAMS.config.csrfCookieName);
 
-            if (token) {
-              request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+  if (typeof jest === 'undefined') {
+    // don't check cookies extension in test mode!
+    ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.extext, ".js")).then(function () {
+      var _xhr = $.ajaxSettings.xhr;
+      $.ajaxSetup({
+        beforeSend: function beforeSend(request, options) {
+          if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
+            if (window.Cookies !== undefined) {
+              var token = Cookies.get(MyAMS.config.csrfCookieName);
+
+              if (token) {
+                request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+              }
             }
           }
-        }
-      },
-      progress: ajax.progress,
-      progressUpload: ajax.progress,
-      xhr: function xhr() {
-        var request = _xhr();
+        },
+        progress: ajax.progress,
+        progressUpload: ajax.progress,
+        xhr: function xhr() {
+          var request = _xhr();
 
-        if (request && typeof request.addEventListener === 'function') {
-          if (ajax.progress) {
-            request.addEventListener('progress', function (evt) {
-              MyAMS.ajax.progress(evt);
-            }, false);
+          if (request && typeof request.addEventListener === 'function') {
+            if (ajax.progress) {
+              request.addEventListener('progress', function (evt) {
+                MyAMS.ajax.progress(evt);
+              }, false);
+            }
           }
-        }
 
-        return request;
-      }
+          return request;
+        }
+      });
     });
-  });
+  }
+
   $(document).ajaxStart(ajax.start);
   $(document).ajaxStop(ajax.stop);
   $(document).ajaxError(ajax.error);
