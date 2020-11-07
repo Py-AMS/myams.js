@@ -37,6 +37,16 @@
     margin: 0;
     padding: 1px 5px;
     width: 100%; }
+    .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered.ui-sortable .select2-selection__choice {
+      position: relative;
+      padding-left: 18px; }
+      .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered.ui-sortable .select2-selection__choice::before {
+        position: absolute;
+        content: '\f338';
+        left: 0.5em;
+        font-family: "Font Awesome 5 Free";
+        font-size: 93%;
+        font-weight: 900; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
     color: #f8f9fa;
     background-color: #3886c9;
