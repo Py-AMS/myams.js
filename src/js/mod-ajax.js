@@ -569,36 +569,38 @@ export const ajax = {
 /**
  * AJAX events callbacks
  */
-ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`)
-	.then(() => {
-		const xhr = $.ajaxSettings.xhr;
-		$.ajaxSetup({
-			beforeSend: (request, options) => {
-				if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
-					if (window.Cookies !== undefined) {
-						const token = Cookies.get(MyAMS.config.csrfCookieName);
-						if (token) {
-							request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+if (typeof jest === 'undefined') {
+	// don't check cookies extension in test mode!
+	ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`)
+		.then(() => {
+			const xhr = $.ajaxSettings.xhr;
+			$.ajaxSetup({
+				beforeSend: (request, options) => {
+					if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
+						if (window.Cookies !== undefined) {
+							const token = Cookies.get(MyAMS.config.csrfCookieName);
+							if (token) {
+								request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
+							}
 						}
 					}
-				}
-			},
-			progress: ajax.progress,
-			progressUpload: ajax.progress,
-			xhr: function() {
-				const request = xhr();
-				if (request && (typeof request.addEventListener === 'function')) {
-					if (ajax.progress) {
-						request.addEventListener('progress', (evt) => {
-							MyAMS.ajax.progress(evt);
-						}, false);
+				},
+				progress: ajax.progress,
+				progressUpload: ajax.progress,
+				xhr: function() {
+					const request = xhr();
+					if (request && (typeof request.addEventListener === 'function')) {
+						if (ajax.progress) {
+							request.addEventListener('progress', (evt) => {
+								MyAMS.ajax.progress(evt);
+							}, false);
+						}
 					}
+					return request;
 				}
-				return request;
-			}
+			});
 		});
-	});
-
+}
 
 $(document).ajaxStart(ajax.start);
 $(document).ajaxStop(ajax.stop);
