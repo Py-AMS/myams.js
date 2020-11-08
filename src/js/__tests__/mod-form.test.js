@@ -6,6 +6,7 @@
 import $ from "jquery";
 
 import MyAMS, { init } from "../ext-base";
+import { ajax } from "../mod-ajax";
 import { alert } from "../mod-alert";
 import { i18n } from "../mod-i18n";
 import { modal } from "../mod-modal";
@@ -36,21 +37,30 @@ import {
 
 import myams_require from "../ext-require";
 
+import { MockXHR } from "../__mocks__/xhr";
+
 const bs = require("bootstrap");
 // Bootstrap toasts are required...
 $.fn.toast = bs.Toast._jQueryInterface;
 $.fn.toast.Constructor = bs.Toast;
 
+const jqForm = require("jquery-form");
+$.fn.ajaxSubmit = jqForm;
+
 
 init($);
 
-if (!MyAMS.form) {
-	MyAMS.form = form;
-	MyAMS.config.modules.push('form');
+if (!MyAMS.ajax) {
+	MyAMS.ajax = ajax;
+	MyAMS.config.modules.push('ajax');
 }
 if (!MyAMS.alert) {
 	MyAMS.alert = alert;
 	MyAMS.config.modules.push('alert');
+}
+if (!MyAMS.form) {
+	MyAMS.form = form;
+	MyAMS.config.modules.push('form');
 }
 if (!MyAMS.i18n) {
 	MyAMS.i18n = i18n;
@@ -1602,4 +1612,39 @@ describe("Test MyAMS.skin module", () => {
 
 	});
 
+
+	// Test MyAMS.form submit
+	test("Test MyAMS.form basic submit", () => {
+
+		document.body.innerHTML = `<div>
+			<form action="submit.json" method="post"></form>
+		</div>`;
+
+		const
+			body = $(document.body),
+			testForm = $('form', body);
+
+		const
+			oldXHR = window.XMLHttpRequest,
+			oldAjax = $.ajax;
+
+		const response = {
+			contentType: 'application/json',
+			status: 'success',
+			content: {
+				status: 'success'
+			}
+		}
+		window.XMLHttpRequest = jest.fn(() => {
+			return MockXHR(response);
+		})
+		$.ajax = jest.fn().mockImplementation((settings) => {
+			const request = XMLHttpRequest();
+			return Promise.all([response, 'success', request]);
+		});
+		expect(MyAMS.form.submit(testForm)).toBe(false);
+		$.ajax = oldAjax;
+		window.XMLHttpRequest = oldXHR;
+
+	});
 });
