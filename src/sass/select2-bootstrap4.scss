@@ -135,30 +135,20 @@
 
     // all clear button
     .select2-selection__clear {
-        width: 1.5em;
-        height: 1.5em;
-        line-height: 1.25em;
-        margin-top: 0.25em;
-        border-radius: 30%;
+        width: 1.2em;
+        height: 1.2em;
+        line-height: 1.4em;
+        margin-top: 0.5em;
+        border-radius: 20%;
         text-align: center;
 
-        color: transparent;
+        font-weight: 900;
+        background-color: lighten($primary, 20%);
+        color: $light;
         float: right;
-        position: relative;
 
-        &::before {
-            content: '\f2ed';
-            position: absolute;
-            left: calc(50% - 0.5em);
-            top: calc(50% - 0.5em);
-            font-family: "Font Awesome 5 Free";
-            font-weight: 500;
-            color: lighten($primary, 20%);
-        }
         &:hover {
-            &::before {
-                color: $primary;
-            }
+            background-color: $primary;
         }
         &::content {
             display: none;

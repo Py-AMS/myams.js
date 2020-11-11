@@ -11,22 +11,6 @@
             margin: 0;
             padding: 1px 5px;
             width: 100%;
-
-            &.ui-sortable {
-                .select2-selection__choice {
-                    position: relative;
-                    padding-left: 18px;
-
-                    &::before {
-                        position: absolute;
-                        content: '\f338';
-                        left: 0.5em;
-                        font-family: "Font Awesome 5 Free";
-                        font-size: 93%;
-                        font-weight: 900;
-                    }
-                }
-            }
         }
 
         // each selected item in input box
@@ -50,7 +34,7 @@
                 width: 100%;
             }
             .select2.sortable[data-allow-clear="true"] + & {
-                width: calc(100% - 30px);
+                width: calc(100% - 25px);
             }
         }
 
