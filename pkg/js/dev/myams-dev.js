@@ -30346,8 +30346,20 @@ function select2(element) {
               }
 
               var defaultOptions = {
-                theme: data.amsSelect2Theme || 'bootstrap4',
-                language: MyAMS.i18n.language
+                theme: data.amsSelect2Theme || data.amsTheme || 'bootstrap4',
+                language: data.amsSelect2Language || data.amsLanguage || MyAMS.i18n.language,
+                escapeMarkup: MyAMS.core.getFunctionByName(data.amsSelect2EscapeMarkup || data.amsEscapeMarkup),
+                matcher: MyAMS.core.getFunctionByName(data.amsSelect2Matcher || data.amsMatcher),
+                sorter: MyAMS.core.getFunctionByName(data.amsSelect2Sorter || data.amsSorter),
+                templateResult: MyAMS.core.getFunctionByName(data.amsSelect2TemplateResult || data.amsTemplateResult),
+                templateSelection: MyAMS.core.getFunctionByName(data.amsSelect2TemplateSelection || data.amsTemplateSelection),
+                tokenizer: MyAMS.core.getFunctionByName(data.amsSelect2Tokenizer || data.amsTokenizer),
+                ajax: {
+                  url: MyAMS.core.getFunctionByName(data.amsSelect2AjaxUrl || data.amsAjaxUrl) || data.amsSelect2AjaxUrl || data.amsAjaxUrl,
+                  data: MyAMS.core.getFunctionByName(data.amsSelect2AjaxData || data.amsAjaxData) || data.amsSelect2AjaxData || data.amsAjaxData,
+                  processResults: MyAMS.core.getFunctionByName(data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults) || data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults,
+                  transport: MyAMS.core.getFunctionByName(data.amsSelect2AjaxTransport || data.amsAjaxTransport) || data.amsSelect2AjaxTransport || data.amsAjaxTransport
+                }
               };
 
               if (select.hasClass('sortable')) {

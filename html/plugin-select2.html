@@ -1,0 +1,283 @@
+<h1>MyAMS "select2" plug-in</h1>
+
+<section>
+	<p><strong>Select2</strong> is a common extension to standard HTML "select" element; it
+	provides many features, like filtering and support for AJAX requests, and can be customized
+	in many ways. Look at <a href="https://select2.org">Select2 website</a> to know all
+	it's available options.</p>
+	<p>MyAMS doesn't add any custom properties to default Select2 options, but is initializing
+	a default Bootstrap theme, and Select2 language based on current page language; MyAMS also
+	add support for sortable selections, using JQuery-UI sortable plug-in.</p>
+	<p>You can also use data attributes to define all Select2 callback options, using
+	<code>ams-select2-</code> or just <code>ams-</code> prefix, like in
+	<code>data-ams-select2-matcher="MyApp.matcher"</code>, or
+	<code>data-ams-ajax-url="MyApp.urlGetter"</code>.</p>
+	<p>The most basic way to use Select2 is just to add a <code>select2</code> class on a
+	<code>&lt;select&gt;</code> element:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_1">
+						Simple selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_1" class="form-control select2">
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_1" class="form-control select2"&gt;
+	  &lt;option value="1"&gt;Option 1&lt;/option&gt;
+	  &lt;option value="2"&gt;Option 2&lt;/option&gt;
+	  &lt;option value="3"&gt;Option 3&lt;/option&gt;
+	&lt;/select&gt;
+</pre>
+	</div>
+</section>
+
+<section>
+	<h2>Multiple select</h2>
+	<p>Another common use of select inputs is to handle multiple selections:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_2">
+						Multiple selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_2" class="form-control select2" multiple>
+								<option value="1">Option 1</option>
+								<option value="2" selected>Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_1" class="form-control select2" multiple&gt;
+	  &lt;option value="1"&gt;Option 1&lt;/option&gt;
+	  &lt;option value="2"&gt;Option 2&lt;/option&gt;
+	  &lt;option value="3"&gt;Option 3&lt;/option&gt;
+	&lt;/select&gt;
+</pre>
+	</div>
+</section>
+
+<section>
+	<h2>Multiple orderable select</h2>
+	<p>You can handle selection sorting by just adding a <code>sortable</code> class to the
+	select element:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_3">
+						Sortable selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_3" class="form-control select2 sortable" multiple>
+								<option value="1">Option 1</option>
+								<option value="2" selected>Option 2</option>
+								<option value="3" selected>Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_1" class="form-control select2 sortable" multiple&gt;
+	  &lt;option value="1"&gt;Option 1&lt;/option&gt;
+	  &lt;option value="2"&gt;Option 2&lt;/option&gt;
+	  &lt;option value="3"&gt;Option 3&lt;/option&gt;
+	&lt;/select&gt;
+</pre>
+	</div>
+</section>
+
+<section>
+	<h2>Clearing selection and setting placeholder</h2>
+	<p>You can add a "clear" button by adding a <code>data-allow-clear</code> attribute with a
+	<code>true</code> value, for both single and multiple selections; this can be combined with
+	a <code>data-placeholder</code> attribute:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_4">
+						Simple selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_4" class="form-control select2"
+									data-allow-clear="true"
+									data-placeholder="Please select a value">
+								<option></option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_5">
+						Multiple selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_5" class="form-control select2 sortable" multiple
+									data-allow-clear="true"
+									data-placeholder="Please select one or more values">
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_1" class="form-control select2"
+	        data-allow-clear="true"
+	        data-placeholder="Please select a value"&gt;
+	  &lt;option value="1"&gt;Option 1&lt;/option&gt;
+	  &lt;option value="2"&gt;Option 2&lt;/option&gt;
+	  &lt;option value="3"&gt;Option 3&lt;/option&gt;
+	&lt;/select&gt;
+</pre>
+	</div>
+	<div class="alert alert-info p-2 m-2" role="alert">
+		<h5 class="alert-heading">
+			<i class="fas fa-info-circle"></i>
+			Info
+		</h5>
+		<p>On single select, an empty <code>option</code> is required as first option to prevent
+		selection of the first non-empty option, and allow display of placeholder!</p>
+	</div>
+</section>
+
+<section>
+	<h2>Managing AJAX query</h2>
+	<p>Select2 items can be provided with an AJAX call, using <code>data-ajax</code> attribute
+	to define the API endpoint:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_6">
+						Sortable selection
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget">
+							<select id="select_6" class="form-control select2"
+									data-ajax--url="data/select2.json"
+									data-minimum-input-length="2">
+								<option value="2" selected>Option 2</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_1" class="form-control select2"
+	        data-ajax--url="data/select2.json"
+	        data-minimum-input-length="2"&gt;
+	  &lt;option value="2" selected&gt;Option 2&lt;/option&gt;
+	&lt;/select&gt;
+</pre>
+	</div>
+	<div class="alert alert-info p-2 m-2" role="alert">
+		<h5 class="alert-heading">
+			<i class="fas fa-info-circle"></i>
+			Info
+		</h5>
+		<p>Please note that when using AJAX request for autocompletion, currently selected
+		options have to be inserted into <code>select</code> as classic options!</p>
+	</div>
+</section>
+
+<section>
+	<h2>MyAMS <code>select2</code> plug-in options</h2>
+	<p>These plug-in options are available as data attributes prefixed by
+	<code>data-ams-select2-</code>, or just <code>data-ams-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>theme</code></td>
+			<td>bootstrap4</td>
+			<td>Select2 theme name; you must provide your own CSS if using an alternative theme
+			</td>
+		</tr>
+		<tr>
+			<td><code>language</code></td>
+			<td>page language</td>
+			<td>Current language used to display translated strings</td>
+		</tr>
+		<tr>
+			<td><code>escapeMarkup</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>matcher</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>sorter</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>templateResult</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>templateSelection</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>tokenizer</code></td>
+			<td colspan="2">See Select2 options</td>
+		</tr>
+		<tr>
+			<td><code>ajaxUrl</code></td>
+			<td colspan="2">See Select2 AJAX options</td>
+		</tr>
+		<tr>
+			<td><code>ajaxData</code></td>
+			<td colspan="2">See Select2 AJAX options</td>
+		</tr>
+		<tr>
+			<td><code>ajaxProcessResults</code></td>
+			<td colspan="2">See Select2 AJAX options</td>
+		</tr>
+		<tr>
+			<td><code>ajaxTransport</code></td>
+			<td colspan="2">See Select2 AJAX options</td>
+		</tr>
+	</table>
+</section>

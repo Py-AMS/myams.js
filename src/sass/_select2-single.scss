@@ -48,5 +48,5 @@
 
 // no result message
 .select2-results__message {
-    color: $secondary;
+    color: darken($secondary, 10%);
 }
