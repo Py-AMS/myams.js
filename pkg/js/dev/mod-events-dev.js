@@ -64,8 +64,18 @@
                 event = _Object$entries$_i[0],
                 handler = _Object$entries$_i[1];
 
-            context.on(event, function (event, options) {
-              MyAMS.core.executeFunctionByName(handler, document, event, options || context.data('ams-events-options') || {});
+            context.on(event, function (event) {
+              for (var _len = arguments.length, options = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                options[_key - 1] = arguments[_key];
+              }
+
+              if (options.length > 0) {
+                var _MyAMS$core;
+
+                (_MyAMS$core = MyAMS.core).executeFunctionByName.apply(_MyAMS$core, [handler, document, event].concat(options));
+              } else {
+                MyAMS.core.executeFunctionByName(handler, document, event, context.data('ams-events-options') || {});
+              }
             });
           };
 

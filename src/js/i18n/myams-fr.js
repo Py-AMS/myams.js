@@ -53,7 +53,50 @@
 
 		LAST_UPDATE: "Dernière mise à jour : ",
 
-		DT_COLUMNS: "Colonnes"
+		DT_COLUMNS: "Colonnes",
+
+		// Plug-ins translations
+		plugins: {
+
+			// Datatables plug-in translations
+			datatables: {
+				processing:     "Traitement en cours...",
+				search:         "",
+				searchPlaceholder: "Filtrer...",
+				lengthMenu:     "_MENU_ &eacute;l&eacute;ments par page",
+				info:           "Affichage des &eacute;l&eacute;ments _START_ &agrave; _END_ sur _TOTAL_",
+				infoEmpty:      "Aucun &eacute;l&eacute;ment &agrave; afficher",
+				infoFiltered:   "(sur un total de _MAX_)",
+				infoPostFix:    "",
+				loadingRecords: "Chargement en cours...",
+				zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+				emptyTable:     "Aucune donnée disponible dans le tableau",
+				paginate: {
+					first:      "Premier",
+					previous:   "Pr&eacute;c&eacute;dent",
+					next:       "Suivant",
+					last:       "Dernier"
+				},
+				columns:        "Colonnes",
+				buttons: {
+					copy:       "Copier",
+					copyTitle:  "Copie dans le presse-papiers",
+					copySuccess: {
+						1:      "Une ligne copiée dans le presse-papiers.",
+						_:      "%d lignes copiées dans le presse-papiers."
+					},
+					print:      "Imprimer",
+					colvis:     "Colonnes"
+				},
+				searchPanes: {
+					emptyPanes: "Pas de filtre de recherche !"
+				},
+				aria: {
+					sortAscending:  ": activer pour trier la colonne par ordre croissant",
+					sortDescending: ": activer pour trier la colonne par ordre décroissant"
+				}
+			}
+		}
 	});
 
 })(jQuery);

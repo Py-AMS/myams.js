@@ -1,0 +1,317 @@
+<h1>MyAMS "datatables" plug-in</h1>
+
+<section>
+	<p><strong>DataTables</strong> is another very common JQuery plug-in which allows to add
+	nice extensions to classic HTML tables, including basic features like sorting and filtering,
+	and more advanced ones like data export, printing, responsive rendering and many more.</p>
+	<p>MyAMS provides a few custom options compared with default DataTables ones, and allows
+	to download all extensions automatically if required.</p>
+	<p>Except when specified explicitly, all DataTables options can be set using standard data
+	attributes as defined by DataTables (see <a href="https://datatables.net">DataTables
+	website</a>).</p>
+	<p>The simplest way to use DataTables is just to add the <code>datatable</code> class to
+	a very standard table:</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_1"
+			   class="table table-bordered table-striped table-sm datatable width-100">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+</section>
+
+<section>
+	<h2>Adding buttons</h2>
+	<p>Standard buttons can be added just by adding a <code>data-buttons</code> attribute with
+	a string value set to <code>default</code>; this will add <i>Copy</i> and <i>Print</i>
+	buttons:</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_2"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-buttons="default">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
+	       data-buttons="default"&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+
+	<p>Setting <code>data-buttons</code> value to <code>all</code> instead of <code>default</code>
+	will provide all common buttons:</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_3"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-buttons="all">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
+	       data-buttons="all"&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+
+	<p>Alternatively, you can use default Datatables syntax and specify an array of required
+	buttons:</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_4"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-buttons='["copy", "csv", "print"]'>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
+	       data-buttons='["copy", "csv", "print"]'&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+</section>
+
+<section>
+	<h2>MyAMS <code>DataTables</code> plug-in options</h2>
+	<p>The DataTables plug-in and all it's extensions options are extensively described into
+	DataTables manual.</p>
+	<p>MyAMS allows a dynamic loading of all requested extensions (including their stylesheets),
+	which are activated using default DataTables data-attributes; for example, defining the
+	<code>data-buttons</code> attribute will automatically download the <i>Buttons</i> extension,
+	and all the dependencies required based on the requested buttons. All extensions are disabled
+	by default, except the <i>Responsive</i> one which have to be disabled explicitly using
+	<code>data-responsive="false"</code> attribute.</p>
+	<p>Many DataTatables options and extensions can be defined using JSON objects, which can be
+	set with data-attributes, or with Javascript using the <code>data-ams-init</code>
+	callback or a <code>before-init</code> event handler; the following example implements both
+	of them:</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_5"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-ams-modules='{"app": "resources/js/myams-app.js"}'
+			   data-ams-init="MyAMS.app.datatables.initCallback"
+			   data-ams-events-handlers='{
+			   		"before-init.ams.datatable": "MyAMS.app.datatables.initHandler"
+			   }'>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
+	       data-ams-modules='{"app": "resources/js/myams-app.js"}'
+	       data-ams-init="MyAMS.app.datatables.initCallback"
+	       data-ams-events-handlers='{
+	         "before-init.ams.datatable": "MyAMS.app.datatables.initHandler"
+	       }'&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+	<p>And here is the matching Javascript code:</p>
+<pre>	datatables: {
+
+		initCallback: (table, settings) => {
+			settings.dom = `B${settings.dom}`;
+			settings.buttons = ['copy', 'print'];
+		},
+
+		initHandler: function(evt, table, settings, veto) {
+			settings.lengthMenu = [1, 3, 5, 10];
+		}
+	}
+</pre>
+</section>

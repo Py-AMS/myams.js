@@ -84,6 +84,18 @@ const app = {
 				});
 			});
 		}
+	},
+
+	datatables: {
+
+		initCallback: (table, settings) => {
+			settings.dom = `B${settings.dom}`;
+			settings.buttons = ['copy', 'print'];
+		},
+
+		initHandler: function(evt, table, settings, veto) {
+			settings.lengthMenu = [1, 3, 5, 10];
+		}
 	}
 }
 

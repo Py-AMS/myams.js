@@ -200,6 +200,330 @@ export function contextMenu(element) {
 
 
 /**
+ * JQuery Datatable plug-in
+ */
+
+const _datatablesHelpers = {
+
+	init: () => {
+
+		// Add autodetect formats
+		try {
+			const types = $.fn.dataTable.ext.type;
+		}
+		catch (e) {
+			return;
+		}
+
+		types.detect.unshift((data) => {
+			if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3}$/)) {
+				return 'date-euro';
+			}
+			return null;
+		});
+
+		types.detect.unshift((data) => {
+			if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3} - ([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+				return 'datetime-euro';
+			}
+			return null;
+		});
+
+		// Add sorting methods
+		$.extend(types.order, {
+
+			// numeric values using commas separators
+			"numeric-comma-asc": (a, b) => {
+				var x = a.replace(/,/, ".").replace(/ /g, '');
+				var y = b.replace(/,/, ".").replace(/ /g, '');
+				x = parseFloat(x);
+				y = parseFloat(y);
+				return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+			},
+			"numeric-comma-desc": (a, b) => {
+				var x = a.replace(/,/, ".").replace(/ /g, '');
+				var y = b.replace(/,/, ".").replace(/ /g, '');
+				x = parseFloat(x);
+				y = parseFloat(y);
+				return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+			},
+
+			// date-euro column sorter
+			"date-euro-pre": (a) => {
+				var trimmed = $.trim(a);
+				var x;
+				if (trimmed !== '') {
+					var frDate = trimmed.split('/');
+					x = (frDate[2] + frDate[1] + frDate[0]) * 1;
+				} else {
+					x = 10000000; // = l'an 1000 ...
+				}
+				return x;
+			},
+			"date-euro-asc": (a, b) => {
+				return a - b;
+			},
+			"date-euro-desc": (a, b) => {
+				return b - a;
+			},
+
+			// datetime-euro column sorter
+			"datetime-euro-pre": (a) => {
+				var trimmed = $.trim(a);
+				var x;
+				if (trimmed !== '') {
+					var frDateTime = trimmed.split(' - ');
+					var frDate = frDateTime[0].split('/');
+					var frTime = frDateTime[1].split(':');
+					x = (frDate[2] + frDate[1] + frDate[0] + frTime[0] + frTime[1]) * 1;
+				} else {
+					x = 100000000000; // = l'an 1000 ...
+				}
+				return x;
+			},
+			"datetime-euro-asc": (a, b) => {
+				return a - b;
+			},
+			"datetime-euro-desc": (a, b) => {
+				return b - a;
+			}
+		});
+	}
+};
+
+export function datatables(element) {
+	const
+		baseJS = `${MyAMS.env.baseURL}../ext/datatables/`,
+		baseCSS = `${MyAMS.env.baseURL}../../css/ext/datatables/`;
+	return new Promise((resolve, reject) => {
+		const tables = $('.datatable', element);
+		if (tables.length > 0) {
+			MyAMS.ajax.check($.fn.dataTable,
+				`${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then((firstLoad) => {
+				const required = [];
+				if (firstLoad) {
+					required.push(MyAMS.core.getScript(`${baseJS}dataTables-bootstrap4${MyAMS.env.extext}.js`));
+					required.push(MyAMS.core.getCSS(`${baseCSS}dataTables-bootstrap4${MyAMS.env.extext}.css`, 'datatables-bs4'));
+				}
+				$.when.apply($, required).then(() => {
+					const
+						css = {},
+						bases = [],
+						extensions = [],
+						depends = [],
+						loaded = {};
+					tables.each((idx, elt) => {
+						const
+							table = $(elt),
+							data = table.data();
+						if (data.buttons === 'default') {
+							table.attr('data-buttons', '["copy", "print"]');
+							table.removeData('buttons');
+							data.buttons = table.data('buttons');
+						} else if (data.buttons === 'all') {
+							table.attr('data-buttons', '["copy", "csv", "excel", "print", "pdf", "colvis"]');
+							table.removeData('buttons');
+							data.buttons = table.data('buttons');
+						}
+						if (data.autoFill && !loaded.autoFill && !$.fn.dataTable.AutoFill) {
+							bases.push(`${baseJS}autoFill${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}autoFill-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-autofill-bs4'] = `${baseCSS}autoFill-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.autoFill = true;
+						}
+						if (data.buttons) {
+							if (!loaded.buttons && !$.fn.dataTable.Buttons) {
+								bases.push(`${baseJS}buttons${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}buttons-bootstrap4${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}buttons-html5${MyAMS.env.extext}.js`);
+								css['dt-buttons-bs4'] = `${baseCSS}buttons-bootstrap4${MyAMS.env.extext}.css`;
+								loaded.buttons = true;
+							}
+							if ($.isArray(data.buttons)) {
+								if (data.buttons.indexOf('print') >= 0) {
+									if (!loaded.buttons_print && !$.fn.dataTable.ext.buttons.print) {
+										depends.push(`${baseJS}buttons-print${MyAMS.env.extext}.js`);
+										loaded.buttons_print = true;
+									}
+								}
+								if (data.buttons.indexOf('excel') >= 0) {
+									if (!loaded.buttons_excel && !$.fn.dataTable.ext.buttons.excelHtml5) {
+										bases.push(`${baseJS}jszip${MyAMS.env.extext}.js`);
+										loaded.buttons_excel = true;
+									}
+								}
+								if (data.buttons.indexOf('pdf') >= 0) {
+									if (!loaded.buttons_pdf && !window.pdfMake) {
+										bases.push(`${baseJS}pdfmake${MyAMS.env.extext}.js`);
+										extensions.push(`${baseJS}vfs_fonts${MyAMS.env.extext}.js`);
+										loaded.buttons_pdf = true;
+									}
+								}
+								if (data.buttons.indexOf('colvis') >= 0) {
+									if (!loaded.buttons_colvis && !$.fn.dataTable.ext.buttons.colvis) {
+										depends.push(`${baseJS}buttons-colVis${MyAMS.env.extext}.js`);
+										loaded.buttons_colvis = true;
+									}
+								}
+							}
+						}
+						if (data.colReorder && !loaded.colReorder && !$.fn.dataTable.ColReorder) {
+							bases.push(`${baseJS}colReorder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}colReorder-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-colreorder-bs4'] = `${baseCSS}colReorder-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.colReorder = true;
+						}
+						if (data.fixedColumns && !loaded.fixedColumns && !$.fn.dataTable.FixedColumns) {
+							bases.push(`${baseJS}fixedColumns${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}fixedColumns-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-fixedcolumns-bs4'] = `${baseCSS}fixedColumns-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.fixedColumns = true;
+						}
+						if (data.fixedHeader && !loaded.fixedHeader && !$.fn.dataTable.FixedHeader) {
+							bases.push(`${baseJS}fixedHeader${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}fixedHeader-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-fixedheader-bs4'] = `${baseCSS}fixedHeader-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.fixedHeader = true;
+						}
+						if (data.keyTable && !loaded.keyTable && !$.fn.dataTable.KeyTable) {
+							bases.push(`${baseJS}keyTable${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}keyTable-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-keytable-bs4'] = `${baseCSS}keyTable-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.keyTable = true;
+						}
+						if ((data.responsive !== false) && !loaded.responsive && !$.fn.dataTable.Responsive) {
+							bases.push(`${baseJS}responsive${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}responsive-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-responsive-bs4'] = `${baseCSS}responsive-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.responsive = true;
+						}
+						if (data.rowGroup && !loaded.rowGroup && !$.fn.dataTable.RowGroup) {
+							bases.push(`${baseJS}rowGroup${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}rowGroup-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-rowgroup-bs4'] = `${baseCSS}rowGroup-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.rowGroup = true;
+						}
+						if (data.rowReorder && !loaded.rowReorder && !$.fn.dataTable.RowReorder) {
+							bases.push(`${baseJS}rowReorder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}rowReorder-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-rowreorder-bs4'] = `${baseCSS}rowReorder-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.rowReorder = true;
+						}
+						if (data.scroller && !loaded.scroller && !$.fn.dataTable.Scroller) {
+							bases.push(`${baseJS}scroller${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}scroller-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-scroller-bs4'] = `${baseCSS}scroller-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.scroller = true;
+						}
+						if (data.searchBuilder && !loaded.searchBuilder && !$.fn.dataTable.SearchBuilder) {
+							bases.push(`${baseJS}searchBuilder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}searchBuilder-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-searchbuilder-bs4'] = `${baseCSS}searchBuilder-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.searchBuilder = true;
+						}
+						if (data.searchPanes && !loaded.searchPanes && !$.fn.dataTable.SearchPanes) {
+							if (!loaded.select && !$.fn.dataTable.select) {
+								bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
+								css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+								loaded.select = true;
+							}
+							extensions.push(`${baseJS}searchPanes${MyAMS.env.extext}.js`);
+							depends.push(`${baseJS}searchPanes-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-searchpanes-bs4'] = `${baseCSS}searchPanes-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.searchPanes = true;
+						}
+						if (data.select && !loaded.select && !$.fn.dataTable.select) {
+							bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+							loaded.select = true;
+						}
+					});
+					$.when.apply($, bases.map(MyAMS.core.getScript)).then(() => {
+						return $.when.apply($, extensions.map(MyAMS.core.getScript)).then(() => {
+							return $.when.apply($, depends.map(MyAMS.core.getScript)).then(() => {
+								if (firstLoad) {
+									_datatablesHelpers.init();
+								}
+								for (const [name, url] of Object.entries(css)) {
+									MyAMS.core.getCSS(url, name);
+								}
+								tables.each((idx, elt) => {
+									const table = $(elt);
+									if ($.fn.dataTable.isDataTable(table)) {
+										return;
+									}
+									const data = table.data();
+									let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
+									if (!dom) {
+										if (data.buttons) {
+											dom += "B";
+										}
+										if (data.searchBuilder) {
+											dom += "Q";
+										}
+										if (data.searchPanes) {
+											dom += "P";
+										}
+										if (data.searching !== false || data.lengthChange !== false) {
+											dom += "<'row px-2'";
+											if (data.searching !== false) {
+												dom += "<'col-sm-6 col-md-8'f>";
+											}
+											if (data.lengthChange !== false) {
+												dom += "<'col-sm-6 col-md-4'l>";
+											}
+											dom += ">";
+										}
+										dom += "<'row'<'col-sm-12'tr>>";
+										if (data.info !== false || data.paging !== false) {
+											dom += "<'row px-2 py-1'";
+											if (data.info !== false) {
+												dom += "<'col-sm-12 col-md-5'i>";
+											}
+											if (data.paging !== false) {
+												dom += "<'col-sm-12 col-md-7'p>";
+											}
+											dom += ">"
+										}
+									}
+									const
+										defaultOptions = {
+											language: data.amsDatatableLanguage || data.amsLanguage ||
+												MyAMS.i18n.plugins.datatables,
+											responsive: true,
+											dom: dom
+										};
+									let settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
+									settings = MyAMS.core.executeFunctionByName(
+										data.amsDatatableInitCallback || data.amsInit,
+										document, table, settings) || settings;
+									const veto = {veto: false};
+									table.trigger('before-init.ams.datatable', [table, settings, veto]);
+									if (veto.veto) {
+										return;
+									}
+									const plugin = table.DataTable(settings);
+									MyAMS.core.executeFunctionByName(
+										data.amsDatatableAfterInitCallback || data.amsAfterInit,
+										document, table, plugin, settings);
+									table.trigger('after-init.ams.datatable', [table, plugin]);
+								});
+								resolve(tables);
+							}, reject);
+						}, reject);
+					}, reject);
+				}, reject);
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
  * JQuery-UI drag and drop plug-ins
  */
 
@@ -348,7 +672,7 @@ export function fileInput(element) {
 
 const _select2Helpers = {
 
-	select2UpdateHiddenField: function(input) {
+	select2UpdateHiddenField: (input) => {
 		const values = [];
 		input.parent().find('ul.select2-selection__rendered').children('li[title]').each((idx, elt) => {
 			values.push(input.children(`option[data-content="${elt.title}"]`).attr('value'));
@@ -392,8 +716,11 @@ export function select2(element) {
 								templateSelection: MyAMS.core.getFunctionByName(
 									data.amsSelect2TemplateSelection || data.amsTemplateSelection),
 								tokenizer: MyAMS.core.getFunctionByName(
-									data.amsSelect2Tokenizer || data.amsTokenizer),
-								ajax: {
+									data.amsSelect2Tokenizer || data.amsTokenizer)
+							};
+							const ajaxUrl = data.amsSelect2AjaxUrl || data.amsAjaxUrl || data['ajax-Url'];
+							if (ajaxUrl) {
+								defaultOptions.ajax = {
 									url: MyAMS.core.getFunctionByName(
 										data.amsSelect2AjaxUrl || data.amsAjaxUrl) ||
 										data.amsSelect2AjaxUrl || data.amsAjaxUrl,
@@ -406,8 +733,10 @@ export function select2(element) {
 									transport: MyAMS.core.getFunctionByName(
 										data.amsSelect2AjaxTransport || data.amsAjaxTransport) ||
 										data.amsSelect2AjaxTransport || data.amsAjaxTransport
-								}
-							};
+								};
+								defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength ||
+									data.amsMinimumInputLength || data.minimumInputLength || 1;
+							}
 							if (select.hasClass('sortable')) {
 								// create hidden input for sortable selections
 								const hidden = $(`<input type="hidden" name="${select.attr('name')}">`).insertAfter(select);
@@ -679,6 +1008,7 @@ if (window.MyAMS) {
 	// register loaded plug-ins
 	MyAMS.registry.register(checker, 'checker');
 	MyAMS.registry.register(contextMenu, 'contextMenu');
+	MyAMS.registry.register(datatables, 'datatables');
 	MyAMS.registry.register(dragdrop, 'dragdrop');
 	MyAMS.registry.register(fileInput, 'fileInput');
 	MyAMS.registry.register(select2, 'select2');

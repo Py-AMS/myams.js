@@ -1,8 +1,40 @@
 
-.table-xs {
-  th,
-  td {
-    padding: 0.2rem 0.3rem;
-    font-size: 0.9em;
+.table {
+  &.table-sm {
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+  &.table-xs {
+    th,
+    td {
+      padding: 0.2rem 0.3rem;
+      font-size: 0.9em;
+    }
+  }
+}
+
+section {
+  table.datatable {
+    th {
+      &.sorting_asc,
+      &.sorting_desc {
+        background-color: $table-sort;
+      }
+    }
+    &.table-bordered {
+      tr {
+        th:last-child,
+        td:last-child {
+          border-right-width: 0;
+        }
+        &:last-child {
+          td {
+            border-bottom-width: 1px;
+          }
+        }
+      }
+    }
   }
 }

@@ -58,6 +58,17 @@ export const i18n = {
 	DT_COLUMNS: "Columns",
 
 	/**
+	 * Plug-ins translations container
+	 */
+	plugins: {
+		datatables: {
+			search:            "",
+			searchPlaceholder: "Search..."
+		}
+	},
+
+
+	/**
 	 * MyAMS i18n package
 	 */
 	init: (force=false) => {
