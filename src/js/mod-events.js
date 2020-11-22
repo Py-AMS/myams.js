@@ -35,9 +35,13 @@ export const events = {
 				handlers = context.data('ams-events-handlers');
 			if (handlers) {
 				for (const [event, handler] of Object.entries(handlers)) {
-					context.on(event, (event, options) => {
-						MyAMS.core.executeFunctionByName(handler, document, event,
-							options || context.data('ams-events-options') || {});
+					context.on(event, (event, ...options) => {
+						if (options.length > 0) {
+							MyAMS.core.executeFunctionByName(handler, document, event, ...options);
+						} else {
+							MyAMS.core.executeFunctionByName(handler, document, event,
+								context.data('ams-events-options') || {});
+						}
 					});
 				}
 			}
