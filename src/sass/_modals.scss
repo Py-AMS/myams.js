@@ -7,7 +7,7 @@
   overflow-y: auto;
   max-height: calc(100vh - 210px);
 
-  @media (max-width: 767px) {
+  @media (max-width: $md-width) {
     padding: 0.1rem!important;
   }
 }

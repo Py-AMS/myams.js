@@ -79,7 +79,7 @@ aside {
     position: fixed;
     z-index: 900;
 
-    @media (max-width: 767px) {
+    @media (max-width: $md-width) {
       position: absolute !important;
     }
   }
@@ -127,7 +127,7 @@ aside {
   left: 0;
   @include transition($transition-base);
 
-  @media (max-width: 767px) {
+  @media (max-width: $md-width) {
     padding-left: 0.2rem;
     padding-right: 0.2rem;
   }
@@ -254,12 +254,12 @@ aside {
       @media (max-width: 979px) {
         color: $white;
       }
-      @media (min-width: 768px) and (max-width: 880px) {
+      @media (min-width: $md-width) and (max-width: 880px) {
         &::before {
           content: "\f0c9";
         }
       }
-      @media (max-width: 767px) {
+      @media (max-width: $md-width) {
         color: $white;
 
         &::before {

@@ -12,7 +12,7 @@
     padding-right: 0.2rem;
     background-color: $header-mobile-bg;
   }
-  @media (max-width: 767px) {
+  @media (max-width: $md-width) {
     padding-right: 5px;
   }
 
@@ -179,7 +179,7 @@
         max-width: calc(100vw - 10px);
       }
     }
-    @media (max-width: 767px) {
+    @media (max-width: $md-width) {
         width: calc(100vw - 10px);
         max-width: calc(100vw - 10px);
         height: calc(100vh - 75px);

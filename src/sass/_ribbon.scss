@@ -8,7 +8,7 @@
   background: $ribbon-bg;
   height: 40px;
 
-  @media (max-width: 767px) {
+  @media (max-width: $md-width) {
     padding-left: 5px;
     padding-right: 5px;
   }
