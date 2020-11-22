@@ -1,6 +1,6 @@
 /* global describe, jest, test, beforeAll, afterAll, expect */
 /**
- * MyAMS.plugins "fileinput" plug-in tests
+ * MyAMS.plugins "select2" plug-in tests
  */
 
 import $ from "jquery";
