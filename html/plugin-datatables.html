@@ -9,6 +9,8 @@
 	<p>Except when specified explicitly, all DataTables options can be set using standard data
 	attributes as defined by DataTables (see <a href="https://datatables.net">DataTables
 	website</a>).</p>
+	<p>As usual, custom data attributes defined by MyAMS can use the short <code>data-ams-</code>
+	prefix, or <code>data-ams-datatable-</code> when name conflicts can occur.</p>
 	<p>The simplest way to use DataTables is just to add the <code>datatable</code> class to
 	a very standard table:</p>
 	<section class="m-3">
@@ -54,8 +56,126 @@
 <pre>	&lt;table class="table table-bordered table-striped table-sm datatable"&gt;
 	  &lt;thead&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+</section>
+
+<section id="dt-order">
+	<h2>Initial rows ordering</h2>
+	<p>You can define the initial rows ordering using the <code>data-ams-order</code>
+	attribute; you can set this attribute using a string or a JSON array: each array item is a tuple
+	containing the row index and the order direction (<code>asc</code> or <code>desc</code>),
+	like in: <code>data-ams-order='[[2, "asc"], [3, "desc"]]'</code>, which is equivalent to
+	<code>data-ams-order="2,asc;3,desc"</code>.</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_1.1"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-ams-order="2,asc">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Address</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
+	        data-ams-order="2,asc"&gt;
+	  &lt;thead&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
+	  &lt;/thead&gt;
+	  ...
+	&lt;/table&gt;
+</pre>
+</section>
+
+<section id="dt-columns">
+	<h2>Table column definitions</h2>
+	<p>MyAMS and DataTables allows to define columns; this can be done with MyAMS by setting
+	data attributes on columns headers.</p>
+	<p>The <code>data-ams-stype</code> attribute can be used on a column header to define
+	column's type, <code>data-ams-sortable</code> to define if a column can be sorted or not,
+	and otherwise <code>data-ams-column</code> can store a serialized JSON object which can
+	hold all column properties (see <a href="https://datatables.net/reference/option/columns">
+	DataTables reference manual</a>).</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_1.2"
+			   class="table table-bordered table-striped table-sm datatable width-100">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th data-ams-column='{"className": "table-info"}'>Value</th>
+					<th data-ams-type="html">Address</th>
+					<th data-ams-sortable="false">Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>Boston</td>
+					<td>john.doe@example.com</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>Paris</td>
+					<td>joe.bar@example.com</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>Washington</td>
+					<td>wanda.foo@example.com</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>(unknown)</td>
+					<td>(unknown)</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table class="table table-bordered table-striped table-sm datatable"&gt;
+	  &lt;thead&gt;
+	    &lt;tr&gt;
+	      &lt;th data-ams-type="html"&gt;Value&lt;/&gt;
+	      &lt;th data-ams-sortable="false"&gt;Value&lt;/&gt;
+	      &lt;th data-ams-column='{"className": "table-info"}'&gt;Value&lt;/&gt;
+	    &lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
 	&lt;/table&gt;
@@ -112,8 +232,6 @@
 	       data-buttons="default"&gt;
 	  &lt;thead&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
 	&lt;/table&gt;
@@ -166,8 +284,6 @@
 	       data-buttons="all"&gt;
 	  &lt;thead&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
 	&lt;/table&gt;
@@ -219,8 +335,6 @@
 <pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
 	       data-buttons='["copy", "csv", "print"]'&gt;
 	  &lt;thead&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
@@ -294,8 +408,6 @@
 	         "before-init.ams.datatable": "MyAMS.app.datatables.initHandler"
 	       }'&gt;
 	  &lt;thead&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
@@ -389,7 +501,7 @@
 			   data-ams-reorder-callback="MyAMS.app.datatables.reorderCallback">
 			<thead>
 				<tr>
-					<th class="reorder"></th>
+					<th data-ams-column='{"className": "reorder"}'></th>
 					<th>Name</th>
 					<th>Value</th>
 					<th>Birth date</th>
@@ -398,28 +510,28 @@
 			</thead>
 			<tbody>
 				<tr data-ams-row-id="1">
-					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>John Doe</td>
 					<td>Manager</td>
 					<td>02/04/1969</td>
 					<td>15/01/2018 - 11:20</td>
 				</tr>
 				<tr data-ams-row-id="2">
-					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Joe Bar</td>
 					<td>Manager</td>
 					<td>04/03/2002</td>
 					<td>02/05/2019 - 10:30</td>
 				</tr>
 				<tr data-ams-row-id="3">
-					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Wanda Foo</td>
 					<td>Contributor</td>
 					<td>10/01/2020</td>
 					<td>02/05/2019 - 08:42</td>
 				</tr>
 				<tr data-ams-row-id="4">
-					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Gretta Davis</td>
 					<td>Guest</td>
 					<td>15/02/2018</td>
@@ -435,14 +547,14 @@
 	       data-ams-reorder-url="data/reorder.json"&gt;
 	  &lt;thead&gt;
 	    &lt;tr data-ams-row-id="1"&gt;
-	      &lt;th class="reorder"&gt;&lt;/th&gt;
+	      &lt;th data-ams-column='{"className": "reorder"}'&gt;&lt;/th&gt;
 	      &lt;th&gt;...&lt;/th&gt;
 	      ...
 	    &lt;/tr&gt;
 	  &lt;/thead&gt;
 	  &lt;tbody&gt;
-	    &lt;tr data-ams-row-id="1"&gt;
-	      &lt;td class="reorder"&gt;&lt;i class="fas fa-arrows-alt-v"&gt;&lt;/i&gt;&lt;/td&gt;
+	    &lt;tr data-ams-row-id="2"&gt;
+	      &lt;td&gt;&lt;i class="fas fa-arrows-alt-v"&gt;&lt;/i&gt;&lt;/td&gt;
 	      &lt;td&gt;...&lt;/td&gt;
 	      ...
 	    &lt;/tr&gt;
@@ -457,7 +569,8 @@
 		</h5>
 		<p>You can notice how we disabled searching, info display, paging and ordering in this
 		table; <code>rowReorder</code> updates have been disabled so we can handle submission
-		of new table order to a remote service.</p>
+		of new table order to a remote service; the <code>reorder</code> CSS class is added to
+		first column definition.</p>
 	</div>
 	<section class="m-3">
 		<h3>MyAMS <code>reorder</code> custom options</h3>

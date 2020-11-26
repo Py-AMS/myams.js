@@ -506,6 +506,7 @@ export function datatables(element) {
 										return;
 									}
 									const data = table.data();
+
 									// initialize dom property
 									let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
 									if (!dom) {
@@ -540,6 +541,11 @@ export function datatables(element) {
 											dom += ">"
 										}
 									}
+									if (!data.buttons && !data.searchBuilder && !data.searchPanes &&
+										(data.searching === false) || (data.lengthChange === false)) {
+										table.siblings('h3').addClass('mb-0');
+									}
+
 									// initialize default options
 									const
 										defaultOptions = {
@@ -548,7 +554,47 @@ export function datatables(element) {
 											responsive: true,
 											dom: dom
 										};
+
+									// initialize sorting
+									let order = data.amsDatatableOrder || data.amsOrder;
+									if (typeof order === 'string') {
+										const orders = order.split(';');
+										order = [];
+										for (const col of orders) {
+											const colOrder = col.split(',');
+											colOrder[0] = parseInt(colOrder[0]);
+											order.push(colOrder);
+										}
+									}
+									if (order) {
+										defaultOptions.order = order;
+									}
+
 									// initialize columns definition based on header settings
+									const
+										heads = $('thead th', table),
+										columns = [];
+									heads.each((idx, th) => {
+										columns[idx] = $(th).data('ams-column') || {};
+									});
+									const sortables = heads.listattr('data-ams-sortable');
+									for (const iterator of sortables.entries()) {
+										const [idx, sortable] = iterator;
+										if (sortable !== undefined) {
+											columns[idx].sortable =
+												typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
+										}
+									}
+									const types = heads.listattr('data-ams-type');
+									for (const iterator of types.entries()) {
+										const [idx, stype] = iterator;
+										if (stype !==  undefined) {
+											columns[idx].type = stype;
+										}
+									}
+									defaultOptions.columns = columns;
+
+									// initialize final settings and initialize plug-in
 									let settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
 									settings = MyAMS.core.executeFunctionByName(
 										data.amsDatatableInitCallback || data.amsInit,
@@ -559,16 +605,17 @@ export function datatables(element) {
 										return;
 									}
 									const plugin = table.DataTable(settings);
-									// set reorder options
+									MyAMS.core.executeFunctionByName(
+										data.amsDatatableAfterInitCallback || data.amsAfterInit,
+										document, table, plugin, settings);
+									table.trigger('after-init.ams.datatable', [table, plugin]);
+
+									// set reorder events
 									if (settings.rowReorder) {
 										plugin.on('row-reorder', MyAMS.core.getFunctionByName(
 											data.amsDatatableReordered || data.amsReordered) ||
 											_datatablesHelpers.reorderRows);
 									}
-									MyAMS.core.executeFunctionByName(
-										data.amsDatatableAfterInitCallback || data.amsAfterInit,
-										document, table, plugin, settings);
-									table.trigger('after-init.ams.datatable', [table, plugin]);
 								});
 								resolve(tables);
 							}, reject);

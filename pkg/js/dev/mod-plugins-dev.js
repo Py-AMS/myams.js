@@ -611,6 +611,10 @@
 
                         dom += ">";
                       }
+                    }
+
+                    if (!data.buttons && !data.searchBuilder && !data.searchPanes && data.searching === false || data.lengthChange === false) {
+                      table.siblings('h3').addClass('mb-0');
                     } // initialize default options
 
 
@@ -618,7 +622,88 @@
                       language: data.amsDatatableLanguage || data.amsLanguage || MyAMS.i18n.plugins.datatables,
                       responsive: true,
                       dom: dom
-                    }; // initialize columns definition based on header settings
+                    }; // initialize sorting
+
+                    var order = data.amsDatatableOrder || data.amsOrder;
+
+                    if (typeof order === 'string') {
+                      var orders = order.split(';');
+                      order = [];
+
+                      var _iterator = _createForOfIteratorHelper(orders),
+                          _step;
+
+                      try {
+                        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                          var col = _step.value;
+                          var colOrder = col.split(',');
+                          colOrder[0] = parseInt(colOrder[0]);
+                          order.push(colOrder);
+                        }
+                      } catch (err) {
+                        _iterator.e(err);
+                      } finally {
+                        _iterator.f();
+                      }
+                    }
+
+                    if (order) {
+                      defaultOptions.order = order;
+                    } // initialize columns definition based on header settings
+
+
+                    var heads = $('thead th', table),
+                        columns = [];
+                    heads.each(function (idx, th) {
+                      columns[idx] = $(th).data('ams-column') || {};
+                    });
+                    var sortables = heads.listattr('data-ams-sortable');
+
+                    var _iterator2 = _createForOfIteratorHelper(sortables.entries()),
+                        _step2;
+
+                    try {
+                      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                        var iterator = _step2.value;
+
+                        var _iterator4 = _slicedToArray(iterator, 2),
+                            _idx = _iterator4[0],
+                            sortable = _iterator4[1];
+
+                        if (sortable !== undefined) {
+                          columns[_idx].sortable = typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
+                        }
+                      }
+                    } catch (err) {
+                      _iterator2.e(err);
+                    } finally {
+                      _iterator2.f();
+                    }
+
+                    var types = heads.listattr('data-ams-type');
+
+                    var _iterator3 = _createForOfIteratorHelper(types.entries()),
+                        _step3;
+
+                    try {
+                      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                        var _iterator5 = _step3.value;
+
+                        var _iterator6 = _slicedToArray(_iterator5, 2),
+                            _idx2 = _iterator6[0],
+                            stype = _iterator6[1];
+
+                        if (stype !== undefined) {
+                          columns[_idx2].type = stype;
+                        }
+                      }
+                    } catch (err) {
+                      _iterator3.e(err);
+                    } finally {
+                      _iterator3.f();
+                    }
+
+                    defaultOptions.columns = columns; // initialize final settings and initialize plug-in
 
                     var settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
                     settings = MyAMS.core.executeFunctionByName(data.amsDatatableInitCallback || data.amsInit, document, table, settings) || settings;
@@ -631,14 +716,13 @@
                       return;
                     }
 
-                    var plugin = table.DataTable(settings); // set reorder options
+                    var plugin = table.DataTable(settings);
+                    MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
+                    table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
 
                     if (settings.rowReorder) {
                       plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
                     }
-
-                    MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
-                    table.trigger('after-init.ams.datatable', [table, plugin]);
                   });
                   resolve(tables);
                 }, reject);
@@ -1059,12 +1143,12 @@
                   $('span.is-invalid', form).remove();
                   $('.is-invalid', form).removeClass('is-invalid');
 
-                  var _iterator = _createForOfIteratorHelper(validator.errorList),
-                      _step;
+                  var _iterator7 = _createForOfIteratorHelper(validator.errorList),
+                      _step4;
 
                   try {
-                    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                      var error = _step.value;
+                    for (_iterator7.s(); !(_step4 = _iterator7.n()).done;) {
+                      var error = _step4.value;
 
                       var _element = $(error.element),
                           panels = _element.parents('.tab-pane'),
@@ -1081,9 +1165,9 @@
                       });
                     }
                   } catch (err) {
-                    _iterator.e(err);
+                    _iterator7.e(err);
                   } finally {
-                    _iterator.f();
+                    _iterator7.f();
                   }
                 },
                 errorElement: data.amsValidateErrorElement || 'span',
