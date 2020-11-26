@@ -5,10 +5,13 @@ const webpack = require('gulp-webpack');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const stream = require('webpack-stream');
+const replace = require('gulp-replace');
 const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 const sass = require('gulp-sass');
 const clean = require('gulp-clean-css');
+
+const package = require('./package.json');
 
 sass.compiler = require('node-sass');
 
@@ -152,6 +155,7 @@ task('full_dev', function() {
 	const config = require('./webpack.dev.js');
 	return src('src/js/myams.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/dev'));
 });
 
@@ -160,6 +164,7 @@ task('full_prod', function() {
 	const config = require('./webpack.prod.js');
 	return src('src/js/myams.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/prod'));
 });
 
@@ -173,6 +178,7 @@ task('mini_dev', function() {
 	const config = require('./webpack-mini.dev.js');
 	return src('src/js/myams-mini.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/dev'));
 });
 
@@ -181,6 +187,7 @@ task('mini_prod', function() {
 	const config = require('./webpack-mini.prod.js');
 	return src('src/js/myams-mini.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/prod'));
 });
 
@@ -194,6 +201,7 @@ task('core_dev', function() {
 	const config = require('./webpack-core.dev.js');
 	return src('src/js/myams-core.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/dev'));
 });
 
@@ -202,6 +210,7 @@ task('core_prod', function() {
 	const config = require('./webpack-core.prod.js');
 	return src('src/js/myams-core.js')
 		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/js/prod'));
 });
 
@@ -213,6 +222,7 @@ task('core_prod', function() {
 task('sass_dev', function() {
 	return src('src/sass/myams.scss')
 		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
 		.pipe(dest('pkg/css/dev'));
 });
 
@@ -220,6 +230,7 @@ task('sass_dev', function() {
 task('sass_prod', function() {
 	return src('src/sass/myams.scss')
 		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
 		.pipe(clean())
 		.pipe(dest('pkg/css/prod'));
 });

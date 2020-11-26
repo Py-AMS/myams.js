@@ -19,3 +19,6 @@ const html = MyAMS.$('html');
 if (html.data('ams-init') !== false) {
 	init(MyAMS.$);
 }
+
+
+/** Version: $version$  */

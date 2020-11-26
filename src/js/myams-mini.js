@@ -1,10 +1,10 @@
 /**
- * MyAMS core features
+ * MyAMS mini features
  *
  * This script is used to build MyAMS mini-package.
  *
  * This package includes all MyAMS modules, but without JQuery, Bootstrap or FontAwesome
- * external resources; MyAMS CSS are also excluded.
+ * external resources; MyAMS CSS are excluded.
  */
 
 import MyAMS, { init } from "./ext-base";
@@ -64,3 +64,6 @@ const html = MyAMS.$('html');
 if (html.data('ams-init') !== false) {
 	init(MyAMS.$);
 }
+
+
+/** Version: $version$  */
