@@ -668,6 +668,15 @@ section table.datatable.table-bordered tr td:last-child {
 section table.datatable.table-bordered tr:last-child td {
   border-bottom-width: 1px; }
 
+table th.reorder {
+  width: 1em; }
+
+table td.reorder {
+  width: 1em;
+  color: #88b7df; }
+  table td.reorder:hover {
+    color: #3886c9; }
+
 /*!
  * Bootstrap v4.5.3 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
@@ -8017,17 +8026,18 @@ aside {
     border: 1px solid #ced4da;
     background-color: #f8f9fa;
     color: #495057; }
-    #content section > h1,
+    #content section > h2 {
+      font-size: 1.33rem; }
+    #content section > h3 {
+      font-size: 1.14rem; }
     #content section > h2,
     #content section > h3 {
       border-bottom: 1px solid #ced4da;
       color: #495057;
       font-family: "Roboto", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-      font-size: 1.1rem;
       font-weight: bold;
       letter-spacing: 0.08rem;
       padding: 0.4rem 0.8rem 0.3rem; }
-      #content section > h1 .btn,
       #content section > h2 .btn,
       #content section > h3 .btn {
         margin-top: -0.2rem;
@@ -8035,12 +8045,10 @@ aside {
         padding-bottom: 0.1rem;
         font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         letter-spacing: normal; }
-      #content section > h1 .dropdown-menu,
       #content section > h2 .dropdown-menu,
       #content section > h3 .dropdown-menu {
         font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         letter-spacing: normal; }
-        #content section > h1 .dropdown-menu .dropdown-item,
         #content section > h2 .dropdown-menu .dropdown-item,
         #content section > h3 .dropdown-menu .dropdown-item {
           font-size: 0.83125rem; }
@@ -8797,3 +8805,14 @@ section table.datatable.table-bordered tr td:last-child {
 
 section table.datatable.table-bordered tr:last-child td {
   border-bottom-width: 1px; }
+
+table th.reorder {
+  width: 1em; }
+
+table td.reorder {
+  width: 1em;
+  color: #88b7df; }
+  table td.reorder:hover {
+    color: #3886c9; }
+
+/** Version: 1.0.0  */

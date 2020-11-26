@@ -8775,12 +8775,7 @@ function contextMenu(element) {
 var _datatablesHelpers = {
   init: function init() {
     // Add autodetect formats
-    try {
-      var _types = $.fn.dataTable.ext.type;
-    } catch (e) {
-      return;
-    }
-
+    var types = $.fn.dataTable.ext.type;
     types.detect.unshift(function (data) {
       if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3}$/)) {
         return 'date-euro';
@@ -8853,6 +8848,66 @@ var _datatablesHelpers = {
       },
       "datetime-euro-desc": function datetimeEuroDesc(a, b) {
         return b - a;
+      }
+    });
+  },
+
+  /**
+   * Handle table rows reordering
+   *
+   * @param evt: original event
+   * @param details: array of changed objects
+   * @param changes: editor changes
+   */
+  reorderRows: function reorderRows(evt, details, changes) {
+    return new Promise(function (resolve, reject) {
+      var table = $(evt.target),
+          data = table.data();
+      var url = data.amsReorderUrl,
+          ids = null;
+
+      if (url) {
+        url = MyAMS.core.executeFunctionByName(url, document, table) || url;
+        var rows = $('tbody tr', table),
+            getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-id';
+
+        if (typeof getter === 'function') {
+          ids = $.makeArray(rows).map(getter);
+        } else {
+          ids = rows.listattr(getter);
+        }
+
+        if (ids.length > 0) {
+          var postData;
+
+          if (data.amsReorderPostData) {
+            postData = MyAMS.core.executeFunctionByName(data.amsReorderPostData, document, table, ids);
+          } else {
+            var attr = data.amsReorderPostAttr || 'order';
+            postData = {};
+            postData[attr] = ids;
+          }
+
+          MyAMS.require('ajax').then(function () {
+            MyAMS.ajax.post(url, postData).then(function (result, status, xhr) {
+              var callback = data.amsReorderCallback;
+
+              if (callback) {
+                MyAMS.core.executeFunctionByName(callback, document, table, result, status, xhr).then(function () {
+                  for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
+                    results[_key] = arguments[_key];
+                  }
+
+                  resolve.apply.apply(resolve, [table].concat(results));
+                });
+              } else {
+                MyAMS.ajax.handleJSON(result, table.parents('.dataTables_wrapper')).then(function () {
+                  resolve(result);
+                });
+              }
+            }, reject);
+          });
+        }
       }
     });
   }
@@ -9046,7 +9101,8 @@ function datatables(element) {
                     return;
                   }
 
-                  var data = table.data();
+                  var data = table.data(); // initialize dom property
+
                   var dom = data.amsDatatableDom || data.amsDom || data.dom || '';
 
                   if (!dom) {
@@ -9091,13 +9147,15 @@ function datatables(element) {
 
                       dom += ">";
                     }
-                  }
+                  } // initialize default options
+
 
                   var defaultOptions = {
                     language: data.amsDatatableLanguage || data.amsLanguage || MyAMS.i18n.plugins.datatables,
                     responsive: true,
                     dom: dom
-                  };
+                  }; // initialize columns definition based on header settings
+
                   var settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
                   settings = MyAMS.core.executeFunctionByName(data.amsDatatableInitCallback || data.amsInit, document, table, settings) || settings;
                   var veto = {
@@ -9109,7 +9167,12 @@ function datatables(element) {
                     return;
                   }
 
-                  var plugin = table.DataTable(settings);
+                  var plugin = table.DataTable(settings); // set reorder options
+
+                  if (settings.rowReorder) {
+                    plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
+                  }
+
                   MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
                   table.trigger('after-init.ams.datatable', [table, plugin]);
                 });
@@ -10053,12 +10116,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mod_stats__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./mod-stats */ "./src/js/mod-stats.js");
 /* harmony import */ var _mod_plugins__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./mod-plugins */ "./src/js/mod-plugins.js");
 /**
- * MyAMS core features
+ * MyAMS mini features
  *
  * This script is used to build MyAMS mini-package.
  *
  * This package includes all MyAMS modules, but without JQuery, Bootstrap or FontAwesome
- * external resources; MyAMS CSS are also excluded.
+ * external resources; MyAMS CSS are excluded.
  */
 
 
@@ -10113,6 +10176,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
+/** Version: 1.0.0  */
 
 /***/ }),
 

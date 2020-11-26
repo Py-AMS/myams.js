@@ -93,8 +93,28 @@ const app = {
 			settings.buttons = ['copy', 'print'];
 		},
 
-		initHandler: function(evt, table, settings, veto) {
+		initHandler: (evt, table, settings, veto) => {
 			settings.lengthMenu = [1, 3, 5, 10];
+		},
+
+		reorderDataGetter: (row) => {
+			return $(row).data('ams-row-id');
+		},
+
+		reorderPostDataGetter: (table, ids) => {
+			return {order: ids};
+		},
+
+		reorderCallback: (table, result, status, xhr) => {
+			return new Promise((resolve, reject) => {
+				MyAMS.require('ajax').then(() => {
+					MyAMS.ajax
+						.handleJSON(result, table.parents('.dataTables_wrapper'))
+						.then(() => {
+							resolve(result);
+						}, reject);
+				}, reject);
+			});
 		}
 	}
 }

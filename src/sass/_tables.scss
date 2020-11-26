@@ -38,3 +38,21 @@ section {
     }
   }
 }
+
+table {
+  th {
+    &.reorder {
+      width: 1em;
+    }
+  }
+  td {
+    &.reorder {
+      width: 1em;
+      color: lighten($primary, 20%);
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+}

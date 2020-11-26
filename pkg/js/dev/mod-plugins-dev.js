@@ -238,12 +238,7 @@
   var _datatablesHelpers = {
     init: function init() {
       // Add autodetect formats
-      try {
-        var _types = $.fn.dataTable.ext.type;
-      } catch (e) {
-        return;
-      }
-
+      var types = $.fn.dataTable.ext.type;
       types.detect.unshift(function (data) {
         if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3}$/)) {
           return 'date-euro';
@@ -316,6 +311,66 @@
         },
         "datetime-euro-desc": function datetimeEuroDesc(a, b) {
           return b - a;
+        }
+      });
+    },
+
+    /**
+     * Handle table rows reordering
+     *
+     * @param evt: original event
+     * @param details: array of changed objects
+     * @param changes: editor changes
+     */
+    reorderRows: function reorderRows(evt, details, changes) {
+      return new Promise(function (resolve, reject) {
+        var table = $(evt.target),
+            data = table.data();
+        var url = data.amsReorderUrl,
+            ids = null;
+
+        if (url) {
+          url = MyAMS.core.executeFunctionByName(url, document, table) || url;
+          var rows = $('tbody tr', table),
+              getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-id';
+
+          if (typeof getter === 'function') {
+            ids = $.makeArray(rows).map(getter);
+          } else {
+            ids = rows.listattr(getter);
+          }
+
+          if (ids.length > 0) {
+            var postData;
+
+            if (data.amsReorderPostData) {
+              postData = MyAMS.core.executeFunctionByName(data.amsReorderPostData, document, table, ids);
+            } else {
+              var attr = data.amsReorderPostAttr || 'order';
+              postData = {};
+              postData[attr] = ids;
+            }
+
+            MyAMS.require('ajax').then(function () {
+              MyAMS.ajax.post(url, postData).then(function (result, status, xhr) {
+                var callback = data.amsReorderCallback;
+
+                if (callback) {
+                  MyAMS.core.executeFunctionByName(callback, document, table, result, status, xhr).then(function () {
+                    for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
+                      results[_key] = arguments[_key];
+                    }
+
+                    resolve.apply.apply(resolve, [table].concat(results));
+                  });
+                } else {
+                  MyAMS.ajax.handleJSON(result, table.parents('.dataTables_wrapper')).then(function () {
+                    resolve(result);
+                  });
+                }
+              }, reject);
+            });
+          }
         }
       });
     }
@@ -510,7 +565,8 @@
                       return;
                     }
 
-                    var data = table.data();
+                    var data = table.data(); // initialize dom property
+
                     var dom = data.amsDatatableDom || data.amsDom || data.dom || '';
 
                     if (!dom) {
@@ -555,13 +611,15 @@
 
                         dom += ">";
                       }
-                    }
+                    } // initialize default options
+
 
                     var defaultOptions = {
                       language: data.amsDatatableLanguage || data.amsLanguage || MyAMS.i18n.plugins.datatables,
                       responsive: true,
                       dom: dom
-                    };
+                    }; // initialize columns definition based on header settings
+
                     var settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
                     settings = MyAMS.core.executeFunctionByName(data.amsDatatableInitCallback || data.amsInit, document, table, settings) || settings;
                     var veto = {
@@ -573,7 +631,12 @@
                       return;
                     }
 
-                    var plugin = table.DataTable(settings);
+                    var plugin = table.DataTable(settings); // set reorder options
+
+                    if (settings.rowReorder) {
+                      plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
+                    }
+
                     MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
                     table.trigger('after-init.ams.datatable', [table, plugin]);
                   });

@@ -62,7 +62,7 @@
 </pre>
 </section>
 
-<section>
+<section id="dt-buttons">
 	<h2>Adding buttons</h2>
 	<p>Standard buttons can be added just by adding a <code>data-buttons</code> attribute with
 	a string value set to <code>default</code>; this will add <i>Copy</i> and <i>Print</i>
@@ -228,7 +228,7 @@
 </pre>
 </section>
 
-<section>
+<section id="dt-options">
 	<h2>MyAMS <code>DataTables</code> plug-in options</h2>
 	<p>The DataTables plug-in and all it's extensions options are extensively described into
 	DataTables manual.</p>
@@ -314,4 +314,213 @@
 		}
 	}
 </pre>
+</section>
+
+<section id="dt-extensions">
+	<h2>Custom DataTables extensions</h2>
+	<p>MyAMS provides a few DataTables extensions; for example, we provide custom sorters and
+	types detectors for dates and datetimes in Euro format (<code>DD/MM/YYYY</code>, or
+	<code>DD/MM/YYY - HH:MM</code>); there is also a custom sorter called
+	<code>numeric-comma</code>, which can be used to sort numeric values using a comma as
+	separator.</p>
+	<section class="m-3">
+		<h3>Table title</h3>
+		<table id="myTable_6"
+			   class="table table-bordered table-striped table-sm datatable width-100">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Birth date</th>
+					<th>Registration</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>02/04/1969</td>
+					<td>15/01/2018 - 11:20</td>
+					<td>5</td>
+				</tr>
+				<tr>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>04/03/2002</td>
+					<td>02/05/2019 - 10:30</td>
+					<td>32,50</td>
+				</tr>
+				<tr>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>10/01/2020</td>
+					<td>02/05/2019 - 08:42</td>
+					<td>15,50</td>
+				</tr>
+				<tr>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>15/02/2018</td>
+					<td>15/01/2018 - 20:30</td>
+					<td>8</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+</section>
+
+<section id="dt-row-reorder">
+	<h2>Handling tables ordering</h2>
+	<p>There are use cases where you want to handle table's row odering manually, without using
+	standard sorting features. MyAMS is adding a few helpers for this, all you have is to
+	disable standard sorting features, and to specify a few options; you will notice that an
+	cell is included in each row to display ordering handle:</p>
+	<section class="m-3">
+		<h3>Table with ordering</h3>
+		<table id="myTable_7"
+			   class="table table-bordered table-striped table-sm datatable width-100"
+			   data-searching="false" data-info="false" data-paging="false" data-ordering="false"
+			   data-row-reorder='{"update": false}'
+			   data-ams-reorder-data="MyAMS.app.datatables.reorderDataGetter"
+			   data-ams-reorder-url="data/reorder.json"
+			   data-ams-reorder-post-attr="order"
+			   data-ams-reorder-post-data="MyAMS.app.datatables.reorderPostDataGetter"
+			   data-ams-reorder-callback="MyAMS.app.datatables.reorderCallback">
+			<thead>
+				<tr>
+					<th class="reorder"></th>
+					<th>Name</th>
+					<th>Value</th>
+					<th>Birth date</th>
+					<th>Registration</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ams-row-id="1">
+					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td>John Doe</td>
+					<td>Manager</td>
+					<td>02/04/1969</td>
+					<td>15/01/2018 - 11:20</td>
+				</tr>
+				<tr data-ams-row-id="2">
+					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td>Joe Bar</td>
+					<td>Manager</td>
+					<td>04/03/2002</td>
+					<td>02/05/2019 - 10:30</td>
+				</tr>
+				<tr data-ams-row-id="3">
+					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td>Wanda Foo</td>
+					<td>Contributor</td>
+					<td>10/01/2020</td>
+					<td>02/05/2019 - 08:42</td>
+				</tr>
+				<tr data-ams-row-id="4">
+					<td class="reorder"><i class="fas fa-arrows-alt-v"></i></td>
+					<td>Gretta Davis</td>
+					<td>Guest</td>
+					<td>15/02/2018</td>
+					<td>15/01/2018 - 20:30</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+<pre>	&lt;table id="myTable_7"
+	       class="table table-bordered table-striped table-sm datatable width-100"
+	       data-searching="false" data-info="false" data-paging="false" data-ordering="false"
+	       data-row-reorder='{"update": false}'
+	       data-ams-reorder-url="data/reorder.json"&gt;
+	  &lt;thead&gt;
+	    &lt;tr data-ams-row-id="1"&gt;
+	      &lt;th class="reorder"&gt;&lt;/th&gt;
+	      &lt;th&gt;...&lt;/th&gt;
+	      ...
+	    &lt;/tr&gt;
+	  &lt;/thead&gt;
+	  &lt;tbody&gt;
+	    &lt;tr data-ams-row-id="1"&gt;
+	      &lt;td class="reorder"&gt;&lt;i class="fas fa-arrows-alt-v"&gt;&lt;/i&gt;&lt;/td&gt;
+	      &lt;td&gt;...&lt;/td&gt;
+	      ...
+	    &lt;/tr&gt;
+	    ...
+	  &lt;/tbody&/gt;
+	&lt;/table&gt;
+</pre>
+	<div class="alert alert-info p-2 m-2" role="alert">
+		<h5 class="alert-heading">
+			<i class="fas fa-info-circle"></i>
+			Info
+		</h5>
+		<p>You can notice how we disabled searching, info display, paging and ordering in this
+		table; <code>rowReorder</code> updates have been disabled so we can handle submission
+		of new table order to a remote service.</p>
+	</div>
+	<section class="m-3">
+		<h3>MyAMS <code>reorder</code> custom options</h3>
+		<p>Custom MyAMS options attributes used to handler rows ordering are prefixed by
+		<code>data-ams-reorder-</code></p>
+		<table class="table table-sm">
+			<tr>
+				<th>Name</th>
+				<th>Default</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><code>url</code></td>
+				<td>null</td>
+				<td>Target URL to which new order data are sent with a JSON POST.</td>
+			</tr>
+			<tr>
+				<td><code>data</code></td>
+				<td class="text-nowrap">data-ams-row-id</td>
+				<td>This option can be defined in two ways: it can be the name of rows attribute
+				containing the row ID; it can also be the dotted name of a function which will
+				be called to get this ID for each row, with the row as argument.</td>
+			</tr>
+			<tr>
+				<td class="text-nowrap"><code>post-data</code></td>
+				<td>null</td>
+				<td>By default, MyAMS just send an array of reordered rows IDs in a parameter
+				called <code>order</code>; if you want to customize submitted JSON contents, you
+				can set this attribute with the dotted name of a function which will be called to
+				get this it: the function will receive two arguments which are the table and the
+				new ordered list of rows IDs.</td>
+			</tr>
+			<tr>
+				<td class="text-nowrap"><code>post-attr</code></td>
+				<td>'order'</td>
+				<td>If you don't define a custom <code>post-data</code> attribute to get POST data,
+				the list of rows IDs will be send using this property name.</td>
+			</tr>
+			<tr>
+				<td><code>callback</code></td>
+				<td>null</td>
+				<td>The JSON POST result is handled by MyAMS using
+				<a href="#mod-ajax.html!handleJSON"><code>MyAMS.ajax.handleJSON</code></a>; if you
+				want to provide your own callback, set this attribute with it's dotted name: it
+				will be called with the original <code>table</code>, and with <code>result</code>,
+				<code>status</code> and <code>xhr</code> arguments, like a classic JQuery AJAX
+				call; the function must return a Promise.</td>
+			</tr>
+		</table>
+		<div class="alert alert-warning p-2 m-2" role="alert">
+			<h5 class="alert-heading">
+				<i class="fas fa-info-circle"></i>
+				Info
+			</h5>
+			<p>Like many DataTables extensions, Reorder events have to be applied on the
+			DataTables object instead of the original DOM table, so they must be applied in
+			Javascript in an after-init callback, like in:</p>
+<pre>	afterInitCallback: (table, plugin, settings) => {
+		plugin.on('row-reorder', (evt, details, changes) => {
+			// event handling code
+		}
+	}
+</pre>
+		</div>
+	</section>
 </section>

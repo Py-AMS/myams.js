@@ -143,13 +143,17 @@ aside {
     background-color: $section-bg;
     color: $section;
 
-    > h1,
+    > h2 {
+      font-size: $font-size-base * 1.4;
+    }
+    > h3 {
+      font-size: $font-size-base * 1.2;
+    }
     > h2,
     > h3 {
       border-bottom: 1px solid $section-border;
       color: $section-head;
       font-family: $font-family-wide;
-      font-size: 1.1rem;
       font-weight: bold;
       letter-spacing: 0.08rem;
       padding: 0.4rem 0.8rem 0.3rem;
