@@ -10,7 +10,7 @@
 	but the registry API allows you to register your own plug-ins.</p>
 </section>
 
-<section>
+<section id="anatomy">
 	<h2>Plug-in anatomy</h2>
 	<p>A plug-in is nothing but a Javascript function; it is called with an <i>element</i>
 	argument, which is the root of the initialized element, and returns a Promise which is
@@ -72,7 +72,8 @@
 		</li>
 	</ul>
 </section>
-<section>
+
+<section id="registering">
 	<h2>Registering plug-in from Javascript code</h2>
 	<p>You can register a plug-in using Javascript code; this is done using
 	<code>MyAMS.registry.register</code> function, with arguments which are the plug-in callable,
@@ -99,12 +100,100 @@
 </pre>
 </section>
 
-<section>
+<section id="html-registering">
 	<h2>Registering plug-in from HTML code</h2>
-	<p></p>
+	<p>Instead of using Javascript code, you can register an existing plug-in using HTML code
+	with data attributes.</p>
+
+	<section class="m-3">
+		<h3>Plug-in data attributes</h3>
+		<p>You first have to provide a <code>data-ams-plugins</code> attributes, contaning the
+		list of plug-ins names (separated by spaces, commas or semicolons); each plug-in is then
+		defined by a set of data attributes which are prefixed by <code>data-ams-plugin-XXX-</code>,
+		where <code>XXX</code> is the plug-in name; for example:</p>
+<pre>	&lt;div data-ams-plugins="example"
+	     data-ams-plugin-example-src="resources/js/myams-plugin.js"
+	     data-ams-plugin-example-callback="MyAMS.app.examplePlugin"&gt;
+	    ...
+	&lt;/div&gt;
+</pre>
+		<p>Instead of using distinct data attributes, you can also use JSON notation; the value
+		of the <code>data-ams-plugins</code> attribute can then be a single plug-in definition,
+		or an array to define several plug-ins:</p>
+		<div data-ams-plugins='{
+			"name": "example",
+			"src": "resources/js/myams-plugin.js",
+			"callback": "MyAMS.app.examplePlugin"
+		}'>
+			<div class="example p-2 m-3">This is an example element which was updated by a
+			plug-in!!</div>
+		</div>
+<pre>	&lt;div data-ams-plugins='{
+	     "name": "example",
+	     "src": "resources/js/myams-plugin.js",
+	     "callback": "MyAMS.app.examplePlugin"
+	 }'&gt;
+	...
+	&lt;/div&gt;
+</pre>
+		<table class="table table-sm">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>src</code></td>
+					<td>Ralative or absolute URL of the plug-in script</td>
+				</tr>
+				<tr>
+					<td><code>css</code></td>
+					<td>Relative or absolute URL of a CSS file associated with the plug-in</td>
+				</tr>
+				<tr>
+					<td><code>callback</code></td>
+					<td>If given, this is the dotted name of a callback which will be called
+					after plug-in loading</td>
+				</tr>
+				<tr>
+					<td><code>async</code></td>
+					<td>All plug-ins are loaded asyncronously by default, except if this
+					attribute is set to <code>false</code>; synchronous plug-ins are loaded only
+					after all asynchronous ones.</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
 </section>
 
-<section>
+<section id="initialization">
 	<h2>Plug-in initialization</h2>
-	<p></p>
+	<p>Compared with modules which are called after loading (using their <code>init()</code>
+	function) and on each new element initialization (using <code>initElement()</code>), plug-ins
+	are called on each initialized element, after modules initialization; they should always
+	return a new Promise, which is resolved with the JQuery selection of elements which were
+	updated by the plug-in:</p>
+<pre>	(function($) {
+
+	  MyAMS.app = MyAMS.app || {};
+
+	  $.extend(MyAMS.app, {
+
+	    examplePlugin: (element) => {
+	      return new Promise((resolve, reject) => {
+	        try {
+	          const examples = $('.example', element);
+	          examples.addClass('bg-warning');
+	          resolve(examples);
+	        } catch {
+	          reject();
+	        }
+	      });
+	    }
+	  }
+
+	})(MyAMS.$);
+</pre>
 </section>
