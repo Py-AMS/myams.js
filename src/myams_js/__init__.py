@@ -53,7 +53,10 @@ fontawesome_css = Resource(library, 'css/ext/fontawesome.css',
 
 fontawesome_js = ResourceWithData(library, 'js/ext/fontawesome.js',
                                   minified='js/ext/fontawesome.min.js',
-                                  data={'auto-replace-svg': 'nest'},
+                                  data={
+                                      'auto-replace-svg': 'nest',
+                                      'search-pseudo-elements': ''
+                                  },
                                   bottom=True)
 
 

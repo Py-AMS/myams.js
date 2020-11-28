@@ -26,6 +26,10 @@ HISTORY = os.path.join(DOCS, 'HISTORY.txt')
 version = '1.0.0'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
+data_dir = 'pkg'
+data_files = [(d, [os.path.join(d, f) for f in files])
+              for d, folders, files in os.walk(data_dir)]
+
 tests_require = [
     'pyramid_zcml',
     'zope.exceptions'
@@ -51,8 +55,12 @@ setup(name='myams_js',
       package_dir={'': 'src'},
       namespace_packages=[],
       include_package_data=True,
-      package_data={'': ['*.zcml', '*.txt', '*.pt', '*.pot', '*.po', '*.mo',
-                         '*.png', '*.gif', '*.jpeg', '*.jpg', '*.css', '*.js']},
+      package_data={
+          '': ['*.zcml', '*.txt', '*.pt', '*.pot', '*.po', '*.mo',
+               '*.png', '*.gif', '*.jpeg', '*.jpg', '*.css', '*.js',
+               '*.ttf', '*.eot', '*.woff', '*.woff2', '*.svg']
+      },
+      data_files=data_files,
       zip_safe=False,
       # uncomment this to be able to run tests with setup.py
       # test_suite="myams_js.tests.test_utilsdocs.test_suite",
