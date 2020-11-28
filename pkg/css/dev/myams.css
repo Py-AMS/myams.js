@@ -8260,8 +8260,8 @@ aside {
     height: calc(100vh / 2);
     max-height: 800px; }
     .mobile-detected #user-notifications .dropdown-menu {
-      height: calc(100vh - 75px);
-      max-height: calc(100vh - 75px); }
+      height: calc(100vh - 100px);
+      max-height: calc(100vh - 100px); }
       @media (orientation: portrait) {
         .mobile-detected #user-notifications .dropdown-menu {
           width: calc(100vw - 10px);

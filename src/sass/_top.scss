@@ -171,8 +171,8 @@
     max-height: 800px;
 
     .mobile-detected & {
-      height: calc(100vh - 75px);
-      max-height: calc(100vh - 75px);
+      height: calc(100vh - 100px);
+      max-height: calc(100vh - 100px);
 
       @media (orientation: portrait) {
         width: calc(100vw - 10px);
