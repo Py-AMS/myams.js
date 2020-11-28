@@ -80,18 +80,6 @@
 	handler is checking that inputs are not in read-only before calling selected handlers.</p>
 </section>
 
-<section id="formResetHandler">
-	<h2><code>MyAMS.events.formResetHandler(evt)</code></h2>
-	<p>This event handler is used as default to handle <code>reset</code> events on forms.</p>
-	<p>On reset, all remaining error messages are cleared, and focus is restored on the first
-	input. You can also register custom reset event handlers in any form by setting a
-	<code>data-ams-reset-callback</code> attribute on any element located inside the form; the
-	attribute's value is the dotted name of a function which will be called on reset; this
-	function will receive several parameters which are the form, the element on which the
-	handler is set, and the options defined into <code>data-ams-reset-callback-options</code>,
-	if any.</p>
-</section>
-
 <section id="triggerEvent">
 	<h2><code>MyAMS.events.triggerEvent(evt)</code></h2>
 	<p>This event handler is used to handle triggering of custom events on click. By setting a
