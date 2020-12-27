@@ -91,10 +91,10 @@
           dtTable.row(selector).data(options.data);
           resolve(row);
         } else {
-          var new_row = $(options.content);
-          row.replaceWith(new_row);
-          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, new_row).then(function () {
-            resolve(new_row);
+          var newRow = $(options.content);
+          row.replaceWith(newRow);
+          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, newRow).then(function () {
+            resolve(newRow);
           }, reject);
         }
       });

@@ -1,27 +1,29 @@
 matrix:
   include:
-    - language: node_js
-      node_js:
-        - 12.17.0
-      install:
-      - npm install --no-audit
-      - npm run coverage
-      - ./node_modules/.bin/coveralls < ./coverage/lcov.info
-    - language: python
-      python:
-      - '3.5'
-      - '3.6'
-      - '3.7'
-      - '3.8'
-      install:
-      - python bootstrap.py
-      - "./bin/buildout"
-      deploy:
-        provider: pypi
-        on:
-          tags: true
-        user: __token__
-        password:
-          secure: KvkEzqWb5uihavTmJ30A9ab6jI7dh4DWkO2xYxuFODVE1TWQdHRdpJyf9BwsFm5IG+85pv6PXOEkv+/JSto+knJCtkSpSVJWiJYjrsEVWNQhj80rrySRrBFpklezcXKQ2mNnM/59glJ6rHLo435htJY7B9pcNf+64IE4Xoj585oVjSd3gx9Z94WS1JU7/ErLDZb+C4cDJJOLN5Qs0UoqYNHCVbluyofrk5cm3hcVxgwTjDgm4KBPajuEgYn7Xw2BtyLFHQZAPgCltc0F0jEmQzISDrCWmh/mnRMlnFtvvDpYM7r1pepF/LS9g0bXWCzE5z6peU7u2zhvnnSS1T4qPmQQ8O+YbuTNSToDRnozFfFgV5k5uFtWOO2ND74UzcYexotUD8Yu4AauIsixw1MRP+W8T57QWM3HuHa/tLllWM4jUxggyZrpU8/KsPEOAeIoJrSW2V15Vtfnw3xOqYBmj0t6HG19VAXdvp/LKrP8nrwf2GHo/niGdwehPlawFNlVM95YyUuJY5MrcWmR+ZdES2nLC8RjQ2cddcHhbho6uSJHQ6ygJmRcVMBQzwLma5beA4woO1ikJ7VcHBc0m2mkx6OTsWROLzSk5aty3RVrDPdsRHJ3JQJxPhgONOh4rbeGDhraFmjP9g/nxEgN2LSUqgmNwkEk1Txjm2dwMJHvTqI=
-        distributions: sdist bdist_egg bdist_wheel
-        skip_existing: true
+  - language: node_js
+    node_js:
+    - 12.17.0
+    install:
+    - npm install --no-audit
+    - npm run coverage
+    - "./node_modules/.bin/coveralls < ./coverage/lcov.info"
+  - language: python
+    python:
+    - '3.5'
+    - '3.6'
+    - '3.7'
+    - '3.8'
+    install:
+    - python bootstrap.py
+    - "./bin/buildout"
+    script:
+    - ./bin/test
+    deploy:
+      provider: pypi
+      on:
+        tags: true
+      user: __token__
+      password:
+        secure: Zbtt0Qwe4ZgchcrNwNr/AcwBRtiXNWBqO9boFJMj7Z4C/jPNItJp3UJGod/hdsdsCYnjRMomIPxrNfYe97cEWPAthVEJbxUsx8B8YXFptCrfSAX8w5golz1HvezSj6fI7e9DsEn39FXiFZDr88bKyLl6ohnZ+tiADVhmLjcSdjwZcPUybyjc+EiofbuN5Ia5FcXN1+sT9JmG4JaPBbPYzdp1qbJ4mUt8WT8yKMTWD82cr3h0ya/i9/fCR0S2Qjc6qwkUUX++Jbg3oCb2Ad0Z3mpVqrvnstY0NycSbaRD5aYWSc0w+z+II9oENdA5Re7FpLhYcVuSPTf9W90YOliZCKytM22saio8HPvWgBRtq8ZfrVIDfa/SvhfA1k1Aaa99gwKmapEd0DvMfsBjbKVHn9na/NIHRDczohbEYXXPMAYM/QQ2FiD4aYnhTw9O+uD7YQ3+Fp+ES2cmuTQa8dn5JpWLUqxf0HXgYVLkLTGvZC/VebsaAaDL87FpggXcrWJV04K8xKdQXbN6F5FIKyBu9FxWeuWg5qyU5SR/KW06oEvB9VUtJ+UhkxfNaWQ8MCnugjVBDN3xqY/4J6xz9V1u0Rz9a4EjpKuL2UnhtmfDsAEZNneBFW61nTaBPCNhsUQwKXzbQYzt2GaHu9KQp2R1x3qSrpL0Ka818v/47yV+wFo=
+      distributions: sdist bdist_egg bdist_wheel
+      skip_existing: true
