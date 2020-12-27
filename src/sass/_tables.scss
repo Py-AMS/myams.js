@@ -40,12 +40,19 @@ section {
 }
 
 table {
+  tr {
+    &[data-ams-url] {
+      cursor: pointer;
+  }
+  }
   th {
-    &.reorder {
+    &.reorder,
+    &.action {
       width: 1em;
     }
   }
   td {
+    &.action,
     &.reorder {
       width: 1em;
       color: lighten($primary, 20%);

@@ -37,19 +37,24 @@ $teal:                      #20c997 !default;
 $cyan:                      #346597 !default;
 
 $success:                   #478e47 !default;
+$warning:                   $orange !default;
 $secondary:               $gray-400 !default;
 
 
 $font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-wide:          "Roboto", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-$font-family-monospace:     SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
 $font-size-base:            0.95rem !default;
 
 
+// Tooltips styles
 $zindex-tooltip:               2000 !default;
+
 $tooltip-bg:                #3a413c !default;
 $tooltip-margin:                3px !default;
+$tooltip-max-width:           300px !default;
+$tooltip-align:                left !default;
 
 
 // Layout colors
