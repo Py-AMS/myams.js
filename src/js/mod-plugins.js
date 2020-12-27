@@ -76,23 +76,26 @@ export function checker(element) {
 				if (!data.amsChecker) {
 					const
 						fieldset = legend.parent('fieldset'),
-						checked = fieldset.hasClass('switched') || (data.amsCheckerState === 'on'),
-						fieldName = data.amsCheckerFieldname || `checker_${MyAMS.core.generateId()}`,
+						state = data.amsCheckerState || data.amsState,
+						checked = fieldset.hasClass('switched') || (state === 'on'),
+						fieldName = data.amsCheckerFieldname || data.amsFieldname || `checker_${MyAMS.core.generateId()}`,
 						fieldId = fieldName.replace(/\./g, '_'),
-						prefix = data.amsCheckerHiddenPrefix,
-						marker = data.amsCheckerMarker || false,
-						checkerMode = data.amsCheckerMode || 'hide',
-						checkedValue = data.amsCheckerValueOn || 'true',
-						uncheckedValue = data.amsCheckerValueOff || 'false',
+						prefix = data.amsCheckerHiddenPrefix || data.amsHiddenPrefix,
+						marker = data.amsCheckerMarker || data.amsMarker || false,
+						checkerMode = data.amsCheckerMode || data.amsMode || 'hide',
+						checkedValue = data.amsCheckerValueOn || data.amsValueOn || 'true',
+						uncheckedValue = data.amsCheckerValueOff || data.amsValueOff || 'false',
+						value = data.amsCheckerValue || data.amsValue,
+						readonly = data.amsCheckerReadonly || data.amsReadonly,
 						props = {
 							legend: legend.text(),
 							fieldName: fieldName,
 							fieldId: fieldId,
-							value: data.amsCheckerValue || true,
+							value: value || true,
 							checked: checked,
-							readonly: data.amsCheckerReadonly,
+							readonly: readonly,
 							prefix: prefix,
-							state: data.amsCheckerState,
+							state: state,
 							checkedValue: checkedValue,
 							uncheckedValue: uncheckedValue,
 							marker: marker
@@ -113,9 +116,9 @@ export function checker(element) {
 							input.prop('checked', !checked);
 							return;
 						}
-						MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler,
-							document, legend, checked);
-						if (!data.amsCheckerCancelDefault) {
+						MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler ||
+							data.amsChangeHandler, document, legend, checked);
+						if (!data.amsCheckerCancelDefault && !data.amsCancelDefault) {
 							const prefix = input.siblings('.prefix');
 							if (checkerMode === 'hide') {
 								if (checked) {
@@ -736,6 +739,87 @@ export function dragdrop(element) {
 
 
 /**
+ * ACE text editor
+ */
+
+export function editor(element) {
+	return new Promise((resolve, reject) => {
+		const editors = $('.editor textarea', element);
+		if (editors.length > 0) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check(window.ace,
+					`${MyAMS.env.baseURL}../ext/ace/ace${MyAMS.env.extext}.js`).then((firstLoad) => {
+
+					const deferred = []
+					if (firstLoad) {
+						ace.config.set('basePath', `${MyAMS.env.baseURL}../ext/ace`);
+						deferred.push(MyAMS.core.getScript(
+							`${MyAMS.env.baseURL}../ext/ace/ext-modelist${MyAMS.env.extext}.js`));
+					}
+					$.when.apply($, deferred).then(() => {
+						editors.each((idx, elt) => {
+							const
+								textarea = $(elt),
+								widget = textarea.parents('.editor'),
+								data = textarea.data(),
+								modeList = ace.require('ace/ext/modelist'),
+								mode = data.amsEditorMode || data.amsMode ||
+									modeList.getModeForPath(data.amsEditorFilename || data.amsFilename || 'text.txt').mode;
+
+							setTimeout(() => {
+								// create editor DIV
+								const textEditor = $('<div>', {
+									position: 'absolute',
+									width: textarea.width(),
+									height: textarea.height(),
+									'class': textarea.attr('class')
+								}).insertBefore(textarea);
+								textarea.css('display', 'none');
+								// initialize editor
+								const defaultOptions = {
+									mode: mode,
+									fontSize: 11,
+									tabSize: 4,
+									useSoftTabs: false,
+									showGutter: true,
+									showLineNumbers: true,
+									printMargin: 132,
+									showInvisibles: true
+								};
+								let settings = $.extend({}, defaultOptions, data.amsEditorOptions || data.amsOptions);
+								settings = MyAMS.core.executeFunctionByName(data.amsEditorInitCallback || data.amsInit,
+									document, textarea, settings) || settings;
+								const veto = {veto: false};
+								textarea.trigger('before-init.ams.editor', [textarea, settings, veto]);
+								if (veto.veto) {
+									return;
+								}
+								const editor = ace.edit(textEditor[0]);
+								editor.setOptions(settings);
+								editor.session.setValue(textarea.val());
+								editor.session.on('change', () => {
+									textarea.val(editor.session.getValue());
+								});
+								widget.data('editor', editor);
+								MyAMS.core.executeFunctionByName(
+									data.amsEditorAfterEditCallback || data.amsAfterInit,
+									document, textarea, editor, settings);
+								textarea.trigger('after-init.ams.editor', [textarea, editor]);
+							}, 200);
+						});
+					});
+				});
+			}, reject).then(() => {
+				resolve(editors);
+			})
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
  * Bootstrap custom file input manager
  */
 
@@ -765,6 +849,83 @@ export function fileInput(element) {
 				}, reject).then(() => {
 					resolve(inputs);
 				});
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
+ * Image area select plug-in integration
+ */
+
+export function imgAreaSelect(element) {
+	return new Promise((resolve, reject) => {
+		const images = $('.imgareaselect', element);
+		if (images.length > 0) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check($.fn.imgAreaSelect,
+					`${MyAMS.env.baseURL}../ext/jquery-imgareaselect${MyAMS.env.extext}.js`).then((firstLoad) => {
+					const required = [];
+					if (firstLoad) {
+						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated.css`, 'imgareaselect'));
+					}
+					$.when.apply($, required).then(() => {
+						images.each((idx, elt) => {
+							const image = $(elt);
+							if (image.data('imgAreaSelect')) {
+								return;  // already initialized
+							}
+							const
+								data = image.data(),
+								parentSelector = data.amsImgareaselectParent || data.amsParent,
+								parent = parentSelector ? image.parents(parentSelector) : 'body',
+								defaultOptions = {
+									instance: true,
+									handles: true,
+									parent: parent,
+									x1: data.amsImgareaselectX1 || data.amsX1 || 0,
+									y1: data.amsImgareaselectY1 || data.amsY1 || 0,
+									x2: data.amsImgareaselectX2 || data.amsX2 ||
+										data.amsImgareaselectImageWidth || data.amsImageWidth,
+									y2: data.amsImgareaselectY2 || data.amsY2 ||
+										data.amsImgareaselectImageHeight || data.amsImageHeight,
+									imageWidth: data.amsImgareaselectImageWidth || data.amsImageWidth,
+									imageHeight: data.amsImgareaselectImageHeight || data.amsImageHeight,
+									imgWidth: data.amsImgareaselectThumbWidth || data.amsThumbWidth,
+									imgHeight: data.amsImgareaselectThumbHeight || data.amsThumbHeight,
+									minWidth: 128,
+									minHeight: 128,
+									aspectRatio: data.amsImgareaselectAspectRatio || data.amsAspectRatio,
+									onSelectEnd: MyAMS.core.getFunctionByName(data.amsImgareaselectSelectEnd || data.amsSelectedEnd) || function(img, selection) {
+										const target = data.amsImgareaselectTargetField || data.amsTargetField || 'image_';
+										$(`input[name="${target}x1"]`, parent).val(selection.x1);
+										$(`input[name="${target}y1"]`, parent).val(selection.y1);
+										$(`input[name="${target}x2"]`, parent).val(selection.x2);
+										$(`input[name="${target}y2"]`, parent).val(selection.y2);
+									}
+								};
+							let settings = $.extend({}, defaultOptions, data.amsImgareaselectOptions || data.amsOptions);
+							settings = MyAMS.core.executeFunctionByName(
+								data.amsImgareaselectInitCallback || data.amsInit,
+								document, image, settings) || settings;
+							const veto = {veto: false};
+							image.trigger('before-init.ams.imgareaselect', [image, settings, veto]);
+							if (veto.veto) {
+								return;
+							}
+							// add timeout to update plug-in if displayed into a modal dialog
+							setTimeout(() => {
+								const plugin = image.imgAreaSelect(settings);
+								image.trigger('after-init.ams.imgareaselect', [image, plugin]);
+							}, 200);
+						});
+					}, reject).then(() => {
+						resolve(images);
+					})
+				}, reject);
 			}, reject);
 		} else {
 			resolve(null);
@@ -902,7 +1063,7 @@ export function select2(element) {
 								data.amsSelect2AfterInitCallback || data.amsAfterInit,
 								document, select, plugin, settings);
 							select.trigger('after-init.ams.select2', [select, plugin]);
-						})
+						});
 					}, reject).then(() => {
 						resolve(selects);
 					});
@@ -956,6 +1117,7 @@ export function switcher(element) {
 					legend = $(elt),
 					fieldset = legend.parent('fieldset'),
 					data = legend.data(),
+					state = data.amsSwitcherState || data.amsState,
 					minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
 					plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
 				if (!data.amsSwitcher) {
@@ -964,7 +1126,7 @@ export function switcher(element) {
 					if (veto.veto) {
 						return;
 					}
-					$(`<i class="fa fa-${data.amsSwitcherState === 'open' ? minusClass : plusClass} mr-2"></i>`)
+					$(`<i class="fa fa-${state === 'open' ? minusClass : plusClass} mr-2"></i>`)
 						.prependTo(legend);
 					legend.on('click', (evt) => {
 						evt.preventDefault();
@@ -992,7 +1154,7 @@ export function switcher(element) {
 							legend.trigger('closed.ams.switcher', [legend]);
 						}
 					});
-					if (data.amsSwitcherState !== 'open') {
+					if (state !== 'open') {
 						fieldset.addClass('switched');
 					}
 					legend.trigger('after-init.ams.switcher', [legend]);
@@ -1006,6 +1168,127 @@ export function switcher(element) {
 	});
 }
 
+
+/**
+ * TinyMCE HTML editor plug-in
+ */
+
+export function tinymce(element) {
+	return new Promise((resolve, reject) => {
+		const editors = $('.tinymce', element);
+		if (editors.length > 0) {
+			MyAMS.require('ajax', 'i18n').then(() => {
+				const baseURL = `${MyAMS.env.baseURL}../ext/tinymce${MyAMS.env.devmode ? '/dev': ''}`;
+				MyAMS.ajax.check(window.tinymce,
+					`${baseURL}/tinymce${MyAMS.env.extext}.js`).then((firstLoad) => {
+					const deferred = [];
+					if (firstLoad) {
+						tinymce.baseURL = baseURL;
+						tinymce.suffix = MyAMS.env.extext;
+						deferred.push(MyAMS.core.getScript(`${baseURL}/jquery.tinymce.min.js`));
+						deferred.push(MyAMS.core.getScript(`${baseURL}/themes/silver/theme${MyAMS.env.extext}.js`));
+						// Prevent Bootstrap dialog from blocking focusin
+						$(document).on('focusin', (evt) => {
+							if ($(evt.target).closest(".tox-tinymce, .tox-tinymce-aux, " +
+								".moxman-window, .tam-assetmanager-root").length) {
+								evt.stopImmediatePropagation();
+							}
+						});
+					}
+					$.when.apply($, deferred).then(() => {
+						editors.each((idx, elt) => {
+							const
+								editor = $(elt),
+								data = editor.data(),
+								defaultOptions = {
+									base_url: baseURL,
+									theme: data.amsTinymceTheme || data.amsTheme || 'silver',
+									language: MyAMS.i18n.language,
+									menubar: (data.amsTinymceMenubar !== false) && (data.amsMenubar !== false),
+									statusbar: (data.amsTinymceStatusbar !== false) && (data.amsStatusbar !== false),
+									plugins: data.amsTinymcePlugins || data.amsPlugins || [
+										"advlist autosave autolink lists link charmap print preview hr anchor pagebreak",
+										"searchreplace wordcount visualblocks visualchars code fullscreen",
+										"insertdatetime nonbreaking save table contextmenu directionality",
+										"emoticons paste textcolor colorpicker textpattern autoresize"
+									],
+									toolbar: data.amsTinymceToolbar || data.amsToolbar,
+									toolbar1: ((data.amsTinymceToolbar1 === false) || (data.amsToolbar1 === false)) ? false :
+										data.amsTinymceToolbar1 || data.amsToolbar1 ||
+										"undo redo | pastetext | styleselect | bold italic | " +
+										"alignleft aligncenter alignright alignjustify | " +
+										"bullist numlist outdent indent",
+									toolbar2: ((data.amsTinymceToolbar2 === false) || (data.amsToolbar2 === false)) ? false :
+										data.amsTinymceToolbar2 || data.amsToolbar2 ||
+										"forecolor backcolor emoticons | charmap link image media | " +
+										"fullscreen preview print | code",
+									content_css: data.amsTinymceContentCss || data.amsContentCss,
+									formats: data.amsTinymceFormats || data.amsFormats,
+									style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
+									block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
+									valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
+									image_advtab: true,
+									image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) ||
+										data.amsTinymceImageList || data.amsImageList,
+									image_class_list: data.amsTinymceImageClassList || data.amsImageClassList,
+									link_list: MyAMS.core.getFunctionByName(data.amsTinymceLinkList || data.amsLinkList) ||
+										data.amsTinymceLinkList || data.amsLinkList,
+									link_class_list: data.amsTinymceLinkClassList || data.amsLinkClassList,
+									paste_as_text: ((data.amsTinymcePasteAsText === undefined) && (data.amsPasteAsText === undefined)) ?
+										true : data.amsTinymcePasteAsText || data.amsPasteAsText,
+									paste_auto_cleanup_on_paste: ((data.amsTinymcePasteAutoCleanup === undefined) && (data.amsPasteAutoCleanup === undefined)) ?
+										true : data.amsTinymcePasteAutoCleanup || data.amsPasteAutoCleanup,
+									paste_strip_class_attributes: data.amsTinymcePasteStripClassAttributes || data.amsPasteStripClassAttributes || 'all',
+									paste_remove_spans: ((data.amsTinymcePasteRemoveSpans === undefined) && (data.amsPasteRemoveSpans === undefined)) ?
+										true : data.amsTinymcePasteRemoveSpans || data.amsPasteRemoveSpans,
+									paste_remove_styles: ((data.amsTinymcePasteRemoveStyles === undefined) || (data.amsPasteRemoveStyles === undefined)) ?
+										true : data.amsTinymcePasteRemoveStyles || data.amsPasteRemoveStyles,
+									height: data.amsTinymceHeight || data.amsHeight || 50,
+									min_height: 50,
+									resize: true,
+									autoresize_min_height: 50,
+									autoresize_max_height: 500,
+									init_instance_callback: (instance) => {
+										const handler = (evt) => {
+											instance.remove(`#${instance.id}`);
+											$(document).off('cleared.ams.content', handler);
+										};
+										$(document).on('cleared.ams.content', handler);
+									}
+								};
+							const plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
+							if (plugins) {
+								const names = plugins.split(/\s+/);
+								for (const name of names) {
+									const src = editor.data(`ams-tinymce-plugin-${name}`) || editor.data(`ams-plugin-${name}`);
+									tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
+								}
+							}
+							let settings = $.extend({}, defaultOptions, data.amsTinymceOptions || data.amsOptions);
+							settings = MyAMS.core.executeFunctionByName(
+								data.amsTinymceInitCallback || data.amsInit,
+								document, editor, settings) || settings;
+							const veto = {veto: false};
+							editor.trigger('before-init.ams.tinymce', [editor, settings, veto]);
+							if (veto.veto) {
+								return;
+							}
+							const plugin = editor.tinymce(settings);
+							MyAMS.core.executeFunctionByName(
+								data.amsTinymceAfterInitCallback || data.amsAfterInit,
+								document, editor, plugin, settings);
+							editor.trigger('after-init.ams.tinymce', [editor, settings]);
+						})
+					}, reject).then(() => {
+						resolve(editors);
+					});
+				}, reject);
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
 
 /**
  * Form validation plug-in
@@ -1117,10 +1400,13 @@ if (window.MyAMS) {
 	MyAMS.registry.register(contextMenu, 'contextMenu');
 	MyAMS.registry.register(datatables, 'datatables');
 	MyAMS.registry.register(dragdrop, 'dragdrop');
+	MyAMS.registry.register(editor, 'editor');
 	MyAMS.registry.register(fileInput, 'fileInput');
+	MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
 	MyAMS.registry.register(select2, 'select2');
 	MyAMS.registry.register(svgPlugin, 'svg');
 	MyAMS.registry.register(switcher, 'switcher');
+	MyAMS.registry.register(tinymce, 'tinymce');
 	MyAMS.registry.register(validate, 'validate');
 
 	// register module
