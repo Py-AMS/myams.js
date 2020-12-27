@@ -133,13 +133,13 @@ const BIGBOX_TEMPLATE_STRING = `
 					<p>{{:message}}</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" 
-							data-dismiss="modal" data-modal-dismiss-value="cancel">
-						{{*: data.cancelLabel || MyAMS.i18n.BTN_CANCEL }}
-					</button>
 					<button type="button" class="btn btn-primary" 
 							data-dismiss="modal" data-modal-dismiss-value="success">
 						{{*: data.successLabel || MyAMS.i18n.BTN_OK }}
+					</button>
+					<button type="button" class="btn btn-secondary" 
+							data-dismiss="modal" data-modal-dismiss-value="cancel">
+						{{*: data.cancelLabel || MyAMS.i18n.BTN_CANCEL }}
 					</button>
 				</div>
 			</div>
@@ -176,6 +176,12 @@ export const alert = {
 		props.status = status;
 		$(`.alert-${status}`, props.parent).not('.persistent').remove();
 		$(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
+		MyAMS.require('ajax').then(() => {
+			MyAMS.ajax.check($.fn.scrollTo,
+				`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+				$('#content').scrollTo(props.parent, { offset: -15 });
+			});
+		});
 	},
 
 	/**
