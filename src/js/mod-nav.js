@@ -196,10 +196,14 @@ let _initialized = false,
 function _openPage(href) {
 	if (location && href.startsWith('#')) {
 		if (href !== location.hash) {
-			window.location.hash = href;
+			location.hash = href;
 		}
 	} else {
-		window.location = href;
+		if (location.toString() === href) {
+			location.reload();
+		} else {
+			window.location = href;
+		}
 	}
 }
 
@@ -294,7 +298,7 @@ export function linkClickHandler(evt) {
 export const nav = {
 
 	/**
-	 * initialize navigation throught data attributes
+	 * initialize navigation through data attributes
 	 */
 	init: () => {
 
