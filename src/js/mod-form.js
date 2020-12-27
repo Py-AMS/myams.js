@@ -667,9 +667,11 @@ export function getFormAjaxSettings(form, settings, button, postData, action, ta
 			if (veto.veto) {
 				return;
 			}
-			const modal = form.closest('.modal-dialog');
-			if (modal.exists() && !settings.keepModalOpen) {
-				MyAMS.modal && MyAMS.modal.close(modal);
+			if (result && result.status !== 'error' && result.closeForm !== false) {
+				const modal = form.closest('.modal-dialog');
+				if (modal.exists() && !settings.keepModalOpen) {
+					MyAMS.modal && MyAMS.modal.close(modal);
+				}
 			}
 			try {
 				settings.submitCallback(form, settings, target, result, status, request);
