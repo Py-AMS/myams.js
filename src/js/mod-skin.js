@@ -31,6 +31,9 @@ export const skin = {
 		$('.hint').mousedown((evt) => {
 			$(evt.currentTarget).tooltip('hide');
 		});
+		$(document).on('clear.ams.content', () => {
+			$('.tooltip').remove();
+		});
 
 		// check URL when hash is changed
 		skin.checkURL();
@@ -149,7 +152,7 @@ export const skin = {
 				url = url.substr(1);
 			}
 			target = $(target);
-			MyAMS.core.clearContent(target).then((status) => {
+			MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, target).then((status) => {
 				if (!status) {  // applied veto!
 					return;
 				}
@@ -205,17 +208,20 @@ export const skin = {
 								case 'text':
 								default:
 									target.parents('.hidden').removeClass('hidden');
-									target.css({opacity: '0.0'})
-										.html(result)
-										.removeClass('hidden')
-										.delay(30)
-										.animate({opacity: '1.0'}, 300);
-									MyAMS.core.executeFunctionByName(target.data('ams-init-content') ||
-										MyAMS.config.initContent, window, target).then(() => {
-										MyAMS.form && MyAMS.form.setFocus(target);
-										target.trigger('after-load.ams.content');
-										resolve(result, status, xhr);
-									})
+									MyAMS.core.executeFunctionByName(target.data('ams-clear-content') ||
+										MyAMS.config.clearContent, document, target).then(() => {
+										target.css({opacity: '0.0'})
+											.html(result)
+											.removeClass('hidden')
+											.delay(30)
+											.animate({opacity: '1.0'}, 300);
+										MyAMS.core.executeFunctionByName(target.data('ams-init-content') ||
+											MyAMS.config.initContent, window, target).then(() => {
+											MyAMS.form && MyAMS.form.setFocus(target);
+											target.trigger('after-load.ams.content');
+											resolve(result, status, xhr);
+										});
+									}, reject);
 							}
 							MyAMS.stats && MyAMS.stats.logPageview();
 						}
