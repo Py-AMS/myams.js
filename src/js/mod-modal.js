@@ -128,10 +128,11 @@ export function modalHiddenEventHandler() {
 export function dynamicModalHiddenEventHandler(evt) {
 	const dialog = $(evt.target);
 	MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') ||
-		MyAMS.config.clearContent, document, dialog)
-	if (dialog.data('dynamic') === true) {
-		dialog.remove();
-	}
+		MyAMS.config.clearContent, document, dialog).then(() => {
+		if (dialog.data('dynamic') === true) {
+			dialog.remove();
+		}
+	});
 }
 
 
