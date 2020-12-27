@@ -5,6 +5,7 @@
 import $ from "jquery";
 
 import MyAMS, { init } from "../ext-base";
+import { ajax } from "../mod-ajax";
 import { alert } from "../mod-alert";
 import { error } from "../mod-error";
 import { form } from "../mod-form";
@@ -18,6 +19,10 @@ init($);
 if (!MyAMS.i18n) {
 	MyAMS.i18n = i18n;
 	MyAMS.config.modules.push('i18n');
+}
+if (!MyAMS.ajax) {
+	MyAMS.ajax = ajax;
+	MyAMS.config.modules.push('ajax');
 }
 if (!MyAMS.alert) {
 	MyAMS.alert = alert;
