@@ -15,7 +15,7 @@
 MyAMS.js extension framework
 """
 
-from fanstatic import Library, Resource
+from fanstatic import Library, Resource, Group
 
 from pyams_utils.fanstatic import ResourceWithData
 
@@ -31,33 +31,29 @@ library = Library('myams', '../../pkg')
 #
 
 jquery = Resource(library, 'js/ext/jquery.js',
-                  minified='js/ext/jquery.min.js',
-                  bottom=True)
+                  minified='js/ext/jquery.min.js')
 
 jsrender = Resource(library, 'js/ext/jsrender.js',
                     minified='js/ext/jsrender.min.js',
-                    depends=(jquery,),
-                    bottom=True)
+                    depends=(jquery,))
 
 bootstrap_css = Resource(library, 'css/ext/bootstrap.css',
                          minified='css/ext/bootstrap.min.css')
 
 bootstrap = Resource(library, 'js/ext/bootstrap.js',
                      minified='js/ext/bootstrap.min.js',
-                     depends=(jquery,),
-                     bottom=True)
+                     depends=(jquery,))
 
 fontawesome_css = Resource(library, 'css/ext/fontawesome.css',
                            minified='css/ext/fontawesome.min.css',
-                           bottom=True)
+                           depends=(bootstrap_css,))
 
 fontawesome_js = ResourceWithData(library, 'js/ext/fontawesome.js',
                                   minified='js/ext/fontawesome.min.js',
                                   data={
                                       'auto-replace-svg': 'nest',
                                       'search-pseudo-elements': ''
-                                  },
-                                  bottom=True)
+                                  })
 
 
 #
@@ -65,28 +61,23 @@ fontawesome_js = ResourceWithData(library, 'js/ext/fontawesome.js',
 #
 
 myams_full_bundle = ResourceWithData(library, 'js/dev/myams-dev.js',
-                                     minified='js/prod/myams.js',
-                                     bottom=True)
+                                     minified='js/prod/myams.js')
 
 myams_css = Resource(library, 'css/dev/myams.css',
                      minified='css/prod/myams.css')
 
-myams_mini_bundle = Resource(library, 'js/dev/myams-mini-dev.js',
-                             minified='js/prod/myams-mini.js',
-                             depends=(jquery, bootstrap, fontawesome_css, myams_css),
-                             bottom=True)
+myams_mini_js = Resource(library, 'js/dev/myams-mini-dev.js',
+                         minified='js/prod/myams-mini.js',
+                         depends=(jquery, bootstrap))
 
-myams_mini_svg_bundle = Resource(library, 'js/dev/myams-mini-dev.js',
-                                 minified='js/prod/myams-mini.js',
-                                 depends=(jquery, bootstrap, fontawesome_js, myams_css),
-                                 bottom=True)
+myams_mini_bundle = Group(depends=(fontawesome_css, myams_css, myams_mini_js))
 
-myams_core_bundle = Resource(library, 'js/dev/myams-core-dev.js',
-                             minified='js/prod/myams-core.js',
-                             depends=(jquery, jsrender, bootstrap, fontawesome_css, myams_css),
-                             bottom=True)
+myams_mini_svg_bundle = Group(depends=(fontawesome_js, myams_css, myams_mini_js))
 
-myams_core_svg_bundle = Resource(library, 'js/dev/myams-core-dev.js',
-                                 minified='js/prod/myams-core.js',
-                                 depends=(jquery, jsrender, bootstrap, fontawesome_js, myams_css),
-                                 bottom=True)
+myams_core_js = Resource(library, 'js/dev/myams-core-dev.js',
+                         minified='js/prod/myams-core.js',
+                         depends=(jquery, jsrender, bootstrap))
+
+myams_core_bundle = Group(depends=(fontawesome_css, myams_css, myams_core_js))
+
+myams_core_svg_bundle = Group(depends=(fontawesome_js, myams_css, myams_core_js))
