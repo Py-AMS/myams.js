@@ -324,7 +324,7 @@ const _datatablesHelpers = {
 					}
 					MyAMS.require('ajax').then(() => {
 						MyAMS.ajax.post(url, postData).then((result, status, xhr) => {
-							let callback = data.amsReorderCallback;
+							const callback = data.amsReorderCallback;
 							if (callback) {
 								MyAMS.core.executeFunctionByName(callback, document,
 									table, result, status, xhr).then((...results) => {

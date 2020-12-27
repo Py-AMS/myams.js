@@ -74,11 +74,11 @@ export const helpers = {
 				dtTable.row(selector).data(options.data);
 				resolve(row);
 			} else {
-				const new_row = $(options.content);
-				row.replaceWith(new_row);
+				const newRow = $(options.content);
+				row.replaceWith(newRow);
 				MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
-					document, new_row).then(() => {
-					resolve(new_row);
+					document, newRow).then(() => {
+					resolve(newRow);
 				}, reject);
 			}
 		});
