@@ -25,13 +25,13 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th.dtr-control:b
   position: absolute;
   color: white;
   border: 0.15em solid white;
-  border-radius: 1em;
+  border-radius: 50%;
   box-shadow: 0 0 0.2em #444;
   box-sizing: content-box;
   text-align: center;
-  text-indent: 0 !important;
+  text-indent: 1px !important;
   font-family: 'Courier New', Courier, monospace;
-  line-height: 1em;
+  line-height: 1.2em;
   content: '+';
   background-color: #0275d8;
 }
@@ -191,5 +191,5 @@ div.dtr-bs-modal table.table tr:first-child td {
 
 table.dataTable.dtr-inline.collapsed.table-sm > tbody > tr > td:first-child:before,
 table.dataTable.dtr-inline.collapsed.table-sm > tbody > tr > th:first-child:before {
-  top: 5px;
+  top: calc(50% - 4px);
 }

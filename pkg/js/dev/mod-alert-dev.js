@@ -62,7 +62,7 @@
    * Big box message template
    */
 
-  var BIGBOX_TEMPLATE_STRING = "\n\t<div class=\"modal fade\" data-backdrop=\"static\" role=\"dialog\">\n\t\t<div class=\"modal-dialog\">\n\t\t\t<div class=\"modal-content\">\n\t\t\t\t<div class=\"modal-header alert-{{:status}}\">\n\t\t\t\t\t<h5 class=\"modal-title\">\n\t\t\t\t\t{{if icon}}\n\t\t\t\t\t\t<i class=\"fa {{:icon}} mr-2\"></i>\n\t\t\t\t\t{{/if}}\n\t\t\t\t\t{{:title}}\n\t\t\t\t\t</h5>\n\t\t\t\t\t<button type=\"button\" class=\"close\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"cancel\">\n\t\t\t\t\t\t<i class=\"fa fa-times\"></i>\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-body\">\n\t\t\t\t\t<p>{{:message}}</p>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-footer\">\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"cancel\">\n\t\t\t\t\t\t{{*: data.cancelLabel || MyAMS.i18n.BTN_CANCEL }}\n\t\t\t\t\t</button>\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"success\">\n\t\t\t\t\t\t{{*: data.successLabel || MyAMS.i18n.BTN_OK }}\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>";
+  var BIGBOX_TEMPLATE_STRING = "\n\t<div class=\"modal fade\" data-backdrop=\"static\" role=\"dialog\">\n\t\t<div class=\"modal-dialog\">\n\t\t\t<div class=\"modal-content\">\n\t\t\t\t<div class=\"modal-header alert-{{:status}}\">\n\t\t\t\t\t<h5 class=\"modal-title\">\n\t\t\t\t\t{{if icon}}\n\t\t\t\t\t\t<i class=\"fa {{:icon}} mr-2\"></i>\n\t\t\t\t\t{{/if}}\n\t\t\t\t\t{{:title}}\n\t\t\t\t\t</h5>\n\t\t\t\t\t<button type=\"button\" class=\"close\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"cancel\">\n\t\t\t\t\t\t<i class=\"fa fa-times\"></i>\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-body\">\n\t\t\t\t\t<p>{{:message}}</p>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-footer\">\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"success\">\n\t\t\t\t\t\t{{*: data.successLabel || MyAMS.i18n.BTN_OK }}\n\t\t\t\t\t</button>\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" \n\t\t\t\t\t\t\tdata-dismiss=\"modal\" data-modal-dismiss-value=\"cancel\">\n\t\t\t\t\t\t{{*: data.cancelLabel || MyAMS.i18n.BTN_CANCEL }}\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>";
   var BIGBOX_TEMPLATE = $.templates({
     markup: BIGBOX_TEMPLATE_STRING,
     allowCode: true
@@ -93,6 +93,14 @@
       props.status = status;
       $(".alert-".concat(status), props.parent).not('.persistent').remove();
       $(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
+
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+          $('#content').scrollTo(props.parent, {
+            offset: -15
+          });
+        });
+      });
     },
 
     /**

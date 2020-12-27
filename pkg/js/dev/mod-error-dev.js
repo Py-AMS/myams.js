@@ -61,7 +61,7 @@
           }).then(resolve, reject);
         } else {
           // full errors with widgets
-          MyAMS.require('i18n', 'alert', 'form').then(function () {
+          MyAMS.require('i18n', 'ajax', 'alert', 'form').then(function () {
             // clear previous alerts
             MyAMS.form.clearAlerts(parent); // create new alert
 
@@ -138,8 +138,33 @@
             } finally {
               _iterator3.f();
             }
+
+            MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+              $('#main').scrollTo(parent, {
+                offset: -15
+              });
+            });
           }).then(resolve, reject);
         }
+      });
+    },
+
+    /**
+     * Display message for standard HTTP error
+     *
+     * @param error: error object
+     */
+    showHTTPError: function showHTTPError(error) {
+      return new Promise(function (resolve, reject) {
+        MyAMS.require('alert').then(function () {
+          MyAMS.alert.messageBox({
+            status: 'error',
+            title: error.title,
+            message: error.message,
+            hideTimestamp: false,
+            timeout: 0
+          });
+        }).then(resolve, reject);
       });
     }
   };

@@ -30,25 +30,4 @@ javascript code.
 MyAMS documentation and demo site is available at http://myams.ztfy.org.
 
 Please note that this package also includes a Python package, for easy integration of MyAMS.js
-within a Pyramid application.
-
-
-MyAMS upgrade
-=============
- - three available versions: full package "myams.js" (including JQuery, Bootstrap and FontAwesome,
-   with all MyAMS extensions and modules), "myams-mini.js" (including only MyAMS extensions and
-   modules) and "myams-core.js" (including only base MyAMS extensions, but no module)
- - all MyAMS modules can now be downloaded automatically using MyAMS.require; you may check
-   all modules before using them, to be able to change your MyAMS packaging mode as you want
- - all synchronous downloads should now be forbidden! An "async=false" attribute is still
-   available when defining plug-ins, but it is just used to load "not-async" plug-ins after the
-   other ones, but always in an asynchronous way...
- - upgraded to JQuery 3.4, Bootstrap 4.4 and FontAwesome 5.12
- - move MyAMS.plugins to MyAMS.registry (refactored)
- - plug-ins are now called with "element" and "context" arguments, without using "this"; "element"
-   is the DOM source element which is updated, "context" is the context to which plug-in is attached
- - move MyAMS.dialog to MyAMS.modal
- - removed Bootstrap modalmanager
- - calling "MyAMS.modal.close" without argument is now closing the upper modal
- - mode MyAMS.event to MyAMS.events
- - removed widgets and utf8 modules
+within a Pyramid application (see PyAMS_skin and PyAMS_zmi packages).

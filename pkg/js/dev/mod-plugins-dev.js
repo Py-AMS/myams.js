@@ -20,10 +20,13 @@
   _exports.contextMenu = contextMenu;
   _exports.datatables = datatables;
   _exports.dragdrop = dragdrop;
+  _exports.editor = editor;
   _exports.fileInput = fileInput;
+  _exports.imgAreaSelect = imgAreaSelect;
   _exports.select2 = select2;
   _exports.svgPlugin = svgPlugin;
   _exports.switcher = switcher;
+  _exports.tinymce = tinymce;
   _exports.validate = validate;
 
   function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
@@ -94,23 +97,26 @@
 
           if (!data.amsChecker) {
             var fieldset = legend.parent('fieldset'),
-                checked = fieldset.hasClass('switched') || data.amsCheckerState === 'on',
-                fieldName = data.amsCheckerFieldname || "checker_".concat(MyAMS.core.generateId()),
+                state = data.amsCheckerState || data.amsState,
+                checked = fieldset.hasClass('switched') || state === 'on',
+                fieldName = data.amsCheckerFieldname || data.amsFieldname || "checker_".concat(MyAMS.core.generateId()),
                 fieldId = fieldName.replace(/\./g, '_'),
-                prefix = data.amsCheckerHiddenPrefix,
-                marker = data.amsCheckerMarker || false,
-                checkerMode = data.amsCheckerMode || 'hide',
-                checkedValue = data.amsCheckerValueOn || 'true',
-                uncheckedValue = data.amsCheckerValueOff || 'false',
+                prefix = data.amsCheckerHiddenPrefix || data.amsHiddenPrefix,
+                marker = data.amsCheckerMarker || data.amsMarker || false,
+                checkerMode = data.amsCheckerMode || data.amsMode || 'hide',
+                checkedValue = data.amsCheckerValueOn || data.amsValueOn || 'true',
+                uncheckedValue = data.amsCheckerValueOff || data.amsValueOff || 'false',
+                value = data.amsCheckerValue || data.amsValue,
+                readonly = data.amsCheckerReadonly || data.amsReadonly,
                 props = {
               legend: legend.text(),
               fieldName: fieldName,
               fieldId: fieldId,
-              value: data.amsCheckerValue || true,
+              value: value || true,
               checked: checked,
-              readonly: data.amsCheckerReadonly,
+              readonly: readonly,
               prefix: prefix,
-              state: data.amsCheckerState,
+              state: state,
               checkedValue: checkedValue,
               uncheckedValue: uncheckedValue,
               marker: marker
@@ -138,9 +144,9 @@
                 return;
               }
 
-              MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler, document, legend, checked);
+              MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler || data.amsChangeHandler, document, legend, checked);
 
-              if (!data.amsCheckerCancelDefault) {
+              if (!data.amsCheckerCancelDefault && !data.amsCancelDefault) {
                 var _prefix = input.siblings('.prefix');
 
                 if (checkerMode === 'hide') {
@@ -844,6 +850,85 @@
     });
   }
   /**
+   * ACE text editor
+   */
+
+
+  function editor(element) {
+    return new Promise(function (resolve, reject) {
+      var editors = $('.editor textarea', element);
+
+      if (editors.length > 0) {
+        MyAMS.require('ajax').then(function () {
+          MyAMS.ajax.check(window.ace, "".concat(MyAMS.env.baseURL, "../ext/ace/ace").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+            var deferred = [];
+
+            if (firstLoad) {
+              ace.config.set('basePath', "".concat(MyAMS.env.baseURL, "../ext/ace"));
+              deferred.push(MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "../ext/ace/ext-modelist").concat(MyAMS.env.extext, ".js")));
+            }
+
+            $.when.apply($, deferred).then(function () {
+              editors.each(function (idx, elt) {
+                var textarea = $(elt),
+                    widget = textarea.parents('.editor'),
+                    data = textarea.data(),
+                    modeList = ace.require('ace/ext/modelist'),
+                    mode = data.amsEditorMode || data.amsMode || modeList.getModeForPath(data.amsEditorFilename || data.amsFilename || 'text.txt').mode;
+
+                setTimeout(function () {
+                  // create editor DIV
+                  var textEditor = $('<div>', {
+                    position: 'absolute',
+                    width: textarea.width(),
+                    height: textarea.height(),
+                    'class': textarea.attr('class')
+                  }).insertBefore(textarea);
+                  textarea.css('display', 'none'); // initialize editor
+
+                  var defaultOptions = {
+                    mode: mode,
+                    fontSize: 11,
+                    tabSize: 4,
+                    useSoftTabs: false,
+                    showGutter: true,
+                    showLineNumbers: true,
+                    printMargin: 132,
+                    showInvisibles: true
+                  };
+                  var settings = $.extend({}, defaultOptions, data.amsEditorOptions || data.amsOptions);
+                  settings = MyAMS.core.executeFunctionByName(data.amsEditorInitCallback || data.amsInit, document, textarea, settings) || settings;
+                  var veto = {
+                    veto: false
+                  };
+                  textarea.trigger('before-init.ams.editor', [textarea, settings, veto]);
+
+                  if (veto.veto) {
+                    return;
+                  }
+
+                  var editor = ace.edit(textEditor[0]);
+                  editor.setOptions(settings);
+                  editor.session.setValue(textarea.val());
+                  editor.session.on('change', function () {
+                    textarea.val(editor.session.getValue());
+                  });
+                  widget.data('editor', editor);
+                  MyAMS.core.executeFunctionByName(data.amsEditorAfterEditCallback || data.amsAfterInit, document, textarea, editor, settings);
+                  textarea.trigger('after-init.ams.editor', [textarea, editor]);
+                }, 200);
+              });
+            });
+          });
+        }, reject).then(function () {
+          resolve(editors);
+        });
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  /**
    * Bootstrap custom file input manager
    */
 
@@ -877,6 +962,85 @@
           }, reject).then(function () {
             resolve(inputs);
           });
+        }, reject);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  /**
+   * Image area select plug-in integration
+   */
+
+
+  function imgAreaSelect(element) {
+    return new Promise(function (resolve, reject) {
+      var images = $('.imgareaselect', element);
+
+      if (images.length > 0) {
+        MyAMS.require('ajax').then(function () {
+          MyAMS.ajax.check($.fn.imgAreaSelect, "".concat(MyAMS.env.baseURL, "../ext/jquery-imgareaselect").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+            var required = [];
+
+            if (firstLoad) {
+              required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/imgareaselect-animated.css"), 'imgareaselect'));
+            }
+
+            $.when.apply($, required).then(function () {
+              images.each(function (idx, elt) {
+                var image = $(elt);
+
+                if (image.data('imgAreaSelect')) {
+                  return; // already initialized
+                }
+
+                var data = image.data(),
+                    parentSelector = data.amsImgareaselectParent || data.amsParent,
+                    parent = parentSelector ? image.parents(parentSelector) : 'body',
+                    defaultOptions = {
+                  instance: true,
+                  handles: true,
+                  parent: parent,
+                  x1: data.amsImgareaselectX1 || data.amsX1 || 0,
+                  y1: data.amsImgareaselectY1 || data.amsY1 || 0,
+                  x2: data.amsImgareaselectX2 || data.amsX2 || data.amsImgareaselectImageWidth || data.amsImageWidth,
+                  y2: data.amsImgareaselectY2 || data.amsY2 || data.amsImgareaselectImageHeight || data.amsImageHeight,
+                  imageWidth: data.amsImgareaselectImageWidth || data.amsImageWidth,
+                  imageHeight: data.amsImgareaselectImageHeight || data.amsImageHeight,
+                  imgWidth: data.amsImgareaselectThumbWidth || data.amsThumbWidth,
+                  imgHeight: data.amsImgareaselectThumbHeight || data.amsThumbHeight,
+                  minWidth: 128,
+                  minHeight: 128,
+                  aspectRatio: data.amsImgareaselectAspectRatio || data.amsAspectRatio,
+                  onSelectEnd: MyAMS.core.getFunctionByName(data.amsImgareaselectSelectEnd || data.amsSelectedEnd) || function (img, selection) {
+                    var target = data.amsImgareaselectTargetField || data.amsTargetField || 'image_';
+                    $("input[name=\"".concat(target, "x1\"]"), parent).val(selection.x1);
+                    $("input[name=\"".concat(target, "y1\"]"), parent).val(selection.y1);
+                    $("input[name=\"".concat(target, "x2\"]"), parent).val(selection.x2);
+                    $("input[name=\"".concat(target, "y2\"]"), parent).val(selection.y2);
+                  }
+                };
+                var settings = $.extend({}, defaultOptions, data.amsImgareaselectOptions || data.amsOptions);
+                settings = MyAMS.core.executeFunctionByName(data.amsImgareaselectInitCallback || data.amsInit, document, image, settings) || settings;
+                var veto = {
+                  veto: false
+                };
+                image.trigger('before-init.ams.imgareaselect', [image, settings, veto]);
+
+                if (veto.veto) {
+                  return;
+                } // add timeout to update plug-in if displayed into a modal dialog
+
+
+                setTimeout(function () {
+                  var plugin = image.imgAreaSelect(settings);
+                  image.trigger('after-init.ams.imgareaselect', [image, plugin]);
+                }, 200);
+              });
+            }, reject).then(function () {
+              resolve(images);
+            });
+          }, reject);
         }, reject);
       } else {
         resolve(null);
@@ -1058,6 +1222,7 @@
           var legend = $(elt),
               fieldset = legend.parent('fieldset'),
               data = legend.data(),
+              state = data.amsSwitcherState || data.amsState,
               minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
               plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
 
@@ -1071,7 +1236,7 @@
               return;
             }
 
-            $("<i class=\"fa fa-".concat(data.amsSwitcherState === 'open' ? minusClass : plusClass, " mr-2\"></i>")).prependTo(legend);
+            $("<i class=\"fa fa-".concat(state === 'open' ? minusClass : plusClass, " mr-2\"></i>")).prependTo(legend);
             legend.on('click', function (evt) {
               evt.preventDefault();
               var veto = {};
@@ -1103,7 +1268,7 @@
               }
             });
 
-            if (data.amsSwitcherState !== 'open') {
+            if (state !== 'open') {
               fieldset.addClass('switched');
             }
 
@@ -1112,6 +1277,123 @@
           }
         });
         resolve(switchers);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  /**
+   * TinyMCE HTML editor plug-in
+   */
+
+
+  function tinymce(element) {
+    return new Promise(function (resolve, reject) {
+      var editors = $('.tinymce', element);
+
+      if (editors.length > 0) {
+        MyAMS.require('ajax', 'i18n').then(function () {
+          var baseURL = "".concat(MyAMS.env.baseURL, "../ext/tinymce").concat(MyAMS.env.devmode ? '/dev' : '');
+          MyAMS.ajax.check(window.tinymce, "".concat(baseURL, "/tinymce").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+            var deferred = [];
+
+            if (firstLoad) {
+              tinymce.baseURL = baseURL;
+              tinymce.suffix = MyAMS.env.extext;
+              deferred.push(MyAMS.core.getScript("".concat(baseURL, "/jquery.tinymce.min.js")));
+              deferred.push(MyAMS.core.getScript("".concat(baseURL, "/themes/silver/theme").concat(MyAMS.env.extext, ".js"))); // Prevent Bootstrap dialog from blocking focusin
+
+              $(document).on('focusin', function (evt) {
+                if ($(evt.target).closest(".tox-tinymce, .tox-tinymce-aux, " + ".moxman-window, .tam-assetmanager-root").length) {
+                  evt.stopImmediatePropagation();
+                }
+              });
+            }
+
+            $.when.apply($, deferred).then(function () {
+              editors.each(function (idx, elt) {
+                var editor = $(elt),
+                    data = editor.data(),
+                    defaultOptions = {
+                  base_url: baseURL,
+                  theme: data.amsTinymceTheme || data.amsTheme || 'silver',
+                  language: MyAMS.i18n.language,
+                  menubar: data.amsTinymceMenubar !== false && data.amsMenubar !== false,
+                  statusbar: data.amsTinymceStatusbar !== false && data.amsStatusbar !== false,
+                  plugins: data.amsTinymcePlugins || data.amsPlugins || ["advlist autosave autolink lists link charmap print preview hr anchor pagebreak", "searchreplace wordcount visualblocks visualchars code fullscreen", "insertdatetime nonbreaking save table contextmenu directionality", "emoticons paste textcolor colorpicker textpattern autoresize"],
+                  toolbar: data.amsTinymceToolbar || data.amsToolbar,
+                  toolbar1: data.amsTinymceToolbar1 === false || data.amsToolbar1 === false ? false : data.amsTinymceToolbar1 || data.amsToolbar1 || "undo redo | pastetext | styleselect | bold italic | " + "alignleft aligncenter alignright alignjustify | " + "bullist numlist outdent indent",
+                  toolbar2: data.amsTinymceToolbar2 === false || data.amsToolbar2 === false ? false : data.amsTinymceToolbar2 || data.amsToolbar2 || "forecolor backcolor emoticons | charmap link image media | " + "fullscreen preview print | code",
+                  content_css: data.amsTinymceContentCss || data.amsContentCss,
+                  formats: data.amsTinymceFormats || data.amsFormats,
+                  style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
+                  block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
+                  valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
+                  image_advtab: true,
+                  image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) || data.amsTinymceImageList || data.amsImageList,
+                  image_class_list: data.amsTinymceImageClassList || data.amsImageClassList,
+                  link_list: MyAMS.core.getFunctionByName(data.amsTinymceLinkList || data.amsLinkList) || data.amsTinymceLinkList || data.amsLinkList,
+                  link_class_list: data.amsTinymceLinkClassList || data.amsLinkClassList,
+                  paste_as_text: data.amsTinymcePasteAsText === undefined && data.amsPasteAsText === undefined ? true : data.amsTinymcePasteAsText || data.amsPasteAsText,
+                  paste_auto_cleanup_on_paste: data.amsTinymcePasteAutoCleanup === undefined && data.amsPasteAutoCleanup === undefined ? true : data.amsTinymcePasteAutoCleanup || data.amsPasteAutoCleanup,
+                  paste_strip_class_attributes: data.amsTinymcePasteStripClassAttributes || data.amsPasteStripClassAttributes || 'all',
+                  paste_remove_spans: data.amsTinymcePasteRemoveSpans === undefined && data.amsPasteRemoveSpans === undefined ? true : data.amsTinymcePasteRemoveSpans || data.amsPasteRemoveSpans,
+                  paste_remove_styles: data.amsTinymcePasteRemoveStyles === undefined || data.amsPasteRemoveStyles === undefined ? true : data.amsTinymcePasteRemoveStyles || data.amsPasteRemoveStyles,
+                  height: data.amsTinymceHeight || data.amsHeight || 50,
+                  min_height: 50,
+                  resize: true,
+                  autoresize_min_height: 50,
+                  autoresize_max_height: 500,
+                  init_instance_callback: function init_instance_callback(instance) {
+                    var handler = function handler(evt) {
+                      instance.remove("#".concat(instance.id));
+                      $(document).off('cleared.ams.content', handler);
+                    };
+
+                    $(document).on('cleared.ams.content', handler);
+                  }
+                };
+                var plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
+
+                if (plugins) {
+                  var names = plugins.split(/\s+/);
+
+                  var _iterator7 = _createForOfIteratorHelper(names),
+                      _step4;
+
+                  try {
+                    for (_iterator7.s(); !(_step4 = _iterator7.n()).done;) {
+                      var name = _step4.value;
+                      var src = editor.data("ams-tinymce-plugin-".concat(name)) || editor.data("ams-plugin-".concat(name));
+                      tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
+                    }
+                  } catch (err) {
+                    _iterator7.e(err);
+                  } finally {
+                    _iterator7.f();
+                  }
+                }
+
+                var settings = $.extend({}, defaultOptions, data.amsTinymceOptions || data.amsOptions);
+                settings = MyAMS.core.executeFunctionByName(data.amsTinymceInitCallback || data.amsInit, document, editor, settings) || settings;
+                var veto = {
+                  veto: false
+                };
+                editor.trigger('before-init.ams.tinymce', [editor, settings, veto]);
+
+                if (veto.veto) {
+                  return;
+                }
+
+                var plugin = editor.tinymce(settings);
+                MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
+                editor.trigger('after-init.ams.tinymce', [editor, settings]);
+              });
+            }, reject).then(function () {
+              resolve(editors);
+            });
+          }, reject);
+        }, reject);
       } else {
         resolve(null);
       }
@@ -1143,12 +1425,12 @@
                   $('span.is-invalid', form).remove();
                   $('.is-invalid', form).removeClass('is-invalid');
 
-                  var _iterator7 = _createForOfIteratorHelper(validator.errorList),
-                      _step4;
+                  var _iterator8 = _createForOfIteratorHelper(validator.errorList),
+                      _step5;
 
                   try {
-                    for (_iterator7.s(); !(_step4 = _iterator7.n()).done;) {
-                      var error = _step4.value;
+                    for (_iterator8.s(); !(_step5 = _iterator8.n()).done;) {
+                      var error = _step5.value;
 
                       var _element = $(error.element),
                           panels = _element.parents('.tab-pane'),
@@ -1165,9 +1447,9 @@
                       });
                     }
                   } catch (err) {
-                    _iterator7.e(err);
+                    _iterator8.e(err);
                   } finally {
-                    _iterator7.f();
+                    _iterator8.f();
                   }
                 },
                 errorElement: data.amsValidateErrorElement || 'span',
@@ -1231,10 +1513,13 @@
     MyAMS.registry.register(contextMenu, 'contextMenu');
     MyAMS.registry.register(datatables, 'datatables');
     MyAMS.registry.register(dragdrop, 'dragdrop');
+    MyAMS.registry.register(editor, 'editor');
     MyAMS.registry.register(fileInput, 'fileInput');
+    MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
     MyAMS.registry.register(select2, 'select2');
     MyAMS.registry.register(svgPlugin, 'svg');
     MyAMS.registry.register(switcher, 'switcher');
+    MyAMS.registry.register(tinymce, 'tinymce');
     MyAMS.registry.register(validate, 'validate'); // register module
 
     MyAMS.config.modules.push('plugins');

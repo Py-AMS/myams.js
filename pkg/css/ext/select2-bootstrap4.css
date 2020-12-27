@@ -38,6 +38,7 @@
     padding: 1px 5px;
     width: 100%; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+    font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     color: #f8f9fa;
     background-color: #3886c9;
     border: 1px solid #9cc3e4;

@@ -756,10 +756,12 @@
           return;
         }
 
-        var modal = form.closest('.modal-dialog');
+        if (result && result.status !== 'error' && result.closeForm !== false) {
+          var modal = form.closest('.modal-dialog');
 
-        if (modal.exists() && !settings.keepModalOpen) {
-          MyAMS.modal && MyAMS.modal.close(modal);
+          if (modal.exists() && !settings.keepModalOpen) {
+            MyAMS.modal && MyAMS.modal.close(modal);
+          }
         }
 
         try {

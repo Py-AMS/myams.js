@@ -73,7 +73,7 @@ setup(name='myams_js',
           'pyams_utils >= 1.2.0'
       ],
       entry_points={
-          'fanstatic_libraries': [
+          'fanstatic.libraries': [
               'myams = myams_js:library'
           ]
       })

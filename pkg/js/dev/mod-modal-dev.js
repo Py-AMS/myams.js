@@ -144,11 +144,11 @@
 
   function dynamicModalHiddenEventHandler(evt) {
     var dialog = $(evt.target);
-    MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog);
-
-    if (dialog.data('dynamic') === true) {
-      dialog.remove();
-    }
+    MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog).then(function () {
+      if (dialog.data('dynamic') === true) {
+        dialog.remove();
+      }
+    });
   }
   /**
    * Main modal module definition

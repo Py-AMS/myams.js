@@ -213,7 +213,7 @@
      * <a href="MyAMS.ajax.getJSON?url=...">Click me!</a>.
      */
     getJSON: function getJSON() {
-      return function (options) {
+      return function (source, options) {
         var url = options.url;
         delete options.url;
         return MyAMS.ajax.post(url, options).then(MyAMS.ajax.handleJSON);
@@ -331,6 +331,10 @@
       var status = result.status,
           promises = [];
 
+      if (target instanceof jQuery && !target.length) {
+        target = null;
+      }
+
       switch (status) {
         case 'alert':
           if (window.alert) {
@@ -413,8 +417,15 @@
           break;
 
         default:
-          if (window.console) {
-            console.warn && console.warn("Unhandled JSON response status: ".concat(status));
+          if (result.code) {
+            // Standard HTTP error?
+            promises.push(MyAMS.require('error').then(function () {
+              MyAMS.error.showHTTPError(result);
+            }));
+          } else {
+            if (window.console) {
+              console.warn && console.warn("Unhandled JSON response status: ".concat(status));
+            }
           }
 
       } // Single content response
@@ -475,7 +486,7 @@
       } // Response with message
 
 
-      if (result.message) {
+      if (result.message && !result.code) {
         promises.push(MyAMS.require('alert').then(function () {
           if (typeof result.message === 'string') {
             MyAMS.alert.smallBox({
@@ -583,14 +594,20 @@
             _step4;
 
         try {
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var _loop2 = function _loop2() {
             var callback = _step4.value;
 
             if (typeof callback === 'string') {
               promises.push(MyAMS.core.executeFunctionByName(callback, document, form, result.options));
             } else {
-              promises.push(MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options));
+              promises.push(MyAMS.require(callback.module || []).then(function () {
+                MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
+              }));
             }
+          };
+
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+            _loop2();
           }
         } catch (err) {
           _iterator4.e(err);

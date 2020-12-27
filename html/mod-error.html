@@ -10,7 +10,7 @@
 	<p class="text-center">
 		<img src="resources/img/form-alert.png" alt="Form alert" />
 	</p>
-	<p>A this function relies on other modules, she returns a Promise which is resolved
+	<p>As this function relies on other modules, she returns a Promise which is resolved
 	when all missing modules have been checked and alerts included into DOM.</p>
 	<p>If <code>errors</code> is a simple string or an array of strings, there strings are
 	simply added to the alert (see <a href="#mod-alert.html!alert"><code>alert</code></a>
@@ -18,4 +18,13 @@
 	<p>If <code>errors</code> is an object, it can provide more informations, including
 	specific messages for selected input widgets; see <a href="#mod-form-errors.html">Forms
 	errors</a> to know the format of JSON errors.</p>
+</section>
+
+<section id="showHTTPError">
+	<h2><code>MyAMS.error.showHTTPError(error): Promise&lt;&gt;</code></h2>
+	<p>This function is used to display a message box when an HTTP error is returned as a
+	JSON object, containing at least <code>code</code>, <code>title</code> and
+	<code>message</code> attributes.</p>
+	<p>As the function relies on other modules, she returns a Promise which is resolved
+	when all modules have been loaded.</p>
 </section>
