@@ -77,7 +77,7 @@ export const error = {
 					});
 				}).then(resolve, reject);
 			} else {  // full errors with widgets
-				MyAMS.require('i18n', 'alert', 'form').then(() => {
+				MyAMS.require('i18n', 'ajax', 'alert', 'form').then(() => {
 					// clear previous alerts
 					MyAMS.form.clearAlerts(parent);
 					// create new alert
@@ -120,8 +120,31 @@ export const error = {
 							MyAMS.form.setInvalid(parent, input, widget.message);
 						}
 					}
+					MyAMS.ajax.check($.fn.scrollTo,
+						`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+						$('#main').scrollTo(parent, { offset: -15 });
+					});
 				}).then(resolve, reject);
 			}
+		});
+	},
+
+	/**
+	 * Display message for standard HTTP error
+	 *
+	 * @param error: error object
+	 */
+	showHTTPError: (error) => {
+		return new Promise((resolve, reject) => {
+			MyAMS.require('alert').then(() => {
+				MyAMS.alert.messageBox({
+					status: 'error',
+					title: error.title,
+					message: error.message,
+					hideTimestamp: false,
+					timeout: 0
+				});
+			}).then(resolve, reject);
 		});
 	}
 };
