@@ -176,7 +176,7 @@ export const ajax = {
 	 * <a href="MyAMS.ajax.getJSON?url=...">Click me!</a>.
 	 */
 	getJSON: function() {
-		return (options) => {
+		return (source, options) => {
 			const url = options.url;
 			delete options.url;
 			return MyAMS.ajax.post(url, options).then(MyAMS.ajax.handleJSON);
@@ -291,6 +291,10 @@ export const ajax = {
 			status = result.status,
 			promises = [];
 
+		if ((target instanceof jQuery) && !target.length) {
+			target = null;
+		}
+
 		switch (status) {
 
 			case 'alert':
@@ -368,8 +372,14 @@ export const ajax = {
 				break;
 
 			default:
-				if (window.console) {
-					console.warn && console.warn(`Unhandled JSON response status: ${status}`);
+				if (result.code) {  // Standard HTTP error?
+					promises.push(MyAMS.require('error').then(() => {
+						MyAMS.error.showHTTPError(result);
+					}));
+				} else {
+					if (window.console) {
+						console.warn && console.warn(`Unhandled JSON response status: ${status}`);
+					}
 				}
 		}
 
@@ -414,7 +424,7 @@ export const ajax = {
 		}
 
 		// Response with message
-		if (result.message) {
+		if (result.message && !result.code) {
 			promises.push(MyAMS.require('alert').then(() => {
 				if (typeof result.message === 'string') {
 					MyAMS.alert.smallBox({
@@ -513,8 +523,10 @@ export const ajax = {
 					promises.push(MyAMS.core.executeFunctionByName(callback, document, form,
 						result.options));
 				} else {
-					promises.push(MyAMS.core.executeFunctionByName(callback.callback, document,
-						form, callback.options));
+					promises.push(MyAMS.require(callback.module || []).then(() => {
+						MyAMS.core.executeFunctionByName(callback.callback, document,
+							form, callback.options)
+					}));
 				}
 			}
 		}
