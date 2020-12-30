@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.0.1
+Version: 1.0.3
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -43,6 +43,10 @@ Description: ================
         
         Changelog
         =========
+        
+        1.0.2
+        -----
+         - updated Fanstatic library path to switch between source and egg installations
         
         1.0.1
         -----
