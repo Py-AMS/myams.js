@@ -12,6 +12,7 @@
       > section,
       > article,
       > div:not(.persistent),
+      > fieldset:not(.persistent),
       > .nav-tabs:not(.persistent) {
         display: none;
       }
