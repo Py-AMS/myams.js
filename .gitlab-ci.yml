@@ -24,35 +24,33 @@ bootstrap:
         - python3.5 bootstrap.py
         - ./bin/buildout
 
-test-3.5:
+test-js:
     stage: test
+    image: node:12.17.0
     script:
-        - pip install anybadge coverage
+        - npm install --no-audit
+        - apt update && apt install -y python3-pip
+        - pip3 install anybadge
         - mkdir ./coverage
-        - coverage erase
-        - coverage run ./bin/test | tee ./coverage/coverage.log
-        - coverage xml
-        - GLOBAL_COVER=$(coverage report | grep TOTAL | awk '{print $4}' | cut -d '%' -f 1)
-        - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
+        - (npm run coverage | tee coverage/coverage.log) || true
+        - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
         - echo "Global tests coverage is $GLOBAL_COVER %"
+        - anybadge --label=Coverage --file=./coverage/coverage.svg --value="$GLOBAL_COVER" coverage
     artifacts:
         paths:
+            - ./node_modules/
             - ./coverage/
-            - coverage.xml
 
-pylint:
+eslint:
     stage: quality
+    image: node:12.17.0
     allow_failure: true
     script:
-        - pip install pylint-exit anybadge
-        - mkdir ./pylint
-        - ./bin/pylint src/myams_js/ | tee ./pylint/pylint.log || pylint-exit $?
-        - PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./pylint/pylint.log)
-        - anybadge --label=Pylint --file=./pylint/pylint.svg --value=$PYLINT_SCORE pylint
-        - echo "Pylint score is $PYLINT_SCORE"
+        - npm install --no-audit
+        - npm run eslint
     artifacts:
         paths:
-            - ./pylint/
+            - ./node_modules/
 
 coverage:
     stage: quality
