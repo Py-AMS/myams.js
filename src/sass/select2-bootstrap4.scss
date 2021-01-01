@@ -34,6 +34,10 @@
 
 .select2-container--bootstrap4 {
 
+    .input-group-prepend > & {
+        border-radius: $input-border-radius 0 0 $input-border-radius;
+    }
+
     // input box
     .select2-selection {
         background-color: $input-bg;
@@ -42,6 +46,16 @@
         @include box-shadow($input-box-shadow);
         @include transition($input-transition);
         width: 100%;
+
+        .bg-secondary & {
+            background-color: $secondary;
+        }
+        .input-group & {
+            height: 100% !important;
+        }
+        .input-group-prepend & {
+            border-radius: $input-border-radius 0 0 $input-border-radius;
+        }
     }
 
     // focused input box
@@ -90,6 +104,7 @@
         border-top: none;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        min-width: 100px;
 
         // dropdown opened above
         &.select2-dropdown--above {
