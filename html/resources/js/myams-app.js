@@ -98,7 +98,7 @@ const app = {
 		},
 
 		reorderDataGetter: (row) => {
-			return $(row).data('ams-row-id');
+			return $(row).data('ams-row-value');
 		},
 
 		reorderPostDataGetter: (table, ids) => {

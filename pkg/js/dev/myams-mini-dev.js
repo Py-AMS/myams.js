@@ -9060,20 +9060,39 @@ var _datatablesHelpers = {
   reorderRows: function reorderRows(evt, details, changes) {
     return new Promise(function (resolve, reject) {
       var table = $(evt.target),
-          data = table.data();
-      var url = data.amsReorderUrl,
+          data = table.data(); // extract target and URL
+
+      var target = data.amsReorderInputTarget,
+          url = data.amsReorderUrl,
           ids = null;
+
+      if (!(target || url)) {
+        resolve();
+      } // extract reordered rows IDs
+
+
+      var rows = $('tbody tr', table),
+          getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
+
+      if (typeof getter === 'function') {
+        ids = $.makeArray(rows).map(getter);
+      } else {
+        ids = rows.listattr(getter);
+      } // set target input value (if any)
+
+
+      if (target) {
+        target = $(target);
+
+        if (target.exists()) {
+          var separator = data.amsReorderSeparator || ';';
+          target.val(ids.join(separator));
+        }
+      } // call target URL (if any)
+
 
       if (url) {
         url = MyAMS.core.executeFunctionByName(url, document, table) || url;
-        var rows = $('tbody tr', table),
-            getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-id';
-
-        if (typeof getter === 'function') {
-          ids = $.makeArray(rows).map(getter);
-        } else {
-          ids = rows.listattr(getter);
-        }
 
         if (ids.length > 0) {
           var postData;

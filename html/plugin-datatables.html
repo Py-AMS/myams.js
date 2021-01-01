@@ -509,28 +509,28 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr data-ams-row-id="1">
+				<tr data-ams-row-value="1">
 					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>John Doe</td>
 					<td>Manager</td>
 					<td>02/04/1969</td>
 					<td>15/01/2018 - 11:20</td>
 				</tr>
-				<tr data-ams-row-id="2">
+				<tr data-ams-row-value="2">
 					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Joe Bar</td>
 					<td>Manager</td>
 					<td>04/03/2002</td>
 					<td>02/05/2019 - 10:30</td>
 				</tr>
-				<tr data-ams-row-id="3">
+				<tr data-ams-row-value="3">
 					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Wanda Foo</td>
 					<td>Contributor</td>
 					<td>10/01/2020</td>
 					<td>02/05/2019 - 08:42</td>
 				</tr>
-				<tr data-ams-row-id="4">
+				<tr data-ams-row-value="4">
 					<td><i class="fas fa-arrows-alt-v"></i></td>
 					<td>Gretta Davis</td>
 					<td>Guest</td>
@@ -546,14 +546,14 @@
 	       data-row-reorder='{"update": false}'
 	       data-ams-reorder-url="data/reorder.json"&gt;
 	  &lt;thead&gt;
-	    &lt;tr data-ams-row-id="1"&gt;
+	    &lt;tr&gt;
 	      &lt;th data-ams-column='{"className": "reorder"}'&gt;&lt;/th&gt;
 	      &lt;th&gt;...&lt;/th&gt;
 	      ...
 	    &lt;/tr&gt;
 	  &lt;/thead&gt;
 	  &lt;tbody&gt;
-	    &lt;tr data-ams-row-id="2"&gt;
+	    &lt;tr data-ams-row-value="1"&gt;
 	      &lt;td&gt;&lt;i class="fas fa-arrows-alt-v"&gt;&lt;/i&gt;&lt;/td&gt;
 	      &lt;td&gt;...&lt;/td&gt;
 	      ...
@@ -589,10 +589,10 @@
 			</tr>
 			<tr>
 				<td><code>data</code></td>
-				<td class="text-nowrap">data-ams-row-id</td>
+				<td class="text-nowrap">data-ams-row-value</td>
 				<td>This option can be defined in two ways: it can be the name of rows attribute
-				containing the row ID; it can also be the dotted name of a function which will
-				be called to get this ID for each row, with the row as argument.</td>
+				containing the row value; it can also be the dotted name of a function which will
+				be called to get this value for each row, with the row as argument.</td>
 			</tr>
 			<tr>
 				<td class="text-nowrap"><code>post-data</code></td>
