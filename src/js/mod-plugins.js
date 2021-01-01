@@ -300,18 +300,33 @@ const _datatablesHelpers = {
 			const
 				table = $(evt.target),
 				data = table.data();
-			let url = data.amsReorderUrl,
+			// extract target and URL
+			let target = data.amsReorderInputTarget,
+				url = data.amsReorderUrl,
 				ids = null;
+			if (!(target || url)) {
+				resolve();
+			}
+			// extract reordered rows IDs
+			const
+				rows = $('tbody tr', table),
+				getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
+			if (typeof getter === 'function') {
+				ids = $.makeArray(rows).map(getter);
+			} else {
+				ids = rows.listattr(getter);
+			}
+			// set target input value (if any)
+			if (target) {
+				target = $(target);
+				if (target.exists()) {
+					const separator = data.amsReorderSeparator || ';';
+					target.val(ids.join(separator));
+				}
+			}
+			// call target URL (if any)
 			if (url) {
 				url = MyAMS.core.executeFunctionByName(url, document, table) || url;
-				const
-					rows = $('tbody tr', table),
-					getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-id';
-				if (typeof getter === 'function') {
-					ids = $.makeArray(rows).map(getter);
-				} else {
-					ids = rows.listattr(getter);
-				}
 				if (ids.length > 0) {
 					let postData;
 					if (data.amsReorderPostData) {
