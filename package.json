@@ -58,7 +58,7 @@
     "jquery": "^3.5.1",
     "jquery-form": "^4.3.0",
     "jquery-ui": "^1.12.1",
-    "jquery-validation": "^1.19.2",
+    "jquery-validation": "^1.19.3",
     "jquery.scrollto": "^2.1.2",
     "jsdoc": "^3.6.6",
     "jsrender": "^1.0.9",
