@@ -13,8 +13,10 @@ if (!$.templates) {
 
 /**
  * Fieldset checker plug-in
+ *
  * A checker is like a simple switcher, but also provides a checkbox which is used
  * as "switcher" input field.
+ *
  * The "checker" class is applied to the fieldset legend; checkbox is created automatically
  * by the plug-in.
  * Check options are given as data attributes, all prefixed with "ams-checker-":
@@ -66,7 +68,7 @@ const CHECKER_TEMPLATE = $.templates({
 });
 
 export function checker(element) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const checkers = $('legend.checker', element);
 		if (checkers.length > 0) {
 			checkers.each((idx, elt) => {
@@ -232,15 +234,15 @@ const _datatablesHelpers = {
 
 			// numeric values using commas separators
 			"numeric-comma-asc": (a, b) => {
-				var x = a.replace(/,/, ".").replace(/ /g, '');
-				var y = b.replace(/,/, ".").replace(/ /g, '');
+				let x = a.replace(/,/, ".").replace(/ /g, '');
+				let y = b.replace(/,/, ".").replace(/ /g, '');
 				x = parseFloat(x);
 				y = parseFloat(y);
 				return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 			},
 			"numeric-comma-desc": (a, b) => {
-				var x = a.replace(/,/, ".").replace(/ /g, '');
-				var y = b.replace(/,/, ".").replace(/ /g, '');
+				let x = a.replace(/,/, ".").replace(/ /g, '');
+				let y = b.replace(/,/, ".").replace(/ /g, '');
 				x = parseFloat(x);
 				y = parseFloat(y);
 				return ((x < y) ? 1 : ((x > y) ? -1 : 0));
@@ -248,10 +250,10 @@ const _datatablesHelpers = {
 
 			// date-euro column sorter
 			"date-euro-pre": (a) => {
-				var trimmed = $.trim(a);
-				var x;
+				const trimmed = $.trim(a);
+				let x;
 				if (trimmed !== '') {
-					var frDate = trimmed.split('/');
+					const frDate = trimmed.split('/');
 					x = (frDate[2] + frDate[1] + frDate[0]) * 1;
 				} else {
 					x = 10000000; // = l'an 1000 ...
@@ -267,12 +269,12 @@ const _datatablesHelpers = {
 
 			// datetime-euro column sorter
 			"datetime-euro-pre": (a) => {
-				var trimmed = $.trim(a);
-				var x;
+				const trimmed = $.trim(a);
+				let x;
 				if (trimmed !== '') {
-					var frDateTime = trimmed.split(' - ');
-					var frDate = frDateTime[0].split('/');
-					var frTime = frDateTime[1].split(':');
+					const frDateTime = trimmed.split(' - ');
+					const frDate = frDateTime[0].split('/');
+					const frTime = frDateTime[1].split(':');
 					x = (frDate[2] + frDate[1] + frDate[0] + frTime[0] + frTime[1]) * 1;
 				} else {
 					x = 100000000000; // = l'an 1000 ...
@@ -292,10 +294,8 @@ const _datatablesHelpers = {
 	 * Handle table rows reordering
 	 *
 	 * @param evt: original event
-	 * @param details: array of changed objects
-	 * @param changes: editor changes
 	 */
-	reorderRows: function(evt, details, changes) {
+	reorderRows: function(evt) {
 		return new Promise((resolve, reject) => {
 			const
 				table = $(evt.target),
@@ -303,7 +303,7 @@ const _datatablesHelpers = {
 			// extract target and URL
 			let target = data.amsReorderInputTarget,
 				url = data.amsReorderUrl,
-				ids = null;
+				ids;
 			if (!(target || url)) {
 				resolve();
 			}
@@ -649,6 +649,79 @@ export function datatables(element) {
 
 
 /**
+ * Bootstrap 4 Tempus/Dominus date/time picker
+ */
+
+export function datetime(element) {
+	return new Promise((resolve, reject) => {
+		const inputs = $('.datetime', element);
+		if (inputs.length > 0) {
+			MyAMS.ajax.check(window.moment,
+				`${MyAMS.env.baseURL}../ext/moment${MyAMS.env.extext}.js`).then(() => {
+				MyAMS.ajax.check($.fn.datetimepicker,
+					`${MyAMS.env.baseURL}../ext/tempusdominus-bootstrap4${MyAMS.env.extext}.js`).then((firstLoad) => {
+					const required = [];
+					if (firstLoad) {
+						required.push(MyAMS.core.getCSS(
+							`${MyAMS.env.baseURL}../../css/ext/tempusdominus-bootstrap4${MyAMS.env.extext}.css`,
+							'tempusdominus'));
+					}
+					$.when.apply($, required).then(() => {
+						inputs.each((idx, elt) => {
+							const
+								input = $(elt),
+								data = input.data(),
+								defaultOptions = {
+									locale: data.amsDatetimeLanguage || data.amsLanguage || MyAMS.i18n.language,
+									icons: {
+										time: 'far fa-clock',
+										date: 'far fa-calendar',
+										up: 'fas fa-arrow-up',
+										down: 'fas fa-arrow-down',
+										previous: 'fas fa-chevron-left',
+										next: 'fas fa-chevron-right',
+										today: 'far fa-calendar-check-o',
+										clear: 'far fa-trash',
+										close: 'far fa-times'
+									},
+									date: input.val(),
+									format: data.amsDatetimeFormat || data.amsFormat
+								};
+							let settings = $.extend({}, defaultOptions, data.datetimeOptions || data.options);
+							settings = MyAMS.core.executeFunctionByName(
+								data.amsDatetimeInitCallback || data.amsInit,
+								document, input, settings) || settings;
+							const veto = {veto: false};
+							input.trigger('before-init.ams.datetime', [input, settings, veto]);
+							if (veto.veto) {
+								return;
+							}
+							input.datetimepicker(settings);
+							const plugin = input.data('datetimepicker');
+							if (data.amsDatetimeIsoTarget || data.amsIsoTarget) {
+								input.on('change.datetimepicker', (evt) => {
+									const
+										source = $(evt.currentTarget),
+										data = source.data(),
+										target = $(data.amsDatetimeIsoTarget || data.amsIsoTarget);
+									target.val(evt.date ? evt.date.toISOString(true) : null);
+								});
+							}
+							input.trigger('after-init.ams.datetime', [input, plugin]);
+						});
+					});
+				}, reject).then(() => {
+					resolve(inputs);
+				});
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
  * JQuery-UI drag and drop plug-ins
  */
 
@@ -765,7 +838,9 @@ export function editor(element) {
 				MyAMS.ajax.check(window.ace,
 					`${MyAMS.env.baseURL}../ext/ace/ace${MyAMS.env.extext}.js`).then((firstLoad) => {
 
-					const deferred = []
+					const
+						ace = window.ace,
+						deferred = [];
 					if (firstLoad) {
 						ace.config.set('basePath', `${MyAMS.env.baseURL}../ext/ace`);
 						deferred.push(MyAMS.core.getScript(
@@ -885,7 +960,7 @@ export function imgAreaSelect(element) {
 					`${MyAMS.env.baseURL}../ext/jquery-imgareaselect${MyAMS.env.extext}.js`).then((firstLoad) => {
 					const required = [];
 					if (firstLoad) {
-						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated.css`, 'imgareaselect'));
+						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated${MyAMS.env.extext}.css`, 'imgareaselect'));
 					}
 					$.when.apply($, required).then(() => {
 						images.each((idx, elt) => {
@@ -1096,7 +1171,7 @@ export function select2(element) {
  */
 
 export function svgPlugin(element) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const svgs = $('.svg-container', element);
 		if (svgs.length > 0) {
 			svgs.each((idx, elt) => {
@@ -1121,10 +1196,13 @@ export function svgPlugin(element) {
 
 /**
  * Fieldset switcher plug-in
+ *
+ * A switcher is a simple fieldset with a "switch" icon in it's legend, which can
+ * be used to hide or show fieldset content.
  */
 
 export function switcher(element) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const switchers = $('legend.switcher', element);
 		if (switchers.length > 0) {
 			switchers.each((idx, elt) => {
@@ -1264,7 +1342,7 @@ export function tinymce(element) {
 									autoresize_min_height: 50,
 									autoresize_max_height: 500,
 									init_instance_callback: (instance) => {
-										const handler = (evt) => {
+										const handler = () => {
 											instance.remove(`#${instance.id}`);
 											$(document).off('cleared.ams.content', handler);
 										};
@@ -1414,6 +1492,7 @@ if (window.MyAMS) {
 	MyAMS.registry.register(checker, 'checker');
 	MyAMS.registry.register(contextMenu, 'contextMenu');
 	MyAMS.registry.register(datatables, 'datatables');
+	MyAMS.registry.register(datetime, 'datetime');
 	MyAMS.registry.register(dragdrop, 'dragdrop');
 	MyAMS.registry.register(editor, 'editor');
 	MyAMS.registry.register(fileInput, 'fileInput');
