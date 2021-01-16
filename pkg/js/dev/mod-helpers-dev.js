@@ -26,6 +26,29 @@
   var $ = MyAMS.$;
   var helpers = {
     /**
+     * Click handler used to clear input
+     */
+    clearValue: function clearValue(evt) {
+      var target = $(evt.currentTarget).data('target');
+
+      if (target) {
+        $(target).val(null);
+      }
+    },
+
+    /**
+     * Click handler used to clear datetime input
+     */
+    clearDatetimeValue: function clearDatetimeValue(evt) {
+      var target = $(evt.currentTarget).data('target'),
+          picker = $(target).data('datetimepicker');
+
+      if (picker) {
+        picker.date(null);
+      }
+    },
+
+    /**
      * Refresh a DOM element with content provided in
      * the <code>options</code> object.
      *

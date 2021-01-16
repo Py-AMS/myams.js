@@ -140,7 +140,13 @@
             }
 
             MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-              $('#main').scrollTo(parent, {
+              var scrollBox = parent.parents('.modal-body');
+
+              if (!scrollBox.exists()) {
+                scrollBox = $('#main');
+              }
+
+              scrollBox.scrollTo(parent, {
                 offset: -15
               });
             });

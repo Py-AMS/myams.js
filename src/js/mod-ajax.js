@@ -1,4 +1,4 @@
-/* global MyAMS, Cookies */
+/* global jQuery, MyAMS, Cookies */
 /**
  * MyAMS AJAX features
  */
@@ -6,6 +6,13 @@
 const $ = MyAMS.$;
 
 
+/**
+ * CSRF cookie checker
+ *
+ * Automatically set CSRF request header when CSRF cookie was specified.
+ *
+ * @param request: outgoing request
+ */
 function checkCsrfHeader(request /*, options */) {
 	if (window.Cookies) {
 		const token = Cookies.get(MyAMS.config.csrfCookieName);

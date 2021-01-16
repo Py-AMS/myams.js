@@ -15,7 +15,7 @@
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-  /*! JsRender v1.0.9: http://jsviews.com/#jsrender */
+  /*! JsRender v1.0.10: http://jsviews.com/#jsrender */
 
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 
@@ -24,7 +24,7 @@
    * Does not require jQuery, or HTML DOM
    * Integrates with JsViews (http://jsviews.com/#jsviews)
    *
-   * Copyright 2020, Boris Moore
+   * Copyright 2021, Boris Moore
    * Released under the MIT License.
    */
   //jshint -W018, -W041, -W120
@@ -60,7 +60,7 @@
 
     $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-    var versionNumber = "v1.0.9",
+    var versionNumber = "v1.0.10",
         jsvStoreName,
         rTag,
         rTmplString,
@@ -2522,7 +2522,8 @@
 
           if (rtPrnDot && bindings) {
             // This is a binding to a path in which an object is returned by a helper/data function/expression, e.g. foo()^x.y or (a?b:c)^x.y
-            // We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes, to return the new object, and trigger re-binding of the subsequent path)
+            // We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes,
+            // to return the new object, and trigger re-binding of the subsequent path)
             expr = pathStart[fnDp - 1];
 
             if (full.length - 1 > ind - (expr || 0)) {

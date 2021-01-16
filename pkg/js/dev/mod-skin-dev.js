@@ -117,7 +117,7 @@
           MyAMS.skin.loadURL(url, container).then(function () {
             var prefix = $('html head title').data('ams-title-prefix'),
                 fullPrefix = prefix ? "".concat(prefix, " > ") : '';
-            document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
+            document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || menu.text().trim() || document.title);
 
             if (tag) {
               var anchor = $("#".concat(tag));

@@ -561,6 +561,11 @@ button.modal .bg-dark-modal:hover,
 button.modal .bg-dark-modal:focus {
   background-color: #1d2124 !important; }
 
+.modal-header .close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem; }
+
 .modal-body {
   overflow-y: auto;
   max-height: calc(100vh - 210px); }
@@ -672,7 +677,7 @@ button.modal .bg-dark-modal:focus {
       background-color: #fff;
       border: 1px solid #dee2e6;
       border-radius: 0.25rem; }
-  .ams-form > fieldset,
+  .ams-form > fieldset.border,
   .ams-form > div {
     margin: 0.5rem; }
   .ams-form fieldset + fieldset {
@@ -8936,4 +8941,4 @@ table td.action, table td.reorder {
   table td.action:hover, table td.reorder:hover {
     color: #3886c9; }
 
-/** Version: 1.0.4  */
+/** Version: 1.1.0  */

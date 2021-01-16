@@ -68,6 +68,9 @@
     .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove:hover {
       color: #343a40; }
 
+select.select2[readonly] + .select2 input {
+  background-color: transparent; }
+
 .select2-container {
   display: block; }
   .select2-container *:focus {

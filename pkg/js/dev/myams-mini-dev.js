@@ -93,14 +93,14 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*! JsRender v1.0.9: http://jsviews.com/#jsrender */
+/*! JsRender v1.0.10: http://jsviews.com/#jsrender */
 /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 /*
  * Best-of-breed templating in browser or on Node.js.
  * Does not require jQuery, or HTML DOM
  * Integrates with JsViews (http://jsviews.com/#jsviews)
  *
- * Copyright 2020, Boris Moore
+ * Copyright 2021, Boris Moore
  * Released under the MIT License.
  */
 
@@ -133,7 +133,7 @@ var setGlobals = $ === false; // Only set globals if script block in browser (no
 
 $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-var versionNumber = "v1.0.9",
+var versionNumber = "v1.0.10",
 	jsvStoreName, rTag, rTmplString, topView, $views, $expando,
 	_ocp = "_ocp",      // Observable contextual parameter
 
@@ -2320,7 +2320,8 @@ function parseParams(params, pathBindings, tmpl, isLinkExpr) {
 			}
 			if (rtPrnDot && bindings) {
 				// This is a binding to a path in which an object is returned by a helper/data function/expression, e.g. foo()^x.y or (a?b:c)^x.y
-				// We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes, to return the new object, and trigger re-binding of the subsequent path)
+				// We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes,
+				// to return the new object, and trigger re-binding of the subsequent path)
 				expr = pathStart[fnDp-1];
 				if (full.length - 1 > ind - (expr || 0)) { // We need to compile a subexpression
 					expr = $.trim(full.slice(expr, ind + all.length));
@@ -4564,12 +4565,19 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-/* global MyAMS, Cookies */
+/* global jQuery, MyAMS, Cookies */
 
 /**
  * MyAMS AJAX features
  */
 var $ = MyAMS.$;
+/**
+ * CSRF cookie checker
+ *
+ * Automatically set CSRF request header when CSRF cookie was specified.
+ *
+ * @param request: outgoing request
+ */
 
 function checkCsrfHeader(request
 /*, options */
@@ -5926,7 +5934,13 @@ var error = {
           }
 
           MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-            $('#main').scrollTo(parent, {
+            var scrollBox = parent.parents('.modal-body');
+
+            if (!scrollBox.exists()) {
+              scrollBox = $('#main');
+            }
+
+            scrollBox.scrollTo(parent, {
               offset: -15
             });
           });
@@ -7216,6 +7230,29 @@ __webpack_require__.r(__webpack_exports__);
  */
 var $ = MyAMS.$;
 var helpers = {
+  /**
+   * Click handler used to clear input
+   */
+  clearValue: function clearValue(evt) {
+    var target = $(evt.currentTarget).data('target');
+
+    if (target) {
+      $(target).val(null);
+    }
+  },
+
+  /**
+   * Click handler used to clear datetime input
+   */
+  clearDatetimeValue: function clearDatetimeValue(evt) {
+    var target = $(evt.currentTarget).data('target'),
+        picker = $(target).data('datetimepicker');
+
+    if (picker) {
+      picker.date(null);
+    }
+  },
+
   /**
    * Refresh a DOM element with content provided in
    * the <code>options</code> object.
@@ -8744,7 +8781,7 @@ if (MyAMS.env.bundle) {
 /*!*******************************!*\
   !*** ./src/js/mod-plugins.js ***!
   \*******************************/
-/*! exports provided: checker, contextMenu, datatables, dragdrop, editor, fileInput, imgAreaSelect, select2, svgPlugin, switcher, tinymce, validate */
+/*! exports provided: checker, contextMenu, datatables, datetime, dragdrop, editor, fileInput, imgAreaSelect, select2, svgPlugin, switcher, tinymce, validate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8752,6 +8789,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checker", function() { return checker; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contextMenu", function() { return contextMenu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "datatables", function() { return datatables; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "datetime", function() { return datetime; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dragdrop", function() { return dragdrop; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editor", function() { return editor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileInput", function() { return fileInput; });
@@ -8789,8 +8827,10 @@ if (!$.templates) {
 }
 /**
  * Fieldset checker plug-in
+ *
  * A checker is like a simple switcher, but also provides a checkbox which is used
  * as "switcher" input field.
+ *
  * The "checker" class is applied to the fieldset legend; checkbox is created automatically
  * by the plug-in.
  * Check options are given as data attributes, all prefixed with "ams-checker-":
@@ -8818,7 +8858,7 @@ var CHECKER_TEMPLATE = $.templates({
   markup: CHECKER_TEMPLATE_STRING
 });
 function checker(element) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     var checkers = $('legend.checker', element);
 
     if (checkers.length > 0) {
@@ -9054,17 +9094,15 @@ var _datatablesHelpers = {
    * Handle table rows reordering
    *
    * @param evt: original event
-   * @param details: array of changed objects
-   * @param changes: editor changes
    */
-  reorderRows: function reorderRows(evt, details, changes) {
+  reorderRows: function reorderRows(evt) {
     return new Promise(function (resolve, reject) {
       var table = $(evt.target),
           data = table.data(); // extract target and URL
 
       var target = data.amsReorderInputTarget,
           url = data.amsReorderUrl,
-          ids = null;
+          ids;
 
       if (!(target || url)) {
         resolve();
@@ -9489,6 +9527,78 @@ function datatables(element) {
   });
 }
 /**
+ * Bootstrap 4 Tempus/Dominus date/time picker
+ */
+
+function datetime(element) {
+  return new Promise(function (resolve, reject) {
+    var inputs = $('.datetime', element);
+
+    if (inputs.length > 0) {
+      MyAMS.ajax.check(window.moment, "".concat(MyAMS.env.baseURL, "../ext/moment").concat(MyAMS.env.extext, ".js")).then(function () {
+        MyAMS.ajax.check($.fn.datetimepicker, "".concat(MyAMS.env.baseURL, "../ext/tempusdominus-bootstrap4").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+          var required = [];
+
+          if (firstLoad) {
+            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/tempusdominus-bootstrap4").concat(MyAMS.env.extext, ".css"), 'tempusdominus'));
+          }
+
+          $.when.apply($, required).then(function () {
+            inputs.each(function (idx, elt) {
+              var input = $(elt),
+                  data = input.data(),
+                  defaultOptions = {
+                locale: data.amsDatetimeLanguage || data.amsLanguage || MyAMS.i18n.language,
+                icons: {
+                  time: 'far fa-clock',
+                  date: 'far fa-calendar',
+                  up: 'fas fa-arrow-up',
+                  down: 'fas fa-arrow-down',
+                  previous: 'fas fa-chevron-left',
+                  next: 'fas fa-chevron-right',
+                  today: 'far fa-calendar-check-o',
+                  clear: 'far fa-trash',
+                  close: 'far fa-times'
+                },
+                date: input.val(),
+                format: data.amsDatetimeFormat || data.amsFormat
+              };
+              var settings = $.extend({}, defaultOptions, data.datetimeOptions || data.options);
+              settings = MyAMS.core.executeFunctionByName(data.amsDatetimeInitCallback || data.amsInit, document, input, settings) || settings;
+              var veto = {
+                veto: false
+              };
+              input.trigger('before-init.ams.datetime', [input, settings, veto]);
+
+              if (veto.veto) {
+                return;
+              }
+
+              input.datetimepicker(settings);
+              var plugin = input.data('datetimepicker');
+
+              if (data.amsDatetimeIsoTarget || data.amsIsoTarget) {
+                input.on('change.datetimepicker', function (evt) {
+                  var source = $(evt.currentTarget),
+                      data = source.data(),
+                      target = $(data.amsDatetimeIsoTarget || data.amsIsoTarget);
+                  target.val(evt.date ? evt.date.toISOString(true) : null);
+                });
+              }
+
+              input.trigger('after-init.ams.datetime', [input, plugin]);
+            });
+          });
+        }, reject).then(function () {
+          resolve(inputs);
+        });
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
+}
+/**
  * JQuery-UI drag and drop plug-ins
  */
 
@@ -9606,7 +9716,8 @@ function editor(element) {
     if (editors.length > 0) {
       MyAMS.require('ajax').then(function () {
         MyAMS.ajax.check(window.ace, "".concat(MyAMS.env.baseURL, "../ext/ace/ace").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
-          var deferred = [];
+          var ace = window.ace,
+              deferred = [];
 
           if (firstLoad) {
             ace.config.set('basePath', "".concat(MyAMS.env.baseURL, "../ext/ace"));
@@ -9726,7 +9837,7 @@ function imgAreaSelect(element) {
           var required = [];
 
           if (firstLoad) {
-            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/imgareaselect-animated.css"), 'imgareaselect'));
+            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/imgareaselect-animated").concat(MyAMS.env.extext, ".css"), 'imgareaselect'));
           }
 
           $.when.apply($, required).then(function () {
@@ -9926,7 +10037,7 @@ function select2(element) {
  */
 
 function svgPlugin(element) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     var svgs = $('.svg-container', element);
 
     if (svgs.length > 0) {
@@ -9950,10 +10061,13 @@ function svgPlugin(element) {
 }
 /**
  * Fieldset switcher plug-in
+ *
+ * A switcher is a simple fieldset with a "switch" icon in it's legend, which can
+ * be used to hide or show fieldset content.
  */
 
 function switcher(element) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     var switchers = $('legend.switcher', element);
 
     if (switchers.length > 0) {
@@ -10083,7 +10197,7 @@ function tinymce(element) {
                 autoresize_min_height: 50,
                 autoresize_max_height: 500,
                 init_instance_callback: function init_instance_callback(instance) {
-                  var handler = function handler(evt) {
+                  var handler = function handler() {
                     instance.remove("#".concat(instance.id));
                     $(document).off('cleared.ams.content', handler);
                   };
@@ -10248,6 +10362,7 @@ if (window.MyAMS) {
   MyAMS.registry.register(checker, 'checker');
   MyAMS.registry.register(contextMenu, 'contextMenu');
   MyAMS.registry.register(datatables, 'datatables');
+  MyAMS.registry.register(datetime, 'datetime');
   MyAMS.registry.register(dragdrop, 'dragdrop');
   MyAMS.registry.register(editor, 'editor');
   MyAMS.registry.register(fileInput, 'fileInput');
@@ -10376,7 +10491,7 @@ var skin = {
         MyAMS.skin.loadURL(url, container).then(function () {
           var prefix = $('html head title').data('ams-title-prefix'),
               fullPrefix = prefix ? "".concat(prefix, " > ") : '';
-          document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || document.title);
+          document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || menu.text().trim() || document.title);
 
           if (tag) {
             var anchor = $("#".concat(tag));
@@ -10758,7 +10873,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.0.3  */
+/** Version: 1.1.0  */
 
 /***/ }),
 
