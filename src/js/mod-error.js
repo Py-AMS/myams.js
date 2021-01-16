@@ -122,7 +122,11 @@ export const error = {
 					}
 					MyAMS.ajax.check($.fn.scrollTo,
 						`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
-						$('#main').scrollTo(parent, { offset: -15 });
+						let scrollBox = parent.parents('.modal-body');
+						if (!scrollBox.exists()) {
+							scrollBox = $('#main');
+						}
+						scrollBox.scrollTo(parent, { offset: -15 });
 					});
 				}).then(resolve, reject);
 			}
