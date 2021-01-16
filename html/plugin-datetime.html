@@ -1,0 +1,201 @@
+<h1>MyAMS "datetime" plug-in</h1>
+
+<section>
+	<p>MyAMS "datetime" widgets relies on Bootstrap 4 "Tempus Dominus" plug-in
+	(see <a href="https://getdatepicker.com/5-4">here</a> for source and documentation).</p>
+
+	<div class="ams-form">
+		<fieldset class="border">
+			<legend>Empty date and time pickers</legend>
+			<div class="form-group row">
+				<label for="datetimepicker1"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Datetime input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker1"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-calendar"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker1-iso" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker1"
+							   data-target="#datetimepicker1"
+							   data-ams-iso-target="#datetimepicker1-iso" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="datetimepicker2"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Date only input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker2"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-calendar"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker2-iso" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker2"
+							   data-target="#datetimepicker2"
+							   data-ams-format="L"
+							   data-ams-iso-target="#datetimepicker2-iso" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="datetimepicker3"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Time only input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker3"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-clock"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker3-iso" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker3"
+							   data-target="#datetimepicker3"
+							   data-ams-format="LT"
+							   data-ams-iso-target="#datetimepicker3-iso" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset class="border">
+			<legend>Pre-filled date and time pickers</legend>
+			<div class="form-group row">
+				<label for="datetimepicker4"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Datetime input with value
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker4"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-calendar"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker4-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker4"
+							   data-target="#datetimepicker4"
+							   data-ams-iso-target="#datetimepicker4-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="datetimepicker5"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Date-only input with value
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker5"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-calendar"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker5-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker5"
+							   data-target="#datetimepicker5"
+							   data-ams-format="L"
+							   data-ams-iso-target="#datetimepicker5-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="datetimepicker6"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Time-only input with value
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group date"
+						 data-target-input="nearest">
+						<div class="input-group-prepend"
+							 data-target="#datetimepicker6"
+							 data-toggle="datetimepicker">
+							<div class="input-group-text">
+								<i class="far fa-clock"></i>
+							</div>
+						</div>
+						<input type="hidden"
+							   id="datetimepicker6-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+						<input type="text" class="form-control datetimepicker-input datetime"
+							   id="datetimepicker6"
+							   data-target="#datetimepicker6"
+							   data-ams-format="LT"
+							   data-ams-iso-target="#datetimepicker6-iso"
+							   value="2021-01-05T08:55:00.000+01:00" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<p>As you can see if looking at this page source, you can associate an « ISO » input to a
+	visible datetime input; this input, if defined using <code>data-ams-iso-target</code>, will
+	be updated automatically with the ISO version of the selected datetime.</p>
+</section>
+
+<section>
+	<h2>MyAMS <code>datetime</code> plug-in options</h2>
+	<p>This plug-in options are available as data attributes prefixed by
+	<code>data-ams-datetime-</code>, or just <code>data-ams-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>language</code></td>
+			<td>MyAMS.i18n.language</td>
+			<td>Used to define plug-in and moments.js locale strings</td>
+		</tr>
+		<tr>
+			<td><code>format</code></td>
+			<td>null</td>
+			<td>Default datetime formatting string</td>
+		</tr>
+		<tr>
+			<td class="text-nowrap"><code>iso-target</code></td>
+			<td>null</td>
+			<td>If defined, may be a JQuery selector of another input where the ISO version
+				of the entered datetime will be stored.</td>
+		</tr>
+	</table>
+</section>
