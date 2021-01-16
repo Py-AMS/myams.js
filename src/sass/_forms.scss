@@ -161,7 +161,7 @@
       @include border-radius($border-radius);
     }
   }
-  > fieldset,
+  > fieldset.border,
   > div {
     margin: 0.5rem;
   }

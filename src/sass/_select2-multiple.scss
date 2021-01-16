@@ -62,3 +62,7 @@
         }
     }
 }
+
+select.select2[readonly] + .select2 input {
+    background-color: transparent;
+}
