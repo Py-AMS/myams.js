@@ -86,7 +86,7 @@ export const skin = {
 						prefix = $('html head title').data('ams-title-prefix'),
 						fullPrefix = prefix ? `${prefix} > ` : '';
 					document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') ||
-						menu.attr('title') || document.title}`;
+						menu.attr('title') || menu.text().trim() || document.title}`;
 					if (tag) {
 						const anchor = $(`#${tag}`);
 						if (anchor.exists()) {
