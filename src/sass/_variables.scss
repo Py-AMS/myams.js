@@ -161,6 +161,11 @@ $legend-padding:            0.2rem 0.5rem 0.1rem !default;
 $form-feedback-font-size:    0.8rem !default;
 $error-border:              lighten($red, 20%) !default;
 
+$custom-file-text: (
+  en: "Browse",
+  fr: "Parcourir"
+) !default;
+
 
 // Tables styles
 $table-sort:                lighten($aside-bg, 20%) !default;
