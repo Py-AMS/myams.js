@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2.0
+-----
+ - added french translation for file input "Browse" label
+ - packages upgrades
+ - CSS styles updates
+
 1.1.0
 -----
  - added Bootstrap "Tempus Dominus" plug-in for datetime input fields
