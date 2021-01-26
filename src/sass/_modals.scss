@@ -7,6 +7,14 @@
   @include bg-variant(".modal .bg-#{$color}-modal", $value, true);
 }
 
+.modal-max {
+  max-width: calc(100vw - 5em) !important;
+
+  @media (max-width: $sm-width) {
+    max-width: calc(100vw - 1em) !important;
+  }
+}
+
 .modal-header {
   .close {
     position: absolute;
