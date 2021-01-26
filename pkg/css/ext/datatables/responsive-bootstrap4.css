@@ -105,11 +105,11 @@ table.dataTable > tbody > tr.child ul.dtr-details {
 }
 table.dataTable > tbody > tr.child ul.dtr-details * {
   font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 0.9rem;
+  font-size: 1em;
 }
 table.dataTable > tbody > tr.child ul.dtr-details > li {
   border-bottom: 1px solid #efefef;
-  padding: 0.5em 0;
+  padding: 0.1em 0 0.1em 2em;
 }
 table.dataTable > tbody > tr.child ul.dtr-details > li:first-child {
   padding-top: 0;
@@ -119,7 +119,7 @@ table.dataTable > tbody > tr.child ul.dtr-details > li:last-child {
 }
 table.dataTable > tbody > tr.child span.dtr-title {
   display: inline-block;
-  min-width: 75px;
+  min-width: 200px;
   font-weight: bold;
 }
 
