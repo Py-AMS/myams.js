@@ -111,7 +111,7 @@ dist-3.8:
         - ./bin/test
         - buildout setup setup.py bdist_egg
         - pip install twine
-        - twine upload dist/*
+        - twine upload --skip-existing dist/*
     variables:
         TWINE_USERNAME: $PYPI_USERNAME
         TWINE_PASSWORD: $PYPI_PASSWORD
@@ -131,7 +131,7 @@ dist-3.9:
         - ./bin/test
         - buildout setup setup.py bdist_egg
         - pip install twine
-        - twine upload dist/*
+        - twine upload --skip-existing dist/*
     variables:
         TWINE_USERNAME: $PYPI_USERNAME
         TWINE_PASSWORD: $PYPI_PASSWORD
