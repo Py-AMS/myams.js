@@ -46,7 +46,7 @@ $font-family-wide:          "Roboto", "Segoe UI", "Helvetica Neue", Arial, "Noto
 $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
 $font-size-base:            0.95rem !default;
-
+$font-size-xs:           $font-size-base * 0.8 !default;
 
 // Tooltips styles
 $zindex-tooltip:               2000 !default;

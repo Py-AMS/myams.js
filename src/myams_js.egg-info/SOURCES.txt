@@ -15,6 +15,8 @@ pkg/css/ext/imgareaselect-deprecated.css
 pkg/css/ext/imgareaselect-deprecated.min.css
 pkg/css/ext/select2-bootstrap4.css
 pkg/css/ext/select2-bootstrap4.min.css
+pkg/css/ext/select2-bootstrap4.min.min.css
+pkg/css/ext/select2-bootstrap4.min.min.min.css
 pkg/css/ext/select2.css
 pkg/css/ext/select2.min.css
 pkg/css/ext/tempusdominus-bootstrap4.css
@@ -23,6 +25,8 @@ pkg/css/ext/datatables/autoFill-bootstrap4.css
 pkg/css/ext/datatables/autoFill-bootstrap4.min.css
 pkg/css/ext/datatables/buttons-bootstrap4.css
 pkg/css/ext/datatables/buttons-bootstrap4.min.css
+pkg/css/ext/datatables/buttons-bootstrap4.min.min.css
+pkg/css/ext/datatables/buttons-bootstrap4.min.min.min.css
 pkg/css/ext/datatables/colReorder-bootstrap4.css
 pkg/css/ext/datatables/colReorder-bootstrap4.min.css
 pkg/css/ext/datatables/dataTables-bootstrap4.css
@@ -37,6 +41,8 @@ pkg/css/ext/datatables/keyTable-bootstrap4.css
 pkg/css/ext/datatables/keyTable-bootstrap4.min.css
 pkg/css/ext/datatables/responsive-bootstrap4.css
 pkg/css/ext/datatables/responsive-bootstrap4.min.css
+pkg/css/ext/datatables/responsive-bootstrap4.min.min.css
+pkg/css/ext/datatables/responsive-bootstrap4.min.min.min.css
 pkg/css/ext/datatables/rowGroup-bootstrap4.css
 pkg/css/ext/datatables/rowGroup-bootstrap4.min.css
 pkg/css/ext/datatables/rowReorder-bootstrap4.css
