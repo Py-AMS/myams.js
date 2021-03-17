@@ -211,11 +211,17 @@
 
 // Custom TinyMCE styles
 .tox {
-  font-size: 1em !important;
+  font-size: 0.95em !important;
 
   &.tox-tinymce {
     font-family: $font-family-sans-serif !important;
-    border: 0;
+
+    .form-widget > & {
+      border-radius: $border-radius;
+    }
+    .tab-content & {
+      border: 0;
+    }
   }
   .tox-menubar {
     border-bottom: 1px solid silver !important;
