@@ -720,10 +720,13 @@ button.modal .bg-dark-modal:focus {
         background-image: linear-gradient(to right, transparent, transparent); }
 
 .tox {
-  font-size: 1em !important; }
+  font-size: 0.95em !important; }
   .tox.tox-tinymce {
-    font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
-    border: 0; }
+    font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important; }
+    .form-widget > .tox.tox-tinymce {
+      border-radius: 0.25rem; }
+    .tab-content .tox.tox-tinymce {
+      border: 0; }
   .tox .tox-menubar {
     border-bottom: 1px solid silver !important; }
     .tox .tox-menubar .tox-mbtn {
@@ -8983,4 +8986,4 @@ table td.action, table td.reorder {
   table td.action:hover, table td.reorder:hover {
     color: #3886c9; }
 
-/** Version: 1.3.2  */
+/** Version: 1.3.3  */

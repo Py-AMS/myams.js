@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.3.3
+-----
+ - updated TinyMCE CSS styles
+
 1.3.2
 -----
  - updated TinyMCE production build
