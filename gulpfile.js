@@ -226,7 +226,6 @@ task('sass_dev', function() {
 		.pipe(dest('pkg/css/dev'));
 });
 
-
 task('sass_prod', function() {
 	return src('src/sass/myams.scss')
 		.pipe(sass().on('error', sass.logError))
@@ -236,21 +235,20 @@ task('sass_prod', function() {
 });
 
 
-task('select2_dev', function() {
-	return src('src/sass/select2-bootstrap4.scss')
+task('sass_emerald_dev', function() {
+	return src('src/sass/emerald.scss')
 		.pipe(sass().on('error', sass.logError))
-		.pipe(dest('pkg/css/ext'));
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/css/dev'));
 });
 
 
-task('select2_prod', function() {
-	return src('src/sass/select2-bootstrap4.scss')
+task('sass_emerald_prod', function() {
+	return src('src/sass/emerald.scss')
 		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
 		.pipe(clean())
-		.pipe(rename(function(path) {
-			path.basename += '.min';
-		}))
-		.pipe(dest('pkg/css/ext'));
+		.pipe(dest('pkg/css/prod'));
 });
 
 
@@ -283,7 +281,7 @@ exports.default = function() {
 								  'core_dev', 'core_prod'));
 	watch('src/js/i18n/*.js', parallel('i18n_dev', 'i18n_prod'));
 	watch('src/js/mod-*.js', parallel('mods_dev', 'mods_prod'));
-	watch('src/sass/*.scss', parallel('sass_dev', 'sass_prod',
-									  'select2_dev', 'select2_prod',
-									  'full_dev', 'full_prod'));
+	watch('src/sass/**/*.scss', parallel('sass_dev', 'sass_prod',
+										 'sass_emerald_dev', 'sass_emerald_prod',
+										 'full_dev', 'full_prod'));
 };

@@ -6,28 +6,30 @@
 		<meta charset="UTF-8">
 		<meta name="HandheldFriendly" content="True" />
 		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-		<script type="text/javascript" src="dist/js/dev/myams-dev.js"></script>
-		<script type="text/javascript" src="resources/js/myams-app.js"></script>
+		<script type="text/javascript" src="dist/js/ext/jquery.js"></script>
+		<script type="text/javascript" src="dist/js/ext/bootstrap.js"></script>
+		<script type="text/javascript" src="dist/js/ext/fontawesome.js"
+				data-auto-replace-svg="nest" data-search-pseudo-elements></script>
+		<script type="text/javascript" src="dist/js/dev/myams-mini-dev.js"></script>
+		<link rel="stylesheet" type="text/css" href="dist/css/dev/emerald.css">
 	</head>
 	<body class="fixed-ribbon">
 
 		<!-- header panel -->
 		<header id="header"
 				class="d-flex flex-nowrap justify-content-between pr-2">
-			<div id="logo-group"
-				 class="d-flex align-items-center">
+			<div id="logo-group" class="d-flex align-items-center">
 				<span id="logo">
-					<a href="index.html">
+					<a href="index-mini.html">
 						<img src="resources/img/logo.png" alt="Logo" />
 					</a>
 				</span>
 			</div>
-			<div id="top-links"
-				 class="flex-grow-1 d-none d-sm-flex">
-				<div class="top-menu d-flex flex-column px-3 py-1">
+			<div id="top-links" class="flex-grow-1 d-none d-sm-flex">
+				<div class="top-menu d-flex flex-column py-1 px-3">
 					<span class="label d-block text-nowrap">MyAMS bundle</span>
 					<span class="btn btn-sm dropdown-toggle px-2 bg-secondary" data-toggle="dropdown">
-						<span class="title">MyAMS full bundle</span>
+						<span class="title">Emerald mini bundle</span>
 					</span>
 					<span class="dropdown-menu">
 						<a class="dropdown-item disabled">MyAMS skin</a>
@@ -39,7 +41,7 @@
 						<a href="index-core-emerald.html" class="dropdown-item">Core bundle</a>
 					</span>
 				</div>
-				<div class="top-tabs d-none d-sm-flex flex-column px-3 py-1">
+				<div class="top-tabs d-flex flex-column py-1 px-3">
 					<span class="label d-block text-nowrap">Sections</span>
 					<ul class="nav nav-tabs flex-nowrap">
 						<li class="nav-item">
@@ -59,7 +61,7 @@
 						</li>
 					</ul>
 				</div>
-				<div class="top-tabs d-none d-md-flex flex-column py-1 px-3">
+				<div class="top-tabs d-none d-sm-flex flex-column py-1 px-3">
 					<span class="label d-block text-nowrap">Menus</span>
 					<ul class="nav nav-tabs flex-nowrap">
 						<li class="nav-item">
@@ -97,7 +99,7 @@
 							  data-ams-events-handlers='{"submit-success.ams.form": "MyAMS.helpers.hideDropdown"}'>
 							<div class="input-group form-widget m-0">
 								<input type="text" class="form-control" name="query"
-									   required placeholder="Search..." />
+									   required placeholder="Search..."/>
 								<button type="submit"
 										class="input-group-append input-group-text">
 									<i class="fa fa-fw fa-search"></i>
@@ -223,7 +225,7 @@
 			<div id="ribbon">
 				<ol class="breadcrumb d-flex flex-nowrap" aria-label="breadcrumb">
 					<li class="breadcrumb-item persistent strong">
-						<a href="index.html">MyAMS.js</a>
+						<a href="#summary.html">MyAMS.js</a>
 					</li>
 				</ol>
 			</div>
@@ -232,5 +234,16 @@
 			<div id="content"></div>
 
 		</div>
+<!--			<div data-ams-plugins='[{"name": "_test1", "src": "test-1.js"}]'>-->
+<!--				<p></p>-->
+<!--			</div>-->
+<!--			<div data-ams-plugins='[{"name": "_test2", "src": "test-2.js", "async": "false"}]'>-->
+<!--				<p></p>-->
+<!--			</div>-->
+<!--			<div data-ams-plugins='test3'-->
+<!--				 data-ams-plugin-test3-src="test-3.js"-->
+<!--				 data-ams-plugin-test3-callback="MyAMS.app.init">-->
+<!--				<p></p>-->
+<!--			</div>-->
 	</body>
 </html>
