@@ -960,7 +960,9 @@ export function imgAreaSelect(element) {
 					`${MyAMS.env.baseURL}../ext/jquery-imgareaselect${MyAMS.env.extext}.js`).then((firstLoad) => {
 					const required = [];
 					if (firstLoad) {
-						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated${MyAMS.env.extext}.css`, 'imgareaselect'));
+						required.push(MyAMS.core.getCSS(
+							`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated${MyAMS.env.extext}.css`,
+							'imgareaselect'));
 					}
 					$.when.apply($, required).then(() => {
 						images.each((idx, elt) => {
@@ -1049,8 +1051,6 @@ export function select2(element) {
 					const required = [];
 					if (firstLoad) {
 						required.push(MyAMS.core.getScript(`${MyAMS.env.baseURL}../ext/select2/i18n/${MyAMS.i18n.language}.js`));
-						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/select2${MyAMS.env.extext}.css`, 'select2'));
-						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/select2-bootstrap4${MyAMS.env.extext}.css`, 'select2_bs4'));
 					}
 					$.when.apply($, required).then(() => {
 						selects.each((idx, elt) => {
