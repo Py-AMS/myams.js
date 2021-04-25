@@ -15,7 +15,7 @@
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-  /*! JsRender v1.0.10: http://jsviews.com/#jsrender */
+  /*! JsRender v1.0.11: http://jsviews.com/#jsrender */
 
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 
@@ -60,7 +60,7 @@
 
     $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-    var versionNumber = "v1.0.10",
+    var versionNumber = "v1.0.11",
         jsvStoreName,
         rTag,
         rTmplString,
@@ -1314,6 +1314,8 @@
                 // Look for server-generated script block with id "./some/file.html"
                 elem = document.getElementById(value);
               }
+            } else if (value.charAt(0) === "#") {
+              elem = document.getElementById(value.slice(1));
             } else if ($.fn && !$sub.rTmpl.test(value)) {
               try {
                 elem = $(value, document)[0]; // if jQuery is loaded, test for selector returning elements, and get first element
