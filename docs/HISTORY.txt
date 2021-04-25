@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.1
+-----
+ - Updated Git fonts resources
+
 1.4.0
 -----
  - added new Emerald theme
