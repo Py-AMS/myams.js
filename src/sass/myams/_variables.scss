@@ -3,6 +3,13 @@
 // These styles are extending Bootstrap styles
 //
 
+
+// Common options
+
+$enable-gradients:             true !default;
+$enable-responsive-font-sizes: true !default;
+
+
 // Standard widths
 
 $sm-width:                   575px !default;
@@ -40,6 +47,10 @@ $success:                   #478e47 !default;
 $warning:                   $orange !default;
 $secondary:               $gray-400 !default;
 
+$focus-border:              #84c6b7 !default;
+$focus-shadow:           0 0 0 0.2rem rgba(64, 139, 122, 0.25) !default;
+$focus-hover:               #c5e0d8 !default;
+
 
 $font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-wide:          "Roboto", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
@@ -47,6 +58,7 @@ $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consol
 
 $font-size-base:            0.95rem !default;
 $font-size-xs:           $font-size-base * 0.8 !default;
+
 
 // Tooltips styles
 $zindex-tooltip:               2000 !default;
@@ -90,6 +102,8 @@ $section-head:            $gray-700 !default;
 $header-bg:                 #f8f8f8 !default;
 $header-mobile-bg:             #fff !default;
 
+$aside-width:                 220px !default;
+$aside-min-width:             210px !default;
 $aside-bg:                  #92a395 !default;
 
 $nav-font:                  $font-family-sans-serif !default;
@@ -135,6 +149,15 @@ $nav-minify-item-top:       #d8d4d4 !default;
 $nav-minify-item-bottom:       #fff !default;
 $nav-minify-item-left:      #bfbfbf !default;
 
+$nav-tabs-link-active-bg:    $white !default;
+
+$version-color:           $gray-600 !default;
+
+$main-margin-top:                40px !default;
+$main-height:        calc(100% - 50px) !default;
+$main-fixed-height:  calc(100% - 90px) !default;
+
+$ribbon-height:                40px !default;
 $ribbon-bg:                 #3886c9 !default;
 $ribbon-mobile-bg:          #f5f5f5 !default;
 $ribbon-mobile-bottom:      #cfcfcf !default;
@@ -148,6 +171,8 @@ $ribbon-mobile-active-link:    #333 !default;
 
 $breadcrumb-divider-color:  #efefef !default;
 $breadcrumb-active-color:   #ffffff !default;
+
+$content-padding:          1rem calc(1rem - 4px) 1rem 1rem !default;
 
 $fieldset-bg:               rgba(255, 255, 255, .9) !default;
 $fieldset-border:           #dee2e6 !default;
@@ -175,6 +200,6 @@ $table-sort:                lighten($aside-bg, 20%) !default;
 $modal-inner-padding:        0.5rem !default;
 
 
-@import '../../node_modules/bootstrap/scss/functions';
-@import '../../node_modules/bootstrap/scss/variables';
-@import '../../node_modules/bootstrap/scss/mixins';
+@import '../../../node_modules/bootstrap/scss/functions';
+@import '../../../node_modules/bootstrap/scss/variables';
+@import '../../../node_modules/bootstrap/scss/mixins';

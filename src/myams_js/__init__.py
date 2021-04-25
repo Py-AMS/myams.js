@@ -88,3 +88,15 @@ myams_core_js = Resource(library, 'js/dev/myams-core-dev.js',
 myams_core_bundle = Group(depends=(fontawesome_css, myams_css, myams_core_js))
 
 myams_core_svg_bundle = Group(depends=(fontawesome_js, myams_css, myams_core_js))
+
+
+emerald_css = Resource(library, 'css/dev/emerald.css',
+                       minified='css/prod/emerald.css')
+
+emerald_mini_bundle = Group(depends=(fontawesome_css, emerald_css, myams_mini_js))
+
+emerald_mini_svg_bundle = Group(depends=(fontawesome_js, emerald_css, myams_mini_js))
+
+emerald_core_bundle = Group(depends=(fontawesome_css, emerald_css, myams_core_js))
+
+emerald_core_svg_bundle = Group(depends=(fontawesome_js, emerald_css, myams_core_js))

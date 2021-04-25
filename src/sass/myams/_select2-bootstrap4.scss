@@ -1,12 +1,10 @@
 
 @import "variables";
 
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/mixins";
 
-@import "select2-single";
-@import "select2-multiple";
 
 // basic
 .select2-container {

@@ -1,8 +1,9 @@
+@import "variables";
+
+
 /**
  * Forms contents style
  */
-
-@import "variables";
 
 
 // Generic controls
@@ -56,6 +57,7 @@
         opacity: 0.8;
       }
     }
+
     .hint {
       position: absolute;
       top: 0.1rem;
@@ -98,10 +100,12 @@
       margin-bottom: 0.5rem;
     }
   }
+
   .nav-link {
     padding: 0.3rem 1rem;
     font-family: $nav-font;
   }
+
   .tab-content {
     border-color: $nav-tabs-border-color;
     border-width: 0 1px 1px;
@@ -122,22 +126,30 @@
     &:last-child {
       padding: $last-fieldset-padding;
     }
+
     &[disabled] {
       > section,
       > article,
       > div {
         opacity: 0.6;
+
+        * {
+          pointer-events: none;
+        }
       }
     }
+
     &.border {
       border: 1px solid $fieldset-border;
       @include border-radius($border-radius);
     }
+
     &.switched {
       legend {
         margin-bottom: 0.2rem;
       }
     }
+
     legend {
       font-size: 0.95rem;
       font-weight: normal;
@@ -159,6 +171,7 @@
         font-size: 0.8rem;
       }
     }
+
     &.border > legend {
       width: auto;
       padding: $legend-padding;
@@ -167,10 +180,12 @@
       @include border-radius($border-radius);
     }
   }
+
   > fieldset.border,
   > div {
     margin: 0.5rem;
   }
+
   fieldset + fieldset {
     margin-top: 0.5rem;
   }
@@ -219,37 +234,47 @@
     .form-widget > & {
       border-radius: $border-radius;
     }
+
     .tab-content & {
       border: 0;
     }
   }
+
   .tox-menubar {
     border-bottom: 1px solid silver !important;
+
     .tox-mbtn {
       height: 26px !important;
       font-size: 1em !important;
     }
   }
+
   .tox-menu {
     * {
       font-family: $font-family-sans-serif !important;
       font-size: 1em !important;
     }
+
     h1 {
       font-size: $h1-font-size !important;
     }
+
     h2 {
       font-size: $h2-font-size !important;
     }
+
     h3 {
       font-size: $h3-font-size !important;
     }
+
     h4 {
       font-size: $h4-font-size !important;
     }
+
     h5 {
       font-size: $h5-font-size !important;
     }
+
     h6 {
       font-size: $h6-font-size !important;
     }

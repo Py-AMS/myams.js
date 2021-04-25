@@ -1,8 +1,13 @@
+
+@import "variables";
+
+
 .select2-container--bootstrap4 {
     .select2-selection--multiple {
 
         // height of input box
         min-height: $input-height !important;
+        display: flex;
 
         // input box
         .select2-selection__rendered {
@@ -16,11 +21,8 @@
         // each selected item in input box
         .select2-selection__choice {
             font-family: $font-family-sans-serif;
-            //color: $dark;
             color: $light;
-            //background-color: lighten($primary, 20%);
             background-color: $primary;
-            //border: 1px solid darken($light, 20%);
             border: 1px solid lighten($primary, 25%);
             border-radius: $btn-border-radius-sm;
             padding: 0;

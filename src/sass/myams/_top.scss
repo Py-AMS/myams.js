@@ -29,7 +29,7 @@
 
 
 #logo-group {
-  width: 220px;
+  width: $aside-width;
 
   @media only screen and (min-width: 480px) and (max-width: 1089px) {
       width: 175px;

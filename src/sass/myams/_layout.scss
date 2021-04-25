@@ -1,6 +1,4 @@
-
 @import "variables";
-@import '../../node_modules/bootstrap/scss/bootstrap';
 
 
 //
@@ -42,6 +40,7 @@ body {
     border-right: 1px solid $body-border;
     box-shadow: 0 2px 70px $body-shadow;
   }
+
   &.nooverflow {
     position: fixed;
     overflow: hidden;
@@ -50,9 +49,14 @@ body {
 }
 
 
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
 aside {
   display: block;
-  width: 220px;
+  width: $aside-width;
   overflow: hidden;
   min-height: 100%;
   background-color: $aside-bg;
@@ -63,7 +67,7 @@ aside {
   display: block;
   top: 50px;
   left: 0;
-  width: 220px;
+  width: $aside-width;
   z-index: 200;
   overflow-x: hidden;
   overflow-y: auto;
@@ -72,7 +76,7 @@ aside {
   @include transition($transition-base);
 
   @media (max-width: 979px) {
-    left: -220px;
+    left: -$aside-width;
   }
 
   .fixed-navigation & {
@@ -85,10 +89,11 @@ aside {
   }
 
   .version {
-    margin-top: 40px;
+    margin-top: 25px;
     font-size: 0.8rem;
+    line-height: 1.2;
     text-align: center;
-    color: $gray-600;
+    color: $version-color;
   }
 }
 
@@ -102,20 +107,20 @@ aside {
 
 #main {
   display: block;
-  margin-left: 220px;
+  margin-left: $aside-width;
   margin-right: 4px;
   padding: 0;
-  height: calc(100% - 50px);
+  height: $main-height;
   overflow-y: auto;
   @include transition($transition-base);
 
   @media (max-width: 979px) {
-      margin-left: 0;
+    margin-left: 0;
   }
 
   .fixed-ribbon & {
-    margin-top: 40px;
-    height: calc(100% - 90px);
+    margin-top: $ribbon-height;
+    height: $main-fixed-height;
   }
 }
 
@@ -123,7 +128,7 @@ aside {
 #content {
   position: relative;
   min-height: calc(100% - 40px);
-  padding: 1rem calc(1rem - 4px) 1rem 1rem;
+  padding: $content-padding;
   left: 0;
   @include transition($transition-base);
 
@@ -138,6 +143,7 @@ aside {
     font-family: $font-family-wide;
     letter-spacing: -1px;
   }
+
   section {
     border: 1px solid $section-border;
     background-color: $section-bg;
@@ -145,10 +151,20 @@ aside {
 
     > h2 {
       font-size: $font-size-base * 1.4;
+
+      > svg.svg-inline--fa {
+        transform: scale(0.7);
+      }
     }
+
     > h3 {
       font-size: $font-size-base * 1.2;
+
+      > svg.svg-inline--fa {
+        transform: scale(0.7);
+      }
     }
+
     > h2,
     > h3 {
       border-bottom: 1px solid $section-border;
@@ -163,8 +179,10 @@ aside {
         padding-top: 0.1rem;
         padding-bottom: 0.1rem;
         font-family: $font-family-sans-serif;
+        line-height: 1.75em;
         letter-spacing: normal;
       }
+
       .dropdown-menu {
         font-family: $font-family-sans-serif;
         letter-spacing: normal;
@@ -174,38 +192,46 @@ aside {
         }
       }
     }
+
     p,
     .p,
     ul {
       font-family: $font-family-wide;
     }
+
     p,
     .p {
       padding-left: 0.8rem;
       padding-right: 0.8rem;
     }
+
     > p:first-child,
     > .p:first-child {
       padding-top: 0.5rem;
     }
+
     > p:last-child,
     > .p:last-child {
       margin-bottom: 0.5rem;
     }
+
     > ul {
       padding-left: 2.6rem;
       padding-right: 0.8rem;
     }
+
     .alert {
       p {
         padding-left: 0;
         padding-right: 0;
       }
+
       > p:last-child {
         margin-bottom: 0;
       }
     }
   }
+
   section + section {
     margin-top: 1rem;
   }
@@ -222,6 +248,7 @@ aside {
   #hide-menu {
     display: none;
   }
+
   #left-panel {
     width: 40px;
     overflow: visible;
@@ -229,10 +256,12 @@ aside {
     @media (max-width: 979px) {
       left: 0;
     }
+
     .version {
       display: none;
     }
   }
+
   #main {
     margin-left: 40px;
   }
@@ -254,6 +283,7 @@ aside {
         box-shadow: inset 0 0 6px 1px rgba(0, 0, 0, .2);
       }
     }
+
     i {
       @media (max-width: 979px) {
         color: $white;
@@ -272,29 +302,34 @@ aside {
       }
     }
   }
+
   #left-panel {
-    left: -210px;
+    left: -$aside-min-width;
     z-index: 901;
 
     &:hover {
       left: 0;
     }
+
     @media (max-width: 979px) {
       left: 0;
     }
   }
+
   #minifyme {
     display: none;
   }
+
   #main {
     margin-left: 10px;
 
     @media (max-width: 979px) {
       position: relative;
-      left: 210px;
+      left: $aside-min-width;
     }
   }
 }
+
 .minified.hidden-menu {
   #main {
     margin-left: 0;
