@@ -108,7 +108,11 @@ export class NavigationMenu {
 			if (menuItem.find('ul').length > 0) {
 				const firstLink = menuItem.find('a:first');
 				// add multi-level sign next to link
-				firstLink.append(`<b class="collapse-sign">${settings.closedSign}</b>`);
+				const sign = $(`<b class="collapse-sign">${settings.closedSign}</b>`);
+				sign.on('click', (evt) => {
+					evt.preventDefault();
+				});
+				firstLink.append(sign);
 				// avoid jumping to top of page when href is a #
 				if (firstLink.attr('href') === '#') {
 					firstLink.click(() => {
