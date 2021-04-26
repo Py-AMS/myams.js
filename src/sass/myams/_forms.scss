@@ -183,7 +183,7 @@
 
   > fieldset.border,
   > div {
-    margin: 0.5rem;
+    margin: $fieldset-border-margin;
   }
 
   fieldset + fieldset {
