@@ -23,7 +23,7 @@
 			<p><strong>Default build:</strong> this is the default implementation of MyAMS; it's a
 				big bundle (1.2 Mb) which is including JQuery, Bootstrap, FontAwesome icons (in
 				CSS mode) and MyAMS in a single Javascript file built using Webpack; it's this
-				bundle which is currently used by this demo site.</p>
+				bundle which is currently used by default on this demo site.</p>
 		</li>
 		<li>
 			<p><strong>Mini-build:</strong> this package is only including all MyAMS features in a
@@ -37,6 +37,10 @@
 				if required.</p>
 		</li>
 	</ul>
+	<p>MyAMS is also available actually with two skins: the default *MyAMS* skin, and a new skin
+		called *Emerald*; other skins can be created easily using new SASS files. These alternate
+		skins are only available in *core* and *mini* builds, as default build only includes
+		default *MyAMS* skin.</p>
 	<p>Please note that all these packages are available in "development" mode as well as
 		"production" mode, where resources are minimized.</p>
 	<p>MyAMS resources directories are listed below; only files which may have to be included
@@ -52,7 +56,8 @@
 						<li>
 							<em>/dev</em>
 							<ul>
-								<li><em>myams.css</em> (MyAMS.css, development mode)</li>
+								<li><em>myams.css</em> (MyAMS skin, development mode)</li>
+								<li><em>emerald.css</em> (Emerald skin, development mode)</li>
 							</ul>
 						</li>
 						<li>
@@ -60,12 +65,15 @@
 							<ul>
 								<li><em>bootstrap.css</em> (Bootstrap 4 CSS)</li>
 								<li><em>fontawesome.css</em> (FontAwesome CSS)</li>
+								<li><em>*.css</em> (other stylesheets downloaded dynamically by
+									MyAMS plug-ins)</li>
 							</ul>
 						</li>
 						<li>
 							<em>/prod</em>
 							<ul>
-								<li><em>myams.css</em> (MyAMS.css, production mode)</li>
+								<li><em>myams.css</em> (MyAMS skin, production mode)</li>
+								<li><em>emerald.css</em> (Emerald skin, production mode)</li>
 							</ul>
 						</li>
 						<li>
@@ -101,6 +109,8 @@
 								<li><em>jsrender.js</em> (Javascript rendering library)</li>
 								<li><em>bootstrap.js</em> (Bootstrap 4 JS)</li>
 								<li><em>fontawesome.js</em> (FontAwesome JS)</li>
+								<li><em>*.js</em> (Other scripts files downloaded dynamically
+									by MyAMS plug-ins)</li>
 							</ul>
 						</li>
 						<li>
