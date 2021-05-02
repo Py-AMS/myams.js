@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.4.1
+Version: 1.4.2
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -35,14 +35,27 @@ Description: ================
         features using the HTML "data" API to enable components configuration without using any
         javascript code.
         
-        MyAMS documentation and demo site is available at http://myams.ztfy.org.
+        MyAMS documentation and demo site are available at http://myams.ztfy.org.
         
-        Please note that this package also includes a Python package, for easy integration of MyAMS.js
-        within a Pyramid application (see PyAMS_skin and PyAMS_zmi packages).
+        
+        Integrating MyAMS.js
+        ====================
+        
+        You can include MyAMS resources manually as usual in your HTML pages.
+        
+        A Python package is also provided, which is declaring MyAMS resources as Fanstatic resources,
+        for easy integration into any Pyramid application; you can also use *PyAMS_zmi* package, which
+        is relying on MyAMS.js.
         
         
         Changelog
         =========
+        
+        1.4.2
+        -----
+         - updated AJAX behaviour of Select2 plug-in
+         - updated CSS styles
+         - updated demo site documentation
         
         1.4.1
         -----

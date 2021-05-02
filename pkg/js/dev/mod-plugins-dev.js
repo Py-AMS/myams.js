@@ -1153,6 +1153,9 @@
         values.push(input.children("option[data-content=\"".concat(elt.title, "\"]")).attr('value'));
       });
       input.data('select2-target').val(values.join(input.data('ams-select2-separator') || ','));
+    },
+    select2AjaxParamsHelper: function select2AjaxParamsHelper(params, data) {
+      return Object.assign({}, params, data);
     }
   };
 
@@ -1191,9 +1194,21 @@
                 var ajaxUrl = data.amsSelect2AjaxUrl || data.amsAjaxUrl || data['ajax-Url'];
 
                 if (ajaxUrl) {
+                  // check AJAX data helper function
+                  var ajaxParamsHelper;
+                  var ajaxParams = MyAMS.core.getFunctionByName(data.amsSelect2AjaxParams || data.amsAjaxParams || data['ajax-Params']) || data.amsSelect2AjaxParams || data.amsAjaxParams || data['ajax-Params'];
+
+                  if (typeof ajaxParams === 'function') {
+                    ajaxParamsHelper = ajaxParams;
+                  } else if (ajaxParams) {
+                    ajaxParamsHelper = function ajaxParamsHelper(params) {
+                      return _select2Helpers.select2AjaxParamsHelper(params, ajaxParams);
+                    };
+                  }
+
                   defaultOptions.ajax = {
                     url: MyAMS.core.getFunctionByName(data.amsSelect2AjaxUrl || data.amsAjaxUrl) || data.amsSelect2AjaxUrl || data.amsAjaxUrl,
-                    data: MyAMS.core.getFunctionByName(data.amsSelect2AjaxData || data.amsAjaxData) || data.amsSelect2AjaxData || data.amsAjaxData,
+                    data: ajaxParamsHelper || MyAMS.core.getFunctionByName(data.amsSelect2AjaxData || data.amsAjaxData) || data.amsSelect2AjaxData || data.amsAjaxData,
                     processResults: MyAMS.core.getFunctionByName(data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults) || data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults,
                     transport: MyAMS.core.getFunctionByName(data.amsSelect2AjaxTransport || data.amsAjaxTransport) || data.amsSelect2AjaxTransport || data.amsAjaxTransport
                   };

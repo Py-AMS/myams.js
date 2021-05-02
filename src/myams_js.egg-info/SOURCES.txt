@@ -3275,6 +3275,7 @@ src/myams_js.egg-info/top_level.txt
 src/sass/emerald.scss
 src/sass/myams.scss
 src/sass/emerald/_icons.scss
+src/sass/emerald/_modals.scss
 src/sass/emerald/_nav.scss
 src/sass/emerald/_ribbon.scss
 src/sass/emerald/_variables.scss
