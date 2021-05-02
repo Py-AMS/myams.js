@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.4.2
+-----
+ - updated AJAX behaviour of Select2 plug-in
+ - updated CSS styles
+ - updated demo site documentation
+
 1.4.1
 -----
  - Updated Git fonts resources
