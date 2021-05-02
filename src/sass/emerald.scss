@@ -7,13 +7,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 @import 'emerald/variables';
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 @import 'myams/animations';
 
 @import 'myams/misc';
 @import 'emerald/icons';
 @import 'myams/alerts';
-@import 'myams/modals';
+@import 'emerald/modals';
 @import 'myams/buttons';
 @import 'myams/caret';
 @import 'myams/forms';
@@ -29,7 +30,5 @@
 
 @import "myams/scrollbars";
 
-
-@import "../../node_modules/bootstrap/scss/bootstrap";
 
 /** Version: $version$  */

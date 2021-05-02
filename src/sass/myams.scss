@@ -7,6 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 @import 'myams/variables';
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 @import 'myams/animations';
 
@@ -29,7 +30,5 @@
 
 @import "myams/scrollbars";
 
-
-@import "../../node_modules/bootstrap/scss/bootstrap";
 
 /** Version: $version$  */
