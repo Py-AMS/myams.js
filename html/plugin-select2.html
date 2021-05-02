@@ -179,7 +179,9 @@
 <section id="s2-ajax">
 	<h2>Managing AJAX queries</h2>
 	<p>Select2 items can be provided with an AJAX call, using <code>data-ajax</code> attribute
-	to define the API endpoint:</p>
+	to define the API endpoint; optional params to AJAX request can be set using AJAX
+	<code>params</code> attribute, which can be a static JSON object used as request parameters
+	(but also the dotted name of a callback which will be used to get query arguments):</p>
 	<div>
 		<form class="ams-form">
 			<fieldset class="border">
@@ -193,6 +195,7 @@
 						<div class="form-widget">
 							<select id="select_6" class="form-control select2"
 									data-ajax--url="data/select2.json"
+									data-ajax--params='{"param2": "value 2"}'
 									data-minimum-input-length="2">
 								<option value="2" selected>Option 2</option>
 							</select>
@@ -203,6 +206,7 @@
 		</form>
 <pre>	&lt;select id="select_1" class="form-control select2"
 	        data-ajax--url="data/select2.json"
+	        data-ajax--params='{"param2": "value 2"}'
 	        data-minimum-input-length="2"&gt;
 	  &lt;option value="2" selected&gt;Option 2&lt;/option&gt;
 	&lt;/select&gt;
