@@ -76,13 +76,13 @@ $body-border:               #bfbfbf !default;
 $body-shadow:            rgba(0, 0, 0, .45) !default;
 
 $body-scrollbar-width:         thin !default;
-$body-scrollbar-color:   rgba(182, 182, 182, 0.5) rgba(104, 104, 104, 0.9) !default;
+$body-scrollbar-color:   rgba(51, 122, 183, 0.8) rgba(182, 182, 182, 0.8) !default;
 
 $wk-body-scrollbar-width:             10px !default;
 $wk-body-scrollbar-btn-height:        1rem !default;
 $wk-body-scrollbar-radius:            10px !default;
 $wk-body-scrollbar-thumb-bg:          rgba(182, 182, 182, 0.6) !default;
-$wk-body-scrollbar-thumb-hover-bg:    rgba(128, 128, 128, 0.8) !default;
+$wk-body-scrollbar-thumb-hover-bg:    rgba(51, 122, 183, 0.8) !default;
 $wk-body-scrollbar-thumb-radius:      10px !default;
 
 
@@ -183,6 +183,7 @@ $legend-padding:            0.2rem 0.5rem 0.1rem !default;
 
 
 // Forms styles
+$form-legend-bg:            #f4f4f4 !default;
 $form-feedback-font-size:    0.8rem !default;
 $error-border:              lighten($red, 20%) !default;
 

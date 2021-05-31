@@ -172,10 +172,15 @@
       }
     }
 
+    .actions-container {
+      top: -2.75em;
+      right: 0.5em;
+    }
+
     &.border > legend {
       width: auto;
       padding: $legend-padding;
-      background-color: $white;
+      background-color: $form-legend-bg;
       border: 1px solid $fieldset-border;
       @include border-radius($border-radius);
     }

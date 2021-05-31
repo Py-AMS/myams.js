@@ -48,13 +48,14 @@ table {
   th {
     &.reorder,
     &.action {
-      width: 1em;
+      width: 1.5em;
     }
   }
   td {
     &.action,
     &.reorder {
-      width: 1em;
+      width: 1.5em;
+      text-align: center;
       color: lighten($primary, 20%);
 
       &:hover {
