@@ -5702,6 +5702,64 @@ __webpack_require__.r(__webpack_exports__);
  */
 var $ = MyAMS.$;
 var container = {
+  /**
+   * Switch attribute of container element
+   *
+   * @param action
+   */
+  switchElementAttribute: function switchElementAttribute(action) {
+    return function (link, params) {
+      MyAMS.require('ajax', 'alert', 'i18n').then(function () {
+        var cell = link.parents('td'),
+            icon = $('i', cell),
+            row = cell.parents('tr'),
+            table = row.parents('table'),
+            col = $("thead th:nth-child(".concat(cell.index() + 1, ")"), table);
+        var location = link.data('ams-location') || col.data('ams-location') || row.data('ams-location') || table.data('ams-location') || '';
+
+        if (location) {
+          location += '/';
+        }
+
+        var updateTarget = link.data('ams-update-target') || col.data('ams-update-target') || row.data('ams-update-target') || table.data('ams-update-target') || 'switch-element-attribute.json',
+            objectName = row.data('ams-element-name'),
+            hint = icon.attr('data-original-title') || icon.attr('title');
+        icon.tooltip('hide').replaceWith('<i class="fas fa-spinner fa-spin"></i>');
+        MyAMS.ajax.post(location + updateTarget, {
+          object_name: objectName,
+          attribute_name: col.data('ams-attribute-name')
+        }).then(function (result, status, xhr) {
+          var icon = $('i', cell);
+
+          if (result.status === 'success') {
+            if (result.state) {
+              icon.replaceWith("<i class=\"".concat(col.data('ams-icon-on'), "\"></i>"));
+            } else {
+              icon.replaceWith("<i class=\"".concat(col.data('ams-icon-off'), "\"></i>"));
+            }
+
+            if (hint) {
+              icon = $('i', cell);
+              icon.addClass('hint').attr('data-original-title', hint);
+            }
+
+            if (result.handle_json) {
+              MyAMS.ajax.handleJSON(result);
+            }
+          } else {
+            MyAMS.ajax.handleJSON(result);
+          }
+        });
+      });
+    };
+  },
+
+  /**
+   * Delete element from container
+   *
+   * @param action
+   * @returns {(function(*, *): void)|*}
+   */
   deleteElement: function deleteElement(action) {
     return function (link, params) {
       MyAMS.require('ajax', 'alert', 'i18n').then(function () {
@@ -5717,15 +5775,17 @@ var container = {
             return;
           }
 
-          var row = link.parents('tr'),
-              table = row.parents('table');
-          var location = link.data('ams-location') || row.data('ams-location') || table.data('ams-location') || '';
+          var cell = link.parents('td'),
+              row = cell.parents('tr'),
+              table = row.parents('table'),
+              col = $("thead th:nth-child(".concat(cell.index() + 1, ")"), table);
+          var location = link.data('ams-location') || col.data('ams-location') || row.data('ams-location') || table.data('ams-location') || '';
 
           if (location) {
             location += '/';
           }
 
-          var deleteTarget = link.data('ams-delete-target') || row.data('ams-delete-target') || table.data('ams-delete-target') || 'delete-element.json',
+          var deleteTarget = link.data('ams-delete-target') || col.data('ams-delete-target') || row.data('ams-delete-target') || table.data('ams-delete-target') || 'delete-element.json',
               objectName = row.data('ams-element-name');
           MyAMS.ajax.post(location + deleteTarget, {
             'object_name': objectName
@@ -7298,6 +7358,34 @@ var helpers = {
           resolve(widget);
         }, reject);
       }, reject);
+    });
+  },
+
+  /**
+   * Add new row to table
+   *
+   * @param form: optional parent form
+   * @param options: added row properties:
+   *  - content: new row content
+   */
+  addTableRow: function addTableRow(form, options) {
+    return new Promise(function (resolve, reject) {
+      var selector = "table[id=\"".concat(options.table_id, "\"]"),
+          table = $(selector),
+          dtTable = table.DataTable();
+      var newRow;
+
+      if (options.data) {
+        dtTable.rows.add(options.data).draw();
+        newRow = $("tr[id=\"".concat(options.row_id, "\"]"), table);
+        resolve(newRow);
+      } else {
+        newRow = $(options.content);
+        dtTable.rows.add(newRow).draw();
+        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, newRow).then(function () {
+          resolve(newRow);
+        }, reject);
+      }
     });
   },
 
@@ -10892,7 +10980,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.4.2  */
+/** Version: 1.5.0  */
 
 /***/ }),
 

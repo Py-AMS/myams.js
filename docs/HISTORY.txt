@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5.0
+-----
+ - added table row adding helper
+ - added container helper to switch element's attribute
+ - updated CSS styles
+
 1.4.2
 -----
  - updated AJAX behaviour of Select2 plug-in
