@@ -77,6 +77,35 @@ export const helpers = {
 	},
 
 	/**
+	 * Add new row to table
+	 *
+	 * @param form: optional parent form
+	 * @param options: added row properties:
+	 *  - content: new row content
+	 */
+	addTableRow: (form, options) => {
+		return new Promise((resolve, reject) => {
+			const
+				selector = `table[id="${options.table_id}"]`,
+				table = $(selector),
+				dtTable = table.DataTable();
+			let newRow;
+			if (options.data) {
+				dtTable.rows.add(options.data).draw();
+				newRow = $(`tr[id="${options.row_id}"]`, table);
+				resolve(newRow);
+			} else {
+				newRow = $(options.content);
+				dtTable.rows.add(newRow).draw();
+				MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
+					document, newRow).then(() => {
+					resolve(newRow);
+				}, reject);
+			}
+		});
+	},
+
+	/**
 	 * Refresh a table row with content provided in
 	 * the <code>options</code> object
 	 *
