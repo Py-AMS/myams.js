@@ -6345,31 +6345,33 @@ var form = {
     }); // Initialize generic and custom reset handlers
 
     $(document).on('reset', MyAMS.form.resetHandler);
-    $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler); // Add unload event listener to check for modified forms
+    $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler); // Submit form when CTRL+Enter key is pressed in textarea
+
+    $(document).on('keydown', 'textarea', function (evt) {
+      if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
+        var _form = $(evt.currentTarget).closest('form');
+
+        $('button[type="submit"]', _form).first().click();
+      }
+    }); // Always blur readonly inputs
+
+    $(document).on('focus', 'input[readonly]', function (evt) {
+      $(evt.currentTarget).blur();
+    }); // Prevent bootstrap dialog from blocking TinyMCE focus
+
+    $(document).on('focusin', function (evt) {
+      if ($(evt.target).closest('.mce-window').length >= 0) {
+        evt.stopImmediatePropagation();
+      }
+    }); // Add unload event listener to check for modified forms
 
     $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
   },
   initElement: function initElement(element) {
     if (typeof element === 'string') {
       element = $(element);
-    } // Submit form when CTRL+Enter key is pressed in textarea
+    }
 
-
-    element.on('keydown', 'textarea', function (evt) {
-      if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
-        $(evt.currentTarget).closest('form').submit();
-      }
-    }); // Always blur readonly inputs
-
-    element.on('focus', 'input[readonly]', function (evt) {
-      $(evt.currentTarget).blur();
-    }); // Prevent bootstrap dialog from blocking TinyMCE focus
-
-    element.on('focusin', function (evt) {
-      if ($(evt.target).closest('.mce-window').length >= 0) {
-        evt.stopImmediatePropagation();
-      }
-    });
     var forms;
 
     if (MyAMS.config.warnOnFormChange) {
@@ -10980,7 +10982,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.5.0  */
+/** Version: 1.5.1  */
 
 /***/ }),
 

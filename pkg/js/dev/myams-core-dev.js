@@ -1555,7 +1555,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.5.0  */
+/** Version: 1.5.1  */
 
 /***/ }),
 

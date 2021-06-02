@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.1
+------
+ - updated form's keydown handler to submit with <ctrl>+<enter> from a textarea
+ - moved focus handlers to avoid multiple initializations
+
 1.5.0
 -----
  - added table row adding helper
