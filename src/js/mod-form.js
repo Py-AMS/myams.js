@@ -43,6 +43,26 @@ export const form = {
 		$(document).on('reset', MyAMS.form.resetHandler);
 		$(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler);
 
+		// Submit form when CTRL+Enter key is pressed in textarea
+		$(document).on('keydown', 'textarea', (evt) => {
+			if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
+				const form = $(evt.currentTarget).closest('form');
+				$('button[type="submit"]', form).first().click();
+			}
+		});
+
+		// Always blur readonly inputs
+		$(document).on('focus', 'input[readonly]', (evt) => {
+			$(evt.currentTarget).blur();
+		});
+
+		// Prevent bootstrap dialog from blocking TinyMCE focus
+		$(document).on('focusin', (evt) => {
+			if ($(evt.target).closest('.mce-window').length >= 0) {
+				evt.stopImmediatePropagation();
+			}
+		});
+
 		// Add unload event listener to check for modified forms
 		$(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
 	},
@@ -52,25 +72,6 @@ export const form = {
 		if (typeof element === 'string') {
 			element = $(element);
 		}
-
-		// Submit form when CTRL+Enter key is pressed in textarea
-		element.on('keydown', 'textarea', (evt) => {
-			if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
-				$(evt.currentTarget).closest('form').submit();
-			}
-		});
-
-		// Always blur readonly inputs
-		element.on('focus', 'input[readonly]', (evt) => {
-			$(evt.currentTarget).blur();
-		});
-
-		// Prevent bootstrap dialog from blocking TinyMCE focus
-		element.on('focusin', (evt) => {
-			if ($(evt.target).closest('.mce-window').length >= 0) {
-				evt.stopImmediatePropagation();
-			}
-		});
 
 		let forms;
 		if (MyAMS.config.warnOnFormChange) {
