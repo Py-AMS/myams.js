@@ -126,7 +126,8 @@ export const menu = {
 							return;
 						}
 						// open menu
-						menu.dropdown('show')
+						menu.data('contextmenu-event-source', source)
+							.dropdown('show')
 							.css({
 								position: 'fixed',
 								left: getMenuPosition(evt.clientX, 'width') - 10,
