@@ -33,6 +33,7 @@ export function modalToggleEventHandler(evt) {
 			evt.stopPropagation();
 		}
 		evt.preventDefault();
+		source.tooltip('hide');
 		MyAMS.modal.open(source).then(() => {
 			resolve(true);
 		}, reject);
