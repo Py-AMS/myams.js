@@ -733,7 +733,7 @@ export function datetime(element) {
 
 export function dragdrop(element) {
 	return new Promise((resolve, reject) => {
-		const dragitems = $('.draggable, .droppable, .sortable', element);
+		const dragitems = $('.draggable, .droppable, .sortable, .resizable', element);
 		if (dragitems.length > 0) {
 			MyAMS.ajax.check($.fn.draggable,
 				`${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
@@ -822,6 +822,35 @@ export function dragdrop(element) {
 							document, item, plugin, settings);
 						item.trigger('after-init.ams.sortable', [item, plugin]);
 					}
+					// resizable components
+					if (item.hasClass('resizable')) {
+						const resizeOptions = {
+							autoHide: data.amsResizableAutohide === false ? true : data.amsResizableAutohide,
+							containment: data.amsResizableContainment,
+							grid: data.amsResizableGrid,
+							handles: data.amsResizableHandles,
+							start: MyAMS.core.getFunctionByName(data.amsResizableStart),
+							resize: MyAMS.core.getFunctionByName(data.amsResizableResize),
+							stop: MyAMS.core.getFunctionByName(data.amsResizableStop)
+						};
+						let settings = $.extend({}, resizeOptions,
+							data.amsResizableOptions || data.amsOptions);
+						settings = MyAMS.core.executeFunctionByName(
+							data.amsResizableInitCallback || data.amsInit,
+							document, item, settings) || settings;
+						const veto = {veto: false};
+						item.trigger('before-init.ams.resizable', [item, settings, veto]);
+						if (veto.veto) {
+							return;
+						}
+						const plugin = item.resizable(settings);
+						item.disableSelection();
+						MyAMS.core.executeFunctionByName(
+							data.amsResizableAfterInitCallback || data.amsAfterInit,
+							document, item, plugin, settings);
+						item.trigger('after-init.ams.resizable', [item, plugin]);
+					}
+				});
 				});
 			}, reject).then(() => {
 				resolve(dragitems);
