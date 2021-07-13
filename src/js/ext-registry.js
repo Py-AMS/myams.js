@@ -49,13 +49,14 @@ class Plugin {
 	load() {
 		return new Promise((resolve, reject) => {
 			if (!this.loaded) {
-				let result = MyAMS.core.getScript(this.src);
-				if (this.css) {
-					result = result.then(() => {
-						MyAMS.core.getCSS(this.css, `${this.name}_css`);
-					})
+				let deferred = [];
+				if (this.src) {
+					deferred.push(MyAMS.core.getScript(this.src));
 				}
-				result.then(() => {
+				if (this.css) {
+					deferred.push(MyAMS.core.getCSS(this.css, `${this.name}_css`));
+				}
+				$.when.apply($, deferred).then(() => {
 					this.loaded = true;
 					resolve();
 				}, reject);
@@ -71,13 +72,15 @@ class Plugin {
 	 * @param element: plug-in execution context
 	 */
 	run(element) {
+		const results = [];
 		for (const callback of this.callbacks) {
 			if (typeof callback.callback === 'string') {
 				console.debug(`Resolving callback ${callback.callback}`);
 				callback.callback = MyAMS.core.getFunctionByName(callback.callback) || callback.callback;
 			}
-			callback.callback(element, callback.context);
+			results.push(callback.callback(element, callback.context));
 		}
+		return Promise.all(results);
 	}
 }
 
@@ -133,7 +136,7 @@ class PluginsRegistry {
 				callback: props
 			}, true));
 		} else if (typeof props === 'object') {  // plug-in properties object
-			plugins.set(name, new Plugin(name, props, !props.src));
+			plugins.set(name, new Plugin(name, props, !(props.src || props.css)));
 		}
 		// check callback
 		return plugins.get(name);
