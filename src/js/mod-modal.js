@@ -197,6 +197,7 @@ export const modal = {
 					cache: sourceData.amsAllowCache === undefined ? false : sourceData.amsAllowCache,
 					data: options
 				}).then((data, status, request) => {
+					let modal = null;
 					MyAMS.require('ajax').then(() => {
 						const
 							response = MyAMS.ajax.getResponse(request),
@@ -226,7 +227,7 @@ export const modal = {
 								};
 								settings = $.extend({}, dialogOptions, dialogData.amsOptions);
 								settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
-								$('<div>').addClass('modal fade')
+								modal = $('<div>').addClass('modal fade')
 									.data('dynamic', true)
 									.append(content)
 									.on('show.bs.modal', dynamicModalShownEventHandler)
@@ -238,7 +239,9 @@ export const modal = {
 									MyAMS.stats.logPageview(url);
 								}
 						}
-					}).then(resolve);
+					}).then(() => {
+						resolve(modal);
+					});
 				});
 			}
 		});
