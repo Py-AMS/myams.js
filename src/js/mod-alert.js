@@ -256,6 +256,9 @@ export const alert = {
 			props.status = status;
 			MyAMS.require('modal').then(() => {
 				const alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
+				alert.on('shown.bs.modal', (evt) => {
+					$('.btn-primary', evt.target).focus();
+				});
 				alert.on('hidden.bs.modal', () => {
 					resolve(alert.data('modal-result'));
 					alert.remove();
