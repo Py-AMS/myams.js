@@ -317,16 +317,22 @@ const _datatablesHelpers = {
 				ids = rows.listattr(getter);
 			}
 			// set target input value (if any)
+			const separator = data.amsReorderSeparator || ';';
 			if (target) {
 				target = $(target);
 				if (target.exists()) {
-					const separator = data.amsReorderSeparator || ';';
 					target.val(ids.join(separator));
 				}
+			} else {
+				ids = ids.join(separator);
 			}
 			// call target URL (if any)
 			if (url) {
 				url = MyAMS.core.executeFunctionByName(url, document, table) || url;
+				if (!(url.startsWith(window.location.protocol) || url.startsWith('/'))) {
+					const location = table.data('ams-location');
+					url = `${location}/${url}`;
+				}
 				if (ids.length > 0) {
 					let postData;
 					if (data.amsReorderPostData) {
