@@ -10,6 +10,33 @@
   @include bg-variant(".modal .bg-#{$color}-modal", $value, true);
 }
 
+.modal {
+  .py-1-modal,
+  .pt-1-modal {
+    padding-top: 0.25rem !important;
+  }
+  .py-1-modal,
+  .pb-1-modal {
+    padding-bottom: 0.25rem !important;
+  }
+  .py-2-modal,
+  .pt-2-modal {
+    padding-top: 0.5rem !important;
+  }
+  .py-2-modal,
+  .pb-2-modal {
+    padding-bottom: 0.5rem !important;
+  }
+  .py-3-modal,
+  .pt-3-modal {
+    padding-top: 1rem !important;
+  }
+  .py-3-modal,
+  .pb-3-modal {
+    padding-bottom: 1rem !important;
+  }
+}
+
 .modal-max {
   max-width: calc(100vw - 5em) !important;
 

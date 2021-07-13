@@ -116,6 +116,14 @@
     background: $fieldset-bg;
   }
 
+  .form-group + section {
+    margin-top: 1rem !important;
+  }
+
+  section + .form-group {
+    margin-top: 1rem !important;
+  }
+
   // Fieldsets
   fieldset {
     position: relative;
@@ -183,6 +191,10 @@
       background-color: $form-legend-bg;
       border: 1px solid $fieldset-border;
       @include border-radius($border-radius);
+    }
+
+    &.border > section:last-child {
+      margin-bottom: 0.35rem !important;
     }
   }
 
