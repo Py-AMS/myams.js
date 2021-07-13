@@ -737,7 +737,8 @@ export function dragdrop(element) {
 		if (dragitems.length > 0) {
 			MyAMS.ajax.check($.fn.draggable,
 				`${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
-				dragitems.each((idx, elt) => {
+				MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/jquery-ui.structure${MyAMS.env.extext}.css`, 'jquery-ui').then(() => {
+					dragitems.each((idx, elt) => {
 					const
 						item = $(elt),
 						data = item.data();
