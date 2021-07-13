@@ -294,6 +294,7 @@ export const registry = {
 					$elt.attr(`data-${name}`, elementData);
 				}
 			}
+			$elt.removeAttr('data-ams-data');
 		});
 	},
 
