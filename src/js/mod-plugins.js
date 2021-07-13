@@ -331,7 +331,7 @@ const _datatablesHelpers = {
 				url = MyAMS.core.executeFunctionByName(url, document, table) || url;
 				if (!(url.startsWith(window.location.protocol) || url.startsWith('/'))) {
 					const location = table.data('ams-location');
-					url = `${location}/${url}`;
+					url = `${location || ''}/${url}`;
 				}
 				if (ids.length > 0) {
 					let postData;
