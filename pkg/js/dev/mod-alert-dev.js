@@ -179,6 +179,9 @@
 
         MyAMS.require('modal').then(function () {
           var alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
+          alert.on('shown.bs.modal', function (evt) {
+            $('.btn-primary', evt.target).focus();
+          });
           alert.on('hidden.bs.modal', function () {
             resolve(alert.data('modal-result'));
             alert.remove();

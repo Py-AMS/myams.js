@@ -7676,6 +7676,18 @@ a.text-dark:hover, a.text-dark:focus {
     height: 400px !important; } }
 
 /**
+ * Opacity classes
+ */
+.opacity-75 {
+  opacity: 0.75; }
+
+.opacity-50 {
+  opacity: 0.5; }
+
+.opacity-25 {
+  opacity: 0.25; }
+
+/**
  * Custom classes
  */
 .mouse-pointer,
@@ -7865,6 +7877,30 @@ button.modal .bg-dark-modal:hover,
 button.modal .bg-dark-modal:focus {
   background-color: #1d2124 !important; }
 
+.modal .py-1-modal,
+.modal .pt-1-modal {
+  padding-top: 0.25rem !important; }
+
+.modal .py-1-modal,
+.modal .pb-1-modal {
+  padding-bottom: 0.25rem !important; }
+
+.modal .py-2-modal,
+.modal .pt-2-modal {
+  padding-top: 0.5rem !important; }
+
+.modal .py-2-modal,
+.modal .pb-2-modal {
+  padding-bottom: 0.5rem !important; }
+
+.modal .py-3-modal,
+.modal .pt-3-modal {
+  padding-top: 1rem !important; }
+
+.modal .py-3-modal,
+.modal .pb-3-modal {
+  padding-bottom: 1rem !important; }
+
 .modal-max {
   max-width: calc(100vw - 5em) !important; }
   @media (max-width: 575px) {
@@ -7983,6 +8019,10 @@ button.modal .bg-dark-modal:focus {
     border-style: solid; }
   .ams-form > div.border {
     background: rgba(255, 255, 255, 0.9); }
+  .ams-form .form-group + section {
+    margin-top: 1rem !important; }
+  .ams-form section + .form-group {
+    margin-top: 1rem !important; }
   .ams-form fieldset {
     position: relative;
     padding: 0.2rem 0.5rem 0.1rem;
@@ -8025,6 +8065,8 @@ button.modal .bg-dark-modal:focus {
       background-color: #f4f4f4;
       border: 1px solid #dee2e6;
       border-radius: 0.25rem; }
+    .ams-form fieldset.border > section:last-child {
+      margin-bottom: 0.35rem !important; }
   .ams-form > fieldset.border,
   .ams-form > div {
     margin: 1rem; }
@@ -8961,7 +9003,7 @@ table td.action, table td.reorder {
         text-decoration: none; }
 
 #user-menu img {
-  transform: rotate(10deg); }
+  transform: translate(0, 0.6em) rotate(10deg); }
 
 .hidden-menu #hide-menu .btn {
   background-color: #e8e8e8;
@@ -9795,4 +9837,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 1.5.1  */
+/** Version: 1.6.0  */

@@ -353,18 +353,26 @@
         } // set target input value (if any)
 
 
+        var separator = data.amsReorderSeparator || ';';
+
         if (target) {
           target = $(target);
 
           if (target.exists()) {
-            var separator = data.amsReorderSeparator || ';';
             target.val(ids.join(separator));
           }
+        } else {
+          ids = ids.join(separator);
         } // call target URL (if any)
 
 
         if (url) {
           url = MyAMS.core.executeFunctionByName(url, document, table) || url;
+
+          if (!(url.startsWith(window.location.protocol) || url.startsWith('/'))) {
+            var location = table.data('ams-location');
+            url = "".concat(location || '', "/").concat(url);
+          }
 
           if (ids.length > 0) {
             var postData;
@@ -841,98 +849,131 @@
 
   function dragdrop(element) {
     return new Promise(function (resolve, reject) {
-      var dragitems = $('.draggable, .droppable, .sortable', element);
+      var dragitems = $('.draggable, .droppable, .sortable, .resizable', element);
 
       if (dragitems.length > 0) {
         MyAMS.ajax.check($.fn.draggable, "".concat(MyAMS.env.baseURL, "../ext/jquery-ui").concat(MyAMS.env.extext, ".js")).then(function () {
-          dragitems.each(function (idx, elt) {
-            var item = $(elt),
-                data = item.data(); // draggable components
+          MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/jquery-ui.structure").concat(MyAMS.env.extext, ".css"), 'jquery-ui').then(function () {
+            dragitems.each(function (idx, elt) {
+              var item = $(elt),
+                  data = item.data(); // draggable components
 
-            if (item.hasClass('draggable')) {
-              var dragOptions = {
-                cursor: data.amsDraggableCursor || 'move',
-                containment: data.amsDraggableContainment,
-                handle: data.amsDraggableHandle,
-                connectToSortable: data.amsDraggableConnectSortable,
-                helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
-                start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
-                stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
-              };
-              var settings = $.extend({}, dragOptions, data.amsDraggableOptions || data.amsOptions);
-              settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, item, settings) || settings;
-              var veto = {
-                veto: false
-              };
-              item.trigger('before-init.ams.draggable', [item, settings, veto]);
+              if (item.hasClass('draggable')) {
+                var dragOptions = {
+                  cursor: data.amsDraggableCursor || 'move',
+                  containment: data.amsDraggableContainment,
+                  handle: data.amsDraggableHandle,
+                  connectToSortable: data.amsDraggableConnectSortable,
+                  helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
+                  start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
+                  stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+                };
+                var settings = $.extend({}, dragOptions, data.amsDraggableOptions || data.amsOptions);
+                settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, item, settings) || settings;
+                var veto = {
+                  veto: false
+                };
+                item.trigger('before-init.ams.draggable', [item, settings, veto]);
 
-              if (veto.veto) {
-                return;
+                if (veto.veto) {
+                  return;
+                }
+
+                var plugin = item.draggable(settings);
+                item.disableSelection();
+                MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
+                item.trigger('after-init.ams.draggable', [item, plugin]);
+              } // droppable components
+
+
+              if (item.hasClass('droppable')) {
+                var dropOptions = {
+                  accept: data.amsDroppableAccept || data.amsAccept,
+                  drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
+                };
+
+                var _settings = $.extend({}, dropOptions, data.amsDroppableOptions || data.amsOptions);
+
+                _settings = MyAMS.core.executeFunctionByName(data.amsDroppableInitCallback || data.amsInit, document, item, _settings) || _settings;
+                var _veto = {
+                  veto: false
+                };
+                item.trigger('before-init.ams.droppable', [item, _settings, _veto]);
+
+                if (_veto.veto) {
+                  return;
+                }
+
+                var _plugin = item.droppable(_settings);
+
+                MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, item, _plugin, _settings);
+                item.trigger('after-init.ams.droppable', [item, _plugin]);
+              } // sortable components
+
+
+              if (item.hasClass('sortable')) {
+                var sortOptions = {
+                  items: data.amsSortableItems,
+                  handle: data.amsSortableHandle,
+                  helper: MyAMS.core.getFunctionByName(data.amsSortableHelper) || data.amsSortableHelper,
+                  connectWith: data.amsSortableConnectwith,
+                  containment: data.amsSortableContainment,
+                  placeholder: data.amsSortablePlaceholder,
+                  start: MyAMS.core.getFunctionByName(data.amsSortableStart),
+                  over: MyAMS.core.getFunctionByName(data.amsSortableOver),
+                  stop: MyAMS.core.getFunctionByName(data.amsSortableStop)
+                };
+
+                var _settings2 = $.extend({}, sortOptions, data.amsSortableOptions || data.amsOptions);
+
+                _settings2 = MyAMS.core.executeFunctionByName(data.amsSortableInitCallback || data.amsInit, document, item, _settings2) || _settings2;
+                var _veto2 = {
+                  veto: false
+                };
+                item.trigger('before-init.ams.sortable', [item, _settings2, _veto2]);
+
+                if (_veto2.veto) {
+                  return;
+                }
+
+                var _plugin2 = item.sortable(_settings2);
+
+                item.disableSelection();
+                MyAMS.core.executeFunctionByName(data.amsSortableAfterInitCallback || data.amsAfterInit, document, item, _plugin2, _settings2);
+                item.trigger('after-init.ams.sortable', [item, _plugin2]);
+              } // resizable components
+
+
+              if (item.hasClass('resizable')) {
+                var resizeOptions = {
+                  autoHide: data.amsResizableAutohide === false ? true : data.amsResizableAutohide,
+                  containment: data.amsResizableContainment,
+                  grid: data.amsResizableGrid,
+                  handles: data.amsResizableHandles,
+                  start: MyAMS.core.getFunctionByName(data.amsResizableStart),
+                  resize: MyAMS.core.getFunctionByName(data.amsResizableResize),
+                  stop: MyAMS.core.getFunctionByName(data.amsResizableStop)
+                };
+
+                var _settings3 = $.extend({}, resizeOptions, data.amsResizableOptions || data.amsOptions);
+
+                _settings3 = MyAMS.core.executeFunctionByName(data.amsResizableInitCallback || data.amsInit, document, item, _settings3) || _settings3;
+                var _veto3 = {
+                  veto: false
+                };
+                item.trigger('before-init.ams.resizable', [item, _settings3, _veto3]);
+
+                if (_veto3.veto) {
+                  return;
+                }
+
+                var _plugin3 = item.resizable(_settings3);
+
+                item.disableSelection();
+                MyAMS.core.executeFunctionByName(data.amsResizableAfterInitCallback || data.amsAfterInit, document, item, _plugin3, _settings3);
+                item.trigger('after-init.ams.resizable', [item, _plugin3]);
               }
-
-              var plugin = item.draggable(settings);
-              item.disableSelection();
-              MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
-              item.trigger('after-init.ams.draggable', [item, plugin]);
-            } // droppable components
-
-
-            if (item.hasClass('droppable')) {
-              var dropOptions = {
-                accept: data.amsDroppableAccept || data.amsAccept,
-                drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
-              };
-
-              var _settings = $.extend({}, dropOptions, data.amsDroppableOptions || data.amsOptions);
-
-              _settings = MyAMS.core.executeFunctionByName(data.amsDroppableInitCallback || data.amsInit, document, item, _settings) || _settings;
-              var _veto = {
-                veto: false
-              };
-              item.trigger('before-init.ams.droppable', [item, _settings, _veto]);
-
-              if (_veto.veto) {
-                return;
-              }
-
-              var _plugin = item.droppable(_settings);
-
-              MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, item, _plugin, _settings);
-              item.trigger('after-init.ams.droppable', [item, _plugin]);
-            } // sortable components
-
-
-            if (item.hasClass('sortable')) {
-              var sortOptions = {
-                items: data.amsSortableItems,
-                handle: data.amsSortableHandle,
-                helper: MyAMS.core.getFunctionByName(data.amsSortableHelper) || data.amsSortableHelper,
-                connectWith: data.amsSortableConnectwith,
-                containment: data.amsSortableContainment,
-                placeholder: data.amsSortablePlaceholder,
-                start: MyAMS.core.getFunctionByName(data.amsSortableStart),
-                over: MyAMS.core.getFunctionByName(data.amsSortableOver),
-                stop: MyAMS.core.getFunctionByName(data.amsSortableStop)
-              };
-
-              var _settings2 = $.extend({}, sortOptions, data.amsSortableOptions || data.amsOptions);
-
-              _settings2 = MyAMS.core.executeFunctionByName(data.amsSortableInitCallback || data.amsInit, document, item, _settings2) || _settings2;
-              var _veto2 = {
-                veto: false
-              };
-              item.trigger('before-init.ams.sortable', [item, _settings2, _veto2]);
-
-              if (_veto2.veto) {
-                return;
-              }
-
-              var _plugin2 = item.sortable(_settings2);
-
-              item.disableSelection();
-              MyAMS.core.executeFunctionByName(data.amsSortableAfterInitCallback || data.amsAfterInit, document, item, _plugin2, _settings2);
-              item.trigger('after-init.ams.sortable', [item, _plugin2]);
-            }
+            });
           });
         }, reject).then(function () {
           resolve(dragitems);

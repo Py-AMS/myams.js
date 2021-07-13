@@ -1002,15 +1002,17 @@ var Plugin = /*#__PURE__*/function () {
 
       return new Promise(function (resolve, reject) {
         if (!_this.loaded) {
-          var result = MyAMS.core.getScript(_this.src);
+          var deferred = [];
 
-          if (_this.css) {
-            result = result.then(function () {
-              MyAMS.core.getCSS(_this.css, "".concat(_this.name, "_css"));
-            });
+          if (_this.src) {
+            deferred.push(MyAMS.core.getScript(_this.src));
           }
 
-          result.then(function () {
+          if (_this.css) {
+            deferred.push(MyAMS.core.getCSS(_this.css, "".concat(_this.name, "_css")));
+          }
+
+          $.when.apply($, deferred).then(function () {
             _this.loaded = true;
             resolve();
           }, reject);
@@ -1028,6 +1030,8 @@ var Plugin = /*#__PURE__*/function () {
   }, {
     key: "run",
     value: function run(element) {
+      var results = [];
+
       var _iterator = _createForOfIteratorHelper(this.callbacks),
           _step;
 
@@ -1040,13 +1044,15 @@ var Plugin = /*#__PURE__*/function () {
             callback.callback = MyAMS.core.getFunctionByName(callback.callback) || callback.callback;
           }
 
-          callback.callback(element, callback.context);
+          results.push(callback.callback(element, callback.context));
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
       }
+
+      return Promise.all(results);
     }
   }]);
 
@@ -1131,7 +1137,7 @@ var PluginsRegistry = /*#__PURE__*/function () {
         }, true));
       } else if (_typeof(props) === 'object') {
         // plug-in properties object
-        plugins.set(name, new Plugin(name, props, !props.src));
+        plugins.set(name, new Plugin(name, props, !(props.src || props.css)));
       } // check callback
 
 
@@ -1364,6 +1370,8 @@ var registry = {
           $elt.attr("data-".concat(name), elementData);
         }
       }
+
+      $elt.removeAttr('data-ams-data');
     });
   },
 

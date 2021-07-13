@@ -55,6 +55,7 @@
       }
 
       evt.preventDefault();
+      source.tooltip('hide');
       MyAMS.modal.open(source).then(function () {
         resolve(true);
       }, reject);
@@ -214,6 +215,8 @@
             cache: sourceData.amsAllowCache === undefined ? false : sourceData.amsAllowCache,
             data: options
           }).then(function (data, status, request) {
+            var modal = null;
+
             MyAMS.require('ajax').then(function () {
               var response = MyAMS.ajax.getResponse(request),
                   dataType = response.contentType,
@@ -237,14 +240,16 @@
                   };
                   settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                   settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
-                  $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
+                  modal = $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 
                   if (MyAMS.stats && !(sourceData.amsLogEvent === false || dialogData.amsLogEvent === false)) {
                     MyAMS.stats.logPageview(url);
                   }
 
               }
-            }).then(resolve);
+            }).then(function () {
+              resolve(modal);
+            });
           });
         }
       });

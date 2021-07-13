@@ -14,6 +14,8 @@ pkg/css/ext/imgareaselect-default.css
 pkg/css/ext/imgareaselect-default.min.css
 pkg/css/ext/imgareaselect-deprecated.css
 pkg/css/ext/imgareaselect-deprecated.min.css
+pkg/css/ext/jquery-ui.structure.css
+pkg/css/ext/jquery-ui.structure.min.css
 pkg/css/ext/tempusdominus-bootstrap4.css
 pkg/css/ext/tempusdominus-bootstrap4.min.css
 pkg/css/ext/datatables/autoFill-bootstrap4.css

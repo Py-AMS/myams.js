@@ -146,7 +146,7 @@
               } // open menu
 
 
-              menu.dropdown('show').css({
+              menu.data('contextmenu-event-source', source).dropdown('show').css({
                 position: 'fixed',
                 left: getMenuPosition(evt.clientX, 'width') - 10,
                 top: getMenuPosition(evt.clientY, 'height') - 10

@@ -579,12 +579,6 @@
       menu.parents('ul').addClass(menu.attr('href').replace(/^#/, '') ? 'active' : '').show();
 
       if (menu.exists()) {
-        // MyAMS.require('ajax').then(() => {
-        // 	MyAMS.ajax.check($.fn.scrollTo,
-        // 		`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
-        // 		nav.scrollTo(menu);
-        // 	});
-        // })
         var scroll = nav.scrollTop(),
             position = $(menu).parents('li:last').position();
 
