@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.5.1
+Version: 1.6.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,19 @@ Description: ================
         
         Changelog
         =========
+        
+        1.6.0
+        -----
+         - allow loading of MyAMS extensions only containing CSS files
+         - automatically focus first primary button in modals
+         - automatically hide tooltips before opening a new modal
+         - resolve promise with modal when opening a new modal from code
+         - set event source in context menu dropdown event
+         - remove "data-ams-data" attribute after modules initialization
+         - add JQuery-UI resizable plug-in support
+         - load JQuery-UI stylesheet when using drag&drop plug-ins
+         - update datatable reordering
+         - updated CSS styles
         
         1.5.1
         ------

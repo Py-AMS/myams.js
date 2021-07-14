@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.1
+-----
+ - added missing Git JQuery-UI resources
+
 1.6.0
 -----
  - allow loading of MyAMS extensions only containing CSS files
