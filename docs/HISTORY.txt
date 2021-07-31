@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.3
+-----
+ - Select2 plug-in styles updates
+
 1.6.2
 -----
  - small updates in Select2 plug-in styles
