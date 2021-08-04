@@ -264,6 +264,9 @@ export function linkClickHandler(evt) {
 					if (linkTarget === '_blank') {
 						window.open && window.open(href);
 						resolve();
+					} else if (linkTarget === '_top') {
+						window.location = href;
+						resolve();
 					} else {
 						if (MyAMS.form) {
 							MyAMS.form.confirmChangedForm().then((result) => {
