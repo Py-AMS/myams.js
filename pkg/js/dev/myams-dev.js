@@ -29877,6 +29877,9 @@ function linkClickHandler(evt) {
           if (linkTarget === '_blank') {
             window.open && window.open(href);
             resolve();
+          } else if (linkTarget === '_top') {
+            window.location = href;
+            resolve();
           } else {
             if (MyAMS.form) {
               MyAMS.form.confirmChangedForm().then(function (result) {
@@ -32497,7 +32500,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_3__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_3__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_3__["default"].$);
 }
-/** Version: 1.6.3  */
+/** Version: 1.6.4  */
 
 /***/ })
 

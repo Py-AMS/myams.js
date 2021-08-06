@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.6.2
+Version: 1.6.3
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,10 @@ Description: ================
         
         Changelog
         =========
+        
+        1.6.3
+        -----
+         - Select2 plug-in styles updates
         
         1.6.2
         -----

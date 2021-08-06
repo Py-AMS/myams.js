@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.4
+-----
+ - added support for "_top" target in links using "data-ams-target" attribute
+
 1.6.3
 -----
  - Select2 plug-in styles updates
