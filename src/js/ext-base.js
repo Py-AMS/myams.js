@@ -206,6 +206,55 @@ export function init($) {
 	});
 
 
+	/**
+	 * JQuery 'hasvalue' function expression
+	 * Filter inputs containing value:
+	 *
+	 *     $('span:hasvalue("value")')
+	 */
+	$.expr[":"].hasvalue = function (obj, index, meta /*, stack*/) {
+		return $(obj).val() !== "";
+	};
+
+
+	/**
+	 * JQuery 'econtains' function expression
+	 * Case insensitive contains expression:
+	 *
+	 *     $('span:econtains("text")')
+	 */
+	$.expr[":"].econtains = function (obj, index, meta /*, stack*/) {
+		return (obj.textContent || obj.innerText || $(obj).text() || "").toLowerCase() === meta[3].toLowerCase();
+	};
+
+
+	/**
+	 * JQuery 'withtext' expression
+	 * Case sensitive exact search expression.
+	 * For example:
+	 *
+	 *    $('span:withtext("text")')
+	 */
+	$.expr[":"].withtext = function (obj, index, meta /*, stack*/) {
+		return (obj.textContent || obj.innerText || $(obj).text() || "") === meta[3];
+	};
+
+
+	/**
+	 * JQuery filter on parents class
+	 * This filter is often combined with ":not()" to select DOM objects which don't have
+	 * parents of a given class.
+	 * For example:
+	 *
+	 *   $('.hint:not(:parents(.nohints))', element);
+	 *
+	 * will select all elements with ".hint" class which don't have a parent with '.nohints' class.
+	 */
+	$.expr[':'].parents = function (obj, index, meta /*, stack*/) {
+		return $(obj).parents(meta[3]).length > 0;
+	};
+
+
 	$(document).ready(() => {
 		const html = $('html');
 		html.removeClass('no-js')
