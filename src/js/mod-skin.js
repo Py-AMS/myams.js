@@ -218,9 +218,16 @@ export const skin = {
 										MyAMS.core.executeFunctionByName(target.data('ams-init-content') ||
 											MyAMS.config.initContent, window, target).then(() => {
 											MyAMS.form && MyAMS.form.setFocus(target);
-											target.trigger('after-load.ams.content');
-											resolve(result, status, xhr);
-										});
+											if (options && options.afterLoadCallback) {
+												MyAMS.core.executeFunctionByName(options.afterLoadCallback, this, options.afterLoadCallbackOptions).then(() => {
+													target.trigger('after-load.ams.content');
+													resolve(result, status, xhr);
+												}, reject);
+											} else {
+												target.trigger('after-load.ams.content');
+												resolve(result, status, xhr);
+											}
+										}, reject);
 									}, reject);
 							}
 							MyAMS.stats && MyAMS.stats.logPageview();
