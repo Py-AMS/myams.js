@@ -257,6 +257,33 @@
     }
   }
 
+  .tox-textfield,
+  .tox-listbox {
+    &:focus {
+      border-color: var(--primary) !important;
+      filter: drop-shadow(0 0 0.2rem var(--primary));
+    }
+  }
+
+  .tox-button {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+
+    &--secondary {
+      background-color: var(--light) !important;
+      border-color: var(--secondary) !important;
+
+      &:hover {
+        background-color: var(--secondary) !important;
+      }
+    }
+
+    &--icon {
+      background-color: transparent !important;
+      border-color: transparent !important;
+    }
+  }
+
   .tox-menubar {
     border-bottom: 1px solid silver !important;
 
@@ -295,5 +322,9 @@
     h6 {
       font-size: $h6-font-size !important;
     }
+  }
+
+  .tox-dialog__footer-end {
+    flex-direction: row-reverse;
   }
 }
