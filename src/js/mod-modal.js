@@ -154,6 +154,7 @@ export const modal = {
 			// Standard Bootstrap handlers are removed!!
 			$(document).off('click', '[data-toggle="modal"]')
 				.on('click', '[data-toggle="modal"]', (evt) => {
+					evt.stopPropagation();
 					const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
 					MyAMS.core.executeFunctionByName(handler, document, evt);
 				});
