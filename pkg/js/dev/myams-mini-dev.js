@@ -3398,6 +3398,63 @@ function init($) {
       return this;
     }
   });
+  /**
+   * JQuery 'hasvalue' function expression
+   * Filter inputs containing value:
+   *
+   *     $('span:hasvalue("value")')
+   */
+
+  $.expr[":"].hasvalue = function (obj, index, meta
+  /*, stack*/
+  ) {
+    return $(obj).val() !== "";
+  };
+  /**
+   * JQuery 'econtains' function expression
+   * Case insensitive contains expression:
+   *
+   *     $('span:econtains("text")')
+   */
+
+
+  $.expr[":"].econtains = function (obj, index, meta
+  /*, stack*/
+  ) {
+    return (obj.textContent || obj.innerText || $(obj).text() || "").toLowerCase() === meta[3].toLowerCase();
+  };
+  /**
+   * JQuery 'withtext' expression
+   * Case sensitive exact search expression.
+   * For example:
+   *
+   *    $('span:withtext("text")')
+   */
+
+
+  $.expr[":"].withtext = function (obj, index, meta
+  /*, stack*/
+  ) {
+    return (obj.textContent || obj.innerText || $(obj).text() || "") === meta[3];
+  };
+  /**
+   * JQuery filter on parents class
+   * This filter is often combined with ":not()" to select DOM objects which don't have
+   * parents of a given class.
+   * For example:
+   *
+   *   $('.hint:not(:parents(.nohints))', element);
+   *
+   * will select all elements with ".hint" class which don't have a parent with '.nohints' class.
+   */
+
+
+  $.expr[':'].parents = function (obj, index, meta
+  /*, stack*/
+  ) {
+    return $(obj).parents(meta[3]).length > 0;
+  };
+
   $(document).ready(function () {
     var html = $('html');
     html.removeClass('no-js').addClass('js');
@@ -7968,6 +8025,7 @@ var modal = {
       // Initialize modal dialogs links
       // Standard Bootstrap handlers are removed!!
       $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', function (evt) {
+        evt.stopPropagation();
         var handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
       });
@@ -10811,9 +10869,17 @@ var skin = {
                     }, 300);
                     MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(function () {
                       MyAMS.form && MyAMS.form.setFocus(target);
-                      target.trigger('after-load.ams.content');
-                      resolve(_result3, status, xhr);
-                    });
+
+                      if (options && options.afterLoadCallback) {
+                        MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(function () {
+                          target.trigger('after-load.ams.content');
+                          resolve(_result3, status, xhr);
+                        }, reject);
+                      } else {
+                        target.trigger('after-load.ams.content');
+                        resolve(_result3, status, xhr);
+                      }
+                    }, reject);
                   }, reject);
               }
 
@@ -11036,7 +11102,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.6.4  */
+/** Version: 1.7.0  */
 
 /***/ }),
 

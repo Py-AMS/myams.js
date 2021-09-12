@@ -1,5 +1,6 @@
 <h1>MyAMS additions to JQuery</h1>
-<section>
+<section id="functions">
+	<h2>Custom JQuery functions</h2>
 	<p>MyAMS is adding a few methods to standard JQuery selectors.</p>
 	<ul>
 		<li>
@@ -41,6 +42,36 @@
 			<code>$().removeClass</code>, but removes all CSS classes names which starts
 			with given prefix.</p>
 			<pre class="p"><code>$('i', container).removeClassPrefix('fa');</code></pre>
+		</li>
+	</ul>
+</section>
+
+<section id="filters">
+	<h2>Custom JQuery filters</h2>
+	<p>Custom expressions can be used in JQuery selectors.</p>
+	<ul>
+		<li>
+			<p><code>hasvalue</code>: this filter can be used to select elements based on their
+			<i>value</i>:</p>
+			<pre class="p"><code>const inputs = $('input:hasvalue("content")');</code></pre>
+		</li>
+		<li>
+			<p><code>econtains</code>: this filter can be used to select elements which
+			text matches the provided text; the comparison is not case-sensitive:</p>
+			<pre class="p"><code>const inputs = $('span:econtains("my text")');</code></pre>
+		</li>
+		<li>
+			<p><code>withtext</code>: this filter can be used to select elements which
+			contains the exact provided text; the comparison is case-sensitive:</p>
+			<pre class="p"><code>const inputs = $('span:withtext("my text")');</code></pre>
+		</li>
+		<li>
+			<p><code>parents</code>: this filter can be used to select elements based on their
+			parents class; this filter is often combined with a <code>:not()</code> operator
+			to select elements only if they don't have a parent of a given class. For example:</p>
+			<pre class="p"><code>const hinst = $('.hint:not(:parents(.nohints))', element);</code></pre>
+			<p>This expression will select elements of 'hint' class which doesn't have a parent
+			element with 'nohints' class.</p>
 		</li>
 	</ul>
 </section>

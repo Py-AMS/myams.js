@@ -274,9 +274,17 @@
                       }, 300);
                       MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(function () {
                         MyAMS.form && MyAMS.form.setFocus(target);
-                        target.trigger('after-load.ams.content');
-                        resolve(_result3, status, xhr);
-                      });
+
+                        if (options && options.afterLoadCallback) {
+                          MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(function () {
+                            target.trigger('after-load.ams.content');
+                            resolve(_result3, status, xhr);
+                          }, reject);
+                        } else {
+                          target.trigger('after-load.ams.content');
+                          resolve(_result3, status, xhr);
+                        }
+                      }, reject);
                     }, reject);
                 }
 

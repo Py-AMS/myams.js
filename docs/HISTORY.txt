@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.7.0
+-----
+ - added custom JQuery filter expressions
+ - added custom CSS tree styles
+ - added custom TinyMCE editor styles using CSS variables
+ - stop event propagation on *modal* data-toggle click handler
+ - updated *after-reload* callback management
+
 1.6.4
 -----
  - added support for "_top" target in links using "data-ams-target" attribute

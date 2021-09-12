@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.6.3
+Version: 1.6.4
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,10 @@ Description: ================
         
         Changelog
         =========
+        
+        1.6.4
+        -----
+         - added support for "_top" target in links using "data-ams-target" attribute
         
         1.6.3
         -----
