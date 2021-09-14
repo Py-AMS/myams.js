@@ -204,3 +204,12 @@ $modal-inner-padding:        0.5rem !default;
 @import '../../../node_modules/bootstrap/scss/functions';
 @import '../../../node_modules/bootstrap/scss/variables';
 @import '../../../node_modules/bootstrap/scss/mixins';
+
+
+$primary-light:       lighten($primary, 40%) !default;
+$secondary-light:     lighten($secondary, 40%) !default;
+$success-light:       lighten($success, 40%) !default;
+$info-light:          lighten($info, 40%) !default;
+$warning-light:       lighten($warning, 40%) !default;
+$danger-light:        lighten($danger, 40%) !default;
+$dark-light:          lighten($dark, 40%) !default;

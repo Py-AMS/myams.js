@@ -13,7 +13,18 @@
 // - .hidden-menu #left-panel           901
 // - bs: .dropdown-menu                1000
 // - .modal                            1100
-// - .toast-wraooer                    9990
+// - .toast-wrapper                    9990
+
+
+:root {
+  --primary-light:       #{$primary-light};
+  --secondary-light:     #{$secondary-light};
+  --success-light:       #{$success-light};
+  --info-light:          #{$info-light};
+  --warning-light:       #{$warning-light};
+  --danger-light:        #{$danger-light};
+  --dark-light:          #{$dark-light};
+}
 
 
 html {
