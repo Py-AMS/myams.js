@@ -1,7 +1,7 @@
 /**
  * MyAMS main SCSS file
  */
-@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 /*!
@@ -9645,6 +9645,48 @@ table td.action, table td.reorder {
     .tab-content > .tab-pane.d-flex.active {
       display: flex !important; }
 
+/**
+ * Custom viewport related classes
+ */
+.vp-y {
+  overflow-y: auto; }
+  .vp-y-none {
+    overflow-y: hidden !important; }
+  .vp-y.vp-100 {
+    max-height: 100px; }
+  .vp-y.vp-200 {
+    max-height: 200px; }
+  .vp-y.vp-300 {
+    max-height: 300px; }
+  .vp-y.vp-400 {
+    max-height: 400px; }
+  .vp-y.vp-500 {
+    max-height: 500px; }
+
+.vp-x {
+  overflow-x: auto; }
+  .vp-x-none {
+    overflow-x: hidden !important; }
+  .vp-x.vp-100 {
+    max-width: 100px; }
+  .vp-x.vp-200 {
+    max-width: 200px; }
+  .vp-x.vp-300 {
+    max-width: 300px; }
+  .vp-x.vp-400 {
+    max-width: 400px; }
+  .vp-x.vp-500 {
+    max-width: 500px; }
+
+:root {
+  --primary-light:       #b8dfd6;
+  --secondary-light:     white;
+  --success-light:       #b8dfd6;
+  --info-light:          #b2cbe5;
+  --warning-light:       #ffedde;
+  --danger-light:        #ebcdcc;
+  --dark-light:          #96a0aa; }
+
 html {
   margin: 0;
   padding: 0;
@@ -9930,4 +9972,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 1.7.0  */
+/** Version: 1.8.0  */
