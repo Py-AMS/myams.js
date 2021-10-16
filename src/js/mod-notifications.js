@@ -16,7 +16,7 @@ if (!$.templates) {
  */
 
 const ITEM_TEMPLATE_STRING = `
-	<li class="p-1">
+	<li class="p-1 my-1{{if status}} alert-{{:status}}{{/if}}">
 		<a class="d-flex flex-row"{{if url}} href="{{:url}}"{{/if}}>
 			{{if source.avatar}}
 			<img class="avatar mx-1 mt-1" src="{{:source.avatar}}" />
