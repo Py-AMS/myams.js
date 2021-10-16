@@ -19,16 +19,18 @@ const ITEM_TEMPLATE_STRING = `
 	<li class="p-1 my-1{{if status}} alert-{{:status}}{{/if}}">
 		<a class="d-flex flex-row"{{if url}} href="{{:url}}"{{/if}}>
 			{{if source.avatar}}
-			<img class="avatar mx-1 mt-1" src="{{:source.avatar}}" />
+			<img class="avatar mx-1 mt-1" src="{{:source.avatar}}"
+				 alt="{{:source.title}}" title="{{:source.title}}" />
 			{{else}}
-			<i class="avatar fa fa-fw fa-2x fa-user mx-1 mt-1"></i>
+			<i class="avatar fa fa-fw fa-2x fa-user mx-1 mt-1"
+			   title="{{:source.title}}"></i>
 			{{/if}}
 			<div class="flex-grow-1 ml-2">
 				<small class="timestamp float-right text-muted">
 					{{*: new Date(data.timestamp).toLocaleString()}}
 				</small>
 				<strong class="title d-block">
-					{{:source.title}}
+					{{:title}}
 				</strong>
 				<p class="text-muted mb-2">{{:message}}</p>
 			</div>
