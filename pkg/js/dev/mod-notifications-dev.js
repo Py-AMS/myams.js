@@ -41,7 +41,7 @@
    */
 
 
-  var ITEM_TEMPLATE_STRING = "\n\t<li class=\"p-1 my-1{{if status}} alert-{{:status}}{{/if}}\">\n\t\t<a class=\"d-flex flex-row\"{{if url}} href=\"{{:url}}\"{{/if}}>\n\t\t\t{{if source.avatar}}\n\t\t\t<img class=\"avatar mx-1 mt-1\" src=\"{{:source.avatar}}\" />\n\t\t\t{{else}}\n\t\t\t<i class=\"avatar fa fa-fw fa-2x fa-user mx-1 mt-1\"></i>\n\t\t\t{{/if}}\n\t\t\t<div class=\"flex-grow-1 ml-2\">\n\t\t\t\t<small class=\"timestamp float-right text-muted\">\n\t\t\t\t\t{{*: new Date(data.timestamp).toLocaleString()}}\n\t\t\t\t</small>\n\t\t\t\t<strong class=\"title d-block\">\n\t\t\t\t\t{{:source.title}}\n\t\t\t\t</strong>\n\t\t\t\t<p class=\"text-muted mb-2\">{{:message}}</p>\n\t\t\t</div>\n\t\t</a>\n\t</li>";
+  var ITEM_TEMPLATE_STRING = "\n\t<li class=\"p-1 my-1{{if status}} alert-{{:status}}{{/if}}\">\n\t\t<a class=\"d-flex flex-row\"{{if url}} href=\"{{:url}}\"{{/if}}>\n\t\t\t{{if source.avatar}}\n\t\t\t<img class=\"avatar mx-1 mt-1\" src=\"{{:source.avatar}}\"\n\t\t\t\t alt=\"{{:source.title}}\" title=\"{{:source.title}}\" />\n\t\t\t{{else}}\n\t\t\t<i class=\"avatar fa fa-fw fa-2x fa-user mx-1 mt-1\"\n\t\t\t   title=\"{{:source.title}}\"></i>\n\t\t\t{{/if}}\n\t\t\t<div class=\"flex-grow-1 ml-2\">\n\t\t\t\t<small class=\"timestamp float-right text-muted\">\n\t\t\t\t\t{{*: new Date(data.timestamp).toLocaleString()}}\n\t\t\t\t</small>\n\t\t\t\t<strong class=\"title d-block\">\n\t\t\t\t\t{{:title}}\n\t\t\t\t</strong>\n\t\t\t\t<p class=\"text-muted mb-2\">{{:message}}</p>\n\t\t\t</div>\n\t\t</a>\n\t</li>";
   var ITEM_TEMPLATE = $.templates({
     markup: ITEM_TEMPLATE_STRING,
     allowCode: true
