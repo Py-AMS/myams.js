@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.8.1
+-----
+ - added missing status color to notifications
+ - tests updates
+
 1.8.0
 -----
  - added viewport related classes

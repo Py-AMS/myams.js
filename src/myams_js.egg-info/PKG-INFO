@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.6.4
+Version: 1.8.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,19 @@ Description: ================
         
         Changelog
         =========
+        
+        1.8.0
+        -----
+         - added viewport related classes
+         - added lighter versions of main Bootstrap colors to CSS variables
+        
+        1.7.0
+        -----
+         - added custom JQuery filter expressions
+         - added custom CSS tree styles
+         - added custom TinyMCE editor styles using CSS variables
+         - stop event propagation on *modal* data-toggle click handler
+         - updated *after-reload* callback management
         
         1.6.4
         -----
