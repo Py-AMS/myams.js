@@ -149,6 +149,7 @@ describe("Test MyAMS.notifications module", () => {
 		});
 
 		return MyAMS.notifications.getNotifications(event, {}).then(() => {
+			expect($('li.alert-success', body).length).toBe(2);
 			expect($('.timestamp', body).length).toBe(3);
 			expect($('img.avatar', body).length).toBe(1);
 			expect($('img.avatar', body).attr('src')).toBe('resources/img/profile.png');
