@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.8.0
+Version: 1.8.2
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,15 @@ Description: ================
         
         Changelog
         =========
+        
+        1.8.2
+        -----
+         - updated notifications title
+        
+        1.8.1
+        -----
+         - added missing status color to notifications
+         - tests updates
         
         1.8.0
         -----

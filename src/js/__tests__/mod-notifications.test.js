@@ -227,4 +227,34 @@ describe("Test MyAMS.notifications module", () => {
 			window.XMLHttpRequest = oldXHR;
 		});
 	});
+
+
+	// Test MyAMS.notifications addNotification function
+	test("Test MyAMS.notifications addNotification", () => {
+
+		const
+			message = {
+				timestamp: 1587644933164,
+				source: {
+					title: "MyAMS.js",
+					id: "user.id",
+					avatar: "resources/img/profile.png"
+				},
+				host: "localhost",
+				title: "Notification title",
+				message: "Notification message",
+				status: "success",
+				url: "#test.html"
+			};
+
+		document.body.innerHTML = `<div id="notifications-pane">
+			<span id="notifications-count"></span>
+			<ul></ul>
+		</div>`;
+
+		const body = $(document.body);
+		MyAMS.notifications.addNotification(message, false);
+		expect($('#notifications-count').text()).toBe('1');
+		expect($('li', body).length).toBe(1);
+	});
 });

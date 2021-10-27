@@ -95,18 +95,62 @@ class NotificationsList {
 export const notifications = {
 
 	/**
+	 * Check permission to display desktop notifications
+	 */
+	checkPermission: () => {
+
+		const checkNotificationPromise = () => {
+			try {
+				Notification.requestPermission().then();
+			} catch (e) {
+				return false;
+			}
+			return true;
+		};
+
+		return new Promise((resolve, reject) => {
+			if (!('Notification' in window)) {
+				console.debug("Notifications are not supported by this browser!");
+				resolve(false);
+			} else if (Notification.permission !== 'denied') {
+				if (Notification.permission === 'default') {
+					if (checkNotificationPromise()) {
+						Notification.requestPermission().then((permission) => {
+							resolve(permission === 'granted');
+						});
+					} else {
+						Notification.requestPermission((permission) => {
+							resolve(permission === 'granted');
+						});
+					}
+				} else {
+					resolve(true);
+				}
+			} else {
+				resolve(false);
+			}
+		});
+	},
+
+	checkUserPermission: () => {
+		MyAMS.notifications.checkPermission().then(() => {});
+	},
+
+	/**
 	 * Load user notifications
 	 *
 	 * @param evt: source event
 	 * @param options: notifications options (which can also be extracted from event data)
 	 */
 	getNotifications: (evt, options) => {
+
 		const
 			data = $.extend({}, options, evt.data),
 			target = $(evt.target),
 			current = $(evt.currentTarget),
 			remote = current.data('ams-notifications-source') ||
 				current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
+
 		return new Promise((resolve, reject) => {
 			MyAMS.require('ajax').then(() => {
 				MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '',
@@ -116,9 +160,60 @@ export const notifications = {
 						target.parents('[data-ams-notifications-target]').data('ams-notifications-target') ||
 						current.attr('href'));
 					new NotificationsList(result, data).render(tab);
+					$('#notifications-count').text('');
+					notifications.checkUserPermission();
 					resolve();
 				}, reject);
 			}, reject);
+		});
+	},
+
+	/**
+	 * Add new notification to notifications list
+	 *
+	 * @param message: notification element
+	 * @param showDesktop: if true, also try to display desktop notification
+	 */
+	addNotification: (message, showDesktop) => {
+
+		const
+			pane = $('ul', '#notifications-pane'),
+			notification = $(ITEM_TEMPLATE.render(message)),
+			badge = $('#notifications-count'),
+			count = parseInt(badge.text()) || 0;
+
+		pane.prepend(notification);
+		badge.text(count + 1);
+
+		if (showDesktop) {
+			notifications.showDesktopNotification(message);
+		}
+	},
+
+	/**
+	 * Show new desktop notification
+	 *
+	 * @param message: notification elements
+	 */
+	showDesktopNotification: (message) => {
+
+		notifications.checkPermission().then((status) => {
+			if (!status) {
+				return;
+			}
+			const
+				options = {
+					title: message.title,
+					body: message.message,
+					icon: message.source.avatar
+				},
+				notification = new Notification(options.title, options);
+
+			if (message.url) {
+				notification.onclick = () => {
+					window.open(message.url);
+				};
+			}
 		});
 	}
 }
