@@ -31,6 +31,45 @@ export const helpers = {
 	},
 
 	/**
+	 * Select2 change helper
+	 */
+	select2ChangeHelper: (evt) => {
+		const
+			source = $(evt.currentTarget),
+			data = source.data(),
+			target = $(data.amsSelect2HelperTarget);
+
+		switch (data.amsSelect2HelperType) {
+
+			case 'html':
+				target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
+				const params = {};
+				params[data.amsSelect2HelperArgument || 'value'] = source.val();
+				$.get(data.amsSelect2HelperUrl, params).then((result) => {
+					const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || ((result) => {
+						if (result) {
+							target.html(result);
+							MyAMS.core.initContent(target).then();
+						} else {
+							target.empty();
+						}
+					});
+					callback(result);
+				})
+				.catch(() => {
+					target.empty();
+				});
+				break;
+
+			default:
+				const callback = data.amsSelect2HelperCallback;
+				if (callback) {
+					MyAMS.core.executeFunctionByName(callback, source, data);
+				}
+		}
+	},
+
+	/**
 	 * Refresh a DOM element with content provided in
 	 * the <code>options</code> object.
 	 *
@@ -119,11 +158,15 @@ export const helpers = {
 			const
 				selector = `tr[id="${options.row_id}"]`,
 				row = $(selector),
-				table = row.parents('table').first(),
-				dtTable = table.DataTable();
+				table = row.parents('table').first();
 			if (options.data) {
-				dtTable.row(selector).data(options.data);
-				resolve(row);
+				if ($.fn.DataTable) {
+					const dtTable = table.DataTable();
+					dtTable.row(selector).data(options.data);
+					resolve(row);
+				} else {
+					reject('No DataTable plug-in available!');
+				}
 			} else {
 				const newRow = $(options.content);
 				row.replaceWith(newRow);
