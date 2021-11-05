@@ -6,16 +6,28 @@
 const $ = MyAMS.$;
 
 
-function getModule(module) {
-	let moduleSrc;
-	if (module.startsWith('http://') || module.startsWith('https://')) {
-		moduleSrc = module;
-	} else if (module.endsWith('.js')) {  // custom module with relative path
-		moduleSrc = module;
-	} else {  // standard MyAMS module
-		moduleSrc = `${MyAMS.env.baseURL}mod-${module}${MyAMS.env.devext}.js`;
+function getModule(module, name) {
+	let moduleSrc,
+		moduleCss;
+	if (typeof module === 'object') {
+		moduleSrc = module.src;
+		moduleCss = module.css;
+	} else {
+		if (module.startsWith('http://') || module.startsWith('https://')) {
+			moduleSrc = module;
+		} else if (module.endsWith('.js')) {  // custom module with relative path
+			moduleSrc = module;
+		} else {  // standard MyAMS module
+			moduleSrc = `${MyAMS.env.baseURL}mod-${module}${MyAMS.env.devext}.js`;
+		}
 	}
-	return MyAMS.core.getScript(moduleSrc, {async: true}, console.error);
+	const deferred = [
+		MyAMS.core.getScript(moduleSrc, {async: true}, console.error)
+	];
+	if (moduleCss) {
+		deferred.push(MyAMS.core.getCSS(moduleCss, `${name}_css`));
+	}
+	return deferred;
 }
 
 
@@ -38,20 +50,20 @@ export default function myams_require(...modules) {
 			if (typeof module === 'string') {
 				if (loaded.indexOf(module) < 0) {
 					names.push(module);
-					deferred.push(getModule(module));
+					deferred.extend(getModule(module));
 				}
 			} else if ($.isArray(module)) {  // strings array
 				for (const name of module) {
 					if (loaded.indexOf(name) < 0) {
 						names.push(name);
-						deferred.push(getModule(name));
+						deferred.extend(getModule(name));
 					}
 				}
 			} else {  // object
-				for (const [name, src] of Object.entries(module)) {
+				for (const [name, props] of Object.entries(module)) {
 					if (loaded.indexOf(name) < 0) {
 						names.push(name);
-						deferred.push(getModule(src));
+						deferred.extend(getModule(props, name));
 					}
 				}
 			}
