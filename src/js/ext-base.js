@@ -76,6 +76,22 @@ export function init($) {
 
 
 	/**
+	 * Array class prototype extension
+	 */
+	$.extend(Array.prototype, {
+
+		/**
+		 * Extend an array with another one
+		 */
+		extend: function(source) {
+			for (const element of source) {
+				this.push(element);
+			}
+		}
+	});
+
+
+	/**
 	 * Global JQuery object extensions
 	 */
 	$.extend($, {
