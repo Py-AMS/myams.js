@@ -213,3 +213,8 @@ $info-light:          lighten($info, 40%) !default;
 $warning-light:       lighten($warning, 40%) !default;
 $danger-light:        lighten($danger, 40%) !default;
 $dark-light:          lighten($dark, 40%) !default;
+
+
+$widths-px: (
+  50, 100, 150, 200
+) !default;

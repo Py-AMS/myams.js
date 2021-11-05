@@ -95,6 +95,15 @@
 
 
 /**
+ * Custom widths
+ */
+
+@each $width in $widths-px {
+  .w-#{$width}px { width: #{$width}px };
+}
+
+
+/**
  * Opacity classes
  */
 .opacity-75 {
@@ -125,6 +134,22 @@
 
 .list-style-none {
   list-style-type: none;
+}
+
+
+.ui-sortable-placeholder {
+  min-height: 2em;
+  background-color: lighten($info-light, 15%);
+
+  .visible-placeholder & {
+    visibility: visible !important;
+  }
+}
+
+.ui-sortable-helper {
+  .visible-helper & {
+    background-color: lighten($info-light, 10%);
+  }
 }
 
 img {
