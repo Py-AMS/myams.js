@@ -1449,6 +1449,91 @@ export function tinymce(element) {
 	});
 }
 
+
+/**
+ * Bootstrap treeview plug-in
+ */
+
+export function treeview(element) {
+	return new Promise((resolve, reject) => {
+		const trees = $('.treeview', element);
+		if (trees.length > 0) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check($.fn.treview,
+					`${MyAMS.env.baseURL}../ext/bootstrap-treeview${MyAMS.env.extext}.js`).then((firstLoad) => {
+					const required = [];
+					if (firstLoad) {
+						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/bootstrap-treeview${MyAMS.env.extext}.css`,
+							'treeview'));
+					}
+					$.when.apply($, required).then(() => {
+						trees.each((idx, elt) => {
+							const
+								treeview = $(elt),
+								data = treeview.data(),
+								dataOptions = {
+									data: data.amsTreeviewData,
+									levels: data.amsTreeviewLevels,
+									injectStyle: data.amsTreeviewInjectStyle,
+									expandIcon: data.amsTreeviewExpandIcon || 'far fa-fw fa-plus-square',
+									collapseIcon: data.amsTreeviewCollaspeIcon || 'far fa-fw fa-minus-square',
+									emptyIcon: data.amsTreeviewEmptyIcon,
+									nodeIcon: data.amsTreeviewNodeIcon,
+									selectedIcon: data.amsTreeviewSelectedIcon,
+									checkedIcon: data.amsTreeviewCheckedIcon || 'far fa-fw fa-check-square',
+									uncheckedIcon: data.amsTreeviewUncheckedIcon || 'far fa-fw fa-square',
+									color: data.amsTreeviewColor,
+									backColor: data.amsTreeviewBackColor,
+									borderColor: data.amsTreeviewBorderColor,
+									onHoverColor: data.amsTreeviewHoverColor,
+									selectedColor: data.amsTreeviewSelectedColor,
+									selectedBackColor: data.amsTreeviewSelectedBackColor,
+									unselectableColor: data.amsTreeviewUnselectableColor || 'rgba(1,1,1,0.25)',
+									unselectableBackColor: data.amsTreeviewUnselectableBackColor || 'rgba(1,1,1,0.25)',
+									enableLinks: data.amsTreeviewEnableLinks,
+									highlightSelected: data.amsTreeviewHighlightSelected,
+									highlightSearchResults: data.amsTreeviewhighlightSearchResults,
+									showBorder: data.amsTreeviewShowBorder,
+									showIcon: data.amsTreeviewShowIcon,
+									showCheckbox: data.amsTreeviewShowCheckbox,
+									showTags: data.amsTreeviewShowTags,
+									toggleUnselectable: data.amsTreeviewToggleUnselectable,
+									multiSelect: data.amsTreeviewMultiSelect,
+									onNodeChecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeChecked),
+									onNodeCollapsed: MyAMS.core.getFunctionByName(data.amsTreeviewNodeCollapsed),
+									onNodeDisabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeDisabled),
+									onNodeEnabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeEnabled),
+									onNodeExpanded: MyAMS.core.getFunctionByName(data.amsTreeviewNodeExpanded),
+									onNodeSelected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeSelected),
+									onNodeUnchecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnchecked),
+									onNodeUnselected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnselected),
+									onSearchComplete: MyAMS.core.getFunctionByName(data.amsTreeviewSearchComplete),
+									onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
+								};
+							let settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
+							settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit,
+								document, treeview, settings) || settings;
+							const veto = {veto: false};
+							treeview.trigger('before-init.ams.treeview', [treeview, settings, veto]);
+							if (veto.veto) {
+								return;
+							}
+							const plugin = treeview.treeview(settings);
+							MyAMS.core.executeFunctionByName(data.amsTreeviewAfterInitCallback || data.amsAfterInit,
+								document, treeview, plugin, settings);
+							treeview.trigger('after-init.ams.treeview', [treeview, plugin]);
+						});
+						resolve(trees);
+					}, reject);
+				}, reject);
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
 /**
  * Form validation plug-in
  */
@@ -1567,6 +1652,7 @@ if (window.MyAMS) {
 	MyAMS.registry.register(svgPlugin, 'svg');
 	MyAMS.registry.register(switcher, 'switcher');
 	MyAMS.registry.register(tinymce, 'tinymce');
+	MyAMS.registry.register(treeview, 'treeview');
 	MyAMS.registry.register(validate, 'validate');
 
 	// register module
