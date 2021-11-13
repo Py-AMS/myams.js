@@ -627,16 +627,24 @@ export function generateUUID() {
  * @param fromClass: initial CSS class (without "fa-" prefix)
  * @param toClass: new CSS class (without "fa-" prefix)
  */
-export function switchIcon(element, fromClass, toClass) {
+export function switchIcon(element, fromClass, toClass, prefix) {
 	if (typeof element === 'string') {
 		element = $(element);
 	}
+	if (!prefix) {
+		prefix = 'fa'
+	}
 	if (MyAMS.config.useSVGIcons) {
-		const iconDef = FontAwesome.findIconDefinition({iconName: toClass});
-		element.html(FontAwesome.icon(iconDef).html);
+		const iconDef = FontAwesome.findIconDefinition({
+			iconName: toClass,
+			prefix: prefix
+		});
+		if (iconDef) {
+			element.html(FontAwesome.icon(iconDef).html);
+		}
 	} else {
-		element.removeClass(`fa-${fromClass}`)
-			.addClass(`fa-${toClass}`);
+		element.removeClass(`${prefix}-${fromClass}`)
+			.addClass(`${prefix}-${toClass}`);
 	}
 }
 
