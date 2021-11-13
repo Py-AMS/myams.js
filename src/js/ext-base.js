@@ -626,6 +626,7 @@ export function generateUUID() {
  * @param element: source element
  * @param fromClass: initial CSS class (without "fa-" prefix)
  * @param toClass: new CSS class (without "fa-" prefix)
+ * @param prefix: icon prefix (defaults to "fa")
  */
 export function switchIcon(element, fromClass, toClass, prefix) {
 	if (typeof element === 'string') {
