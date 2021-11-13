@@ -291,6 +291,17 @@ const _datatablesHelpers = {
 	},
 
 	/**
+	 * Store reorder source before reorder
+	 *
+	 * @param evt: original event
+	 * @param node: source node
+	 */
+	preReorder: function(evt, node) {
+		const table = $(evt.target);
+		table.data('ams-reorder-source', node);
+	},
+
+	/**
 	 * Handle table rows reordering
 	 *
 	 * @param evt: original event
@@ -636,6 +647,9 @@ export function datatables(element) {
 
 									// set reorder events
 									if (settings.rowReorder) {
+										plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(
+											data.amsDatatablePreReorder || data.amsPreReorder) ||
+											_datatablesHelpers.preReorder);
 										plugin.on('row-reorder', MyAMS.core.getFunctionByName(
 											data.amsDatatableReordered || data.amsReordered) ||
 											_datatablesHelpers.reorderRows);
