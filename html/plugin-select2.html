@@ -222,6 +222,57 @@
 	</div>
 </section>
 
+<section id="s2-helpers">
+	<h2>MyAMS <code>select2</code> helpers</h2>
+	<p>MyAMS provides a small set of helpers which can be used to handle events on
+	Select2 widgets; for example, a built-in handler is available to handle a <i>change</i>
+	event:</p>
+	<div>
+		<form class="ams-form">
+			<fieldset class="border">
+				<legend>Basic select form</legend>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-sm-right"
+						   for="select_7">
+						Select2 helpers
+					</label>
+					<div class="col-sm-9">
+						<div class="form-widget"
+							 data-ams-modules="helpers">
+							<select id="select_7" class="form-control select2"
+									data-allow-clear="true"
+									data-placeholder="Please select a value..."
+									data-ams-change-handler="MyAMS.helpers.select2ChangeHelper"
+									data-ams-stop-propagation="true"
+									data-ams-select2-helper-type="html"
+									data-ams-select2-helper-url="data/select2-7.html"
+									data-ams-select2-helper-target="#select7_target">
+								<option selected></option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div id="select7_target"></div>
+			</fieldset>
+		</form>
+<pre>	&lt;select id="select_7" class="form-control select2"
+	        data-ams-change-handler="MyAMS.helpers.select2ChangeHelper"
+	        data-ams-stop-propagation="true"
+	        data-ams-select2-helper-type="html"
+	        data-ams-select2-helper-url="data/select2-7.html"
+	        data-ams-select2-helper-target="#select7_target"
+	        data-minimum-input-length="2"&gt;
+	  &lt;option value="1" selected&gt;Option 1&lt;/option&gt;
+	  &lt;option value="2" selected&gt;Option 2&lt;/option&gt;
+	&lt;/select&gt;
+	<div id="select7_target"></div>
+</pre>
+	</div>
+
+</section>
+
 <section id="s2-options">
 	<h2>MyAMS <code>select2</code> plug-in options</h2>
 	<p>These plug-in options are available as data attributes prefixed by
@@ -283,6 +334,38 @@
 		<tr>
 			<td><code>ajaxTransport</code></td>
 			<td colspan="2">See Select2 AJAX options</td>
+		</tr>
+		<tr>
+			<td><code>helperType</code></td>
+			<td></td>
+			<td>Type of Select2 change helper; if type is set to <code>html</code>, the remote
+				helper URL call result will be used as HTML code; otherwise, you should set a
+				custom callback to handle result call
+			</td>
+		</tr>
+		<tr>
+			<td><code>helperTarget</code></td>
+			<td></td>
+			<td>JQuery selector of helper call <i>target</i></td>
+		</tr>
+		<tr>
+			<td><code>helperUrl</code></td>
+			<td></td>
+			<td>Remote URL called by <code>MyAMS.helpers.select2ChangeHelper</code></td>
+		</tr>
+		<tr>
+			<td><code>helperArgument</code></td>
+			<td></td>
+			<td>Name of argument used by Select2 change helper when calling remote URL</td>
+		</tr>
+		<tr>
+			<td><code>helperCallback</code></td>
+			<td></td>
+			<td>Dotted name of a javascript callback used by
+				<code>MyAMS.helpers.select2ChangeHelper</code>; if <code>helperType</code> is
+				not set to <code>html</code>, this callback will be called with original widget
+				and widget data as arguments.
+			</td>
 		</tr>
 	</table>
 </section>
