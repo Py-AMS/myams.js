@@ -8,7 +8,7 @@
  * Alternate MyAMS bundles include:
  *  - mini: all MyAMS features, without JQuery / Bootstrap / FontAwesome resources (which
  *    are available separately)
- *  - mini-core: MyAMS base features, without loadable modules or external resources (which
+ *  - core: MyAMS base features, without loadable modules or external resources (which
  *    are available separately)
  */
 
