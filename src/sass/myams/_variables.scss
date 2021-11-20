@@ -43,6 +43,7 @@ $green:                     #296829 !default;
 $teal:                      #20c997 !default;
 $cyan:                      #346597 !default;
 
+$primary:                     $blue !default;
 $success:                   #478e47 !default;
 $warning:                   $orange !default;
 $secondary:               $gray-400 !default;
@@ -88,6 +89,8 @@ $wk-body-scrollbar-thumb-radius:      10px !default;
 
 $top-menu-label:            #bfbfbf !default;
 $top-menu-shadow:      0 0 1px #fff !default;
+
+$top-tabs-border-color: #ccc !default;
 
 $hide-menu-border:          #494949 !default;
 $hide-menu-hidden-bg:       #e8e8e8 !default;
@@ -169,6 +172,7 @@ $ribbon-mobile-link-strong:    #333 !default;
 $ribbon-active-link:           #fff !default;
 $ribbon-mobile-active-link:    #333 !default;
 
+$breadcrumb-border-color:   $gray-300 !default;
 $breadcrumb-divider-color:  #efefef !default;
 $breadcrumb-active-color:   #ffffff !default;
 
@@ -191,6 +195,10 @@ $custom-file-text: (
   en: "Browse",
   fr: "Parcourir"
 ) !default;
+
+$select2-multiple-sortable-width: calc(100% - 35px) !default;
+$select2-highlight: $white !default;
+$select2-selection-color: $white !default;
 
 
 // Tables styles

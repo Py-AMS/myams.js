@@ -17,6 +17,8 @@
 
 
 :root {
+  --body:                #{$body};
+  --body-bg:             #{$body-bg};
   --primary-light:       #{$primary-light};
   --secondary-light:     #{$secondary-light};
   --success-light:       #{$success-light};

@@ -22,6 +22,8 @@
     padding: 10px 34px 9px 0;
     background: 0 0;
     vertical-align: top;
+    border-radius: 0;
+    border-bottom: 1px solid $breadcrumb-border-color;
 
     &,
     a {

@@ -7,20 +7,22 @@
 		<meta name="HandheldFriendly" content="True" />
 		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 		<script type="text/javascript" src="dist/js/ext/jquery.js"></script>
+		<script type="text/javascript" src="dist/js/ext/jsrender.js"></script>
 		<script type="text/javascript" src="dist/js/ext/bootstrap.js"></script>
 		<script type="text/javascript" src="dist/js/ext/fontawesome.js"
 				data-auto-replace-svg="nest" data-search-pseudo-elements></script>
-		<script type="text/javascript" src="dist/js/dev/myams-mini-dev.js"></script>
-		<link rel="stylesheet" type="text/css" href="dist/css/dev/myams.css">
+		<script type="text/javascript" src="dist/js/dev/myams-core-dev.js"></script>
+		<link rel="stylesheet" type="text/css" href="dist/css/dev/darkmode.css">
 	</head>
-	<body class="fixed-ribbon">
+	<body class="fixed-ribbon"
+		  data-ams-modules="ajax i18n nav helpers callbacks events menu skin">
 
 		<!-- header panel -->
 		<header id="header"
 				class="d-flex flex-nowrap justify-content-between pr-2">
 			<div id="logo-group" class="d-flex align-items-center">
 				<span id="logo">
-					<a href="index-mini.html">
+					<a href="index-core.html">
 						<img src="resources/img/logo.png" alt="Logo" />
 					</a>
 				</span>
@@ -29,7 +31,7 @@
 				<div class="top-menu d-flex flex-column py-1 px-3">
 					<span class="label d-block text-nowrap">MyAMS bundle</span>
 					<span class="btn btn-sm dropdown-toggle px-2 bg-secondary" data-toggle="dropdown">
-						<span class="title">MyAMS mini bundle</span>
+						<span class="title">Dark mode core bundle</span>
 					</span>
 					<span class="dropdown-menu">
 						<a class="dropdown-item disabled">MyAMS skin</a>
@@ -91,7 +93,8 @@
 				</div>
 			</div>
 			<div class="flex-nowrap flex-shrink-0 d-flex align-items-end pb-1">
-				<div id="user-search">
+				<div id="user-search"
+					 data-ams-modules="form plugins">
 					<a href="#" class="btn btn-light pt-2"
 					   data-toggle="dropdown" data-offset="36,7">
 						<i class="fa fa-search hint" title="Search..."
@@ -99,8 +102,8 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right p-2 width-100 width-sm-75 width-md-50"
 						 data-ams-click-dismiss="false">
-						<form class="ams-form" method="post" action="#search.html"
-							  target="#content" data-async
+						<form class="ams-form" method="post"
+							  action="#search.html" target="#content" data-async
 							  data-ams-events-handlers='{"submit-success.ams.form": "MyAMS.helpers.hideDropdown"}'>
 							<div class="input-group form-widget m-0">
 								<input type="text" class="form-control" name="query"
@@ -126,6 +129,7 @@
 					</div>
 				</div>
 				<div id="user-notifications" class="ml-1"
+					 data-ams-modules="notifications"
 					 data-ams-events-handlers='{"show.bs.dropdown": "MyAMS.notifications.getNotifications"}'
 					 data-ams-events-options='{"localTimestamp": "true"}'
 					 data-ams-notifications-target="#notifications-pane"
@@ -194,7 +198,7 @@
 					<a href="#" class="btn btn-light pt-2"
 					   data-ams-click-handler="MyAMS.nav.switchMenu">
 						<i class="fa fa-bars hint" title="Show/hide navigation menus"
-						   data-placement="bottom"></i>
+						   data-placement="bottom" data-offset="0,10"></i>
 					</a>
 				</div>
 			</div>
@@ -240,6 +244,7 @@
 			<div id="content"></div>
 
 		</div>
+<!--		<div id="modal1" class="modal" role="dialog">-->
 <!--			<div data-ams-plugins='[{"name": "_test1", "src": "test-1.js"}]'>-->
 <!--				<p></p>-->
 <!--			</div>-->
@@ -251,5 +256,23 @@
 <!--				 data-ams-plugin-test3-callback="MyAMS.app.init">-->
 <!--				<p></p>-->
 <!--			</div>-->
+<!--			<div class="modal-dialog">-->
+<!--				<div class="modal-content">-->
+<!--					<div class="modal-header">-->
+<!--						<h5 class="modal-title">Modal title</h5>-->
+<!--						<button type="button" class="close" data-dismiss="modal">-->
+<!--							<i class="fa fa-times"></i>-->
+<!--						</button>-->
+<!--					</div>-->
+<!--					<div class="modal-body">-->
+<!--						<p>Modal body</p>-->
+<!--					</div>-->
+<!--					<div class="modal-footer">-->
+<!--						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--						<button type="button" class="btn btn-primary" data-toggle="modal" data-ams-url="test-modal.html">Modal 2</button>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
 	</body>
 </html>

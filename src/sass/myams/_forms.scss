@@ -8,6 +8,19 @@
 
 // Generic controls
 
+.form-control {
+  background-color: $input-bg;
+
+  &[disabled],
+  &.disabled,
+  & .disabled {
+    background-color: $input-disabled-bg;
+  }
+  &.custom-switch {
+    background-color: transparent;
+  }
+}
+
 .custom-select {
   -webkit-appearance: none;
   -moz-appearance: none;

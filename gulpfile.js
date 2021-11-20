@@ -168,6 +168,40 @@ task('full_prod', function() {
 		.pipe(dest('pkg/js/prod'));
 });
 
+task('emerald_dev', function() {
+	const config = require('./webpack-emerald.dev.js');
+	return src('src/js/emerald.js')
+		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/js/dev'));
+});
+
+
+task('emerald_prod', function() {
+	const config = require('./webpack-emerald.prod.js');
+	return src('src/js/emerald.js')
+		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/js/prod'));
+});
+
+task('darkmode_dev', function() {
+	const config = require('./webpack-darkmode.dev.js');
+	return src('src/js/darkmode.js')
+		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/js/dev'));
+});
+
+
+task('darkmode_prod', function() {
+	const config = require('./webpack-darkmode.prod.js');
+	return src('src/js/darkmode.js')
+		.pipe(stream(config), webpack)
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/js/prod'));
+});
+
 
 /**
  * Mini-packages don't include jQuery and Bootstrap
@@ -252,6 +286,23 @@ task('sass_emerald_prod', function() {
 });
 
 
+task('sass_darkmode_dev', function() {
+	return src('src/sass/darkmode.scss')
+		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/css/dev'));
+});
+
+
+task('sass_darkmode_prod', function() {
+	return src('src/sass/darkmode.scss')
+		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
+		.pipe(clean())
+		.pipe(dest('pkg/css/prod'));
+});
+
+
 /**
  * Main tasks
  */
@@ -278,10 +329,15 @@ exports.core_prod = task('core_prod');
 exports.default = function() {
 	watch('src/js/*.js', parallel('full_dev', 'full_prod',
 								  'mini_dev', 'mini_prod',
-								  'core_dev', 'core_prod'));
+								  'core_dev', 'core_prod',
+								  'emerald_dev', 'emerald_prod',
+								  'darkmode_dev', 'darkmode_prod'));
 	watch('src/js/i18n/*.js', parallel('i18n_dev', 'i18n_prod'));
 	watch('src/js/mod-*.js', parallel('mods_dev', 'mods_prod'));
 	watch('src/sass/**/*.scss', parallel('sass_dev', 'sass_prod',
 										 'sass_emerald_dev', 'sass_emerald_prod',
-										 'full_dev', 'full_prod'));
+										 'sass_darkmode_dev', 'sass_darkmode_prod',
+										 'full_dev', 'full_prod',
+										 'emerald_dev', 'emerald_prod',
+										 'darkmode_dev', 'darkmode_prod'));
 };

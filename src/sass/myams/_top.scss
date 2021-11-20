@@ -63,6 +63,7 @@
       color: $top-menu-label;
       font-size: $font-size-sm;
       font-weight: 700;
+      line-height: 1.35em;
       text-transform: uppercase;
       text-shadow: $top-menu-shadow;
     }
@@ -85,7 +86,7 @@
         color: $body;
         font-size: $font-size-sm;
         background-color: $gray-200;
-        border-color: #ccc #ccc transparent;
+        border-color: $top-tabs-border-color $top-tabs-border-color transparent;
         box-shadow: 1px -1px 2px transparent;
 
         &.active {

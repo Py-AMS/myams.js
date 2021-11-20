@@ -32,6 +32,7 @@
 
 .select2-container--bootstrap4 {
 
+    // prepend input group
     .input-group-prepend > & {
         border-radius: $input-border-radius 0 0 $input-border-radius;
     }
@@ -53,6 +54,22 @@
         }
         .input-group-prepend & {
             border-radius: $input-border-radius 0 0 $input-border-radius;
+        }
+        .select2-selection__rendered {
+            color: $input-color;
+        }
+        .select2-search__field {
+            background-color: $input-bg;
+            color: $input-color;
+
+            fieldset[disabled] & {
+                background-color: $input-disabled-bg;
+            }
+        }
+        &--multiple {
+            .select2-selection__choice {
+                color: $select2-selection-color;
+            }
         }
     }
 
@@ -85,6 +102,14 @@
         }
     }
 
+    // readonly select
+    fieldset[disabled] &,
+    .select2[readonly].select2-hidden-accessible + & {
+        .select2-selection {
+            background-color: $input-disabled-bg;
+        }
+    }
+
     // validated input box
     select.is-invalid ~ & .select2-selection,
     form.was-validated select:invalid ~ & .select2-selection {
@@ -97,6 +122,7 @@
 
     // dropdown
     .select2-dropdown {
+        background-color: $fieldset-bg;
         border-color: $input-border-color;
 
         border-top: none;
@@ -111,9 +137,23 @@
             border-top-right-radius: $input-border-radius;
         }
 
+        // search input
+        .select2-search {
+            .select2-search__field {
+                background-color: $input-bg;
+                color: $input-color;
+            }
+        }
+
+        .select2-results__options {
+            .select2-results__message {
+                color: $input-placeholder-color;
+            }
+        }
         // selected item
         .select2-results__option[aria-selected=true] {
             background-color: darken($light, 5%);
+            color: $select2-highlight;
         }
     }
 
@@ -126,7 +166,7 @@
     .select2-results__option--highlighted,
     .select2-results__option--highlighted.select2-results__option[aria-selected=true] {
         background-color: $primary;
-        color: $light;
+        color: $select2-highlight;
     }
 
     // for <optgroup>

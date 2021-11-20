@@ -90,6 +90,9 @@ myams_core_bundle = Group(depends=(fontawesome_css, myams_css, myams_core_js))
 myams_core_svg_bundle = Group(depends=(fontawesome_js, myams_css, myams_core_js))
 
 
+emerald_full_bundle = ResourceWithData(library, 'js/dev/emerald-dev.js',
+                                       minified='js/prod/emerald.js')
+
 emerald_css = Resource(library, 'css/dev/emerald.css',
                        minified='css/prod/emerald.css')
 
@@ -100,3 +103,18 @@ emerald_mini_svg_bundle = Group(depends=(fontawesome_js, emerald_css, myams_mini
 emerald_core_bundle = Group(depends=(fontawesome_css, emerald_css, myams_core_js))
 
 emerald_core_svg_bundle = Group(depends=(fontawesome_js, emerald_css, myams_core_js))
+
+
+darkmode_full_bundle = ResourceWithData(library, 'js/dev/darkmode-dev.js',
+                                        minified='js/prod/darkmode.js')
+
+darkmode_css = Resource(library, 'css/dev/darkmode.css',
+                        minified='css/prod/darkmode.css')
+
+darkmode_mini_bundle = Group(depends=(fontawesome_css, darkmode_css, myams_mini_js))
+
+darkmode_mini_svg_bundle = Group(depends=(fontawesome_js, darkmode_css, myams_mini_js))
+
+darkmode_core_bundle = Group(depends=(fontawesome_css, darkmode_css, myams_core_js))
+
+darkmode_core_svg_bundle = Group(depends=(fontawesome_js, darkmode_css, myams_core_js))
