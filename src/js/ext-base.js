@@ -83,7 +83,7 @@ export function init($) {
 		/**
 		 * Extend an array with another one
 		 */
-		extend: function(source) {
+		extendWith: function(source) {
 			for (const element of source) {
 				this.push(element);
 			}
