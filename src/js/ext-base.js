@@ -293,9 +293,9 @@ export function getModules(element) {
 	if (typeof mods === 'string') {
 		modules = modules.concat(mods.trim().split(/[\s,;]+/));
 	} else if (mods) {
-		for (const [name, path] of Object.entries(mods)) {
+		for (const [name, props] of Object.entries(mods)) {
 			const entry = {};
-			entry[name] = path;
+			entry[name] = props;
 			modules.push(entry);
 		}
 	}
@@ -304,9 +304,9 @@ export function getModules(element) {
 		if (typeof mods === 'string') {
 			modules = modules.concat(mods.trim().split(/[\s,;]+/));
 		} else if (mods) {
-			for (const [name, path] of Object.entries(mods)) {
+			for (const [name, props] of Object.entries(mods)) {
 				const entry = {};
-				entry[name] = path;
+				entry[name] = props;
 				modules.push(entry);
 			}
 		}
@@ -653,18 +653,26 @@ export function switchIcon(element, fromClass, toClass, prefix) {
 /**
  * MyAMS base functions
  *
- * @type {{devmode: boolean, baseURL: string, devext: string}}
+ * @type {{
+ *     bundle: boolean,
+ *     devmode: boolean,
+ *     devext: string,
+ *     extext: string,
+ *     baseURL: string
+ * }}
  */
 function getEnv($) {
 	const
 		script = $(
 			'script[src*="/myams.js"], script[src*="/myams-dev.js"], ' +
+			'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' +
+			'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' +
 			'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' +
 			'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
 		src = script.attr('src'),
 		devmode = src ? src.indexOf('-dev.js') >= 0 : true;  // testing mode
 	return {
-		bundle: src ? src.indexOf('-core') < 0 : true,  // testing mode
+		bundle: src ? (src.indexOf('-core') < 0 && src.indexOf('-mini') < 0) : true,
 		devmode: devmode,
 		devext: devmode ? '-dev' : '',
 		extext: devmode ? '' : '.min',
@@ -693,21 +701,21 @@ function getDOM() {
  *
  * @type {Object}:
  *      modules: array of loaded extension modules
- * 		ajaxNav: true if AJAX navigation is enabled
- * 	    enableFastclick: true is "smart-click" extension is to be activated on mobile devices
- * 		menuSpeed: menu speed, in miliseconds
- * 	    initPage: dotted name of MyAMS global init function
- * 	    initContent: dotted name of MyAMS content init function
- * 	    alertContainerCLass: class of MyAMS alerts container
- * 		safeMethods: HTTP methods which can be used without CSRF cookie verification
- * 		csrfCookieName: CSRF cookie name
- * 		csrfHeaderName: CSRF header name
+ *      ajaxNav: true if AJAX navigation is enabled
+ *      enableFastclick: true is "smart-click" extension is to be activated on mobile devices
+ *      menuSpeed: menu speed, in miliseconds
+ *      initPage: dotted name of MyAMS global init function
+ *      initContent: dotted name of MyAMS content init function
+ *      alertContainerCLass: class of MyAMS alerts container
+ *      safeMethods: HTTP methods which can be used without CSRF cookie verification
+ *      csrfCookieName: CSRF cookie name
+ *      csrfHeaderName: CSRF header name
  *      enableTooltips: global tooltips enable flag
  *      enableHtmlTooltips: allow HTML code in tooltips
- * 		warnOnFormChange: flag to specify if form changes should be warned
- * 		formChangeCallback: global form change callback
- * 		isMobile: boolean, true if device is detected as mobile
- * 	    device: string: 'mobile' or 'desktop'
+ *      warnOnFormChange: flag to specify if form changes should be warned
+ *      formChangeCallback: global form change callback
+ *      isMobile: boolean, true if device is detected as mobile
+ *      device: string: 'mobile' or 'desktop'
  */
 const
 	isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
