@@ -162,7 +162,12 @@ export const helpers = {
 			if (options.data) {
 				if ($.fn.DataTable) {
 					const dtTable = table.DataTable();
-					dtTable.row(selector).data(options.data);
+					if (typeof options.data === 'string') {
+						dtTable.row(selector).remove().draw();
+						dtTable.row.add($(options.data)).draw();
+					} else {
+						dtTable.row(selector).data(options.data);
+					}
 					resolve(row);
 				} else {
 					reject('No DataTable plug-in available!');
