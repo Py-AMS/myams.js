@@ -50,20 +50,20 @@ export default function myams_require(...modules) {
 			if (typeof module === 'string') {
 				if (loaded.indexOf(module) < 0) {
 					names.push(module);
-					deferred.extend(getModule(module));
+					deferred.extendWith(getModule(module));
 				}
 			} else if ($.isArray(module)) {  // strings array
 				for (const name of module) {
 					if (loaded.indexOf(name) < 0) {
 						names.push(name);
-						deferred.extend(getModule(name));
+						deferred.extendWith(getModule(name));
 					}
 				}
 			} else {  // object
 				for (const [name, props] of Object.entries(module)) {
 					if (loaded.indexOf(name) < 0) {
 						names.push(name);
-						deferred.extend(getModule(props, name));
+						deferred.extendWith(getModule(props, name));
 					}
 				}
 			}
