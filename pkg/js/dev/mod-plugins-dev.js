@@ -28,6 +28,7 @@
   _exports.svgPlugin = svgPlugin;
   _exports.switcher = switcher;
   _exports.tinymce = tinymce;
+  _exports.treeview = treeview;
   _exports.validate = validate;
 
   function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -322,6 +323,17 @@
           return b - a;
         }
       });
+    },
+
+    /**
+     * Store reorder source before reorder
+     *
+     * @param evt: original event
+     * @param node: source node
+     */
+    preReorder: function preReorder(evt, node) {
+      var table = $(evt.target);
+      table.data('ams-reorder-source', node);
     },
 
     /**
@@ -755,6 +767,7 @@
                     table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
 
                     if (settings.rowReorder) {
+                      plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
                       plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
                     }
                   });
@@ -1551,6 +1564,91 @@
     });
   }
   /**
+   * Bootstrap treeview plug-in
+   */
+
+
+  function treeview(element) {
+    return new Promise(function (resolve, reject) {
+      var trees = $('.treeview', element);
+
+      if (trees.length > 0) {
+        MyAMS.require('ajax').then(function () {
+          MyAMS.ajax.check($.fn.treview, "".concat(MyAMS.env.baseURL, "../ext/bootstrap-treeview").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+            var required = [];
+
+            if (firstLoad) {
+              required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/bootstrap-treeview").concat(MyAMS.env.extext, ".css"), 'treeview'));
+            }
+
+            $.when.apply($, required).then(function () {
+              trees.each(function (idx, elt) {
+                var treeview = $(elt),
+                    data = treeview.data(),
+                    dataOptions = {
+                  data: data.amsTreeviewData,
+                  levels: data.amsTreeviewLevels,
+                  injectStyle: data.amsTreeviewInjectStyle,
+                  expandIcon: data.amsTreeviewExpandIcon || 'far fa-fw fa-plus-square',
+                  collapseIcon: data.amsTreeviewCollaspeIcon || 'far fa-fw fa-minus-square',
+                  emptyIcon: data.amsTreeviewEmptyIcon,
+                  nodeIcon: data.amsTreeviewNodeIcon,
+                  selectedIcon: data.amsTreeviewSelectedIcon,
+                  checkedIcon: data.amsTreeviewCheckedIcon || 'far fa-fw fa-check-square',
+                  uncheckedIcon: data.amsTreeviewUncheckedIcon || 'far fa-fw fa-square',
+                  color: data.amsTreeviewColor,
+                  backColor: data.amsTreeviewBackColor,
+                  borderColor: data.amsTreeviewBorderColor,
+                  onHoverColor: data.amsTreeviewHoverColor,
+                  selectedColor: data.amsTreeviewSelectedColor,
+                  selectedBackColor: data.amsTreeviewSelectedBackColor,
+                  unselectableColor: data.amsTreeviewUnselectableColor || 'rgba(1,1,1,0.25)',
+                  unselectableBackColor: data.amsTreeviewUnselectableBackColor || 'rgba(1,1,1,0.25)',
+                  enableLinks: data.amsTreeviewEnableLinks,
+                  highlightSelected: data.amsTreeviewHighlightSelected,
+                  highlightSearchResults: data.amsTreeviewhighlightSearchResults,
+                  showBorder: data.amsTreeviewShowBorder,
+                  showIcon: data.amsTreeviewShowIcon,
+                  showCheckbox: data.amsTreeviewShowCheckbox,
+                  showTags: data.amsTreeviewShowTags,
+                  toggleUnselectable: data.amsTreeviewToggleUnselectable,
+                  multiSelect: data.amsTreeviewMultiSelect,
+                  onNodeChecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeChecked),
+                  onNodeCollapsed: MyAMS.core.getFunctionByName(data.amsTreeviewNodeCollapsed),
+                  onNodeDisabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeDisabled),
+                  onNodeEnabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeEnabled),
+                  onNodeExpanded: MyAMS.core.getFunctionByName(data.amsTreeviewNodeExpanded),
+                  onNodeSelected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeSelected),
+                  onNodeUnchecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnchecked),
+                  onNodeUnselected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnselected),
+                  onSearchComplete: MyAMS.core.getFunctionByName(data.amsTreeviewSearchComplete),
+                  onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
+                };
+                var settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
+                settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit, document, treeview, settings) || settings;
+                var veto = {
+                  veto: false
+                };
+                treeview.trigger('before-init.ams.treeview', [treeview, settings, veto]);
+
+                if (veto.veto) {
+                  return;
+                }
+
+                var plugin = treeview.treeview(settings);
+                MyAMS.core.executeFunctionByName(data.amsTreeviewAfterInitCallback || data.amsAfterInit, document, treeview, plugin, settings);
+                treeview.trigger('after-init.ams.treeview', [treeview, plugin]);
+              });
+              resolve(trees);
+            }, reject);
+          }, reject);
+        }, reject);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  /**
    * Form validation plug-in
    */
 
@@ -1672,6 +1770,7 @@
     MyAMS.registry.register(svgPlugin, 'svg');
     MyAMS.registry.register(switcher, 'switcher');
     MyAMS.registry.register(tinymce, 'tinymce');
+    MyAMS.registry.register(treeview, 'treeview');
     MyAMS.registry.register(validate, 'validate'); // register module
 
     MyAMS.config.modules.push('plugins');

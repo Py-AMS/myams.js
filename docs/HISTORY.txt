@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.10.0
+------
+ - added dark theme
+ - added full-bundle (using CSS icons) for Emerald and Dark themes
+ - added treeview plug-in
+ - added datatable pre-order helper
+ - updated *tree* module
+ - updated SVG icons switcher
+
 1.9.0
 -----
  - added new function in notifications module to add a single notification

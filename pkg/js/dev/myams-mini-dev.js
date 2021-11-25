@@ -3250,6 +3250,30 @@ function init($) {
     }
   });
   /**
+   * Array class prototype extension
+   */
+
+  $.extend(Array.prototype, {
+    /**
+     * Extend an array with another one
+     */
+    extendWith: function extendWith(source) {
+      var _iterator2 = _createForOfIteratorHelper(source),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var element = _step2.value;
+          this.push(element);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+  });
+  /**
    * Global JQuery object extensions
    */
 
@@ -3478,10 +3502,10 @@ function getModules(element) {
     for (var _i6 = 0, _Object$entries3 = Object.entries(mods); _i6 < _Object$entries3.length; _i6++) {
       var _Object$entries3$_i = _slicedToArray(_Object$entries3[_i6], 2),
           name = _Object$entries3$_i[0],
-          path = _Object$entries3$_i[1];
+          props = _Object$entries3$_i[1];
 
       var entry = {};
-      entry[name] = path;
+      entry[name] = props;
       modules.push(entry);
     }
   }
@@ -3495,10 +3519,10 @@ function getModules(element) {
       for (var _i7 = 0, _Object$entries4 = Object.entries(mods); _i7 < _Object$entries4.length; _i7++) {
         var _Object$entries4$_i = _slicedToArray(_Object$entries4[_i7], 2),
             _name = _Object$entries4$_i[0],
-            _path = _Object$entries4$_i[1];
+            _props = _Object$entries4$_i[1];
 
         var _entry = {};
-        _entry[_name] = _path;
+        _entry[_name] = _props;
         modules.push(_entry);
       }
     }
@@ -3515,18 +3539,18 @@ function initPage() {
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-      var _iterator2 = _createForOfIteratorHelper(MyAMS.config.modules),
-          _step2;
+      var _iterator3 = _createForOfIteratorHelper(MyAMS.config.modules),
+          _step3;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var moduleName = _step2.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var moduleName = _step3.value;
           executeFunctionByName("MyAMS.".concat(moduleName, ".init"));
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator2.f();
+        _iterator3.f();
       }
 
       MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
@@ -3550,18 +3574,18 @@ function initContent() {
   element = $(element);
 
   function initElementModules() {
-    var _iterator3 = _createForOfIteratorHelper(MyAMS.config.modules),
-        _step3;
+    var _iterator4 = _createForOfIteratorHelper(MyAMS.config.modules),
+        _step4;
 
     try {
-      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-        var moduleName = _step3.value;
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+        var moduleName = _step4.value;
         executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
       }
     } catch (err) {
-      _iterator3.e(err);
+      _iterator4.e(err);
     } finally {
-      _iterator3.f();
+      _iterator4.f();
     }
   }
 
@@ -3658,12 +3682,12 @@ function getObject(objectName, context) {
   var namespaces = objectName.split('.');
   context = context === undefined || context === null ? window : context;
 
-  var _iterator4 = _createForOfIteratorHelper(namespaces),
-      _step4;
+  var _iterator5 = _createForOfIteratorHelper(namespaces),
+      _step5;
 
   try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var name = _step4.value;
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var name = _step5.value;
 
       try {
         context = context[name];
@@ -3672,9 +3696,9 @@ function getObject(objectName, context) {
       }
     }
   } catch (err) {
-    _iterator4.e(err);
+    _iterator5.e(err);
   } finally {
-    _iterator4.f();
+    _iterator5.f();
   }
 
   return context;
@@ -3700,12 +3724,12 @@ function getFunctionByName(functionName, context) {
       func = namespaces.pop();
   context = context === undefined || context === null ? window : context;
 
-  var _iterator5 = _createForOfIteratorHelper(namespaces),
-      _step5;
+  var _iterator6 = _createForOfIteratorHelper(namespaces),
+      _step6;
 
   try {
-    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var name = _step5.value;
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var name = _step6.value;
 
       try {
         context = context[name];
@@ -3714,9 +3738,9 @@ function getFunctionByName(functionName, context) {
       }
     }
   } catch (err) {
-    _iterator5.e(err);
+    _iterator6.e(err);
   } finally {
-    _iterator5.f();
+    _iterator6.f();
   }
 
   try {
@@ -3867,36 +3891,50 @@ function generateUUID() {
  * @param element: source element
  * @param fromClass: initial CSS class (without "fa-" prefix)
  * @param toClass: new CSS class (without "fa-" prefix)
+ * @param prefix: icon prefix (defaults to "fa")
  */
 
-function switchIcon(element, fromClass, toClass) {
+function switchIcon(element, fromClass, toClass, prefix) {
   if (typeof element === 'string') {
     element = $(element);
   }
 
+  if (!prefix) {
+    prefix = 'fa';
+  }
+
   if (MyAMS.config.useSVGIcons) {
     var iconDef = FontAwesome.findIconDefinition({
-      iconName: toClass
+      iconName: toClass,
+      prefix: prefix
     });
-    element.html(FontAwesome.icon(iconDef).html);
+
+    if (iconDef) {
+      element.html(FontAwesome.icon(iconDef).html);
+    }
   } else {
-    element.removeClass("fa-".concat(fromClass)).addClass("fa-".concat(toClass));
+    element.removeClass("".concat(prefix, "-").concat(fromClass)).addClass("".concat(prefix, "-").concat(toClass));
   }
 }
 /**
  * MyAMS base functions
  *
- * @type {{devmode: boolean, baseURL: string, devext: string}}
+ * @type {{
+ *     bundle: boolean,
+ *     devmode: boolean,
+ *     devext: string,
+ *     extext: string,
+ *     baseURL: string
+ * }}
  */
 
 function getEnv($) {
-  var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
+  var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
       src = script.attr('src'),
       devmode = src ? src.indexOf('-dev.js') >= 0 : true; // testing mode
 
   return {
-    bundle: src ? src.indexOf('-core') < 0 : true,
-    // testing mode
+    bundle: src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true,
     devmode: devmode,
     devext: devmode ? '-dev' : '',
     extext: devmode ? '' : '.min',
@@ -3923,21 +3961,21 @@ function getDOM() {
  *
  * @type {Object}:
  *      modules: array of loaded extension modules
- * 		ajaxNav: true if AJAX navigation is enabled
- * 	    enableFastclick: true is "smart-click" extension is to be activated on mobile devices
- * 		menuSpeed: menu speed, in miliseconds
- * 	    initPage: dotted name of MyAMS global init function
- * 	    initContent: dotted name of MyAMS content init function
- * 	    alertContainerCLass: class of MyAMS alerts container
- * 		safeMethods: HTTP methods which can be used without CSRF cookie verification
- * 		csrfCookieName: CSRF cookie name
- * 		csrfHeaderName: CSRF header name
+ *      ajaxNav: true if AJAX navigation is enabled
+ *      enableFastclick: true is "smart-click" extension is to be activated on mobile devices
+ *      menuSpeed: menu speed, in miliseconds
+ *      initPage: dotted name of MyAMS global init function
+ *      initContent: dotted name of MyAMS content init function
+ *      alertContainerCLass: class of MyAMS alerts container
+ *      safeMethods: HTTP methods which can be used without CSRF cookie verification
+ *      csrfCookieName: CSRF cookie name
+ *      csrfHeaderName: CSRF header name
  *      enableTooltips: global tooltips enable flag
  *      enableHtmlTooltips: allow HTML code in tooltips
- * 		warnOnFormChange: flag to specify if form changes should be warned
- * 		formChangeCallback: global form change callback
- * 		isMobile: boolean, true if device is detected as mobile
- * 	    device: string: 'mobile' or 'desktop'
+ *      warnOnFormChange: flag to specify if form changes should be warned
+ *      formChangeCallback: global form change callback
+ *      isMobile: boolean, true if device is detected as mobile
+ *      device: string: 'mobile' or 'desktop'
  */
 
 
@@ -4495,6 +4533,8 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 /* global MyAMS */
 
 /**
@@ -4502,22 +4542,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  */
 var $ = MyAMS.$;
 
-function getModule(module) {
-  var moduleSrc;
+function getModule(module, name) {
+  var moduleSrc, moduleCss;
 
-  if (module.startsWith('http://') || module.startsWith('https://')) {
-    moduleSrc = module;
-  } else if (module.endsWith('.js')) {
-    // custom module with relative path
-    moduleSrc = module;
+  if (_typeof(module) === 'object') {
+    moduleSrc = module.src;
+    moduleCss = module.css;
   } else {
-    // standard MyAMS module
-    moduleSrc = "".concat(MyAMS.env.baseURL, "mod-").concat(module).concat(MyAMS.env.devext, ".js");
+    if (module.startsWith('http://') || module.startsWith('https://')) {
+      moduleSrc = module;
+    } else if (module.endsWith('.js')) {
+      // custom module with relative path
+      moduleSrc = module;
+    } else {
+      // standard MyAMS module
+      moduleSrc = "".concat(MyAMS.env.baseURL, "mod-").concat(module).concat(MyAMS.env.devext, ".js");
+    }
   }
 
-  return MyAMS.core.getScript(moduleSrc, {
+  var deferred = [MyAMS.core.getScript(moduleSrc, {
     async: true
-  }, console.error);
+  }, console.error)];
+
+  if (moduleCss) {
+    deferred.push(MyAMS.core.getCSS(moduleCss, "".concat(name, "_css")));
+  }
+
+  return deferred;
 }
 /**
  * Dynamic loading of MyAMS modules
@@ -4547,7 +4598,7 @@ function myams_require() {
         if (typeof module === 'string') {
           if (loaded.indexOf(module) < 0) {
             names.push(module);
-            deferred.push(getModule(module));
+            deferred.extendWith(getModule(module));
           }
         } else if ($.isArray(module)) {
           // strings array
@@ -4560,7 +4611,7 @@ function myams_require() {
 
               if (loaded.indexOf(name) < 0) {
                 names.push(name);
-                deferred.push(getModule(name));
+                deferred.extendWith(getModule(name));
               }
             }
           } catch (err) {
@@ -4573,11 +4624,11 @@ function myams_require() {
           for (var _i = 0, _Object$entries = Object.entries(module); _i < _Object$entries.length; _i++) {
             var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
                 _name = _Object$entries$_i[0],
-                src = _Object$entries$_i[1];
+                props = _Object$entries$_i[1];
 
             if (loaded.indexOf(_name) < 0) {
               names.push(_name);
-              deferred.push(getModule(src));
+              deferred.extendWith(getModule(props, _name));
             }
           }
         }
@@ -7386,6 +7437,45 @@ var helpers = {
   },
 
   /**
+   * Select2 change helper
+   */
+  select2ChangeHelper: function select2ChangeHelper(evt) {
+    var source = $(evt.currentTarget),
+        data = source.data(),
+        target = $(data.amsSelect2HelperTarget);
+
+    switch (data.amsSelect2HelperType) {
+      case 'html':
+        target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
+        var params = {};
+        params[data.amsSelect2HelperArgument || 'value'] = source.val();
+        $.get(data.amsSelect2HelperUrl, params).then(function (result) {
+          var callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || function (result) {
+            if (result) {
+              target.html(result);
+              MyAMS.core.initContent(target).then();
+            } else {
+              target.empty();
+            }
+          };
+
+          callback(result);
+        }).catch(function () {
+          target.empty();
+        });
+        break;
+
+      default:
+        var callback = data.amsSelect2HelperCallback;
+
+        if (callback) {
+          MyAMS.core.executeFunctionByName(callback, source, data);
+        }
+
+    }
+  },
+
+  /**
    * Refresh a DOM element with content provided in
    * the <code>options</code> object.
    *
@@ -7472,12 +7562,23 @@ var helpers = {
     return new Promise(function (resolve, reject) {
       var selector = "tr[id=\"".concat(options.row_id, "\"]"),
           row = $(selector),
-          table = row.parents('table').first(),
-          dtTable = table.DataTable();
+          table = row.parents('table').first();
 
       if (options.data) {
-        dtTable.row(selector).data(options.data);
-        resolve(row);
+        if ($.fn.DataTable) {
+          var dtTable = table.DataTable();
+
+          if (typeof options.data === 'string') {
+            dtTable.row(selector).remove().draw();
+            dtTable.row.add($(options.data)).draw();
+          } else {
+            dtTable.row(selector).data(options.data);
+          }
+
+          resolve(row);
+        } else {
+          reject('No DataTable plug-in available!');
+        }
       } else {
         var newRow = $(options.content);
         row.replaceWith(newRow);
@@ -8471,7 +8572,9 @@ function linkClickHandler(evt) {
       href = hrefGetter(link, params);
     }
 
-    if (typeof href === 'function') {
+    if (!href) {
+      resolve(null);
+    } else if (typeof href === 'function') {
       resolve(href(link, params));
     } else {
       // Standard AJAX or browser URL call
@@ -9036,7 +9139,7 @@ if (MyAMS.env.bundle) {
 /*!*******************************!*\
   !*** ./src/js/mod-plugins.js ***!
   \*******************************/
-/*! exports provided: checker, contextMenu, datatables, datetime, dragdrop, editor, fileInput, imgAreaSelect, select2, svgPlugin, switcher, tinymce, validate */
+/*! exports provided: checker, contextMenu, datatables, datetime, dragdrop, editor, fileInput, imgAreaSelect, select2, svgPlugin, switcher, tinymce, treeview, validate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9053,6 +9156,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svgPlugin", function() { return svgPlugin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switcher", function() { return switcher; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tinymce", function() { return tinymce; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "treeview", function() { return treeview; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validate", function() { return validate; });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -9343,6 +9447,17 @@ var _datatablesHelpers = {
         return b - a;
       }
     });
+  },
+
+  /**
+   * Store reorder source before reorder
+   *
+   * @param evt: original event
+   * @param node: source node
+   */
+  preReorder: function preReorder(evt, node) {
+    var table = $(evt.target);
+    table.data('ams-reorder-source', node);
   },
 
   /**
@@ -9775,6 +9890,7 @@ function datatables(element) {
                   table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
 
                   if (settings.rowReorder) {
+                    plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
                     plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
                   }
                 });
@@ -10561,6 +10677,90 @@ function tinymce(element) {
   });
 }
 /**
+ * Bootstrap treeview plug-in
+ */
+
+function treeview(element) {
+  return new Promise(function (resolve, reject) {
+    var trees = $('.treeview', element);
+
+    if (trees.length > 0) {
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.check($.fn.treview, "".concat(MyAMS.env.baseURL, "../ext/bootstrap-treeview").concat(MyAMS.env.extext, ".js")).then(function (firstLoad) {
+          var required = [];
+
+          if (firstLoad) {
+            required.push(MyAMS.core.getCSS("".concat(MyAMS.env.baseURL, "../../css/ext/bootstrap-treeview").concat(MyAMS.env.extext, ".css"), 'treeview'));
+          }
+
+          $.when.apply($, required).then(function () {
+            trees.each(function (idx, elt) {
+              var treeview = $(elt),
+                  data = treeview.data(),
+                  dataOptions = {
+                data: data.amsTreeviewData,
+                levels: data.amsTreeviewLevels,
+                injectStyle: data.amsTreeviewInjectStyle,
+                expandIcon: data.amsTreeviewExpandIcon || 'far fa-fw fa-plus-square',
+                collapseIcon: data.amsTreeviewCollaspeIcon || 'far fa-fw fa-minus-square',
+                emptyIcon: data.amsTreeviewEmptyIcon,
+                nodeIcon: data.amsTreeviewNodeIcon,
+                selectedIcon: data.amsTreeviewSelectedIcon,
+                checkedIcon: data.amsTreeviewCheckedIcon || 'far fa-fw fa-check-square',
+                uncheckedIcon: data.amsTreeviewUncheckedIcon || 'far fa-fw fa-square',
+                color: data.amsTreeviewColor,
+                backColor: data.amsTreeviewBackColor,
+                borderColor: data.amsTreeviewBorderColor,
+                onHoverColor: data.amsTreeviewHoverColor,
+                selectedColor: data.amsTreeviewSelectedColor,
+                selectedBackColor: data.amsTreeviewSelectedBackColor,
+                unselectableColor: data.amsTreeviewUnselectableColor || 'rgba(1,1,1,0.25)',
+                unselectableBackColor: data.amsTreeviewUnselectableBackColor || 'rgba(1,1,1,0.25)',
+                enableLinks: data.amsTreeviewEnableLinks,
+                highlightSelected: data.amsTreeviewHighlightSelected,
+                highlightSearchResults: data.amsTreeviewhighlightSearchResults,
+                showBorder: data.amsTreeviewShowBorder,
+                showIcon: data.amsTreeviewShowIcon,
+                showCheckbox: data.amsTreeviewShowCheckbox,
+                showTags: data.amsTreeviewShowTags,
+                toggleUnselectable: data.amsTreeviewToggleUnselectable,
+                multiSelect: data.amsTreeviewMultiSelect,
+                onNodeChecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeChecked),
+                onNodeCollapsed: MyAMS.core.getFunctionByName(data.amsTreeviewNodeCollapsed),
+                onNodeDisabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeDisabled),
+                onNodeEnabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeEnabled),
+                onNodeExpanded: MyAMS.core.getFunctionByName(data.amsTreeviewNodeExpanded),
+                onNodeSelected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeSelected),
+                onNodeUnchecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnchecked),
+                onNodeUnselected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnselected),
+                onSearchComplete: MyAMS.core.getFunctionByName(data.amsTreeviewSearchComplete),
+                onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
+              };
+              var settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
+              settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit, document, treeview, settings) || settings;
+              var veto = {
+                veto: false
+              };
+              treeview.trigger('before-init.ams.treeview', [treeview, settings, veto]);
+
+              if (veto.veto) {
+                return;
+              }
+
+              var plugin = treeview.treeview(settings);
+              MyAMS.core.executeFunctionByName(data.amsTreeviewAfterInitCallback || data.amsAfterInit, document, treeview, plugin, settings);
+              treeview.trigger('after-init.ams.treeview', [treeview, plugin]);
+            });
+            resolve(trees);
+          }, reject);
+        }, reject);
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
+}
+/**
  * Form validation plug-in
  */
 
@@ -10680,6 +10880,7 @@ if (window.MyAMS) {
   MyAMS.registry.register(svgPlugin, 'svg');
   MyAMS.registry.register(switcher, 'switcher');
   MyAMS.registry.register(tinymce, 'tinymce');
+  MyAMS.registry.register(treeview, 'treeview');
   MyAMS.registry.register(validate, 'validate'); // register module
 
   MyAMS.config.modules.push('plugins');
@@ -11042,13 +11243,295 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tree", function() { return tree; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /* global MyAMS */
 
 /**
  * MyAMS tree management
  */
 var $ = MyAMS.$;
-var tree = {};
+var tree = {
+  /**
+   * Open/close tree node inside a table
+   */
+  switchTreeNode: function switchTreeNode(evt) {
+    var removeChildNodes = function removeChildNodes(node_id) {
+      $("tr[data-ams-tree-node-parent-id=\"".concat(node_id, "\"]")).each(function (idx, elt) {
+        var row = $(elt);
+        removeChildNodes(row.data('ams-tree-node-id'));
+        dtTable.row(row).remove().draw();
+      });
+    };
+
+    var node = $(evt.currentTarget),
+        switcher = $('i.switch', node),
+        tr = node.parents('tr').first(),
+        table = tr.parents('table').first(),
+        dtTable = table.DataTable();
+    node.tooltip('hide');
+
+    if (switcher.hasClass('minus')) {
+      removeChildNodes(tr.data('ams-tree-node-id'));
+      MyAMS.core.switchIcon(switcher, 'minus-square', 'plus-square', 'far');
+      switcher.removeClass('minus');
+    } else {
+      var location = tr.data('ams-location') || table.data('ams-location') || '',
+          treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
+          sourceName = tr.data('ams-element-name');
+      MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.post(location + '/' + sourceName + '/' + treeNodesTarget, {
+          can_sort: !$('td.sorter', tr).is(':empty')
+        }).then(function (result) {
+          if (result.length > 0) {
+            var newRow,
+                oldRow = tr;
+
+            var _iterator = _createForOfIteratorHelper(result),
+                _step;
+
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                var row = _step.value;
+                newRow = $(row);
+                dtTable.row.add(newRow).draw();
+                oldRow = newRow;
+                MyAMS.core.initContent(newRow).then();
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+          }
+
+          MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
+          switcher.addClass('minus');
+        });
+      });
+    }
+  },
+
+  /**
+   * Open close all tree nodes
+   */
+  switchTree: function switchTree(evt) {
+    var node = $(evt.currentTarget),
+        switcher = $('i.switch', node),
+        th = node.parents('th'),
+        table = th.parents('table').first(),
+        tableID = table.data('ams-tree-node-id'),
+        dtTable = table.DataTable();
+    node.tooltip('hide');
+
+    if (switcher.hasClass('minus')) {
+      $('tr[data-ams-tree-node-parent-id]').filter("tr[data-ams-tree-node-parent-id!=\"".concat(tableID, "\"]")).each(function (idx, elt) {
+        dtTable.row(elt).remove().draw();
+      });
+      $('i.switch', table).each(function (idx, elt) {
+        MyAMS.core.switchIcon($(elt), 'minus-square', 'plus-square', 'far');
+        $(elt).removeClass('minus');
+      });
+    } else {
+      var location = table.data('ams-location') || '',
+          target = table.data('ams-tree-nodes-target') || 'get-tree.json',
+          tr = $('tbody tr', table.first());
+      MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.post("".concat(location, "/").concat(target), {
+          can_sort: !$('td.sorter', tr).is(':empty')
+        }).then(function (result) {
+          $("tr[data-ams-tree-node-id]", table).each(function (idx, elt) {
+            dtTable.row(elt).remove().draw();
+          });
+          $(result).each(function (idx, elt) {
+            var newRow = $(elt);
+            dtTable.row.add(newRow).draw();
+          });
+          MyAMS.core.initContent(table).then();
+          MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
+          switcher.addClass('minus');
+        });
+      });
+    }
+  },
+
+  /**
+   * Custom tree element delete callback
+   *
+   * @param form: source form, which can be null if callback wasn't triggered from a form
+   * @param options: callback options
+   */
+  deleteElement: function deleteElement(form, options) {
+    console.debug(options);
+    var nodeId = options.node_id;
+
+    if (nodeId) {
+      $("tr[data-ams-tree-node-parent-id=\"".concat(nodeId, "\"]")).each(function (idx, elt) {
+        var table = $(elt).parents('table'),
+            dtTable = table.DataTable();
+        dtTable.row(elt).remove().draw();
+      });
+    }
+  },
+
+  /**
+   * Sort and re-parent tree elements
+   */
+  sortTree: function sortTree(evt, details) {
+    var table = $(evt.target),
+        dtTable = table.DataTable(),
+        data = $(table).data();
+    var target = data.amsReorderUrl;
+
+    if (target) {
+      // Disable row click handler
+      var row = $(data.amsReorderSource.node);
+      row.data('ams-disabled-handlers', 'click');
+
+      try {
+        // Get root ID
+        var tableID = row.parents('table').first().data('ams-tree-node-id'); // Get moved row ID
+
+        var rowID = row.data('ams-tree-node-id');
+        var rowParentID = row.data('ams-tree-node-parent-id'); // Get new parent ID
+
+        var parent = row.prev('tr');
+        var parentID, switcher, action;
+
+        if (parent.exists()) {
+          // Move below an existing row
+          parentID = parent.data('ams-tree-node-id'); // Check switcher state
+
+          switcher = $('.switch', parent);
+
+          if (switcher.hasClass('minus')) {
+            // Opened folder: move as child
+            if (rowParentID === parentID) {
+              // Don't change parent
+              action = 'reorder';
+            } else {
+              // Change parent
+              action = 'reparent';
+            }
+          } else {
+            // Closed folder or simple item: move as sibling
+            parentID = parent.data('ams-tree-node-parent-id');
+
+            if (rowParentID === parentID) {
+              // Don't change parent
+              action = 'reorder';
+            } else {
+              // Change parent
+              action = 'reparent';
+            }
+          }
+        } else {
+          // Move to site root
+          parentID = tableID;
+          switcher = null;
+
+          if (rowParentID === parentID) {
+            // Already child of site root
+            action = 'reorder';
+          } else {
+            // Move from inner folder to site root
+            action = 'reparent';
+          }
+        } // Call ordering target
+
+
+        var localTarget = MyAMS.core.getFunctionByName(target);
+
+        if (typeof localTarget === 'function') {
+          localTarget.call(table, dnd_table, post_data);
+        } else {
+          if (!target.startsWith(window.location.protocol)) {
+            var location = data.amsLocation;
+
+            if (location) {
+              target = location + '/' + target;
+            }
+          }
+
+          var postData = {
+            action: action,
+            child: rowID,
+            parent: parentID,
+            order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
+            can_sort: !$('td.sorter', row).is(':empty')
+          };
+
+          MyAMS.require('ajax').then(function () {
+            MyAMS.ajax.post(target, postData).then(function (result) {
+              var removeRow = function removeRow(rowID) {
+                var row = $("tr[data-ams-tree-node-id=\"".concat(rowID, "\"]"));
+                dtTable.row(row).remove().draw();
+              };
+
+              var removeChildRows = function removeChildRows(rowID) {
+                var childs = $("tr[data-ams-tree-node-parent-id=\"".concat(rowID, "\"]"));
+                childs.each(function (idx, elt) {
+                  var childRow = $(elt),
+                      childID = childRow.attr('data-ams-tree-node-id');
+                  removeChildRows(childID);
+                  dtTable.row(childRow).remove().draw();
+                });
+              };
+
+              if (result.status) {
+                MyAMS.ajax.handleJSON(result);
+              } else {
+                // Remove parent row if changed parent
+                if (postData.action === 'reparent') {
+                  removeRow(parentID);
+                } // Remove moved row children
+
+
+                removeChildRows(parentID);
+                removeChildRows(rowID);
+                dtTable.row(row).remove().draw();
+                var newRow, oldRow;
+
+                var _iterator2 = _createForOfIteratorHelper(result),
+                    _step2;
+
+                try {
+                  for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                    var resultRow = _step2.value;
+                    newRow = $(resultRow);
+                    oldRow = $("tr[id=\"".concat(newRow.attr('id'), "\"]"));
+                    dtTable.row(oldRow).remove().draw();
+                    dtTable.row.add(newRow).draw();
+                    MyAMS.core.initContent(newRow).then();
+                  }
+                } catch (err) {
+                  _iterator2.e(err);
+                } finally {
+                  _iterator2.f();
+                }
+              }
+            });
+          });
+        }
+      } finally {
+        // Restore row click handler
+        setTimeout(function () {
+          $(row).removeData('ams-disabled-handlers');
+        }, 50);
+      }
+    }
+
+    return false;
+  }
+};
 /**
  * Global module initialization
  */
@@ -11190,7 +11673,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.9.0  */
+/** Version: 1.10.0  */
 
 /***/ }),
 

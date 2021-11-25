@@ -225,6 +225,30 @@ function init($) {
     }
   });
   /**
+   * Array class prototype extension
+   */
+
+  $.extend(Array.prototype, {
+    /**
+     * Extend an array with another one
+     */
+    extendWith: function extendWith(source) {
+      var _iterator2 = _createForOfIteratorHelper(source),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var element = _step2.value;
+          this.push(element);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+  });
+  /**
    * Global JQuery object extensions
    */
 
@@ -453,10 +477,10 @@ function getModules(element) {
     for (var _i6 = 0, _Object$entries3 = Object.entries(mods); _i6 < _Object$entries3.length; _i6++) {
       var _Object$entries3$_i = _slicedToArray(_Object$entries3[_i6], 2),
           name = _Object$entries3$_i[0],
-          path = _Object$entries3$_i[1];
+          props = _Object$entries3$_i[1];
 
       var entry = {};
-      entry[name] = path;
+      entry[name] = props;
       modules.push(entry);
     }
   }
@@ -470,10 +494,10 @@ function getModules(element) {
       for (var _i7 = 0, _Object$entries4 = Object.entries(mods); _i7 < _Object$entries4.length; _i7++) {
         var _Object$entries4$_i = _slicedToArray(_Object$entries4[_i7], 2),
             _name = _Object$entries4$_i[0],
-            _path = _Object$entries4$_i[1];
+            _props = _Object$entries4$_i[1];
 
         var _entry = {};
-        _entry[_name] = _path;
+        _entry[_name] = _props;
         modules.push(_entry);
       }
     }
@@ -490,18 +514,18 @@ function initPage() {
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
-      var _iterator2 = _createForOfIteratorHelper(MyAMS.config.modules),
-          _step2;
+      var _iterator3 = _createForOfIteratorHelper(MyAMS.config.modules),
+          _step3;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var moduleName = _step2.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var moduleName = _step3.value;
           executeFunctionByName("MyAMS.".concat(moduleName, ".init"));
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator2.f();
+        _iterator3.f();
       }
 
       MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
@@ -525,18 +549,18 @@ function initContent() {
   element = $(element);
 
   function initElementModules() {
-    var _iterator3 = _createForOfIteratorHelper(MyAMS.config.modules),
-        _step3;
+    var _iterator4 = _createForOfIteratorHelper(MyAMS.config.modules),
+        _step4;
 
     try {
-      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-        var moduleName = _step3.value;
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+        var moduleName = _step4.value;
         executeFunctionByName("MyAMS.".concat(moduleName, ".initElement"), document, element);
       }
     } catch (err) {
-      _iterator3.e(err);
+      _iterator4.e(err);
     } finally {
-      _iterator3.f();
+      _iterator4.f();
     }
   }
 
@@ -633,12 +657,12 @@ function getObject(objectName, context) {
   var namespaces = objectName.split('.');
   context = context === undefined || context === null ? window : context;
 
-  var _iterator4 = _createForOfIteratorHelper(namespaces),
-      _step4;
+  var _iterator5 = _createForOfIteratorHelper(namespaces),
+      _step5;
 
   try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var name = _step4.value;
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var name = _step5.value;
 
       try {
         context = context[name];
@@ -647,9 +671,9 @@ function getObject(objectName, context) {
       }
     }
   } catch (err) {
-    _iterator4.e(err);
+    _iterator5.e(err);
   } finally {
-    _iterator4.f();
+    _iterator5.f();
   }
 
   return context;
@@ -675,12 +699,12 @@ function getFunctionByName(functionName, context) {
       func = namespaces.pop();
   context = context === undefined || context === null ? window : context;
 
-  var _iterator5 = _createForOfIteratorHelper(namespaces),
-      _step5;
+  var _iterator6 = _createForOfIteratorHelper(namespaces),
+      _step6;
 
   try {
-    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var name = _step5.value;
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var name = _step6.value;
 
       try {
         context = context[name];
@@ -689,9 +713,9 @@ function getFunctionByName(functionName, context) {
       }
     }
   } catch (err) {
-    _iterator5.e(err);
+    _iterator6.e(err);
   } finally {
-    _iterator5.f();
+    _iterator6.f();
   }
 
   try {
@@ -842,36 +866,50 @@ function generateUUID() {
  * @param element: source element
  * @param fromClass: initial CSS class (without "fa-" prefix)
  * @param toClass: new CSS class (without "fa-" prefix)
+ * @param prefix: icon prefix (defaults to "fa")
  */
 
-function switchIcon(element, fromClass, toClass) {
+function switchIcon(element, fromClass, toClass, prefix) {
   if (typeof element === 'string') {
     element = $(element);
   }
 
+  if (!prefix) {
+    prefix = 'fa';
+  }
+
   if (MyAMS.config.useSVGIcons) {
     var iconDef = FontAwesome.findIconDefinition({
-      iconName: toClass
+      iconName: toClass,
+      prefix: prefix
     });
-    element.html(FontAwesome.icon(iconDef).html);
+
+    if (iconDef) {
+      element.html(FontAwesome.icon(iconDef).html);
+    }
   } else {
-    element.removeClass("fa-".concat(fromClass)).addClass("fa-".concat(toClass));
+    element.removeClass("".concat(prefix, "-").concat(fromClass)).addClass("".concat(prefix, "-").concat(toClass));
   }
 }
 /**
  * MyAMS base functions
  *
- * @type {{devmode: boolean, baseURL: string, devext: string}}
+ * @type {{
+ *     bundle: boolean,
+ *     devmode: boolean,
+ *     devext: string,
+ *     extext: string,
+ *     baseURL: string
+ * }}
  */
 
 function getEnv($) {
-  var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
+  var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
       src = script.attr('src'),
       devmode = src ? src.indexOf('-dev.js') >= 0 : true; // testing mode
 
   return {
-    bundle: src ? src.indexOf('-core') < 0 : true,
-    // testing mode
+    bundle: src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true,
     devmode: devmode,
     devext: devmode ? '-dev' : '',
     extext: devmode ? '' : '.min',
@@ -898,21 +936,21 @@ function getDOM() {
  *
  * @type {Object}:
  *      modules: array of loaded extension modules
- * 		ajaxNav: true if AJAX navigation is enabled
- * 	    enableFastclick: true is "smart-click" extension is to be activated on mobile devices
- * 		menuSpeed: menu speed, in miliseconds
- * 	    initPage: dotted name of MyAMS global init function
- * 	    initContent: dotted name of MyAMS content init function
- * 	    alertContainerCLass: class of MyAMS alerts container
- * 		safeMethods: HTTP methods which can be used without CSRF cookie verification
- * 		csrfCookieName: CSRF cookie name
- * 		csrfHeaderName: CSRF header name
+ *      ajaxNav: true if AJAX navigation is enabled
+ *      enableFastclick: true is "smart-click" extension is to be activated on mobile devices
+ *      menuSpeed: menu speed, in miliseconds
+ *      initPage: dotted name of MyAMS global init function
+ *      initContent: dotted name of MyAMS content init function
+ *      alertContainerCLass: class of MyAMS alerts container
+ *      safeMethods: HTTP methods which can be used without CSRF cookie verification
+ *      csrfCookieName: CSRF cookie name
+ *      csrfHeaderName: CSRF header name
  *      enableTooltips: global tooltips enable flag
  *      enableHtmlTooltips: allow HTML code in tooltips
- * 		warnOnFormChange: flag to specify if form changes should be warned
- * 		formChangeCallback: global form change callback
- * 		isMobile: boolean, true if device is detected as mobile
- * 	    device: string: 'mobile' or 'desktop'
+ *      warnOnFormChange: flag to specify if form changes should be warned
+ *      formChangeCallback: global form change callback
+ *      isMobile: boolean, true if device is detected as mobile
+ *      device: string: 'mobile' or 'desktop'
  */
 
 
@@ -1470,6 +1508,8 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 /* global MyAMS */
 
 /**
@@ -1477,22 +1517,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  */
 var $ = MyAMS.$;
 
-function getModule(module) {
-  var moduleSrc;
+function getModule(module, name) {
+  var moduleSrc, moduleCss;
 
-  if (module.startsWith('http://') || module.startsWith('https://')) {
-    moduleSrc = module;
-  } else if (module.endsWith('.js')) {
-    // custom module with relative path
-    moduleSrc = module;
+  if (_typeof(module) === 'object') {
+    moduleSrc = module.src;
+    moduleCss = module.css;
   } else {
-    // standard MyAMS module
-    moduleSrc = "".concat(MyAMS.env.baseURL, "mod-").concat(module).concat(MyAMS.env.devext, ".js");
+    if (module.startsWith('http://') || module.startsWith('https://')) {
+      moduleSrc = module;
+    } else if (module.endsWith('.js')) {
+      // custom module with relative path
+      moduleSrc = module;
+    } else {
+      // standard MyAMS module
+      moduleSrc = "".concat(MyAMS.env.baseURL, "mod-").concat(module).concat(MyAMS.env.devext, ".js");
+    }
   }
 
-  return MyAMS.core.getScript(moduleSrc, {
+  var deferred = [MyAMS.core.getScript(moduleSrc, {
     async: true
-  }, console.error);
+  }, console.error)];
+
+  if (moduleCss) {
+    deferred.push(MyAMS.core.getCSS(moduleCss, "".concat(name, "_css")));
+  }
+
+  return deferred;
 }
 /**
  * Dynamic loading of MyAMS modules
@@ -1522,7 +1573,7 @@ function myams_require() {
         if (typeof module === 'string') {
           if (loaded.indexOf(module) < 0) {
             names.push(module);
-            deferred.push(getModule(module));
+            deferred.extendWith(getModule(module));
           }
         } else if ($.isArray(module)) {
           // strings array
@@ -1535,7 +1586,7 @@ function myams_require() {
 
               if (loaded.indexOf(name) < 0) {
                 names.push(name);
-                deferred.push(getModule(name));
+                deferred.extendWith(getModule(name));
               }
             }
           } catch (err) {
@@ -1548,11 +1599,11 @@ function myams_require() {
           for (var _i = 0, _Object$entries = Object.entries(module); _i < _Object$entries.length; _i++) {
             var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
                 _name = _Object$entries$_i[0],
-                src = _Object$entries$_i[1];
+                props = _Object$entries$_i[1];
 
             if (loaded.indexOf(_name) < 0) {
               names.push(_name);
-              deferred.push(getModule(src));
+              deferred.extendWith(getModule(props, _name));
             }
           }
         }
@@ -1620,7 +1671,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.9.0  */
+/** Version: 1.10.0  */
 
 /***/ }),
 

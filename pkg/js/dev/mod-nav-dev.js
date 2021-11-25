@@ -335,7 +335,9 @@
         href = hrefGetter(link, params);
       }
 
-      if (typeof href === 'function') {
+      if (!href) {
+        resolve(null);
+      } else if (typeof href === 'function') {
         resolve(href(link, params));
       } else {
         // Standard AJAX or browser URL call
