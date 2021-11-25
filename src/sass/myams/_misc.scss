@@ -120,6 +120,21 @@
 
 
 /**
+ * Custom links styles
+ */
+a.bg-primary,
+button.bg-primary {
+  &.text-white {
+    &:hover,
+    &:focus,
+    &:active {
+      color: $primary !important;
+    }
+  }
+}
+
+
+/**
  * Custom classes
  */
 
