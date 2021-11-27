@@ -216,6 +216,13 @@
     margin: $fieldset-border-margin;
   }
 
+  .modal-dialog & {
+    > fieldset[class=""] {
+      margin: $fieldset-border-margin / 2;
+      background-color: transparent;
+    }
+  }
+
   fieldset + fieldset {
     margin-top: 0.5rem;
   }
@@ -248,6 +255,18 @@
         height: 0.25rem;
         background-color: transparent;
         background-image: linear-gradient(to right, transparent, transparent);
+      }
+    }
+  }
+}
+
+
+// Custom ACE editor styles
+.ams-form {
+  .form-widget {
+    &.editor {
+      > div {
+        height: 100%;
       }
     }
   }

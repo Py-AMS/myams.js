@@ -19,7 +19,7 @@ $gray-100:                  #1f2933 !default;
 $white:                     #1F2427 !default;
 
 $primary:                   #d9882b !default;
-$success: #00a801 !default;
+$success:                   #00a801 !default;
 $secondary:                 $gray-400 !default;
 $info:                      #2b7bb9 !default;
 $warning:                   #bf9300 !default;
@@ -104,6 +104,8 @@ $modal-backdrop-opacity:  0.1 !default;
 $tooltip-color:           $gray-200 !default;
 $tooltip-bg:              $gray-700 !default;
 $tooltip-opacity:         1.0 !default;
+
+$tab-content-bg:          $gray-200 !default;
 
 $form-legend-border:      $gray-500 !default;
 $form-legend-bg:          $gray-300 !default;
