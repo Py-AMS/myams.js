@@ -18,6 +18,7 @@
   });
   _exports.modalToggleEventHandler = modalToggleEventHandler;
   _exports.modalShownEventHandler = modalShownEventHandler;
+  _exports.dynamicModalShowEventHandler = dynamicModalShowEventHandler;
   _exports.dynamicModalShownEventHandler = dynamicModalShownEventHandler;
   _exports.modalDismissEventHandler = modalDismissEventHandler;
   _exports.modalHiddenEventHandler = modalHiddenEventHandler;
@@ -84,16 +85,30 @@
     });
   }
   /**
-   * Dynamic modal 'shown' callback
+   * Dynamic modal 'show' callback
    * This callback is used to initialize modal's viewport size
    *
    * @param evt: source event
    */
 
 
-  function dynamicModalShownEventHandler(evt) {
+  function dynamicModalShowEventHandler(evt) {
     var dialog = $(evt.target);
     return MyAMS.core.executeFunctionByName(dialog.data('ams-init-content') || MyAMS.config.initContent, document, dialog);
+  }
+  /**
+   * Dynamic modal 'shown' callback
+   * This callback is is used to set focus on first modal input
+   *
+   * @param evt: source event
+   */
+
+
+  function dynamicModalShownEventHandler(evt) {
+    MyAMS.require('form').then(function () {
+      var modal = $(evt.target);
+      MyAMS.form.setFocus(modal);
+    });
   }
   /**
    * Modal dismiss handler
@@ -237,11 +252,12 @@
                 case 'text':
                 default:
                   content = $(result), dialog = $('.modal-dialog', content.wrap('<div></div>').parent()), dialogData = dialog.data() || {}, dialogOptions = {
-                    backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
+                    backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop,
+                    keyboard: dialogData.keyboard === undefined ? true : dialogData.keyboard
                   };
                   settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                   settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
-                  modal = $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
+                  modal = $('<div>').addClass('modal fade').attr('tabIndex', '-1').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShowEventHandler).on('shown.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 
                   if (MyAMS.stats && !(sourceData.amsLogEvent === false || dialogData.amsLogEvent === false)) {
                     MyAMS.stats.logPageview(url);

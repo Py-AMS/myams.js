@@ -3536,6 +3536,7 @@ function getModules(element) {
 function initPage() {
   return MyAMS.require('i18n').then(function () {
     MyAMS.dom = getDOM();
+    MyAMS.theme = getTheme();
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
@@ -3917,13 +3918,14 @@ function switchIcon(element, fromClass, toClass, prefix) {
   }
 }
 /**
- * MyAMS base functions
+ * MyAMS base environment
  *
  * @type {{
  *     bundle: boolean,
  *     devmode: boolean,
  *     devext: string,
  *     extext: string,
+ *     theme: string,
  *     baseURL: string
  * }}
  */
@@ -3931,15 +3933,33 @@ function switchIcon(element, fromClass, toClass, prefix) {
 function getEnv($) {
   var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
       src = script.attr('src'),
-      devmode = src ? src.indexOf('-dev.js') >= 0 : true; // testing mode
-
+      devmode = src ? src.indexOf('-dev.js') >= 0 : true,
+      // testing mode
+  bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
   return {
-    bundle: src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true,
+    bundle: bundle,
     devmode: devmode,
     devext: devmode ? '-dev' : '',
     extext: devmode ? '' : '.min',
     baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
   };
+}
+/**
+ * MyAMS theme getter
+ */
+
+
+function getTheme() {
+  var theme;
+
+  if (MyAMS.env.bundle) {
+    theme = MyAMS.theme;
+  } else {
+    var css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
+    theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
+  }
+
+  return theme;
 }
 /**
  * Get base DOM elements
@@ -7976,13 +7996,14 @@ if (window.MyAMS) {
 /*!*****************************!*\
   !*** ./src/js/mod-modal.js ***!
   \*****************************/
-/*! exports provided: modalToggleEventHandler, modalShownEventHandler, dynamicModalShownEventHandler, modalDismissEventHandler, modalHiddenEventHandler, dynamicModalHiddenEventHandler, modal */
+/*! exports provided: modalToggleEventHandler, modalShownEventHandler, dynamicModalShowEventHandler, dynamicModalShownEventHandler, modalDismissEventHandler, modalHiddenEventHandler, dynamicModalHiddenEventHandler, modal */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalToggleEventHandler", function() { return modalToggleEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalShownEventHandler", function() { return modalShownEventHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicModalShowEventHandler", function() { return dynamicModalShowEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicModalShownEventHandler", function() { return dynamicModalShownEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalDismissEventHandler", function() { return modalDismissEventHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalHiddenEventHandler", function() { return modalHiddenEventHandler; });
@@ -8047,15 +8068,28 @@ function modalShownEventHandler(evt) {
   });
 }
 /**
- * Dynamic modal 'shown' callback
+ * Dynamic modal 'show' callback
  * This callback is used to initialize modal's viewport size
  *
  * @param evt: source event
  */
 
-function dynamicModalShownEventHandler(evt) {
+function dynamicModalShowEventHandler(evt) {
   var dialog = $(evt.target);
   return MyAMS.core.executeFunctionByName(dialog.data('ams-init-content') || MyAMS.config.initContent, document, dialog);
+}
+/**
+ * Dynamic modal 'shown' callback
+ * This callback is is used to set focus on first modal input
+ *
+ * @param evt: source event
+ */
+
+function dynamicModalShownEventHandler(evt) {
+  MyAMS.require('form').then(function () {
+    var modal = $(evt.target);
+    MyAMS.form.setFocus(modal);
+  });
 }
 /**
  * Modal dismiss handler
@@ -8195,11 +8229,12 @@ var modal = {
               case 'text':
               default:
                 content = $(result), dialog = $('.modal-dialog', content.wrap('<div></div>').parent()), dialogData = dialog.data() || {}, dialogOptions = {
-                  backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop
+                  backdrop: dialogData.backdrop === undefined ? 'static' : dialogData.backdrop,
+                  keyboard: dialogData.keyboard === undefined ? true : dialogData.keyboard
                 };
                 settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                 settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
-                modal = $('<div>').addClass('modal fade').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
+                modal = $('<div>').addClass('modal fade').attr('tabIndex', '-1').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShowEventHandler).on('shown.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
 
                 if (MyAMS.stats && !(sourceData.amsLogEvent === false || dialogData.amsLogEvent === false)) {
                   MyAMS.stats.logPageview(url);
@@ -10156,7 +10191,7 @@ function editor(element) {
 
                 var defaultOptions = {
                   mode: mode,
-                  fontSize: 11,
+                  fontSize: 12,
                   tabSize: 4,
                   useSoftTabs: false,
                   showGutter: true,
@@ -10177,6 +10212,13 @@ function editor(element) {
 
                 var editor = ace.edit(textEditor[0]);
                 editor.setOptions(settings);
+
+                if (MyAMS.theme === 'darkmode') {
+                  editor.setTheme('ace/theme/dracula');
+                } else {
+                  editor.setTheme('ace/theme/textmate');
+                }
+
                 editor.session.setValue(textarea.val());
                 editor.session.on('change', function () {
                   textarea.val(editor.session.getValue());
@@ -10584,6 +10626,17 @@ function tinymce(element) {
               if ($(evt.target).closest(".tox-tinymce, .tox-tinymce-aux, " + ".moxman-window, .tam-assetmanager-root").length) {
                 evt.stopImmediatePropagation();
               }
+            }); // Remove editor before cleaning content
+
+            $(document).on('clear.ams.content', function (evt, veto, element) {
+              $('.tinymce', element).each(function (idx, elt) {
+                var editorId = $(elt).attr('id'),
+                    editor = window.tinymce.get(editorId);
+
+                if (editor !== null) {
+                  editor.remove();
+                }
+              });
             });
           }
 
@@ -10592,6 +10645,7 @@ function tinymce(element) {
               var editor = $(elt),
                   data = editor.data(),
                   defaultOptions = {
+                selector: "textarea#".concat(editor.attr('id')),
                 base_url: baseURL,
                 theme: data.amsTinymceTheme || data.amsTheme || 'silver',
                 language: MyAMS.i18n.language,
@@ -10620,15 +10674,7 @@ function tinymce(element) {
                 min_height: 50,
                 resize: true,
                 autoresize_min_height: 50,
-                autoresize_max_height: 500,
-                init_instance_callback: function init_instance_callback(instance) {
-                  var handler = function handler() {
-                    instance.remove("#".concat(instance.id));
-                    $(document).off('cleared.ams.content', handler);
-                  };
-
-                  $(document).on('cleared.ams.content', handler);
-                }
+                autoresize_max_height: 500
               };
               var plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
 
@@ -10642,7 +10688,7 @@ function tinymce(element) {
                   for (_iterator7.s(); !(_step4 = _iterator7.n()).done;) {
                     var name = _step4.value;
                     var src = editor.data("ams-tinymce-plugin-".concat(name)) || editor.data("ams-plugin-".concat(name));
-                    tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
+                    window.tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
                   }
                 } catch (err) {
                   _iterator7.e(err);
@@ -10662,9 +10708,11 @@ function tinymce(element) {
                 return;
               }
 
-              var plugin = editor.tinymce(settings);
-              MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
-              editor.trigger('after-init.ams.tinymce', [editor, settings]);
+              setTimeout(function () {
+                var plugin = editor.tinymce(settings);
+                MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
+                editor.trigger('after-init.ams.tinymce', [editor, settings]);
+              }, 100);
             });
           }, reject).then(function () {
             resolve(editors);
@@ -11290,8 +11338,7 @@ var tree = {
           can_sort: !$('td.sorter', tr).is(':empty')
         }).then(function (result) {
           if (result.length > 0) {
-            var newRow,
-                oldRow = tr;
+            var newRow;
 
             var _iterator = _createForOfIteratorHelper(result),
                 _step;
@@ -11301,7 +11348,6 @@ var tree = {
                 var row = _step.value;
                 newRow = $(row);
                 dtTable.row.add(newRow).draw();
-                oldRow = newRow;
                 MyAMS.core.initContent(newRow).then();
               }
             } catch (err) {
@@ -11673,7 +11719,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.10.0  */
+/** Version: 1.11.0  */
 
 /***/ }),
 

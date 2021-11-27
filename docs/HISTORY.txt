@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.11.0
+------
+ - upgraded TinyMCE editor to release 5.10.2
+ - updated "modal" options to correctly handle "escape" key and modal focus
+ - added "theme" attribute to MyAMS global object to get selected theme
+ - handle ICE editor default theme selection based on current MyAMS theme
+ - updated themes light colors
+ - dark theme updates
+
 1.10.0
 ------
  - added dark theme

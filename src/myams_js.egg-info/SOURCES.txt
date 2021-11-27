@@ -2,8 +2,11 @@ MANIFEST.in
 setup.py
 docs/HISTORY.txt
 docs/README.txt
+pkg/css/dev/darkmode.css
 pkg/css/dev/emerald.css
 pkg/css/dev/myams.css
+pkg/css/ext/bootstrap-treeview.css
+pkg/css/ext/bootstrap-treeview.min.css
 pkg/css/ext/bootstrap.css
 pkg/css/ext/bootstrap.min.css
 pkg/css/ext/fontawesome.css
@@ -22,8 +25,6 @@ pkg/css/ext/datatables/autoFill-bootstrap4.css
 pkg/css/ext/datatables/autoFill-bootstrap4.min.css
 pkg/css/ext/datatables/buttons-bootstrap4.css
 pkg/css/ext/datatables/buttons-bootstrap4.min.css
-pkg/css/ext/datatables/buttons-bootstrap4.min.min.css
-pkg/css/ext/datatables/buttons-bootstrap4.min.min.min.css
 pkg/css/ext/datatables/colReorder-bootstrap4.css
 pkg/css/ext/datatables/colReorder-bootstrap4.min.css
 pkg/css/ext/datatables/dataTables-bootstrap4.css
@@ -38,8 +39,6 @@ pkg/css/ext/datatables/keyTable-bootstrap4.css
 pkg/css/ext/datatables/keyTable-bootstrap4.min.css
 pkg/css/ext/datatables/responsive-bootstrap4.css
 pkg/css/ext/datatables/responsive-bootstrap4.min.css
-pkg/css/ext/datatables/responsive-bootstrap4.min.min.css
-pkg/css/ext/datatables/responsive-bootstrap4.min.min.min.css
 pkg/css/ext/datatables/rowGroup-bootstrap4.css
 pkg/css/ext/datatables/rowGroup-bootstrap4.min.css
 pkg/css/ext/datatables/rowReorder-bootstrap4.css
@@ -57,6 +56,7 @@ pkg/css/ext/datatables/images/sort_asc_disabled.png
 pkg/css/ext/datatables/images/sort_both.png
 pkg/css/ext/datatables/images/sort_desc.png
 pkg/css/ext/datatables/images/sort_desc_disabled.png
+pkg/css/prod/darkmode.css
 pkg/css/prod/emerald.css
 pkg/css/prod/myams.css
 pkg/css/sprites/brands.svg
@@ -1704,7 +1704,11 @@ pkg/js/dev/216edb96b562c79adc09e2d3c63db7c0.svg
 pkg/js/dev/4079ae2d2a15d0689568f3a5459241c7.eot
 pkg/js/dev/89a52ae1d02b86d6143987c865471c24.eot
 pkg/js/dev/9e138496e8f1719c6ebf0abe50563635.ttf
+pkg/js/dev/darkmode-dev.js
+pkg/js/dev/darkmode-dev.js.map
 pkg/js/dev/efbd5d20e407bbf85f2b3087ee67bfa1.eot
+pkg/js/dev/emerald-dev.js
+pkg/js/dev/emerald-dev.js.map
 pkg/js/dev/mod-ajax-dev.js
 pkg/js/dev/mod-ajax-dev.js.map
 pkg/js/dev/mod-alert-dev.js
@@ -1760,6 +1764,8 @@ pkg/js/dev/myams-dev.js.map
 pkg/js/dev/myams-mini-dev.js
 pkg/js/dev/myams-mini-dev.js.map
 pkg/js/dev/i18n/myams-fr.js
+pkg/js/ext/bootstrap-treeview.js
+pkg/js/ext/bootstrap-treeview.min.js
 pkg/js/ext/bootstrap.js
 pkg/js/ext/bootstrap.min.js
 pkg/js/ext/bs-custom-file-input.js
@@ -3180,7 +3186,9 @@ pkg/js/prod/216edb96b562c79adc09e2d3c63db7c0.svg
 pkg/js/prod/4079ae2d2a15d0689568f3a5459241c7.eot
 pkg/js/prod/89a52ae1d02b86d6143987c865471c24.eot
 pkg/js/prod/9e138496e8f1719c6ebf0abe50563635.ttf
+pkg/js/prod/darkmode.js
 pkg/js/prod/efbd5d20e407bbf85f2b3087ee67bfa1.eot
+pkg/js/prod/emerald.js
 pkg/js/prod/mod-ajax.js
 pkg/js/prod/mod-alert.js
 pkg/js/prod/mod-callbacks.js
@@ -3210,6 +3218,8 @@ pkg/js/prod/myams-mini.js
 pkg/js/prod/myams.js
 pkg/js/prod/i18n/myams-fr.js
 src/js/_mod.js
+src/js/darkmode.js
+src/js/emerald.js
 src/js/ext-base.js
 src/js/ext-registry.js
 src/js/ext-require.js
@@ -3274,8 +3284,15 @@ src/myams_js.egg-info/namespace_packages.txt
 src/myams_js.egg-info/not-zip-safe
 src/myams_js.egg-info/requires.txt
 src/myams_js.egg-info/top_level.txt
+src/sass/darkmode.scss
 src/sass/emerald.scss
 src/sass/myams.scss
+src/sass/darkmode/_icons.scss
+src/sass/darkmode/_modals.scss
+src/sass/darkmode/_nav.scss
+src/sass/darkmode/_ribbon.scss
+src/sass/darkmode/_top.scss
+src/sass/darkmode/_variables.scss
 src/sass/emerald/_icons.scss
 src/sass/emerald/_modals.scss
 src/sass/emerald/_nav.scss

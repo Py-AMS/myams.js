@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.9.0
+Version: 1.10.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,15 @@ Description: ================
         
         Changelog
         =========
+        
+        1.10.0
+        ------
+         - added dark theme
+         - added full-bundle (using CSS icons) for Emerald and Dark themes
+         - added treeview plug-in
+         - added datatable pre-order helper
+         - updated *tree* module
+         - updated SVG icons switcher
         
         1.9.0
         -----

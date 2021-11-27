@@ -511,6 +511,7 @@ function getModules(element) {
 function initPage() {
   return MyAMS.require('i18n').then(function () {
     MyAMS.dom = getDOM();
+    MyAMS.theme = getTheme();
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
@@ -892,13 +893,14 @@ function switchIcon(element, fromClass, toClass, prefix) {
   }
 }
 /**
- * MyAMS base functions
+ * MyAMS base environment
  *
  * @type {{
  *     bundle: boolean,
  *     devmode: boolean,
  *     devext: string,
  *     extext: string,
+ *     theme: string,
  *     baseURL: string
  * }}
  */
@@ -906,15 +908,33 @@ function switchIcon(element, fromClass, toClass, prefix) {
 function getEnv($) {
   var script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
       src = script.attr('src'),
-      devmode = src ? src.indexOf('-dev.js') >= 0 : true; // testing mode
-
+      devmode = src ? src.indexOf('-dev.js') >= 0 : true,
+      // testing mode
+  bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
   return {
-    bundle: src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true,
+    bundle: bundle,
     devmode: devmode,
     devext: devmode ? '-dev' : '',
     extext: devmode ? '' : '.min',
     baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
   };
+}
+/**
+ * MyAMS theme getter
+ */
+
+
+function getTheme() {
+  var theme;
+
+  if (MyAMS.env.bundle) {
+    theme = MyAMS.theme;
+  } else {
+    var css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
+    theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
+  }
+
+  return theme;
 }
 /**
  * Get base DOM elements
@@ -1671,7 +1691,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.10.0  */
+/** Version: 1.11.0  */
 
 /***/ }),
 

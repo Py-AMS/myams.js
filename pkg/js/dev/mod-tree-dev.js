@@ -65,8 +65,7 @@
             can_sort: !$('td.sorter', tr).is(':empty')
           }).then(function (result) {
             if (result.length > 0) {
-              var newRow,
-                  oldRow = tr;
+              var newRow;
 
               var _iterator = _createForOfIteratorHelper(result),
                   _step;
@@ -76,7 +75,6 @@
                   var row = _step.value;
                   newRow = $(row);
                   dtTable.row.add(newRow).draw();
-                  oldRow = newRow;
                   MyAMS.core.initContent(newRow).then();
                 }
               } catch (err) {

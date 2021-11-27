@@ -1036,7 +1036,7 @@
 
                   var defaultOptions = {
                     mode: mode,
-                    fontSize: 11,
+                    fontSize: 12,
                     tabSize: 4,
                     useSoftTabs: false,
                     showGutter: true,
@@ -1057,6 +1057,13 @@
 
                   var editor = ace.edit(textEditor[0]);
                   editor.setOptions(settings);
+
+                  if (MyAMS.theme === 'darkmode') {
+                    editor.setTheme('ace/theme/dracula');
+                  } else {
+                    editor.setTheme('ace/theme/textmate');
+                  }
+
                   editor.session.setValue(textarea.val());
                   editor.session.on('change', function () {
                     textarea.val(editor.session.getValue());
@@ -1471,6 +1478,17 @@
                 if ($(evt.target).closest(".tox-tinymce, .tox-tinymce-aux, " + ".moxman-window, .tam-assetmanager-root").length) {
                   evt.stopImmediatePropagation();
                 }
+              }); // Remove editor before cleaning content
+
+              $(document).on('clear.ams.content', function (evt, veto, element) {
+                $('.tinymce', element).each(function (idx, elt) {
+                  var editorId = $(elt).attr('id'),
+                      editor = window.tinymce.get(editorId);
+
+                  if (editor !== null) {
+                    editor.remove();
+                  }
+                });
               });
             }
 
@@ -1479,6 +1497,7 @@
                 var editor = $(elt),
                     data = editor.data(),
                     defaultOptions = {
+                  selector: "textarea#".concat(editor.attr('id')),
                   base_url: baseURL,
                   theme: data.amsTinymceTheme || data.amsTheme || 'silver',
                   language: MyAMS.i18n.language,
@@ -1507,15 +1526,7 @@
                   min_height: 50,
                   resize: true,
                   autoresize_min_height: 50,
-                  autoresize_max_height: 500,
-                  init_instance_callback: function init_instance_callback(instance) {
-                    var handler = function handler() {
-                      instance.remove("#".concat(instance.id));
-                      $(document).off('cleared.ams.content', handler);
-                    };
-
-                    $(document).on('cleared.ams.content', handler);
-                  }
+                  autoresize_max_height: 500
                 };
                 var plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
 
@@ -1529,7 +1540,7 @@
                     for (_iterator7.s(); !(_step4 = _iterator7.n()).done;) {
                       var name = _step4.value;
                       var src = editor.data("ams-tinymce-plugin-".concat(name)) || editor.data("ams-plugin-".concat(name));
-                      tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
+                      window.tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
                     }
                   } catch (err) {
                     _iterator7.e(err);
@@ -1549,9 +1560,11 @@
                   return;
                 }
 
-                var plugin = editor.tinymce(settings);
-                MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
-                editor.trigger('after-init.ams.tinymce', [editor, settings]);
+                setTimeout(function () {
+                  var plugin = editor.tinymce(settings);
+                  MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
+                  editor.trigger('after-init.ams.tinymce', [editor, settings]);
+                }, 100);
               });
             }, reject).then(function () {
               resolve(editors);

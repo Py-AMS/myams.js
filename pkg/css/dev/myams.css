@@ -7714,12 +7714,12 @@ button.bg-primary.text-white:active {
 
 .ui-sortable-placeholder {
   min-height: 2em;
-  background-color: #ebf2f8; }
+  background-color: #9fbede; }
   .visible-placeholder .ui-sortable-placeholder {
     visibility: visible !important; }
 
 .visible-helper .ui-sortable-helper {
-  background-color: #d8e5f2; }
+  background-color: #8cb2d8; }
 
 img {
   max-width: 100%;
@@ -8093,6 +8093,9 @@ button.modal .bg-dark-modal:focus {
   .ams-form > fieldset.border,
   .ams-form > div {
     margin: 0.5rem; }
+  .modal-dialog .ams-form > fieldset[class=""] {
+    margin: 0.25rem;
+    background-color: transparent; }
   .ams-form fieldset + fieldset {
     margin-top: 0.5rem; }
   .ams-form footer,
@@ -8121,6 +8124,9 @@ button.modal .bg-dark-modal:focus {
         height: 0.25rem;
         background-color: transparent;
         background-image: linear-gradient(to right, transparent, transparent); }
+
+.ams-form .form-widget.editor > div {
+  height: 100%; }
 
 .tox {
   font-size: 0.95em !important; }
@@ -9648,13 +9654,13 @@ table td.action, table td.reorder {
 :root {
   --body:                #212529;
   --body-bg:             #e7e7ef;
-  --primary-light:       #d8e8f5;
+  --primary-light:       #88b7df;
   --secondary-light:     white;
-  --success-light:       #c1e0c1;
-  --info-light:          #b2cbe5;
-  --warning-light:       #ffedde;
-  --danger-light:        #ebcdcc;
-  --dark-light:          #96a0aa; }
+  --success-light:       #7dbe7d;
+  --info-light:          #6798ca;
+  --warning-light:       #feb679;
+  --danger-light:        #ce8483;
+  --dark-light:          #626d78; }
 
 html {
   margin: 0;
