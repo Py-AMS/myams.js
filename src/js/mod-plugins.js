@@ -936,7 +936,7 @@ export function editor(element) {
 								}
 								const editor = ace.edit(textEditor[0]);
 								editor.setOptions(settings);
-								if (MyAMS.env.theme === 'darkmode') {
+								if (MyAMS.theme === 'darkmode') {
 									editor.setTheme('ace/theme/dracula');
 								} else {
 									editor.setTheme('ace/theme/textmate');

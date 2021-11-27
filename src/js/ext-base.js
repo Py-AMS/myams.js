@@ -321,6 +321,7 @@ export function getModules(element) {
 export function initPage() {
 	return MyAMS.require('i18n').then(() => {
 		MyAMS.dom = getDOM();
+		MyAMS.theme = getTheme();
 		const modules = getModules(MyAMS.dom.root);
 		MyAMS.require(...modules).then(() => {
 			for (const moduleName of MyAMS.config.modules) {
@@ -673,8 +674,22 @@ function getEnv($) {
 		src = script.attr('src'),
 		devmode = src ? src.indexOf('-dev.js') >= 0 : true,  // testing mode
 		bundle = src ? (src.indexOf('-core') < 0 && src.indexOf('-mini') < 0) : true;
+	return {
+		bundle: bundle,
+		devmode: devmode,
+		devext: devmode ? '-dev' : '',
+		extext: devmode ? '' : '.min',
+		baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
+	};
+}
+
+
+/**
+ * MyAMS theme getter
+ */
+function getTheme() {
 	let theme;
-	if (bundle) {
+	if (MyAMS.env.bundle) {
 		theme = MyAMS.theme;
 	} else {
 		const css = $(
@@ -682,14 +697,7 @@ function getEnv($) {
 		);
 		theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
 	}
-	return {
-		bundle: bundle,
-		devmode: devmode,
-		devext: devmode ? '-dev' : '',
-		extext: devmode ? '' : '.min',
-		theme: theme,
-		baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
-	};
+	return theme;
 }
 
 
