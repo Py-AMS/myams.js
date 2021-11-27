@@ -44,12 +44,10 @@ export const tree = {
 					can_sort: !$('td.sorter', tr).is(':empty')
 				}).then((result) => {
 					if (result.length > 0) {
-						let newRow,
-							oldRow = tr;
+						let newRow;
 						for (const row of result) {
 							newRow = $(row);
 							dtTable.row.add(newRow).draw();
-							oldRow = newRow;
 							MyAMS.core.initContent(newRow).then();
 						}
 					}
