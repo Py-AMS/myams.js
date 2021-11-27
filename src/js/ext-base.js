@@ -651,13 +651,14 @@ export function switchIcon(element, fromClass, toClass, prefix) {
 
 
 /**
- * MyAMS base functions
+ * MyAMS base environment
  *
  * @type {{
  *     bundle: boolean,
  *     devmode: boolean,
  *     devext: string,
  *     extext: string,
+ *     theme: string,
  *     baseURL: string
  * }}
  */
@@ -670,12 +671,23 @@ function getEnv($) {
 			'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' +
 			'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
 		src = script.attr('src'),
-		devmode = src ? src.indexOf('-dev.js') >= 0 : true;  // testing mode
+		devmode = src ? src.indexOf('-dev.js') >= 0 : true,  // testing mode
+		bundle = src ? (src.indexOf('-core') < 0 && src.indexOf('-mini') < 0) : true;
+	let theme;
+	if (bundle) {
+		theme = MyAMS.theme;
+	} else {
+		const css = $(
+			'link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]'
+		);
+		theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
+	}
 	return {
-		bundle: src ? (src.indexOf('-core') < 0 && src.indexOf('-mini') < 0) : true,
+		bundle: bundle,
 		devmode: devmode,
 		devext: devmode ? '-dev' : '',
 		extext: devmode ? '' : '.min',
+		theme: theme,
 		baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
 	};
 }

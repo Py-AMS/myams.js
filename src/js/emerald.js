@@ -50,6 +50,7 @@ import "../../pkg/css/dev/emerald.css";
 
 
 MyAMS.$.extend(MyAMS, {
+	theme: 'emerald',
 	require: myams_require,
 	ajax: ajax,
 	alert: alert,

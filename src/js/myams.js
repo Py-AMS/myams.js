@@ -49,6 +49,7 @@ import "../../pkg/css/dev/myams.css";
 
 
 MyAMS.$.extend(MyAMS, {
+	theme: 'myams',
 	require: myams_require,
 	ajax: ajax,
 	alert: alert,

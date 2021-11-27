@@ -50,6 +50,7 @@ import "../../pkg/css/dev/darkmode.css";
 
 
 MyAMS.$.extend(MyAMS, {
+	theme: 'darkmode',
 	require: myams_require,
 	ajax: ajax,
 	alert: alert,
