@@ -918,7 +918,7 @@ export function editor(element) {
 								// initialize editor
 								const defaultOptions = {
 									mode: mode,
-									fontSize: 11,
+									fontSize: 12,
 									tabSize: 4,
 									useSoftTabs: false,
 									showGutter: true,
@@ -936,6 +936,11 @@ export function editor(element) {
 								}
 								const editor = ace.edit(textEditor[0]);
 								editor.setOptions(settings);
+								if (MyAMS.env.theme === 'darkmode') {
+									editor.setTheme('ace/theme/dracula');
+								} else {
+									editor.setTheme('ace/theme/textmate');
+								}
 								editor.session.setValue(textarea.val());
 								editor.session.on('change', () => {
 									textarea.val(editor.session.getValue());
@@ -1353,6 +1358,17 @@ export function tinymce(element) {
 								evt.stopImmediatePropagation();
 							}
 						});
+						// Remove editor before cleaning content
+						$(document).on('clear.ams.content', (evt, veto, element) => {
+							$('.tinymce', element).each((idx, elt) => {
+								const
+									editorId = $(elt).attr('id'),
+									editor = window.tinymce.get(editorId);
+								if (editor !== null) {
+									editor.remove();
+								}
+							});
+						});
 					}
 					$.when.apply($, deferred).then(() => {
 						editors.each((idx, elt) => {
@@ -1360,6 +1376,7 @@ export function tinymce(element) {
 								editor = $(elt),
 								data = editor.data(),
 								defaultOptions = {
+									selector: `textarea#${editor.attr('id')}`,
 									base_url: baseURL,
 									theme: data.amsTinymceTheme || data.amsTheme || 'silver',
 									language: MyAMS.i18n.language,
@@ -1406,21 +1423,14 @@ export function tinymce(element) {
 									min_height: 50,
 									resize: true,
 									autoresize_min_height: 50,
-									autoresize_max_height: 500,
-									init_instance_callback: (instance) => {
-										const handler = () => {
-											instance.remove(`#${instance.id}`);
-											$(document).off('cleared.ams.content', handler);
-										};
-										$(document).on('cleared.ams.content', handler);
-									}
+									autoresize_max_height: 500
 								};
 							const plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
 							if (plugins) {
 								const names = plugins.split(/\s+/);
 								for (const name of names) {
 									const src = editor.data(`ams-tinymce-plugin-${name}`) || editor.data(`ams-plugin-${name}`);
-									tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
+									window.tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
 								}
 							}
 							let settings = $.extend({}, defaultOptions, data.amsTinymceOptions || data.amsOptions);
@@ -1432,12 +1442,14 @@ export function tinymce(element) {
 							if (veto.veto) {
 								return;
 							}
-							const plugin = editor.tinymce(settings);
-							MyAMS.core.executeFunctionByName(
-								data.amsTinymceAfterInitCallback || data.amsAfterInit,
-								document, editor, plugin, settings);
-							editor.trigger('after-init.ams.tinymce', [editor, settings]);
-						})
+							setTimeout(() => {
+								const plugin = editor.tinymce(settings);
+								MyAMS.core.executeFunctionByName(
+									data.amsTinymceAfterInitCallback || data.amsAfterInit,
+									document, editor, plugin, settings);
+								editor.trigger('after-init.ams.tinymce', [editor, settings]);
+							}, 100);
+						});
 					}, reject).then(() => {
 						resolve(editors);
 					});
