@@ -1189,16 +1189,24 @@ export function select2(element) {
 							}
 							const plugin = select.select2(settings);
 							select.on('select2:opening select2:selecting select2:unselecting select2:clearing', (evt) => {
+								// handle disabled selects
 								if ($(evt.target).is(':disabled')) {
 									return false;
 								}
 							});
 							select.on('select2:opening', (evt) => {
+								// handle z-index in modals
 								const modal = $(evt.currentTarget).parents('.modal').first();
 								if (modal.exists()) {
 									const zIndex = parseInt(modal.css('z-index'));
 									plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
 								}
+							});
+							select.on('select2:open', () => {
+								// handle dropdown automatic focus
+								setTimeout(() => {
+									$('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+								}, 50);
 							});
 							if (select.hasClass('sortable')) {
 								MyAMS.ajax.check($.fn.sortable,
