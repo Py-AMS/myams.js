@@ -1302,17 +1302,25 @@
 
                 var plugin = select.select2(settings);
                 select.on('select2:opening select2:selecting select2:unselecting select2:clearing', function (evt) {
+                  // handle disabled selects
                   if ($(evt.target).is(':disabled')) {
                     return false;
                   }
                 });
                 select.on('select2:opening', function (evt) {
+                  // handle z-index in modals
                   var modal = $(evt.currentTarget).parents('.modal').first();
 
                   if (modal.exists()) {
                     var zIndex = parseInt(modal.css('z-index'));
                     plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
                   }
+                });
+                select.on('select2:open', function () {
+                  // handle dropdown automatic focus
+                  setTimeout(function () {
+                    $('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+                  }, 50);
                 });
 
                 if (select.hasClass('sortable')) {

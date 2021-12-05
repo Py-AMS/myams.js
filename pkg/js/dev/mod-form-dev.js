@@ -148,15 +148,27 @@
       MyAMS.form.setFocus(element);
     },
     setFocus: function setFocus(element) {
-      var focused = $('[data-ams-focus-target]', element).first();
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          var focused = $('[data-ams-focus-target]', element).first();
 
-      if (!focused.exists()) {
-        focused = $('input, select, textarea', element).first();
-      }
+          if (!focused.exists()) {
+            var _window, _window$process, _window$process$env;
 
-      if (focused.exists()) {
-        focused.focus();
-      }
+            if (((_window = window) === null || _window === void 0 ? void 0 : (_window$process = _window.process) === null || _window$process === void 0 ? void 0 : (_window$process$env = _window$process.env) === null || _window$process$env === void 0 ? void 0 : _window$process$env.NODE_ENV) === 'test') {
+              focused = $('input, select, textarea', element).first();
+            } else {
+              focused = $('input:enabled:visible, ' + 'select:enabled:visible, ' + 'textarea:enabled:visible', element).first();
+            }
+          }
+
+          if (focused.exists()) {
+            focused.get(0).focus();
+          }
+
+          resolve(focused);
+        }, 100);
+      });
     },
     checkBeforeUnload: function checkBeforeUnload() {
       if (MyAMS.i18n) {

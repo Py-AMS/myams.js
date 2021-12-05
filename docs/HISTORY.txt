@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.11.1
+------
+ - automatically set focus when select2 dropdown is opened
+ - updated form focus handler to only set focus on the first visible and enabled input
+ - updated select2 dropdown styles
+ - updated datetime picker styles
+
 1.11.0
 ------
  - upgraded TinyMCE editor to release 5.10.2

@@ -105,9 +105,12 @@
 
 
   function dynamicModalShownEventHandler(evt) {
-    MyAMS.require('form').then(function () {
-      var modal = $(evt.target);
-      MyAMS.form.setFocus(modal);
+    return new Promise(function (resolve, reject) {
+      MyAMS.require('form').then(function () {
+        var modal = $(evt.target);
+        MyAMS.form.setFocus(modal);
+        resolve(modal);
+      }, reject);
     });
   }
   /**

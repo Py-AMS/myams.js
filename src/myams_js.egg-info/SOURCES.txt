@@ -2825,14 +2825,15 @@ pkg/js/ext/tinymce/jquery.tinymce.min.js
 pkg/js/ext/tinymce/license.txt
 pkg/js/ext/tinymce/tinymce.d.ts
 pkg/js/ext/tinymce/tinymce.min.js
+pkg/js/ext/tinymce/dev/README.md
 pkg/js/ext/tinymce/dev/jquery.tinymce.min.js
 pkg/js/ext/tinymce/dev/license.txt
-pkg/js/ext/tinymce/dev/readme.md
 pkg/js/ext/tinymce/dev/tinymce.d.ts
 pkg/js/ext/tinymce/dev/tinymce.js
 pkg/js/ext/tinymce/dev/tinymce.min.js
 pkg/js/ext/tinymce/dev/icons/default/icons.js
 pkg/js/ext/tinymce/dev/icons/default/icons.min.js
+pkg/js/ext/tinymce/dev/langs/README (Conflit de casse).md
 pkg/js/ext/tinymce/dev/langs/fr.js
 pkg/js/ext/tinymce/dev/langs/fr_FR.js
 pkg/js/ext/tinymce/dev/langs/readme.md
@@ -2983,6 +2984,8 @@ pkg/js/ext/tinymce/dev/themes/mobile/theme.min.js
 pkg/js/ext/tinymce/dev/themes/silver/theme.js
 pkg/js/ext/tinymce/dev/themes/silver/theme.min.js
 pkg/js/ext/tinymce/icons/default/icons.js
+pkg/js/ext/tinymce/icons/default/icons.min.js
+pkg/js/ext/tinymce/langs/README (Conflit de casse).md
 pkg/js/ext/tinymce/langs/fr.js
 pkg/js/ext/tinymce/langs/fr_FR.js
 pkg/js/ext/tinymce/langs/readme.md
@@ -3033,9 +3036,13 @@ pkg/js/ext/tinymce/plugins/visualblocks/plugin.js
 pkg/js/ext/tinymce/plugins/visualchars/plugin.js
 pkg/js/ext/tinymce/plugins/wordcount/plugin.js
 pkg/js/ext/tinymce/skins/content/dark/content.css
+pkg/js/ext/tinymce/skins/content/dark/content.min.css
 pkg/js/ext/tinymce/skins/content/default/content.css
+pkg/js/ext/tinymce/skins/content/default/content.min.css
 pkg/js/ext/tinymce/skins/content/document/content.css
+pkg/js/ext/tinymce/skins/content/document/content.min.css
 pkg/js/ext/tinymce/skins/content/writer/content.css
+pkg/js/ext/tinymce/skins/content/writer/content.min.css
 pkg/js/ext/tinymce/skins/ui/oxide/content.inline.min.css
 pkg/js/ext/tinymce/skins/ui/oxide/content.min.css
 pkg/js/ext/tinymce/skins/ui/oxide/content.mobile.min.css
@@ -3287,10 +3294,12 @@ src/myams_js.egg-info/top_level.txt
 src/sass/darkmode.scss
 src/sass/emerald.scss
 src/sass/myams.scss
+src/sass/darkmode/_forms.scss
 src/sass/darkmode/_icons.scss
 src/sass/darkmode/_modals.scss
 src/sass/darkmode/_nav.scss
 src/sass/darkmode/_ribbon.scss
+src/sass/darkmode/_tinymce.scss
 src/sass/darkmode/_top.scss
 src/sass/darkmode/_variables.scss
 src/sass/emerald/_icons.scss

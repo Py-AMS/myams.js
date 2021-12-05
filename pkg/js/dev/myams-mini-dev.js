@@ -6539,15 +6539,27 @@ var form = {
     MyAMS.form.setFocus(element);
   },
   setFocus: function setFocus(element) {
-    var focused = $('[data-ams-focus-target]', element).first();
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        var focused = $('[data-ams-focus-target]', element).first();
 
-    if (!focused.exists()) {
-      focused = $('input, select, textarea', element).first();
-    }
+        if (!focused.exists()) {
+          var _window, _window$process, _window$process$env;
 
-    if (focused.exists()) {
-      focused.focus();
-    }
+          if (((_window = window) === null || _window === void 0 ? void 0 : (_window$process = _window.process) === null || _window$process === void 0 ? void 0 : (_window$process$env = _window$process.env) === null || _window$process$env === void 0 ? void 0 : _window$process$env.NODE_ENV) === 'test') {
+            focused = $('input, select, textarea', element).first();
+          } else {
+            focused = $('input:enabled:visible, ' + 'select:enabled:visible, ' + 'textarea:enabled:visible', element).first();
+          }
+        }
+
+        if (focused.exists()) {
+          focused.get(0).focus();
+        }
+
+        resolve(focused);
+      }, 100);
+    });
   },
   checkBeforeUnload: function checkBeforeUnload() {
     if (MyAMS.i18n) {
@@ -8086,9 +8098,12 @@ function dynamicModalShowEventHandler(evt) {
  */
 
 function dynamicModalShownEventHandler(evt) {
-  MyAMS.require('form').then(function () {
-    var modal = $(evt.target);
-    MyAMS.form.setFocus(modal);
+  return new Promise(function (resolve, reject) {
+    MyAMS.require('form').then(function () {
+      var modal = $(evt.target);
+      MyAMS.form.setFocus(modal);
+      resolve(modal);
+    }, reject);
   });
 }
 /**
@@ -10453,17 +10468,25 @@ function select2(element) {
 
               var plugin = select.select2(settings);
               select.on('select2:opening select2:selecting select2:unselecting select2:clearing', function (evt) {
+                // handle disabled selects
                 if ($(evt.target).is(':disabled')) {
                   return false;
                 }
               });
               select.on('select2:opening', function (evt) {
+                // handle z-index in modals
                 var modal = $(evt.currentTarget).parents('.modal').first();
 
                 if (modal.exists()) {
                   var zIndex = parseInt(modal.css('z-index'));
                   plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
                 }
+              });
+              select.on('select2:open', function () {
+                // handle dropdown automatic focus
+                setTimeout(function () {
+                  $('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+                }, 50);
               });
 
               if (select.hasClass('sortable')) {
@@ -11719,7 +11742,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.11.0  */
+/** Version: 1.11.1  */
 
 /***/ }),
 
