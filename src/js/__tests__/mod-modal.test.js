@@ -307,7 +307,7 @@ test("Test MyAMS.modal open function with function target", () => {
 test("Test MyAMS.modal show function", () => {
 
 	document.body.innerHTML = `<div>
-		<div id="modaltest" class="modal" data-ams-init-content="MyAMS.test.initContent">
+		<div id="modaltest" class="modal" data-ams-shown-handler="MyAMS.test.initContent">
 			<div class="modal-dialog">
 				<button id="hide-modal" type="button" data-dismiss="modal">
 					<i class="fa fa-times"></i>
@@ -315,12 +315,13 @@ test("Test MyAMS.modal show function", () => {
 				<p>Modal content</p>
 			</div>
 		</div>
-		<a id="open-modal" data-toggle="modal"></a>
+		<a id="open-modal" data-toggle="modal" href="#modaltest"></a>
 	</div>`;
 
 	MyAMS.test = {
-		initContent: (modal) => {
+		initContent: (evt) => {
 			return new Promise((resolve, reject) => {
+				const modal = $(evt.target);
 				modal.data('init-done', true);
 				resolve();
 			});
@@ -328,10 +329,15 @@ test("Test MyAMS.modal show function", () => {
 	}
 	const
 		body = $(document.body),
-		modal = $('#modaltest', body);
+		modal = $('#modaltest', body),
+		button = $('#open-modal', body);
 	MyAMS.modal.init();
-	dynamicModalShownEventHandler($.Event('click', { target: modal }));
-	expect(modal.data('init-done')).toBe(true);
+	button.click();
+	return dynamicModalShownEventHandler($.Event('click', {
+		target: modal
+	})).then(() => {
+		expect(modal.data('init-done')).toBe(true);
+	});
 
 });
 

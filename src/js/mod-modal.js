@@ -89,9 +89,12 @@ export function dynamicModalShowEventHandler(evt) {
  * @param evt: source event
  */
 export function dynamicModalShownEventHandler(evt) {
-	MyAMS.require('form').then(() => {
-		const modal = $(evt.target);
-		MyAMS.form.setFocus(modal);
+	return new Promise((resolve, reject) => {
+		MyAMS.require('form').then(() => {
+			const modal = $(evt.target);
+			MyAMS.form.setFocus(modal);
+			resolve(modal);
+		}, reject);
 	});
 }
 
