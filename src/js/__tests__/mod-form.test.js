@@ -316,8 +316,11 @@ describe("Test MyAMS.skin module", () => {
 
 		MyAMS.config.warnOnFormChange = false;
 		form.initElement(body);
-		MyAMS.form.setFocus(testForm);
-		expect(focused).toBe(true);
+		return MyAMS.form.setFocus(testForm).then((target) => {
+			expect(focused).toBe(true);
+			expect(target.exists()).toBe(true);
+			expect(target.get(0)).toBe(input.get(0));
+		});
 
 	});
 
@@ -347,8 +350,11 @@ describe("Test MyAMS.skin module", () => {
 
 		MyAMS.config.warnOnFormChange = false;
 		form.initElement(body);
-		MyAMS.form.setFocus(testForm);
-		expect(focused).toBe(true);
+		return MyAMS.form.setFocus(testForm).then((target) => {
+			expect(focused).toBe(true);
+			expect(target.exists()).toBe(true);
+			expect(target.get(0)).toBe(input.get(0));
+		});
 
 	});
 

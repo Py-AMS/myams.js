@@ -103,13 +103,24 @@ export const form = {
 	},
 
 	setFocus: (element) => {
-		let focused = $('[data-ams-focus-target]', element).first();
-		if (!focused.exists()) {
-			focused = $('input, select, textarea', element).first();
-		}
-		if (focused.exists()) {
-			focused.focus();
-		}
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				let focused = $('[data-ams-focus-target]', element).first();
+				if (!focused.exists()) {
+					if (window?.process?.env?.NODE_ENV === 'test') {
+						focused = $('input, select, textarea', element).first();
+					} else {
+						focused = $('input:enabled:visible, ' +
+							'select:enabled:visible, ' +
+							'textarea:enabled:visible', element).first();
+					}
+				}
+				if (focused.exists()) {
+					focused.get(0).focus();
+				}
+				resolve(focused);
+			}, 100);
+		});
 	},
 
 	checkBeforeUnload: () => {
