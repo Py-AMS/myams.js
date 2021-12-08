@@ -370,10 +370,11 @@ export const ajax = {
 				if (result.window) {
 					window.open(url, result.window, result.options);
 				} else {
+					$(window).off('beforeunload');
 					if (window.location.href === url) {
 						window.location.reload();
 					} else {
-						window.location.href = url;
+						window.location.replace(url);
 					}
 				}
 				break;
