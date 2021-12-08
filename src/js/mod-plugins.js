@@ -310,6 +310,7 @@ const _datatablesHelpers = {
 		return new Promise((resolve, reject) => {
 			const
 				table = $(evt.target),
+				dtTable = table.DataTable(),
 				data = table.data();
 			// extract target and URL
 			let target = data.amsReorderInputTarget,
@@ -356,6 +357,10 @@ const _datatablesHelpers = {
 					}
 					MyAMS.require('ajax').then(() => {
 						MyAMS.ajax.post(url, postData).then((result, status, xhr) => {
+							$('td.sorter', table).each((idx, elt) => {
+								$(elt).removeData().attr('data-order', idx);
+								dtTable.row($(elt).parents('tr').get(0)).invalidate().draw();
+							});
 							const callback = data.amsReorderCallback;
 							if (callback) {
 								MyAMS.core.executeFunctionByName(callback, document,
@@ -615,7 +620,9 @@ export function datatables(element) {
 									const sortables = heads.listattr('data-ams-sortable');
 									for (const iterator of sortables.entries()) {
 										const [idx, sortable] = iterator;
-										if (sortable !== undefined) {
+										if (data.rowReorder) {
+											columns[idx].sortable = false;
+										} else if (sortable !== undefined) {
 											columns[idx].sortable =
 												typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
 										}
