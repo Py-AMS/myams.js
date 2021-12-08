@@ -115,7 +115,7 @@ export const skin = {
 				if (activeUrl) {
 					menu = $(`a[href="${activeUrl}"]`, nav);
 				} else {
-					menu = $('>ul >li >a[href!="#"]', nav).first();
+					menu = $('ul li a[href!="#"]', nav).first();
 				}
 				if (menu.exists()) {
 					MyAMS.require('nav').then(() => {
