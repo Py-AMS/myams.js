@@ -31,6 +31,25 @@ export const helpers = {
 	},
 
 	/**
+	 * SEO input helper
+	 */
+	setSEOStatus: (evt) => {
+		const
+			input = $(evt.target),
+			progress = input.siblings('.progress').children('.progress-bar'),
+			length = Math.min(input.val().length, 100);
+		let status = 'success';
+		if (length < 20 || length > 80) {
+			status = 'danger';
+		} else if (length < 40 || length > 66) {
+			status = 'warning';
+		}
+		progress.removeClassPrefix('bg-')
+				.addClass('bg-' + status)
+				.css('width', length + '%');
+	},
+
+	/**
 	 * Select2 change helper
 	 */
 	select2ChangeHelper: (evt) => {

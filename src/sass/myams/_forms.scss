@@ -360,3 +360,16 @@
     flex-direction: row-reverse;
   }
 }
+
+.seo-container {
+  position: relative;
+
+  .progress {
+    position: absolute;
+    left: $input-border-width;
+    bottom: $input-border-width;
+    height: 0.4em;
+    width: calc(100% - 2 * #{$input-border-width});
+    border-radius: 0 0 $input-border-radius $input-border-radius;
+  }
+}
