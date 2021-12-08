@@ -182,10 +182,10 @@ export const helpers = {
 				if ($.fn.DataTable) {
 					const dtTable = table.DataTable();
 					if (typeof options.data === 'string') {
-						dtTable.row(selector).remove().draw();
+						dtTable.row(selector).remove();
 						dtTable.row.add($(options.data)).draw();
 					} else {
-						dtTable.row(selector).data(options.data);
+						dtTable.row(selector).data(options.data).draw();
 					}
 					resolve(row);
 				} else {
