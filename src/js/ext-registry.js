@@ -49,7 +49,7 @@ class Plugin {
 	load() {
 		return new Promise((resolve, reject) => {
 			if (!this.loaded) {
-				let deferred = [];
+				const deferred = [];
 				if (this.src) {
 					deferred.push(MyAMS.core.getScript(this.src));
 				}
