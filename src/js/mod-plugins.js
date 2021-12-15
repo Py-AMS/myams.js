@@ -1212,7 +1212,10 @@ export function select2(element) {
 							select.on('select2:open', () => {
 								// handle dropdown automatic focus
 								setTimeout(() => {
-									$('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+									const dropdown = $('.select2-search__field', plugin.data('select2').$dropdown);
+									if (dropdown.exists()) {
+										dropdown.get(0).focus();
+									}
 								}, 50);
 							});
 							if (select.hasClass('sortable')) {
