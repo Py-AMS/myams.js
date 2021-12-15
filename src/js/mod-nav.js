@@ -102,7 +102,7 @@ export class NavigationMenu {
 
 	init(menus) {
 		const settings = this.settings;
-		// add mark to menus with childrens
+		// add mark to menus with children
 		menus.find('li').each((idx, elt) => {
 			const menuItem = $(elt);
 			if (menuItem.find('ul').length > 0) {
@@ -120,6 +120,14 @@ export class NavigationMenu {
 					});
 				}
 			}
+		});
+		// slide down open menus
+		menus.find('li.open').each((idx, elt) => {
+			const
+				menu = $(elt),
+				subMenu = $('> ul', menu);
+			subMenu.slideDown(settings.speed);
+			menu.find('>a b.collapse-sign').html(settings.openedSign);
 		});
 		// open active level
 		menus.find('li.active').each((idx, elt) => {
@@ -342,18 +350,19 @@ export const nav = {
 						openedSign: '<em class="fa fa-angle-up"></em>'
 					});
 				}
-				const settings = $.extend({}, defaults, options);
+				const
+					settings = $.extend({}, defaults, options),
+					menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
 				if (data.amsMenuConfig) {
 					MyAMS.require('ajax', 'skin').then(() => {
 						MyAMS.ajax.get(data.amsMenuConfig).then(result => {
-							const menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
 							new menuFactory(result, $(this), settings).render();
 							MyAMS.skin.checkURL();
 						});
 					});
 				} else {  // static menus
 					const menus = $('ul', this);
-					new NavigationMenu(null, $(this), settings).init(menus);
+					new menuFactory(null, $(this), settings).init(menus);
 				}
 			}
 		});
@@ -372,6 +381,16 @@ export const nav = {
 				const handler = $(evt).data('ams-click-handler');
 				if (handler) {
 					return;
+				}
+				// check for DataTable collapse handler
+				if (evt.target.tagName === 'TD') {
+					const target = $(evt.target);
+					if (target.hasClass('dtr-control')) {
+						const table = target.parents('table.datatable');
+						if (table.hasClass('collapsed')) {
+							return;
+						}
+					}
 				}
 				return linkClickHandler(evt);
 			});
