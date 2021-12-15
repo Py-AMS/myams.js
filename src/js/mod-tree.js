@@ -13,8 +13,8 @@ export const tree = {
 	 */
 	switchTreeNode: (evt) => {
 
-		const removeChildNodes = (node_id) => {
-			$(`tr[data-ams-tree-node-parent-id="${node_id}"]`).each((idx, elt) => {
+		const removeChildNodes = (nodeId) => {
+			$(`tr[data-ams-tree-node-parent-id="${nodeId}"]`).each((idx, elt) => {
 				const row = $(elt);
 				removeChildNodes(row.data('ams-tree-node-id'));
 				dtTable.row(row).remove().draw();
@@ -40,7 +40,7 @@ export const tree = {
 				sourceName = tr.data('ams-element-name');
 			MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
 			MyAMS.require('ajax').then(() => {
-				MyAMS.ajax.post(location + '/' + sourceName + '/' + treeNodesTarget, {
+				MyAMS.ajax.post(`${location}/${sourceName}/${treeNodesTarget}`, {
 					can_sort: !$('td.sorter', tr).is(':empty')
 				}).then((result) => {
 					if (result.length > 0) {
@@ -193,7 +193,7 @@ export const tree = {
 					if (!target.startsWith(window.location.protocol)) {
 						const location = data.amsLocation;
 						if (location) {
-							target = location + '/' + target;
+							target = `${location}/${target}`;
 						}
 					}
 					const
