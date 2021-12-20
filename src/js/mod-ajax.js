@@ -89,7 +89,7 @@ export const ajax = {
 	},
 
 	/**
-	 * Hnadle AJAX upload or download progress event
+	 * Handle AJAX upload or download progress event
 	 *
 	 * @param event: source event
 	 */
