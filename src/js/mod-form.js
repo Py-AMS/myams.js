@@ -851,6 +851,9 @@ export function resetFormAfterSubmit(form, settings, button) {
 		form.data('submitted', false);
 		form.removeData('ams-submit-button');
 		form.trigger('after-reset.ams.form');
+		if (form.data('ams-reset-after-submit')) {
+			form.get(0).reset();
+		}
 	}
 }
 
