@@ -322,6 +322,7 @@ export function initPage() {
 	return MyAMS.require('i18n').then(() => {
 		MyAMS.dom = getDOM();
 		MyAMS.theme = getTheme();
+		MyAMS.registry.initData(MyAMS.dom.root);
 		const modules = getModules(MyAMS.dom.root);
 		MyAMS.require(...modules).then(() => {
 			for (const moduleName of MyAMS.config.modules) {
