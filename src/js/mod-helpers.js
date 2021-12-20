@@ -250,6 +250,25 @@ export const helpers = {
 	},
 
 	/**
+	 * Add given element to the end of specified parent
+	 *
+	 * @param source: event source
+	 * @param element: the provided element
+	 * @param parent: the parent to which element should be added
+	 * @param props: additional props
+	 * @returns {*}
+	 */
+	addElementToParent: (source, {element, parent, ...props}) => {
+		element = $(element);
+		parent = $(parent);
+		const result = element.appendTo(parent);
+		if (props.scrollTo) {
+			MyAMS.helpers.scrollTo(props.scrollParent, element);
+		}
+		return result;
+	},
+
+	/**
 	 * Toggle dropdown associated with given event target
 	 *
 	 * @param evt: source event
