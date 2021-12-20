@@ -133,7 +133,7 @@ export const events = {
 	},
 
 	/**
-	 * Genenric click event trigger
+	 * Generic click event trigger
 	 */
 	triggerEvent: (event) => {
 		const source = $(event.currentTarget);
