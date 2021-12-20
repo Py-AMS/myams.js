@@ -120,13 +120,12 @@ export const error = {
 							MyAMS.form.setInvalid(parent, input, widget.message);
 						}
 					}
-					MyAMS.ajax.check($.fn.scrollTo,
-						`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+					MyAMS.require('helpers').then(() => {
 						let scrollBox = parent.parents('.modal-body');
 						if (!scrollBox.exists()) {
 							scrollBox = $('#main');
 						}
-						scrollBox.scrollTo(parent, { offset: -15 });
+						MyAMS.helpers.scrollTo(scrollBox, parent, { offset: -15 });
 					});
 				}).then(resolve, reject);
 			}

@@ -90,11 +90,8 @@ export const skin = {
 					if (tag) {
 						const anchor = $(`#${tag}`);
 						if (anchor.exists()) {
-							MyAMS.require('ajax').then(() => {
-								MyAMS.ajax.check($.fn.scrollTo,
-									`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
-									$('#main').scrollTo(anchor, {offset: -15});
-								});
+							MyAMS.require('helpers').then(() => {
+								MyAMS.helpers.scrollTo('#main', anchor, { offset: -15 });
 							});
 						}
 					}

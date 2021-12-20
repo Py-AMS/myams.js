@@ -176,11 +176,8 @@ export const alert = {
 		props.status = status;
 		$(`.alert-${status}`, props.parent).not('.persistent').remove();
 		$(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
-		MyAMS.require('ajax').then(() => {
-			MyAMS.ajax.check($.fn.scrollTo,
-				`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
-				$('#content').scrollTo(props.parent, { offset: -15 });
-			});
+		MyAMS.require('helpers').then(() => {
+			MyAMS.helpers.scrollTo('#content', props.parent, { offset: -15 });
 		});
 	},
 

@@ -31,6 +31,27 @@ export const helpers = {
 	},
 
 	/**
+	 * Scroll anchor parent element to given anchor
+	 *
+	 * @param anchor: scroll target
+	 * @param parent: scroll parent
+	 * @param props: scroll properties
+	 */
+	scrollTo: (parent='#content', anchor, {...props}) => {
+		if (typeof anchor === 'string') {
+			anchor = $(anchor);
+		}
+		if (anchor.exists()) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check($.fn.scrollTo,
+					`${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
+					$(parent).scrollTo(anchor, props);
+				});
+			});
+		}
+	},
+
+	/**
 	 * SEO input helper
 	 */
 	setSEOStatus: (evt) => {
