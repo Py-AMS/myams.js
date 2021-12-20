@@ -67,28 +67,53 @@
   @include media-breakpoint-up($breakpoint) {
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
+    .w#{$infix}-auto,
+    .width#{$infix}-auto         { width: auto !important; }
+
+    .w#{$infix}-0,
     .width#{$infix}-0            { width: 0 !important; }
+    .w#{$infix}-25,
     .width#{$infix}-25           { width: 25% !important; }
+    .w#{$infix}-50,
     .width#{$infix}-50           { width: 50% !important; }
+    .w#{$infix}-75,
     .width#{$infix}-75           { width: 75% !important; }
+    .w#{$infix}-100,
     .width#{$infix}-100          { width: 100% !important; }
 
+    .w#{$infix}-50-gut,
     .width#{$infix}-50-gut       { width: calc(50% - 0.6em) !important; }
 
+    .w#{$infix}-100px,
     .width#{$infix}-100px        { width: 100px !important; }
+    .w#{$infix}-200px,
     .width#{$infix}-200px        { width: 200px !important; }
+    .w#{$infix}-300px,
     .width#{$infix}-300px        { width: 300px !important; }
+    .w#{$infix}-400px,
     .width#{$infix}-400px        { width: 400px !important; }
 
+    .h#{$infix}-auto,
+    .height#{$infix}-auto        { height: auto !important; }
+
+    .h#{$infix}-0,
     .height#{$infix}-0           { height: 0 !important; }
+    .h#{$infix}-25,
     .height#{$infix}-25          { height: 25% !important; }
+    .h#{$infix}-50,
     .height#{$infix}-50          { height: 50% !important; }
+    .h#{$infix}-75,
     .height#{$infix}-75          { height: 75% !important; }
+    .h#{$infix}-100,
     .height#{$infix}-100         { height: 100% !important; }
 
+    .h#{$infix}-100px,
     .height#{$infix}-100px        { height: 100px !important; }
+    .h#{$infix}-200px,
     .height#{$infix}-200px        { height: 200px !important; }
+    .h#{$infix}-300px,
     .height#{$infix}-300px        { height: 300px !important; }
+    .h#{$infix}-400px,
     .height#{$infix}-400px        { height: 400px !important; }
   }
 }
@@ -116,6 +141,14 @@
 
 .opacity-25 {
   opacity: 0.25;
+}
+
+
+/**
+ * Custom transforms
+ */
+.scaled {
+  transform: scale(1.25);
 }
 
 
@@ -151,6 +184,12 @@ button.bg-primary {
   list-style-type: none;
 }
 
+.list-striped {
+  li:nth-child(2n+1) {
+    background-color: $list-striped-bg;
+  }
+}
+
 
 .ui-sortable-placeholder {
   min-height: 2em;
@@ -175,4 +214,9 @@ img {
 .avatar {
   width: 32px;
   height: 32px;
+
+  svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }

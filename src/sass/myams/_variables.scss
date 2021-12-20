@@ -205,6 +205,9 @@ $select2-selection-color: $white !default;
 $table-sort:                lighten($aside-bg, 20%) !default;
 
 
+// Lists styles
+$list-striped-bg:           darken($body-bg, 10%) !default;
+
 // Modals styles
 $modal-inner-padding:        0.5rem !default;
 

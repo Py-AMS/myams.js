@@ -125,6 +125,8 @@ $font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Montserrat", "Se
 $font-family-wide:          "Montserrat", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
+$list-striped-bg:           lighten($body-bg, 4%) !default;
+
 
 @import "../myams/variables";
 
