@@ -51,9 +51,8 @@ bootstrap = Resource(library, 'js/ext/bootstrap.js',
                      minified='js/ext/bootstrap.min.js',
                      depends=(jquery,))
 
-fontawesome_css = Resource(library, 'css/ext/fontawesome.css',
-                           minified='css/ext/fontawesome.min.css',
-                           depends=(bootstrap_css,))
+fontawesome_css = Resource(library, 'css/ext/fontawesome-all.css',
+                           minified='css/ext/fontawesome-all.min.css')
 
 fontawesome_js = ResourceWithData(library, 'js/ext/fontawesome.js',
                                   minified='js/ext/fontawesome.min.js',
