@@ -52,6 +52,16 @@ export const helpers = {
 	},
 
 	/**
+	 * Store location hash when redirecting to log in form
+	 */
+	setLoginHash: () => {
+		const
+			form = $('#login_form'),
+			hash = $(`input[name="login_form.widgets.hash"]`, form);
+		hash.val(window.location.hash);
+	},
+
+	/**
 	 * SEO input helper
 	 */
 	setSEOStatus: (evt) => {
