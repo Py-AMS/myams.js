@@ -6,24 +6,24 @@
 
 // Skin colors and styles
 
-$black:                     #f5f7fa !default;
-$gray-900:                  #e4e7eb !default;
-$gray-800:                  #cbd2d9 !default;
-$gray-700:                  #9aa5b1 !default;
-$gray-600:                  #7b8794 !default;
-$gray-500:                  #616e7c !default;
-$gray-400:                  #52606d !default;
-$gray-300:                  #3e4c59 !default;
-$gray-200:                  #323f4b !default;
-$gray-100:                  #1f2933 !default;
-$white:                     #1F2427 !default;
+$black:                     #f8ecf8 !default;
+$gray-900:                  #d4c5d9 !default;
+$gray-800:                  #c2b5c7 !default;
+$gray-700:                  #9e939e !default;
+$gray-600:                  #7f7682 !default;
+$gray-500:                  #6b646e !default;
+$gray-400:                  #575159 !default;
+$gray-300:                  #464147 !default;
+$gray-200:                  #343136 !default;
+$gray-100:                  #252226 !default;
+$white:                     #19171a !default;
 
-$primary:                   #d9882b !default;
-$success:                   #00cc00 !default;
+$primary:                   #cc8029 !default;
+$success:                   #29cc29 !default;
 $secondary:                 $gray-500 !default;
-$info:                      #2f88cc !default;
-$warning:                   #bf9300 !default;
-$danger:                    #cc3c2f !default;
+$info:                      #2985cc !default;
+$warning:                   #ffcf33 !default;
+$danger:                    #cc3629 !default;
 $light:                     $gray-600 !default;
 $dark:                      $gray-400 !default;
 
@@ -35,21 +35,21 @@ $font-size-base:            0.9rem !default;
 $body:                      $black !default;
 $body-bg:                   rgba($gray-100, 0.9) !default;
 
-$body-scrollbar-color:             rgba(35, 53, 66, 0.8) rgba(182, 182, 182, 0.8) !default;
-$wk-body-scrollbar-thumb-hover-bg: rgba(53, 78, 98, 0.8) !default;
+$body-scrollbar-color:             rgba(37, 34, 38, 0.8) rgba(182, 182, 182, 0.8) !default;
+$wk-body-scrollbar-thumb-hover-bg: rgba(75, 70, 77, 0.8) !default;
 
 $top-tabs-border-color:     rgba($primary, 0.5) !default;
 
-$header-bg:                 rgba(31, 41, 51, 0.7) !default;
+$header-bg:                 rgba(37, 34, 38, 0.7) !default;
 
 $aside-width:               270px !default;
 $aside-min-width:           260px !default;
-$aside-bg:                  rgba(31, 41, 51, 0.7) !default;
+$aside-bg:                  rgba(37, 34, 38, 0.7) !default;
 
-$nav-bg:                    rgba(31, 41, 51, 0.7) !default;
+$nav-bg:                    rgba(37, 34, 38, 0.7) !default;
 $nav-divider-bg:            $gray-300 !default;
 $nav-header:                $gray-800 !default;
-$nav-header-bg:             rgba(39, 51, 64, 0.7) !default;
+$nav-header-bg:             rgba(37, 34, 38, 0.7) !default;
 $nav-link:                  $gray-700 !default;
 $nav-link-active:           $gray-300 !default;
 $nav-link-focus:            #c9c9c9 !default;
@@ -73,7 +73,7 @@ $nav-minify-item-top:       $gray-300 !default;
 $nav-minify-item-bottom:    $gray-300 !default;
 $nav-minify-item-left:      $gray-300 !default;
 
-$version-color:             $gray-400 !default;
+$version-color:             $gray-500 !default;
 
 $main-margin-top:           60px !default;
 $main-height:               calc(100% - 40px) !default;
@@ -95,7 +95,7 @@ $breadcrumb-border-color:   $gray-400 !default;
 $breadcrumb-divider-color:  #6d6c6c !default;
 $breadcrumb-active-color:   #ffffff !default;
 
-$content-padding:         1rem calc(2rem - 4px) 2rem 2rem !default;
+$content-padding:           1rem calc(2rem - 4px) 2rem 2rem !default;
 
 $modal-content-border-color: rgba($gray-500, .5) !default;
 $modal-backdrop-bg:       $white !default;
