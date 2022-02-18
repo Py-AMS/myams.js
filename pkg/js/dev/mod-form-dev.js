@@ -925,11 +925,9 @@
           opacity: '1.0'
         }, 250);
         MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(function () {
-          MyAMS.require('ajax').then(function () {
-            MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-              $('#main').scrollTo(target, {
-                offset: -15
-              });
+          MyAMS.require('helpers').then(function () {
+            MyAMS.helpers.scrollTo('#main', target, {
+              offset: -15
             });
           });
         });
@@ -959,6 +957,10 @@
       form.data('submitted', false);
       form.removeData('ams-submit-button');
       form.trigger('after-reset.ams.form');
+
+      if (form.data('ams-reset-after-submit')) {
+        form.get(0).reset();
+      }
     }
   }
   /**

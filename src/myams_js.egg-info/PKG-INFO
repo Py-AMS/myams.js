@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.11.0
+Version: 1.11.1
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -50,6 +50,29 @@ Description: ================
         
         Changelog
         =========
+        
+        1.12.0
+        ------
+         - added helper and styles for an "SEO quality indicator" component
+         - added helper to store log in form redirection hash
+         - initialize data attributes before loading modules
+         - handle pre-opened navigation menus
+         - updated table sorting data after ordering
+         - updated active menu selector to handle case where the first active menu is a submenu
+         - updated FontAwesome icon switch helper
+         - updated FontAwesome CSS resources
+         - added scroll helper
+         - added helper to add element to parent
+         - added option to reset form after submit
+         - disable window "beforeunload" event handler before activating a "redirect" response
+         - small styles updates
+        
+        1.11.1
+        ------
+         - automatically set focus when select2 dropdown is opened
+         - updated form focus handler to only set focus on the first visible and enabled input
+         - updated select2 dropdown styles
+         - updated datetime picker styles
         
         1.11.0
         ------

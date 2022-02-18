@@ -18,6 +18,12 @@
   });
   _exports.helpers = void 0;
 
+  function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+  function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+  function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
   /* global MyAMS */
 
   /**
@@ -46,6 +52,60 @@
       if (picker) {
         picker.date(null);
       }
+    },
+
+    /**
+     * Scroll anchor parent element to given anchor
+     *
+     * @param anchor: scroll target
+     * @param parent: scroll parent
+     * @param props: scroll properties
+     */
+    scrollTo: function scrollTo() {
+      var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
+      var anchor = arguments.length > 1 ? arguments[1] : undefined;
+
+      var _ref = arguments.length > 2 ? arguments[2] : undefined,
+          props = _extends({}, _ref);
+
+      if (typeof anchor === 'string') {
+        anchor = $(anchor);
+      }
+
+      if (anchor.exists()) {
+        MyAMS.require('ajax').then(function () {
+          MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+            $(parent).scrollTo(anchor, props);
+          });
+        });
+      }
+    },
+
+    /**
+     * Store location hash when redirecting to log in form
+     */
+    setLoginHash: function setLoginHash() {
+      var form = $('#login_form'),
+          hash = $("input[name=\"login_form.widgets.hash\"]", form);
+      hash.val(window.location.hash);
+    },
+
+    /**
+     * SEO input helper
+     */
+    setSEOStatus: function setSEOStatus(evt) {
+      var input = $(evt.target),
+          progress = input.siblings('.progress').children('.progress-bar'),
+          length = Math.min(input.val().length, 100);
+      var status = 'success';
+
+      if (length < 20 || length > 80) {
+        status = 'danger';
+      } else if (length < 40 || length > 66) {
+        status = 'warning';
+      }
+
+      progress.removeClassPrefix('bg-').addClass('bg-' + status).css('width', length + '%');
     },
 
     /**
@@ -181,10 +241,10 @@
             var dtTable = table.DataTable();
 
             if (typeof options.data === 'string') {
-              dtTable.row(selector).remove().draw();
+              dtTable.row(selector).remove();
               dtTable.row.add($(options.data)).draw();
             } else {
-              dtTable.row(selector).data(options.data);
+              dtTable.row(selector).data(options.data).draw();
             }
 
             resolve(row);
@@ -224,6 +284,31 @@
     moveElementToParentEnd: function moveElementToParentEnd(element) {
       var parent = element.parent();
       return element.detach().appendTo(parent);
+    },
+
+    /**
+     * Add given element to the end of specified parent
+     *
+     * @param source: event source
+     * @param element: the provided element
+     * @param parent: the parent to which element should be added
+     * @param props: additional props
+     * @returns {*}
+     */
+    addElementToParent: function addElementToParent(source, _ref2) {
+      var element = _ref2.element,
+          parent = _ref2.parent,
+          props = _objectWithoutProperties(_ref2, ["element", "parent"]);
+
+      element = $(element);
+      parent = $(parent);
+      var result = element.appendTo(parent);
+
+      if (props.scrollTo) {
+        MyAMS.helpers.scrollTo(props.scrollParent, element);
+      }
+
+      return result;
     },
 
     /**

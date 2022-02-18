@@ -203,7 +203,7 @@
     },
 
     /**
-     * Genenric click event trigger
+     * Generic click event trigger
      */
     triggerEvent: function triggerEvent(event) {
       var source = $(event.currentTarget);

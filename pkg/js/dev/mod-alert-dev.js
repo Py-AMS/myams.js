@@ -94,11 +94,9 @@
       $(".alert-".concat(status), props.parent).not('.persistent').remove();
       $(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
 
-      MyAMS.require('ajax').then(function () {
-        MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-          $('#content').scrollTo(props.parent, {
-            offset: -15
-          });
+      MyAMS.require('helpers').then(function () {
+        MyAMS.helpers.scrollTo('#content', props.parent, {
+          offset: -15
         });
       });
     },

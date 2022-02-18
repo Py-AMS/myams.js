@@ -123,11 +123,9 @@
               var anchor = $("#".concat(tag));
 
               if (anchor.exists()) {
-                MyAMS.require('ajax').then(function () {
-                  MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-                    $('#main').scrollTo(anchor, {
-                      offset: -15
-                    });
+                MyAMS.require('helpers').then(function () {
+                  MyAMS.helpers.scrollTo('#main', anchor, {
+                    offset: -15
                   });
                 });
               }
@@ -151,7 +149,7 @@
           if (activeUrl) {
             menu = $("a[href=\"".concat(activeUrl, "\"]"), nav);
           } else {
-            menu = $('>ul >li >a[href!="#"]', nav).first();
+            menu = $('ul li a[href!="#"]', nav).first();
           }
 
           if (menu.exists()) {

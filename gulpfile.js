@@ -61,6 +61,12 @@ task('bootstrap', function() {
 });
 
 
+task('bootstrap_css', function() {
+	return src('node_modules/bootstrap/dist/css/bootstrap.css')
+		.pipe(dest('pkg/css/ext'));
+});
+
+
 task('fontawesome', function() {
 	return src('node_modules/@fortawesome/fontawesome-free/js/all.js')
 		.pipe(babel({
@@ -75,6 +81,15 @@ task('fontawesome', function() {
 			path.basename = 'fontawesome';
 		}))
 		.pipe(dest('pkg/js/ext'));
+});
+
+
+task('fontawesome_css', function() {
+	return src('node_modules/@fortawesome/fontawesome-free/css/all.css')
+		.pipe(rename(function(path) {
+			path.basename = 'fontawesome-all';
+		}))
+		.pipe(dest('pkg/css/ext'));
 });
 
 
@@ -308,7 +323,9 @@ task('sass_darkmode_prod', function() {
  */
 exports.jquery = task('jquery');
 exports.bootstrap = task('bootstrap');
+exports.bootstrap_css = task('bootstrap_css');
 exports.fontawesome = task('fontawesome');
+exports.fontawesome_css = task('fontawesome_css');
 
 exports.ext = task('ext');
 

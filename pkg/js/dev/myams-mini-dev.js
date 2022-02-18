@@ -3115,7 +3115,7 @@ return $ || jsr;
 /*!****************************!*\
   !*** ./src/js/ext-base.js ***!
   \****************************/
-/*! exports provided: init, getModules, initPage, initContent, clearContent, getObject, getFunctionByName, executeFunctionByName, getSource, getScript, getCSS, getQueryVar, generateId, generateUUID, switchIcon, default */
+/*! exports provided: init, getModules, initPage, initData, initContent, clearContent, getObject, getFunctionByName, executeFunctionByName, getSource, getScript, getCSS, getQueryVar, generateId, generateUUID, switchIcon, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3123,6 +3123,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getModules", function() { return getModules; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initPage", function() { return initPage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initData", function() { return initData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initContent", function() { return initContent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearContent", function() { return clearContent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getObject", function() { return getObject; });
@@ -3537,6 +3538,7 @@ function initPage() {
   return MyAMS.require('i18n').then(function () {
     MyAMS.dom = getDOM();
     MyAMS.theme = getTheme();
+    executeFunctionByName(MyAMS.config.initData, window, MyAMS.dom.root);
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
@@ -3554,8 +3556,43 @@ function initPage() {
         _iterator3.f();
       }
 
-      MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
+      executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
     });
+  });
+}
+/**
+ * Data attributes initializer
+ *
+ * This function converts a single "data-ams-data" attribute into a set of several "data-*"
+ * attributes.
+ * This can be used into HTML templates engines which don't allow creating dynamic attributes
+ * easily.
+ *
+ * @param element: parent element
+ */
+
+function initData(element) {
+  $('[data-ams-data]', element).each(function (idx, elt) {
+    var $elt = $(elt),
+        data = $elt.data('ams-data');
+
+    if (data) {
+      for (var name in data) {
+        if (!Object.prototype.hasOwnProperty.call(data, name)) {
+          continue;
+        }
+
+        var elementData = data[name];
+
+        if (typeof elementData !== 'string') {
+          elementData = JSON.stringify(elementData);
+        }
+
+        $elt.attr("data-".concat(name), elementData);
+      }
+    }
+
+    $elt.removeAttr('data-ams-data');
   });
 }
 /**
@@ -3591,6 +3628,7 @@ function initContent() {
   }
 
   return new Promise(function (resolve, reject) {
+    executeFunctionByName(MyAMS.config.initData, window, element);
     var modules = getModules(element);
     return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
       element.trigger('before-init.ams.content');
@@ -3895,13 +3933,11 @@ function generateUUID() {
  * @param prefix: icon prefix (defaults to "fa")
  */
 
-function switchIcon(element, fromClass, toClass, prefix) {
+function switchIcon(element, fromClass, toClass) {
+  var prefix = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa';
+
   if (typeof element === 'string') {
     element = $(element);
-  }
-
-  if (!prefix) {
-    prefix = 'fa';
   }
 
   if (MyAMS.config.useSVGIcons) {
@@ -3914,7 +3950,7 @@ function switchIcon(element, fromClass, toClass, prefix) {
       element.html(FontAwesome.icon(iconDef).html);
     }
   } else {
-    element.removeClass("".concat(prefix, "-").concat(fromClass)).addClass("".concat(prefix, "-").concat(toClass));
+    element.removeClass("fa-".concat(fromClass)).addClass("fa-".concat(toClass));
   }
 }
 /**
@@ -4007,6 +4043,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
   menuSpeed: 235,
   initPage: 'MyAMS.core.initPage',
+  initData: 'MyAMS.core.initData',
   initContent: 'MyAMS.core.initContent',
   clearContent: 'MyAMS.core.clearContent',
   useRegistry: true,
@@ -4033,6 +4070,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   generateUUID: generateUUID,
   switchIcon: switchIcon,
   initPage: initPage,
+  initData: initData,
   initContent: initContent,
   clearContent: clearContent
 };
@@ -4464,7 +4502,7 @@ var registry = {
   initElement: function initElement() {
     var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
     // populate data attributes
-    MyAMS.registry.initData(element); // load plug-ins from given DOM element
+    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element); // load plug-ins from given DOM element
 
     return plugins.load(element);
   },
@@ -4478,41 +4516,6 @@ var registry = {
    */
   register: function register(plugin, name, callback) {
     return plugins.register(plugin, name, callback);
-  },
-
-  /**
-   * Data attributes initializer
-   *
-   * This function converts a single "data-ams-data" attribute into a set of several "data-*"
-   * attributes.
-   * This can be used into HTML templates engines which don't allow to create dynamic attributes
-   * easilly.
-   *
-   * @param element: parent element
-   */
-  initData: function initData(element) {
-    $('[data-ams-data]', element).each(function (idx, elt) {
-      var $elt = $(elt),
-          data = $elt.data('ams-data');
-
-      if (data) {
-        for (var name in data) {
-          if (!Object.prototype.hasOwnProperty.call(data, name)) {
-            continue;
-          }
-
-          var elementData = data[name];
-
-          if (typeof elementData !== 'string') {
-            elementData = JSON.stringify(elementData);
-          }
-
-          $elt.attr("data-".concat(name), elementData);
-        }
-      }
-
-      $elt.removeAttr('data-ams-data');
-    });
   },
 
   /**
@@ -4805,7 +4808,7 @@ var ajax = {
   },
 
   /**
-   * Hnadle AJAX upload or download progress event
+   * Handle AJAX upload or download progress event
    *
    * @param event: source event
    */
@@ -5093,10 +5096,12 @@ var ajax = {
         if (result.window) {
           window.open(url, result.window, result.options);
         } else {
+          $(window).off('beforeunload');
+
           if (window.location.href === url) {
             window.location.reload();
           } else {
-            window.location.href = url;
+            window.location.replace(url);
           }
         }
 
@@ -5490,11 +5495,9 @@ var alert = {
     $(".alert-".concat(status), props.parent).not('.persistent').remove();
     $(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
 
-    MyAMS.require('ajax').then(function () {
-      MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-        $('#content').scrollTo(props.parent, {
-          offset: -15
-        });
+    MyAMS.require('helpers').then(function () {
+      MyAMS.helpers.scrollTo('#content', props.parent, {
+        offset: -15
       });
     });
   },
@@ -6134,14 +6137,14 @@ var error = {
             _iterator3.f();
           }
 
-          MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+          MyAMS.require('helpers').then(function () {
             var scrollBox = parent.parents('.modal-body');
 
             if (!scrollBox.exists()) {
               scrollBox = $('#main');
             }
 
-            scrollBox.scrollTo(parent, {
+            MyAMS.helpers.scrollTo(scrollBox, parent, {
               offset: -15
             });
           });
@@ -6379,7 +6382,7 @@ var events = {
   },
 
   /**
-   * Genenric click event trigger
+   * Generic click event trigger
    */
   triggerEvent: function triggerEvent(event) {
     var source = $(event.currentTarget);
@@ -7299,11 +7302,9 @@ function formSubmitCallback(form, settings, target, result, status, request) {
         opacity: '1.0'
       }, 250);
       MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(function () {
-        MyAMS.require('ajax').then(function () {
-          MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-            $('#main').scrollTo(target, {
-              offset: -15
-            });
+        MyAMS.require('helpers').then(function () {
+          MyAMS.helpers.scrollTo('#main', target, {
+            offset: -15
           });
         });
       });
@@ -7332,6 +7333,10 @@ function resetFormAfterSubmit(form, settings, button) {
     form.data('submitted', false);
     form.removeData('ams-submit-button');
     form.trigger('after-reset.ams.form');
+
+    if (form.data('ams-reset-after-submit')) {
+      form.get(0).reset();
+    }
   }
 }
 /**
@@ -7438,6 +7443,12 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 /* global MyAMS */
 
 /**
@@ -7466,6 +7477,60 @@ var helpers = {
     if (picker) {
       picker.date(null);
     }
+  },
+
+  /**
+   * Scroll anchor parent element to given anchor
+   *
+   * @param anchor: scroll target
+   * @param parent: scroll parent
+   * @param props: scroll properties
+   */
+  scrollTo: function scrollTo() {
+    var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
+    var anchor = arguments.length > 1 ? arguments[1] : undefined;
+
+    var _ref = arguments.length > 2 ? arguments[2] : undefined,
+        props = _extends({}, _ref);
+
+    if (typeof anchor === 'string') {
+      anchor = $(anchor);
+    }
+
+    if (anchor.exists()) {
+      MyAMS.require('ajax').then(function () {
+        MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
+          $(parent).scrollTo(anchor, props);
+        });
+      });
+    }
+  },
+
+  /**
+   * Store location hash when redirecting to log in form
+   */
+  setLoginHash: function setLoginHash() {
+    var form = $('#login_form'),
+        hash = $("input[name=\"login_form.widgets.hash\"]", form);
+    hash.val(window.location.hash);
+  },
+
+  /**
+   * SEO input helper
+   */
+  setSEOStatus: function setSEOStatus(evt) {
+    var input = $(evt.target),
+        progress = input.siblings('.progress').children('.progress-bar'),
+        length = Math.min(input.val().length, 100);
+    var status = 'success';
+
+    if (length < 20 || length > 80) {
+      status = 'danger';
+    } else if (length < 40 || length > 66) {
+      status = 'warning';
+    }
+
+    progress.removeClassPrefix('bg-').addClass('bg-' + status).css('width', length + '%');
   },
 
   /**
@@ -7601,10 +7666,10 @@ var helpers = {
           var dtTable = table.DataTable();
 
           if (typeof options.data === 'string') {
-            dtTable.row(selector).remove().draw();
+            dtTable.row(selector).remove();
             dtTable.row.add($(options.data)).draw();
           } else {
-            dtTable.row(selector).data(options.data);
+            dtTable.row(selector).data(options.data).draw();
           }
 
           resolve(row);
@@ -7644,6 +7709,31 @@ var helpers = {
   moveElementToParentEnd: function moveElementToParentEnd(element) {
     var parent = element.parent();
     return element.detach().appendTo(parent);
+  },
+
+  /**
+   * Add given element to the end of specified parent
+   *
+   * @param source: event source
+   * @param element: the provided element
+   * @param parent: the parent to which element should be added
+   * @param props: additional props
+   * @returns {*}
+   */
+  addElementToParent: function addElementToParent(source, _ref2) {
+    var element = _ref2.element,
+        parent = _ref2.parent,
+        props = _objectWithoutProperties(_ref2, ["element", "parent"]);
+
+    element = $(element);
+    parent = $(parent);
+    var result = element.appendTo(parent);
+
+    if (props.scrollTo) {
+      MyAMS.helpers.scrollTo(props.scrollParent, element);
+    }
+
+    return result;
   },
 
   /**
@@ -7720,6 +7810,7 @@ var i18n = {
   LOGOUT_COMMENT: "You can improve your security further after logging out by closing this opened browser",
   LAST_UPDATE: "Last update: ",
   DT_COLUMNS: "Columns",
+  NO_SELECTED_VALUE: "No selected value",
 
   /**
    * Plug-ins translations container
@@ -8480,7 +8571,7 @@ var NavigationMenu = /*#__PURE__*/function () {
   }, {
     key: "init",
     value: function init(menus) {
-      var settings = this.settings; // add mark to menus with childrens
+      var settings = this.settings; // add mark to menus with children
 
       menus.find('li').each(function (idx, elt) {
         var menuItem = $(elt);
@@ -8500,6 +8591,13 @@ var NavigationMenu = /*#__PURE__*/function () {
             });
           }
         }
+      }); // slide down open menus
+
+      menus.find('li.open').each(function (idx, elt) {
+        var menu = $(elt),
+            subMenu = $('> ul', menu);
+        subMenu.slideDown(settings.speed);
+        menu.find('>a b.collapse-sign').html(settings.openedSign);
       }); // open active level
 
       menus.find('li.active').each(function (idx, elt) {
@@ -8718,12 +8816,12 @@ var nav = {
           });
         }
 
-        var settings = $.extend({}, defaults, options);
+        var settings = $.extend({}, defaults, options),
+            menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
 
         if (data.amsMenuConfig) {
           MyAMS.require('ajax', 'skin').then(function () {
             MyAMS.ajax.get(data.amsMenuConfig).then(function (result) {
-              var menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
               new menuFactory(result, $(_this), settings).render();
               MyAMS.skin.checkURL();
             });
@@ -8731,7 +8829,7 @@ var nav = {
         } else {
           // static menus
           var menus = $('ul', this);
-          new NavigationMenu(null, $(this), settings).init(menus);
+          new menuFactory(null, $(this), settings).init(menus);
         }
       }
     });
@@ -8748,6 +8846,19 @@ var nav = {
 
         if (handler) {
           return;
+        } // check for DataTable collapse handler
+
+
+        if (evt.target.tagName === 'TD') {
+          var target = $(evt.target);
+
+          if (target.hasClass('dtr-control')) {
+            var table = target.parents('table.datatable');
+
+            if (table.hasClass('collapsed')) {
+              return;
+            }
+          }
         }
 
         return linkClickHandler(evt);
@@ -9518,6 +9629,7 @@ var _datatablesHelpers = {
   reorderRows: function reorderRows(evt) {
     return new Promise(function (resolve, reject) {
       var table = $(evt.target),
+          dtTable = table.DataTable(),
           data = table.data(); // extract target and URL
 
       var target = data.amsReorderInputTarget,
@@ -9573,6 +9685,10 @@ var _datatablesHelpers = {
 
           MyAMS.require('ajax').then(function () {
             MyAMS.ajax.post(url, postData).then(function (result, status, xhr) {
+              $('td.sorter', table).each(function (idx, elt) {
+                $(elt).removeData().attr('data-order', idx);
+                dtTable.row($(elt).parents('tr').get(0)).invalidate().draw();
+              });
               var callback = data.amsReorderCallback;
 
               if (callback) {
@@ -9889,7 +10005,9 @@ function datatables(element) {
                           _idx = _iterator4[0],
                           sortable = _iterator4[1];
 
-                      if (sortable !== undefined) {
+                      if (data.rowReorder) {
+                        columns[_idx].sortable = false;
+                      } else if (sortable !== undefined) {
                         columns[_idx].sortable = typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
                       }
                     }
@@ -9935,14 +10053,16 @@ function datatables(element) {
                     return;
                   }
 
-                  var plugin = table.DataTable(settings);
-                  MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
-                  table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
+                  setTimeout(function () {
+                    var plugin = table.DataTable(settings);
+                    MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
+                    table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
 
-                  if (settings.rowReorder) {
-                    plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
-                    plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
-                  }
+                    if (settings.rowReorder) {
+                      plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
+                      plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
+                    }
+                  }, 100);
                 });
                 resolve(tables);
               }, reject);
@@ -10485,7 +10605,11 @@ function select2(element) {
               select.on('select2:open', function () {
                 // handle dropdown automatic focus
                 setTimeout(function () {
-                  $('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+                  var dropdown = $('.select2-search__field', plugin.data('select2').$dropdown);
+
+                  if (dropdown.exists()) {
+                    dropdown.get(0).focus();
+                  }
                 }, 50);
               });
 
@@ -11078,11 +11202,9 @@ var skin = {
             var anchor = $("#".concat(tag));
 
             if (anchor.exists()) {
-              MyAMS.require('ajax').then(function () {
-                MyAMS.ajax.check($.fn.scrollTo, "".concat(MyAMS.env.baseURL, "../ext/jquery-scrollto").concat(MyAMS.env.extext, ".js")).then(function () {
-                  $('#main').scrollTo(anchor, {
-                    offset: -15
-                  });
+              MyAMS.require('helpers').then(function () {
+                MyAMS.helpers.scrollTo('#main', anchor, {
+                  offset: -15
                 });
               });
             }
@@ -11106,7 +11228,7 @@ var skin = {
         if (activeUrl) {
           menu = $("a[href=\"".concat(activeUrl, "\"]"), nav);
         } else {
-          menu = $('>ul >li >a[href!="#"]', nav).first();
+          menu = $('ul li a[href!="#"]', nav).first();
         }
 
         if (menu.exists()) {
@@ -11331,8 +11453,8 @@ var tree = {
    * Open/close tree node inside a table
    */
   switchTreeNode: function switchTreeNode(evt) {
-    var removeChildNodes = function removeChildNodes(node_id) {
-      $("tr[data-ams-tree-node-parent-id=\"".concat(node_id, "\"]")).each(function (idx, elt) {
+    var removeChildNodes = function removeChildNodes(nodeId) {
+      $("tr[data-ams-tree-node-parent-id=\"".concat(nodeId, "\"]")).each(function (idx, elt) {
         var row = $(elt);
         removeChildNodes(row.data('ams-tree-node-id'));
         dtTable.row(row).remove().draw();
@@ -11357,7 +11479,7 @@ var tree = {
       MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
 
       MyAMS.require('ajax').then(function () {
-        MyAMS.ajax.post(location + '/' + sourceName + '/' + treeNodesTarget, {
+        MyAMS.ajax.post("".concat(location, "/").concat(sourceName, "/").concat(treeNodesTarget), {
           can_sort: !$('td.sorter', tr).is(':empty')
         }).then(function (result) {
           if (result.length > 0) {
@@ -11526,7 +11648,7 @@ var tree = {
             var location = data.amsLocation;
 
             if (location) {
-              target = location + '/' + target;
+              target = "".concat(location, "/").concat(target);
             }
           }
 
@@ -11742,7 +11864,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.11.1  */
+/** Version: 1.12.0  */
 
 /***/ }),
 

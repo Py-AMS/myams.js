@@ -90,7 +90,7 @@
 /*!****************************!*\
   !*** ./src/js/ext-base.js ***!
   \****************************/
-/*! exports provided: init, getModules, initPage, initContent, clearContent, getObject, getFunctionByName, executeFunctionByName, getSource, getScript, getCSS, getQueryVar, generateId, generateUUID, switchIcon, default */
+/*! exports provided: init, getModules, initPage, initData, initContent, clearContent, getObject, getFunctionByName, executeFunctionByName, getSource, getScript, getCSS, getQueryVar, generateId, generateUUID, switchIcon, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -98,6 +98,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getModules", function() { return getModules; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initPage", function() { return initPage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initData", function() { return initData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initContent", function() { return initContent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearContent", function() { return clearContent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getObject", function() { return getObject; });
@@ -512,6 +513,7 @@ function initPage() {
   return MyAMS.require('i18n').then(function () {
     MyAMS.dom = getDOM();
     MyAMS.theme = getTheme();
+    executeFunctionByName(MyAMS.config.initData, window, MyAMS.dom.root);
     var modules = getModules(MyAMS.dom.root);
 
     MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
@@ -529,8 +531,43 @@ function initPage() {
         _iterator3.f();
       }
 
-      MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
+      executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
     });
+  });
+}
+/**
+ * Data attributes initializer
+ *
+ * This function converts a single "data-ams-data" attribute into a set of several "data-*"
+ * attributes.
+ * This can be used into HTML templates engines which don't allow creating dynamic attributes
+ * easily.
+ *
+ * @param element: parent element
+ */
+
+function initData(element) {
+  $('[data-ams-data]', element).each(function (idx, elt) {
+    var $elt = $(elt),
+        data = $elt.data('ams-data');
+
+    if (data) {
+      for (var name in data) {
+        if (!Object.prototype.hasOwnProperty.call(data, name)) {
+          continue;
+        }
+
+        var elementData = data[name];
+
+        if (typeof elementData !== 'string') {
+          elementData = JSON.stringify(elementData);
+        }
+
+        $elt.attr("data-".concat(name), elementData);
+      }
+    }
+
+    $elt.removeAttr('data-ams-data');
   });
 }
 /**
@@ -566,6 +603,7 @@ function initContent() {
   }
 
   return new Promise(function (resolve, reject) {
+    executeFunctionByName(MyAMS.config.initData, window, element);
     var modules = getModules(element);
     return MyAMS.require.apply(MyAMS, _toConsumableArray(modules)).then(function () {
       element.trigger('before-init.ams.content');
@@ -870,13 +908,11 @@ function generateUUID() {
  * @param prefix: icon prefix (defaults to "fa")
  */
 
-function switchIcon(element, fromClass, toClass, prefix) {
+function switchIcon(element, fromClass, toClass) {
+  var prefix = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa';
+
   if (typeof element === 'string') {
     element = $(element);
-  }
-
-  if (!prefix) {
-    prefix = 'fa';
   }
 
   if (MyAMS.config.useSVGIcons) {
@@ -889,7 +925,7 @@ function switchIcon(element, fromClass, toClass, prefix) {
       element.html(FontAwesome.icon(iconDef).html);
     }
   } else {
-    element.removeClass("".concat(prefix, "-").concat(fromClass)).addClass("".concat(prefix, "-").concat(toClass));
+    element.removeClass("fa-".concat(fromClass)).addClass("fa-".concat(toClass));
   }
 }
 /**
@@ -982,6 +1018,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
   menuSpeed: 235,
   initPage: 'MyAMS.core.initPage',
+  initData: 'MyAMS.core.initData',
   initContent: 'MyAMS.core.initContent',
   clearContent: 'MyAMS.core.clearContent',
   useRegistry: true,
@@ -1008,6 +1045,7 @@ var isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test
   generateUUID: generateUUID,
   switchIcon: switchIcon,
   initPage: initPage,
+  initData: initData,
   initContent: initContent,
   clearContent: clearContent
 };
@@ -1439,7 +1477,7 @@ var registry = {
   initElement: function initElement() {
     var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
     // populate data attributes
-    MyAMS.registry.initData(element); // load plug-ins from given DOM element
+    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element); // load plug-ins from given DOM element
 
     return plugins.load(element);
   },
@@ -1453,41 +1491,6 @@ var registry = {
    */
   register: function register(plugin, name, callback) {
     return plugins.register(plugin, name, callback);
-  },
-
-  /**
-   * Data attributes initializer
-   *
-   * This function converts a single "data-ams-data" attribute into a set of several "data-*"
-   * attributes.
-   * This can be used into HTML templates engines which don't allow to create dynamic attributes
-   * easilly.
-   *
-   * @param element: parent element
-   */
-  initData: function initData(element) {
-    $('[data-ams-data]', element).each(function (idx, elt) {
-      var $elt = $(elt),
-          data = $elt.data('ams-data');
-
-      if (data) {
-        for (var name in data) {
-          if (!Object.prototype.hasOwnProperty.call(data, name)) {
-            continue;
-          }
-
-          var elementData = data[name];
-
-          if (typeof elementData !== 'string') {
-            elementData = JSON.stringify(elementData);
-          }
-
-          $elt.attr("data-".concat(name), elementData);
-        }
-      }
-
-      $elt.removeAttr('data-ams-data');
-    });
   },
 
   /**
@@ -1691,7 +1694,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.11.1  */
+/** Version: 1.12.0  */
 
 /***/ }),
 

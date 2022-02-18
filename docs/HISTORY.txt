@@ -1,6 +1,26 @@
 Changelog
 =========
 
+1.12.0
+------
+ - upgraded Bootstrap to version 4.6.1
+ - upgraded FontAwesome to version 5.15.4
+ - added helper and styles for an "SEO quality indicator" component
+ - added helper to store log in form redirection hash
+ - initialize data attributes before loading modules
+ - handle pre-opened navigation menus
+ - updated table sorting data after ordering
+ - updated active menu selector to handle case where the first active menu is a submenu
+ - updated FontAwesome icon switch helper
+ - updated FontAwesome CSS resources
+ - moved initData function to base module, and added config option to override
+ - added scroll helper
+ - added helper to add element to parent
+ - added option to reset form after submit
+ - added timeout to Datatables plug-in initialization
+ - disable window "beforeunload" event handler before activating a "redirect" response
+ - small styles updates
+
 1.11.1
 ------
  - automatically set focus when select2 dropdown is opened

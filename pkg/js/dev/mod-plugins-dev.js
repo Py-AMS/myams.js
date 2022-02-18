@@ -344,6 +344,7 @@
     reorderRows: function reorderRows(evt) {
       return new Promise(function (resolve, reject) {
         var table = $(evt.target),
+            dtTable = table.DataTable(),
             data = table.data(); // extract target and URL
 
         var target = data.amsReorderInputTarget,
@@ -399,6 +400,10 @@
 
             MyAMS.require('ajax').then(function () {
               MyAMS.ajax.post(url, postData).then(function (result, status, xhr) {
+                $('td.sorter', table).each(function (idx, elt) {
+                  $(elt).removeData().attr('data-order', idx);
+                  dtTable.row($(elt).parents('tr').get(0)).invalidate().draw();
+                });
                 var callback = data.amsReorderCallback;
 
                 if (callback) {
@@ -716,7 +721,9 @@
                             _idx = _iterator4[0],
                             sortable = _iterator4[1];
 
-                        if (sortable !== undefined) {
+                        if (data.rowReorder) {
+                          columns[_idx].sortable = false;
+                        } else if (sortable !== undefined) {
                           columns[_idx].sortable = typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
                         }
                       }
@@ -762,14 +769,16 @@
                       return;
                     }
 
-                    var plugin = table.DataTable(settings);
-                    MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
-                    table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
+                    setTimeout(function () {
+                      var plugin = table.DataTable(settings);
+                      MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
+                      table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
 
-                    if (settings.rowReorder) {
-                      plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
-                      plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
-                    }
+                      if (settings.rowReorder) {
+                        plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
+                        plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
+                      }
+                    }, 100);
                   });
                   resolve(tables);
                 }, reject);
@@ -1319,7 +1328,11 @@
                 select.on('select2:open', function () {
                   // handle dropdown automatic focus
                   setTimeout(function () {
-                    $('.select2-search__field', plugin.data('select2').$dropdown).get(0).focus();
+                    var dropdown = $('.select2-search__field', plugin.data('select2').$dropdown);
+
+                    if (dropdown.exists()) {
+                      dropdown.get(0).focus();
+                    }
                   }, 50);
                 });
 

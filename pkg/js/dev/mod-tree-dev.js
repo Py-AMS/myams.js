@@ -35,8 +35,8 @@
      * Open/close tree node inside a table
      */
     switchTreeNode: function switchTreeNode(evt) {
-      var removeChildNodes = function removeChildNodes(node_id) {
-        $("tr[data-ams-tree-node-parent-id=\"".concat(node_id, "\"]")).each(function (idx, elt) {
+      var removeChildNodes = function removeChildNodes(nodeId) {
+        $("tr[data-ams-tree-node-parent-id=\"".concat(nodeId, "\"]")).each(function (idx, elt) {
           var row = $(elt);
           removeChildNodes(row.data('ams-tree-node-id'));
           dtTable.row(row).remove().draw();
@@ -61,7 +61,7 @@
         MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
 
         MyAMS.require('ajax').then(function () {
-          MyAMS.ajax.post(location + '/' + sourceName + '/' + treeNodesTarget, {
+          MyAMS.ajax.post("".concat(location, "/").concat(sourceName, "/").concat(treeNodesTarget), {
             can_sort: !$('td.sorter', tr).is(':empty')
           }).then(function (result) {
             if (result.length > 0) {
@@ -230,7 +230,7 @@
               var location = data.amsLocation;
 
               if (location) {
-                target = location + '/' + target;
+                target = "".concat(location, "/").concat(target);
               }
             }
 

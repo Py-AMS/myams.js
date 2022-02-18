@@ -126,7 +126,7 @@
     },
 
     /**
-     * Hnadle AJAX upload or download progress event
+     * Handle AJAX upload or download progress event
      *
      * @param event: source event
      */
@@ -414,10 +414,12 @@
           if (result.window) {
             window.open(url, result.window, result.options);
           } else {
+            $(window).off('beforeunload');
+
             if (window.location.href === url) {
               window.location.reload();
             } else {
-              window.location.href = url;
+              window.location.replace(url);
             }
           }
 

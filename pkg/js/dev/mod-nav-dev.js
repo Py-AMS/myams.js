@@ -191,7 +191,7 @@
     }, {
       key: "init",
       value: function init(menus) {
-        var settings = this.settings; // add mark to menus with childrens
+        var settings = this.settings; // add mark to menus with children
 
         menus.find('li').each(function (idx, elt) {
           var menuItem = $(elt);
@@ -211,6 +211,13 @@
               });
             }
           }
+        }); // slide down open menus
+
+        menus.find('li.open').each(function (idx, elt) {
+          var menu = $(elt),
+              subMenu = $('> ul', menu);
+          subMenu.slideDown(settings.speed);
+          menu.find('>a b.collapse-sign').html(settings.openedSign);
         }); // open active level
 
         menus.find('li.active').each(function (idx, elt) {
@@ -432,12 +439,12 @@
             });
           }
 
-          var settings = $.extend({}, defaults, options);
+          var settings = $.extend({}, defaults, options),
+              menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
 
           if (data.amsMenuConfig) {
             MyAMS.require('ajax', 'skin').then(function () {
               MyAMS.ajax.get(data.amsMenuConfig).then(function (result) {
-                var menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
                 new menuFactory(result, $(_this), settings).render();
                 MyAMS.skin.checkURL();
               });
@@ -445,7 +452,7 @@
           } else {
             // static menus
             var menus = $('ul', this);
-            new NavigationMenu(null, $(this), settings).init(menus);
+            new menuFactory(null, $(this), settings).init(menus);
           }
         }
       });
@@ -462,6 +469,19 @@
 
           if (handler) {
             return;
+          } // check for DataTable collapse handler
+
+
+          if (evt.target.tagName === 'TD') {
+            var target = $(evt.target);
+
+            if (target.hasClass('dtr-control')) {
+              var table = target.parents('table.datatable');
+
+              if (table.hasClass('collapsed')) {
+                return;
+              }
+            }
           }
 
           return linkClickHandler(evt);
