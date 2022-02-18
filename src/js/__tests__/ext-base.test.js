@@ -18,11 +18,13 @@ import MyAMS, {
 	getScript,
 	switchIcon,
 	init,
+	initData,
 	clearContent,
 	initContent
 } from '../ext-base';
 import { events } from "../mod-events";
 import myams_require from "../ext-require";
+import { registry } from "../ext-registry";
 
 
 // Initialize MyAMS
@@ -432,7 +434,21 @@ test("Test MyAMS switchIcon function", () => {
 });
 
 
-// Test MyAMS initContent
+// Test MyAMS initData
+test("Test MyAMS initData function", () => {
+
+	const tag = $(`<div class="parent"><p data-ams-data='{"ams-field1": "value1"}'>Data block</p></div>`);
+
+	const element = $(tag);
+	initData(element);
+
+	const p = $('p', element);
+	expect(p.attr('data-ams-field1')).toBe('value1');
+
+});
+
+
+	// Test MyAMS initContent
 test("Test MyAMS initContent function", () => {
 
 	document.body.innerHTML = `<div>
