@@ -322,15 +322,47 @@ export function initPage() {
 	return MyAMS.require('i18n').then(() => {
 		MyAMS.dom = getDOM();
 		MyAMS.theme = getTheme();
-		MyAMS.registry.initData(MyAMS.dom.root);
+		executeFunctionByName(MyAMS.config.initData, window, MyAMS.dom.root);
 		const modules = getModules(MyAMS.dom.root);
 		MyAMS.require(...modules).then(() => {
 			for (const moduleName of MyAMS.config.modules) {
 				executeFunctionByName(`MyAMS.${moduleName}.init`);
 			}
-			MyAMS.core.executeFunctionByName(MyAMS.dom.page.data('ams-init-content') ||
+			executeFunctionByName(MyAMS.dom.page.data('ams-init-content') ||
 				MyAMS.config.initContent);
 		});
+	});
+}
+
+
+/**
+ * Data attributes initializer
+ *
+ * This function converts a single "data-ams-data" attribute into a set of several "data-*"
+ * attributes.
+ * This can be used into HTML templates engines which don't allow creating dynamic attributes
+ * easily.
+ *
+ * @param element: parent element
+ */
+export function initData(element) {
+	$('[data-ams-data]', element).each((idx, elt) => {
+		const
+			$elt = $(elt),
+			data = $elt.data('ams-data');
+		if (data) {
+			for (const name in data) {
+				if (!Object.prototype.hasOwnProperty.call(data, name)) {
+					continue;
+				}
+				let elementData = data[name];
+				if (typeof elementData !== 'string') {
+					elementData = JSON.stringify(elementData);
+				}
+				$elt.attr(`data-${name}`, elementData);
+			}
+		}
+		$elt.removeAttr('data-ams-data');
 	});
 }
 
@@ -355,6 +387,7 @@ export function initContent(element=null) {
 	}
 
 	return new Promise((resolve, reject) => {
+		executeFunctionByName(MyAMS.config.initData, window, element);
 		const modules = getModules(element);
 		return MyAMS.require(...modules).then(() => {
 			element.trigger('before-init.ams.content');
@@ -746,6 +779,7 @@ const
 			(window.FontAwesome !== undefined) && (FontAwesome.config.autoReplaceSvg === 'nest'),
 		menuSpeed: 235,
 		initPage: 'MyAMS.core.initPage',
+		initData: 'MyAMS.core.initData',
 		initContent: 'MyAMS.core.initContent',
 		clearContent: 'MyAMS.core.clearContent',
 		useRegistry: true,
@@ -772,6 +806,7 @@ const
 		generateUUID: generateUUID,
 		switchIcon: switchIcon,
 		initPage: initPage,
+		initData: initData,
 		initContent: initContent,
 		clearContent: clearContent
 	};

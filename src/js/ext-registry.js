@@ -254,7 +254,7 @@ export const registry = {
 	 */
 	initElement: function(element='#content') {
 		// populate data attributes
-		MyAMS.registry.initData(element);
+		MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element);
 		// load plug-ins from given DOM element
 		return plugins.load(element);
 	},
@@ -268,37 +268,6 @@ export const registry = {
 	 */
 	register: function(plugin, name, callback) {
 		return plugins.register(plugin, name, callback);
-	},
-
-	/**
-	 * Data attributes initializer
-	 *
-	 * This function converts a single "data-ams-data" attribute into a set of several "data-*"
-	 * attributes.
-	 * This can be used into HTML templates engines which don't allow to create dynamic attributes
-	 * easilly.
-	 *
-	 * @param element: parent element
-	 */
-	initData: function(element) {
-		$('[data-ams-data]', element).each((idx, elt) => {
-			const
-				$elt = $(elt),
-				data = $elt.data('ams-data');
-			if (data) {
-				for (const name in data) {
-					if (!Object.prototype.hasOwnProperty.call(data, name)) {
-						continue;
-					}
-					let elementData = data[name];
-					if (typeof elementData !== 'string') {
-						elementData = JSON.stringify(elementData);
-					}
-					$elt.attr(`data-${name}`, elementData);
-				}
-			}
-			$elt.removeAttr('data-ams-data');
-		});
 	},
 
 	/**
