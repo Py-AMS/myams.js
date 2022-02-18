@@ -36,7 +36,7 @@ test-js:
         - (npm run coverage | tee coverage/coverage.log) || true
         - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
         - echo "Global tests coverage is $GLOBAL_COVER %"
-        - anybadge --label=Coverage --file=./coverage/coverage.svg --value=$GLOBAL_COVER coverage
+        - anybadge --label=Coverage --file=./coverage/coverage.svg --value="$GLOBAL_COVER" coverage
     artifacts:
         paths:
             - ./node_modules/
