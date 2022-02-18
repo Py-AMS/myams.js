@@ -646,21 +646,23 @@ export function datatables(element) {
 									if (veto.veto) {
 										return;
 									}
-									const plugin = table.DataTable(settings);
-									MyAMS.core.executeFunctionByName(
-										data.amsDatatableAfterInitCallback || data.amsAfterInit,
-										document, table, plugin, settings);
-									table.trigger('after-init.ams.datatable', [table, plugin]);
+									setTimeout(() => {
+										const plugin = table.DataTable(settings);
+										MyAMS.core.executeFunctionByName(
+											data.amsDatatableAfterInitCallback || data.amsAfterInit,
+											document, table, plugin, settings);
+										table.trigger('after-init.ams.datatable', [table, plugin]);
 
-									// set reorder events
-									if (settings.rowReorder) {
-										plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(
-											data.amsDatatablePreReorder || data.amsPreReorder) ||
-											_datatablesHelpers.preReorder);
-										plugin.on('row-reorder', MyAMS.core.getFunctionByName(
-											data.amsDatatableReordered || data.amsReordered) ||
-											_datatablesHelpers.reorderRows);
-									}
+										// set reorder events
+										if (settings.rowReorder) {
+											plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(
+													data.amsDatatablePreReorder || data.amsPreReorder) ||
+												_datatablesHelpers.preReorder);
+											plugin.on('row-reorder', MyAMS.core.getFunctionByName(
+													data.amsDatatableReordered || data.amsReordered) ||
+												_datatablesHelpers.reorderRows);
+										}
+									}, 100);
 								});
 								resolve(tables);
 							}, reject);
