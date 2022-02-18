@@ -57,6 +57,8 @@ export const i18n = {
 
 	DT_COLUMNS: "Columns",
 
+	NO_SELECTED_VALUE: "No selected value",
+
 	/**
 	 * Plug-ins translations container
 	 */

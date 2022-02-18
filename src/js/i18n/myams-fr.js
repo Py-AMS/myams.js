@@ -55,6 +55,8 @@
 
 		DT_COLUMNS: "Colonnes",
 
+		NO_SELECTED_VALUE: "Pas de valeur sélectionnée",
+
 		// Plug-ins translations
 		plugins: {
 
