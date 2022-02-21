@@ -84,5 +84,9 @@
 
 .tree-node-padding {
 	display: inline-block;
-	width: 15px;
+	width: 2.5em;
+
+	& + .tree-switcher:not(:empty) {
+		margin-left: -14px;
+	}
 }
