@@ -17,7 +17,7 @@ export const container = {
 		return function(link, params) {
 			MyAMS.require('ajax', 'alert', 'i18n').then(() => {
 				const
-					cell = link.parents('td'),
+					cell = link.parents('td').first(),
 					icon = $('i', cell),
 					row = cell.parents('tr'),
 					table = row.parents('table'),
