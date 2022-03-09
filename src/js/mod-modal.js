@@ -46,7 +46,7 @@ export function modalToggleEventHandler(evt) {
  */
 export function modalShownEventHandler(evt) {
 
-	const zIndexModal = 1100;
+	const zIndexModal = 500;
 
 	// Enable modals stacking
 	const
