@@ -37,6 +37,17 @@ section {
       }
     }
   }
+  &.inner-table {
+    &.border-0 {
+      > fieldset {
+        margin: 1em;
+
+        fieldset >& {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 
 table {
