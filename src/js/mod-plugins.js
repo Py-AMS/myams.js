@@ -951,6 +951,9 @@ export function editor(element) {
 									editor.setTheme('ace/theme/textmate');
 								}
 								editor.session.setValue(textarea.val());
+								if (textarea.attr('disabled')) {
+									editor.setReadOnly(true);
+								}
 								editor.session.on('change', () => {
 									textarea.val(editor.session.getValue());
 								});
