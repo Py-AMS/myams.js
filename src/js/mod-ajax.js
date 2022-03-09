@@ -550,13 +550,19 @@ export const ajax = {
 		if (error === 'abort') {
 			return;
 		}
+		// don't display errors on OK status
 		if (response && response.statusText && response.statusText.toUpperCase() === 'OK') {
+			return;
+		}
+		// don't display errors twice (via AJAX HTTP error handler and JSON response)
+		if (response.x_ams_handled === true) {
 			return;
 		}
 		const parsedResponse = MyAMS.ajax.getResponse(response);
 		if (parsedResponse) {
 			if (parsedResponse.contentType === 'json') {
 				MyAMS.ajax.handleJSON(parsedResponse.data);
+				response.x_ams_handled = true;
 			} else {
 				MyAMS.require('i18n', 'alert').then(() => {
 					const
