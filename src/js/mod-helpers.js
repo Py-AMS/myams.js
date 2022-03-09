@@ -134,7 +134,8 @@ export const helpers = {
 			MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, element).then(() => {
 				element.replaceWith($(options.content));
 				element = $(`[id="${options.object_id}"]`);
-				MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, element).then(() => {
+				const parent = element.parents().first();
+				MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, parent).then(() => {
 					resolve(element);
 				}, reject);
 			}, reject);
