@@ -1471,7 +1471,7 @@ export function tinymce(element) {
 									data.amsTinymceAfterInitCallback || data.amsAfterInit,
 									document, editor, plugin, settings);
 								editor.trigger('after-init.ams.tinymce', [editor, settings]);
-							}, 100);
+							}, 250);
 						});
 					}, reject).then(() => {
 						resolve(editors);
