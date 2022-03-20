@@ -46,7 +46,7 @@ export function modalToggleEventHandler(evt) {
  */
 export function modalShownEventHandler(evt) {
 
-	const zIndexModal = 500;
+	const zIndexModal = 1100;
 
 	// Enable modals stacking
 	const
@@ -84,7 +84,7 @@ export function dynamicModalShowEventHandler(evt) {
 
 /**
  * Dynamic modal 'shown' callback
- * This callback is is used to set focus on first modal input
+ * This callback is used to set focus on first modal input
  *
  * @param evt: source event
  */
