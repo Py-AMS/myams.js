@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.12.3
+------
+ - packaging version mismatch
+
 1.12.2
 ------
  - added support for Python 3.10
