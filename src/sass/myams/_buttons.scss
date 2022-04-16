@@ -9,6 +9,14 @@
   }
 }
 
+.btn-sm,
+.btn-group-sm > .btn {
+  & + .dropdown-menu {
+    font-size: $font-size-sm !important;
+  }
+}
+
+
 .btn-xs,
 .btn-group-xs > .btn {
   padding: .2rem 0.4rem !important;
