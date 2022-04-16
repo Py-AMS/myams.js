@@ -162,7 +162,8 @@
         MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, element).then(function () {
           element.replaceWith($(options.content));
           element = $("[id=\"".concat(options.object_id, "\"]"));
-          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, element).then(function () {
+          var parent = element.parents().first();
+          MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, parent).then(function () {
             resolve(element);
           }, reject);
         }, reject);

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.11.1
+Version: 1.12.1
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -51,8 +51,21 @@ Description: ================
         Changelog
         =========
         
+        1.12.1
+        ------
+         - updated tree nodes padding
+         - updated AJAX errors management
+         - updated container element attribute switcher
+         - updated element refresh helper
+         - updated base modals z-index
+         - updated TinyMCE timeout before editor initialization
+         - handle read-only mode in ACE editor
+         - updated styles
+        
         1.12.0
         ------
+         - upgraded Bootstrap to version 4.6.1
+         - upgraded FontAwesome to version 5.15.4
          - added helper and styles for an "SEO quality indicator" component
          - added helper to store log in form redirection hash
          - initialize data attributes before loading modules
@@ -61,9 +74,11 @@ Description: ================
          - updated active menu selector to handle case where the first active menu is a submenu
          - updated FontAwesome icon switch helper
          - updated FontAwesome CSS resources
+         - moved initData function to base module, and added config option to override
          - added scroll helper
          - added helper to add element to parent
          - added option to reset form after submit
+         - added timeout to Datatables plug-in initialization
          - disable window "beforeunload" event handler before activating a "redirect" response
          - small styles updates
         

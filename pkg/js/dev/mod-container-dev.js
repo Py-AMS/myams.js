@@ -33,7 +33,7 @@
     switchElementAttribute: function switchElementAttribute(action) {
       return function (link, params) {
         MyAMS.require('ajax', 'alert', 'i18n').then(function () {
-          var cell = link.parents('td'),
+          var cell = link.parents('td').first(),
               icon = $('i', cell),
               row = cell.parents('tr'),
               table = row.parents('table'),

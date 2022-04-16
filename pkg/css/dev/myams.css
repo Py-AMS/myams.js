@@ -1481,7 +1481,7 @@ select.form-control:focus::-ms-value {
 .col-form-label-sm {
   padding-top: calc(0.25rem + 1px);
   padding-bottom: calc(0.25rem + 1px);
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5; }
 
 .form-control-plaintext {
@@ -1502,7 +1502,7 @@ select.form-control:focus::-ms-value {
 .form-control-sm {
   height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5;
   border-radius: 0.2rem; }
 
@@ -1579,7 +1579,7 @@ textarea.form-control {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: .1rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5;
   color: #fff;
   background-color: rgba(71, 142, 71, 0.9);
@@ -1667,7 +1667,7 @@ textarea.form-control {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: .1rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5;
   color: #fff;
   background-color: rgba(169, 68, 66, 0.9);
@@ -2229,7 +2229,7 @@ fieldset:disabled a.btn {
 
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5;
   border-radius: 0.2rem; }
 
@@ -2458,7 +2458,7 @@ input[type="button"].btn-block {
   display: block;
   padding: 0.5rem 1.5rem;
   margin-bottom: 0;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   color: #6c757d;
   white-space: nowrap; }
 
@@ -2685,7 +2685,7 @@ input[type="button"].btn-block {
 .input-group-sm > .input-group-prepend > .btn,
 .input-group-sm > .input-group-append > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5;
   border-radius: 0.2rem; }
 
@@ -2865,7 +2865,7 @@ input[type="button"].btn-block {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
-  font-size: 0.83125rem; }
+  font-size: 0.855rem; }
 
 .custom-select-lg {
   height: calc(1.5em + 1rem + 2px);
@@ -3643,7 +3643,7 @@ input[type="button"].btn-block {
 
 .pagination-sm .page-link {
   padding: 0.25rem 0.5rem;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   line-height: 1.5; }
 
 .pagination-sm .page-item:first-child .page-link {
@@ -4379,7 +4379,7 @@ a.close.disabled {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   word-wrap: break-word;
   opacity: 0; }
   .tooltip.show {
@@ -4464,7 +4464,7 @@ a.close.disabled {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   word-wrap: break-word;
   background-color: #fff;
   background-clip: padding-box;
@@ -8099,6 +8099,10 @@ button.modal .bg-dark-modal:focus {
 .btn.btn-light {
   border-color: #ced4da; }
 
+.btn-sm + .dropdown-menu, .btn-group-sm > .btn + .dropdown-menu,
+.btn-group-sm > .btn + .dropdown-menu {
+  font-size: 0.855rem !important; }
+
 .btn-xs,
 .btn-group-xs > .btn {
   padding: .2rem 0.4rem !important;
@@ -9107,6 +9111,11 @@ section table.datatable.table-bordered tr td:last-child {
 section table.datatable.table-bordered tr:last-child td {
   border-bottom-width: 1px; }
 
+section.inner-table.border-0 > fieldset {
+  margin: 1em; }
+  fieldset > section.inner-table.border-0 > fieldset {
+    margin: 0; }
+
 table tr[data-ams-url] {
   cursor: pointer; }
 
@@ -9177,7 +9186,9 @@ table td.action, table td.reorder {
 
 .tree-node-padding {
   display: inline-block;
-  width: 15px; }
+  width: 2.5em; }
+  .tree-node-padding + .tree-switcher:not(:empty) {
+    margin-left: -14px; }
 
 #header {
   position: relative;
@@ -9223,7 +9234,7 @@ table td.action, table td.reorder {
   #top-links .top-menu .label,
   #top-links .top-tabs .label {
     color: #bfbfbf;
-    font-size: 0.83125rem;
+    font-size: 0.855rem;
     font-weight: 700;
     line-height: 1.35em;
     text-transform: uppercase;
@@ -9241,7 +9252,7 @@ table td.action, table td.reorder {
 
 #top-links .top-tabs li > a {
   color: #212529;
-  font-size: 0.83125rem;
+  font-size: 0.855rem;
   background-color: #e9ecef;
   border-color: #ccc #ccc transparent;
   box-shadow: 1px -1px 2px transparent; }
@@ -9978,7 +9989,7 @@ aside {
         letter-spacing: normal; }
         #content section > h2 .dropdown-menu .dropdown-item,
         #content section > h3 .dropdown-menu .dropdown-item {
-          font-size: 0.83125rem; }
+          line-height: 1.5; }
     #content section p,
     #content section .p,
     #content section ul {

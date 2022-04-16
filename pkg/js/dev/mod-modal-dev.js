@@ -98,7 +98,7 @@
   }
   /**
    * Dynamic modal 'shown' callback
-   * This callback is is used to set focus on first modal input
+   * This callback is used to set focus on first modal input
    *
    * @param evt: source event
    */

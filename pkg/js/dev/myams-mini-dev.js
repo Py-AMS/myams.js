@@ -5317,9 +5317,15 @@ var ajax = {
     // user shouldn't be notified of aborted requests
     if (_error === 'abort') {
       return;
-    }
+    } // don't display errors on OK status
+
 
     if (response && response.statusText && response.statusText.toUpperCase() === 'OK') {
+      return;
+    } // don't display errors twice (via AJAX HTTP error handler and JSON response)
+
+
+    if (response.x_ams_handled === true) {
       return;
     }
 
@@ -5328,6 +5334,7 @@ var ajax = {
     if (parsedResponse) {
       if (parsedResponse.contentType === 'json') {
         MyAMS.ajax.handleJSON(parsedResponse.data);
+        response.x_ams_handled = true;
       } else {
         MyAMS.require('i18n', 'alert').then(function () {
           var title = _error || event.statusText || event.type,
@@ -5852,7 +5859,7 @@ var container = {
   switchElementAttribute: function switchElementAttribute(action) {
     return function (link, params) {
       MyAMS.require('ajax', 'alert', 'i18n').then(function () {
-        var cell = link.parents('td'),
+        var cell = link.parents('td').first(),
             icon = $('i', cell),
             row = cell.parents('tr'),
             table = row.parents('table'),
@@ -7587,7 +7594,8 @@ var helpers = {
       MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, element).then(function () {
         element.replaceWith($(options.content));
         element = $("[id=\"".concat(options.object_id, "\"]"));
-        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, element).then(function () {
+        var parent = element.parents().first();
+        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, parent).then(function () {
           resolve(element);
         }, reject);
       }, reject);
@@ -8183,7 +8191,7 @@ function dynamicModalShowEventHandler(evt) {
 }
 /**
  * Dynamic modal 'shown' callback
- * This callback is is used to set focus on first modal input
+ * This callback is used to set focus on first modal input
  *
  * @param evt: source event
  */
@@ -10355,6 +10363,11 @@ function editor(element) {
                 }
 
                 editor.session.setValue(textarea.val());
+
+                if (textarea.attr('disabled')) {
+                  editor.setReadOnly(true);
+                }
+
                 editor.session.on('change', function () {
                   textarea.val(editor.session.getValue());
                 });
@@ -10859,7 +10872,7 @@ function tinymce(element) {
                 var plugin = editor.tinymce(settings);
                 MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
                 editor.trigger('after-init.ams.tinymce', [editor, settings]);
-              }, 100);
+              }, 250);
             });
           }, reject).then(function () {
             resolve(editors);
@@ -11864,7 +11877,7 @@ var html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
 if (html.data('ams-init') !== false) {
   Object(_ext_base__WEBPACK_IMPORTED_MODULE_0__["init"])(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.12.0  */
+/** Version: 1.12.1  */
 
 /***/ }),
 

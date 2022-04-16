@@ -1074,6 +1074,11 @@
                   }
 
                   editor.session.setValue(textarea.val());
+
+                  if (textarea.attr('disabled')) {
+                    editor.setReadOnly(true);
+                  }
+
                   editor.session.on('change', function () {
                     textarea.val(editor.session.getValue());
                   });
@@ -1585,7 +1590,7 @@
                   var plugin = editor.tinymce(settings);
                   MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
                   editor.trigger('after-init.ams.tinymce', [editor, settings]);
-                }, 100);
+                }, 250);
               });
             }, reject).then(function () {
               resolve(editors);
