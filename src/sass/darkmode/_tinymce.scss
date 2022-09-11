@@ -100,6 +100,12 @@
       .tox-dialog__body-nav-item {
         color: $input-color;
       }
+      &.tox-alert-dialog {
+        border: 8px solid $input-border-color !important;
+        p {
+          color: $input-color;
+        }
+      }
     }
   }
   .tox-collection--list {
