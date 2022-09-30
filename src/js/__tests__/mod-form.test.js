@@ -1602,8 +1602,8 @@ describe("Test MyAMS.skin module", () => {
 			settings = form.getSettings(testForm, testFormData, testButton, testButtonData, {}),
 			postData = getFormData(testForm, settings, testFormData, testButton, testButtonData, {}),
 			action = getFormAction(testForm, settings),
-			ajaxSettings = getFormAjaxSettings(testForm, settings, testButton, postData, action, target),
-			target = getFormDownloadTarget(testForm, settings);
+			target = getFormDownloadTarget(testForm, settings),
+			ajaxSettings = getFormAjaxSettings(testForm, settings, testButton, postData, action, target);
 
 		expect(target).toBe('download_frame');
 
