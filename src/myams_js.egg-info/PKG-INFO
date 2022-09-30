@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.12.1
+Version: 1.12.3
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -51,16 +51,26 @@ Description: ================
         Changelog
         =========
         
-        1.12.1
+        1.12.3
         ------
+         - packaging version mismatch
+        
+        1.12.2
+        ------
+         - added support for Python 3.10
          - updated tree nodes padding
          - updated AJAX errors management
          - updated container element attribute switcher
          - updated element refresh helper
          - updated base modals z-index
          - updated TinyMCE timeout before editor initialization
+         - updated font size in dropdown menus
          - handle read-only mode in ACE editor
          - updated styles
+        
+        1.12.1
+        ------
+         - updated CI configuration
         
         1.12.0
         ------

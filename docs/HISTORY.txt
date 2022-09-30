@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.13.0
+------
+ - updated dependencies: Bootstrap, Babel, DataTables, Jest, JQuery, JQuery-UI, Webpack...
+ - updated TinyMCE dialogs style
+
 1.12.3
 ------
  - packaging version mismatch
