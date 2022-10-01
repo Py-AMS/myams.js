@@ -23,22 +23,22 @@ export const tree = {
 
 		const
 			node = $(evt.currentTarget),
-			switcher = $('i.switch', node),
+			switcher = $('.switcher', node),
 			tr = node.parents('tr').first(),
 			table = tr.parents('table').first(),
 			dtTable = table.DataTable();
 		node.tooltip('hide');
-		if (switcher.hasClass('minus')) {
+		if (switcher.hasClass('expanded')) {
 			removeChildNodes(tr.data('ams-tree-node-id'));
-			MyAMS.core.switchIcon(switcher, 'minus-square', 'plus-square', 'far');
-			switcher.removeClass('minus');
+			switcher.html('<i class="far fa-plus-square"></i>')
+				.removeClass('expanded');
 		} else {
 			const
 				location = tr.data('ams-location') || table.data('ams-location') || '',
 				treeNodesTarget = tr.data('ams-tree-nodes-target') ||
 					table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
 				sourceName = tr.data('ams-element-name');
-			MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+			switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 			MyAMS.require('ajax').then(() => {
 				MyAMS.ajax.post(`${location}/${sourceName}/${treeNodesTarget}`, {
 					can_sort: !$('td.sorter', tr).is(':empty')
@@ -51,8 +51,8 @@ export const tree = {
 							MyAMS.core.initContent(newRow).then();
 						}
 					}
-					MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-					switcher.addClass('minus');
+					switcher.html('<i class="far fa-minus-square"></i>')
+						.addClass('expanded');
 				});
 			});
 		}
@@ -65,26 +65,26 @@ export const tree = {
 	switchTree: (evt) => {
 		const
 			node = $(evt.currentTarget),
-			switcher = $('i.switch', node),
+			switcher = $('.switcher', node),
 			th = node.parents('th'),
 			table = th.parents('table').first(),
 			tableID = table.data('ams-tree-node-id'),
 			dtTable = table.DataTable();
 		node.tooltip('hide');
-		if (switcher.hasClass('minus')) {
+		if (switcher.hasClass('expanded')) {
 			$('tr[data-ams-tree-node-parent-id]').filter(`tr[data-ams-tree-node-parent-id!="${tableID}"]`).each((idx, elt) => {
 				dtTable.row(elt).remove().draw();
 			});
-			$('i.switch', table).each((idx, elt) => {
-				MyAMS.core.switchIcon($(elt), 'minus-square', 'plus-square', 'far');
-				$(elt).removeClass('minus');
+			$('.switcher', table).each((idx, elt) => {
+				$(elt).html('<i class="far fa-plus-square"></i>')
+					.removeClass('expanded');
 			});
 		} else {
 			const
 				location = table.data('ams-location') || '',
 				target = table.data('ams-tree-nodes-target') || 'get-tree.json',
 				tr = $('tbody tr', table.first());
-			MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+			switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 			MyAMS.require('ajax').then(() => {
 				MyAMS.ajax.post(`${location}/${target}`, {
 					can_sort: !$('td.sorter', tr).is(':empty')
@@ -97,8 +97,8 @@ export const tree = {
 						dtTable.row.add(newRow).draw();
 					});
 					MyAMS.core.initContent(table).then();
-					MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-					switcher.addClass('minus');
+					switcher.html('<i class="far fa-minus-square"></i>')
+						.addClass('expanded');
 				});
 			});
 		}
