@@ -168,7 +168,7 @@ export const alert = {
 	 *  - subtitle: message sub-title
 	 *  - message: main alert message
 	 */
-	alert: function(props={}) {
+	alert: (props={}) => {
 		let status = props.status || 'info';
 		if (status === 'error') {
 			status = 'danger';
@@ -193,7 +193,7 @@ export const alert = {
 	 *  - hideTimestamp: boolean value to specify if timestamp must be hidden
 	 *  - timeout: timeout in ms; default to 5000, set to 0 to disable auto-hide
 	 */
-	messageBox: function(props={}) {
+	messageBox: (props={}) => {
 		let status = props.status || 'info';
 		if (status === 'error') {
 			status = 'danger';
@@ -218,7 +218,7 @@ export const alert = {
 	 *
 	 * @param props
 	 */
-	smallBox: function(props={}) {
+	smallBox: (props={}) => {
 		let status = props.status || 'info';
 		if (status === 'error') {
 			status = 'danger';
@@ -244,7 +244,7 @@ export const alert = {
 	 * @param props
 	 * @returns {Promise<unknown>}
 	 */
-	bigBox: function(props={}) {
+	bigBox: (props={}) => {
 		return new Promise((resolve, reject) => {
 			let status = props.status || 'info';
 			if (status === 'error') {

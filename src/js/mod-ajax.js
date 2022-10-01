@@ -30,10 +30,6 @@ export const ajax = {
 	 *
 	 * @param checker: pointer to a resource which will be downloaded if undefined
 	 * @param source: URL of a javascript file containing requested resource
-	 * @param callback: pointer to a function which will be called after the script is
-	 * 		downloaded; first argument of this callback is a boolean value indicating if the
-	 * 	    script was downloaded for the first time or not
-	 * @param options: additional callback options argument
 	 */
 	check: (checker, source) => {
 
@@ -52,11 +48,11 @@ export const ajax = {
 				if (!(checker instanceof Array)) {
 					checker = [checker];
 				}
-				for (let index = 0; index < checker.length; index++) {
-					if (checker[index] === undefined) {
-						deferred.push(MyAMS.core.getScript(source[index]));
+				checker.forEach((elt, idx) => {
+					if (elt === undefined) {
+						deferred.push(MyAMS.core.getScript(source[idx]));
 					}
-				}
+				});
 			}
 			$.when.apply($, deferred).then(() => {
 				resolve(deferred.length > 0);
@@ -69,22 +65,22 @@ export const ajax = {
 	 *
 	 * @param addr
 	 */
-	getAddr: function(addr) {
+	getAddr: (addr) => {
 		const href = addr || $('html head base').attr('href') || window.location.href;
-		return href.substr(0, href.lastIndexOf('/') + 1);
+		return href.substring(0, href.lastIndexOf('/') + 1);
 	},
 
 	/**
 	 * JQuery AJAX start callback
 	 */
-	start: function() {
+	start: () => {
 		$('#ajax-gear').show();
 	},
 
 	/**
 	 * JQuery AJAX stop callback
 	 */
-	stop: function() {
+	stop: () => {
 		$('#ajax-gear').hide();
 	},
 
@@ -93,7 +89,7 @@ export const ajax = {
 	 *
 	 * @param event: source event
 	 */
-	progress: function(event) {
+	progress: (event) => {
 		if (!event.lengthComputable) {
 			return;
 		}
@@ -113,7 +109,7 @@ export const ajax = {
 	 * @param params: url params
 	 * @param options: AJAX call options
 	 */
-	get: function(url, params, options) {
+	get: (url, params, options) => {
 
 		return new Promise((resolve, reject) => {
 
@@ -148,7 +144,7 @@ export const ajax = {
 	 * @param data: submit data
 	 * @param options: AJAX call options
 	 */
-	post: function(url, data, options) {
+	post: (url, data, options) => {
 
 		return new Promise((resolve, reject) => {
 
@@ -182,7 +178,7 @@ export const ajax = {
 	 * This form of function can be used in MyAMS "href" or "data-ams-url" attributes, like in
 	 * <a href="MyAMS.ajax.getJSON?url=...">Click me!</a>.
 	 */
-	getJSON: function() {
+	getJSON: () => {
 		return (source, options) => {
 			const url = options.url;
 			delete options.url;
@@ -193,7 +189,7 @@ export const ajax = {
 	/**
 	 * Extract datatype and result from response object
 	 */
-	getResponse: function(request) {
+	getResponse: (request) => {
 		let dataType = 'unknown',
 			result;
 		if (request) {
@@ -270,7 +266,7 @@ export const ajax = {
 	 * @param form: source form
 	 * @param target
 	 */
-	handleJSON: function(result, form, target) {
+	handleJSON: (result, form, target) => {
 
 		function closeForm() {
 			return new Promise((resolve, reject) => {
@@ -340,7 +336,7 @@ export const ajax = {
 				closeForm();
 				url = result.location || window.location.hash;
 				if (url.startsWith('#')) {
-					url = url.substr(1);
+					url = url.substring(1);
 				}
 				loadTarget = $(result.target || target || '#content');
 				promises.push(MyAMS.require('skin').then(() => {
@@ -545,7 +541,7 @@ export const ajax = {
 	/**
 	 * JQuery AJAX error handler
 	 */
-	error: function(event, response, request, error) {
+	error: (event, response, request, error) => {
 		// user shouldn't be notified of aborted requests
 		if (error === 'abort') {
 			return;
