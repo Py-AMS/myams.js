@@ -23,8 +23,8 @@
   /**
    * MyAMS JSON-RPC protocol support
    */
-  var $ = MyAMS.$;
-  var jsonrpc = {};
+  const $ = MyAMS.$;
+  const jsonrpc = {};
   /**
    * Global module initialization
    */

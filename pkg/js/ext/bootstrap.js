@@ -13,20 +13,18 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
   /*!
-    * Bootstrap v4.6.1 (https://getbootstrap.com/)
-    * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+    * Bootstrap v4.6.2 (https://getbootstrap.com/)
+    * Copyright 2011-2022 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
     * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
     */
   (function (global, factory) {
-    (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? factory(exports, require('jquery')) : typeof define === 'function' && define.amd ? define(['exports', 'jquery'], factory) : (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bootstrap = {}, global.jQuery));
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jquery')) : typeof define === 'function' && define.amd ? define(['exports', 'jquery'], factory) : (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bootstrap = {}, global.jQuery));
   })(void 0, function (exports, $) {
     'use strict';
 
     function _interopDefaultLegacy(e) {
-      return e && _typeof(e) === 'object' && 'default' in e ? e : {
+      return e && typeof e === 'object' && 'default' in e ? e : {
         'default': e
       };
     }
@@ -46,11 +44,14 @@
     function _createClass(Constructor, protoProps, staticProps) {
       if (protoProps) _defineProperties(Constructor.prototype, protoProps);
       if (staticProps) _defineProperties(Constructor, staticProps);
+      Object.defineProperty(Constructor, "prototype", {
+        writable: false
+      });
       return Constructor;
     }
 
     function _extends$1() {
-      _extends$1 = Object.assign || function (target) {
+      _extends$1 = Object.assign ? Object.assign.bind() : function (target) {
         for (var i = 1; i < arguments.length; i++) {
           var source = arguments[i];
 
@@ -63,7 +64,6 @@
 
         return target;
       };
-
       return _extends$1.apply(this, arguments);
     }
 
@@ -75,16 +75,15 @@
     }
 
     function _setPrototypeOf(o, p) {
-      _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
         o.__proto__ = p;
         return o;
       };
-
       return _setPrototypeOf(o, p);
     }
     /**
      * --------------------------------------------------------------------------
-     * Bootstrap (v4.6.1): util.js
+     * Bootstrap (v4.6.2): util.js
      * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
      * --------------------------------------------------------------------------
      */
@@ -259,7 +258,7 @@
      */
 
     var NAME$a = 'alert';
-    var VERSION$a = '4.6.1';
+    var VERSION$a = '4.6.2';
     var DATA_KEY$a = 'bs.alert';
     var EVENT_KEY$a = "." + DATA_KEY$a;
     var DATA_API_KEY$7 = '.data-api';
@@ -406,7 +405,7 @@
 
 
     var NAME$9 = 'button';
-    var VERSION$9 = '4.6.1';
+    var VERSION$9 = '4.6.2';
     var DATA_KEY$9 = 'bs.button';
     var EVENT_KEY$9 = "." + DATA_KEY$9;
     var DATA_API_KEY$6 = '.data-api';
@@ -596,7 +595,7 @@
 
 
     var NAME$8 = 'carousel';
-    var VERSION$8 = '4.6.1';
+    var VERSION$8 = '4.6.2';
     var DATA_KEY$8 = 'bs.carousel';
     var EVENT_KEY$8 = "." + DATA_KEY$8;
     var DATA_API_KEY$5 = '.data-api';
@@ -1080,7 +1079,7 @@
 
           var _config = _extends$1({}, Default$7, $__default["default"](this).data());
 
-          if (_typeof(config) === 'object') {
+          if (typeof config === 'object') {
             _config = _extends$1({}, _config, config);
           }
 
@@ -1182,7 +1181,7 @@
 
 
     var NAME$7 = 'collapse';
-    var VERSION$7 = '4.6.1';
+    var VERSION$7 = '4.6.2';
     var DATA_KEY$7 = 'bs.collapse';
     var EVENT_KEY$7 = "." + DATA_KEY$7;
     var DATA_API_KEY$4 = '.data-api';
@@ -1448,7 +1447,7 @@
           var $element = $__default["default"](this);
           var data = $element.data(DATA_KEY$7);
 
-          var _config = _extends$1({}, Default$6, $element.data(), _typeof(config) === 'object' && config ? config : {});
+          var _config = _extends$1({}, Default$6, $element.data(), typeof config === 'object' && config ? config : {});
 
           if (!data && _config.toggle && typeof config === 'string' && /show|hide/.test(config)) {
             _config.toggle = false;
@@ -1894,7 +1893,7 @@
       };
     }
 
-    var classCallCheck = function classCallCheck(instance, Constructor) {
+    var classCallCheck = function (instance, Constructor) {
       if (!(instance instanceof Constructor)) {
         throw new TypeError("Cannot call a class as a function");
       }
@@ -1918,7 +1917,7 @@
       };
     }();
 
-    var defineProperty = function defineProperty(obj, key, value) {
+    var defineProperty = function (obj, key, value) {
       if (key in obj) {
         Object.defineProperty(obj, key, {
           value: value,
@@ -4138,7 +4137,7 @@
      */
 
     var NAME$6 = 'dropdown';
-    var VERSION$6 = '4.6.1';
+    var VERSION$6 = '4.6.2';
     var DATA_KEY$6 = 'bs.dropdown';
     var EVENT_KEY$6 = "." + DATA_KEY$6;
     var DATA_API_KEY$3 = '.data-api';
@@ -4442,7 +4441,7 @@
         return this.each(function () {
           var data = $__default["default"](this).data(DATA_KEY$6);
 
-          var _config = _typeof(config) === 'object' ? config : null;
+          var _config = typeof config === 'object' ? config : null;
 
           if (!data) {
             data = new Dropdown(this, _config);
@@ -4640,7 +4639,7 @@
 
 
     var NAME$5 = 'modal';
-    var VERSION$5 = '4.6.1';
+    var VERSION$5 = '4.6.2';
     var DATA_KEY$5 = 'bs.modal';
     var EVENT_KEY$5 = "." + DATA_KEY$5;
     var DATA_API_KEY$2 = '.data-api';
@@ -5160,7 +5159,7 @@
         return this.each(function () {
           var data = $__default["default"](this).data(DATA_KEY$5);
 
-          var _config = _extends$1({}, Default$4, $__default["default"](this).data(), _typeof(config) === 'object' && config ? config : {});
+          var _config = _extends$1({}, Default$4, $__default["default"](this).data(), typeof config === 'object' && config ? config : {});
 
           if (!data) {
             data = new Modal(this, _config);
@@ -5242,7 +5241,7 @@
     };
     /**
      * --------------------------------------------------------------------------
-     * Bootstrap (v4.6.1): tools/sanitizer.js
+     * Bootstrap (v4.6.2): tools/sanitizer.js
      * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
      * --------------------------------------------------------------------------
      */
@@ -5369,7 +5368,7 @@
 
 
     var NAME$4 = 'tooltip';
-    var VERSION$4 = '4.6.1';
+    var VERSION$4 = '4.6.2';
     var DATA_KEY$4 = 'bs.tooltip';
     var EVENT_KEY$4 = "." + DATA_KEY$4;
     var JQUERY_NO_CONFLICT$4 = $__default["default"].fn[NAME$4];
@@ -5696,7 +5695,7 @@
       };
 
       _proto.setElementContent = function setElementContent($element, content) {
-        if (_typeof(content) === 'object' && (content.nodeType || content.jquery)) {
+        if (typeof content === 'object' && (content.nodeType || content.jquery)) {
           // Content is a DOM node or a jQuery
           if (this.config.html) {
             if (!$__default["default"](content).parent().is($element)) {
@@ -5832,7 +5831,7 @@
       };
 
       _proto._fixTitle = function _fixTitle() {
-        var titleType = _typeof(this.element.getAttribute('data-original-title'));
+        var titleType = typeof this.element.getAttribute('data-original-title');
 
         if (this.element.getAttribute('title') || titleType !== 'string') {
           this.element.setAttribute('data-original-title', this.element.getAttribute('title') || '');
@@ -5922,7 +5921,7 @@
             delete dataAttributes[dataAttr];
           }
         });
-        config = _extends$1({}, this.constructor.Default, dataAttributes, _typeof(config) === 'object' && config ? config : {});
+        config = _extends$1({}, this.constructor.Default, dataAttributes, typeof config === 'object' && config ? config : {});
 
         if (typeof config.delay === 'number') {
           config.delay = {
@@ -6000,7 +5999,7 @@
           var $element = $__default["default"](this);
           var data = $element.data(DATA_KEY$4);
 
-          var _config = _typeof(config) === 'object' && config;
+          var _config = typeof config === 'object' && config;
 
           if (!data && /dispose|hide/.test(config)) {
             return;
@@ -6078,7 +6077,7 @@
 
 
     var NAME$3 = 'popover';
-    var VERSION$3 = '4.6.1';
+    var VERSION$3 = '4.6.2';
     var DATA_KEY$3 = 'bs.popover';
     var EVENT_KEY$3 = "." + DATA_KEY$3;
     var JQUERY_NO_CONFLICT$3 = $__default["default"].fn[NAME$3];
@@ -6172,7 +6171,7 @@
         return this.each(function () {
           var data = $__default["default"](this).data(DATA_KEY$3);
 
-          var _config = _typeof(config) === 'object' ? config : null;
+          var _config = typeof config === 'object' ? config : null;
 
           if (!data && /dispose|hide/.test(config)) {
             return;
@@ -6251,7 +6250,7 @@
 
 
     var NAME$2 = 'scrollspy';
-    var VERSION$2 = '4.6.1';
+    var VERSION$2 = '4.6.2';
     var DATA_KEY$2 = 'bs.scrollspy';
     var EVENT_KEY$2 = "." + DATA_KEY$2;
     var DATA_API_KEY$1 = '.data-api';
@@ -6336,9 +6335,7 @@
           }
 
           return null;
-        }).filter(function (item) {
-          return item;
-        }).sort(function (a, b) {
+        }).filter(Boolean).sort(function (a, b) {
           return a[0] - b[0];
         }).forEach(function (item) {
           _this2._offsets.push(item[0]);
@@ -6362,7 +6359,7 @@
       ;
 
       _proto._getConfig = function _getConfig(config) {
-        config = _extends$1({}, Default$1, _typeof(config) === 'object' && config ? config : {});
+        config = _extends$1({}, Default$1, typeof config === 'object' && config ? config : {});
 
         if (typeof config.target !== 'string' && Util.isElement(config.target)) {
           var id = $__default["default"](config.target).attr('id');
@@ -6471,7 +6468,7 @@
         return this.each(function () {
           var data = $__default["default"](this).data(DATA_KEY$2);
 
-          var _config = _typeof(config) === 'object' && config;
+          var _config = typeof config === 'object' && config;
 
           if (!data) {
             data = new ScrollSpy(this, _config);
@@ -6534,7 +6531,7 @@
 
 
     var NAME$1 = 'tab';
-    var VERSION$1 = '4.6.1';
+    var VERSION$1 = '4.6.2';
     var DATA_KEY$1 = 'bs.tab';
     var EVENT_KEY$1 = "." + DATA_KEY$1;
     var DATA_API_KEY = '.data-api';
@@ -6571,7 +6568,7 @@
       _proto.show = function show() {
         var _this = this;
 
-        if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $__default["default"](this._element).hasClass(CLASS_NAME_ACTIVE) || $__default["default"](this._element).hasClass(CLASS_NAME_DISABLED)) {
+        if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $__default["default"](this._element).hasClass(CLASS_NAME_ACTIVE) || $__default["default"](this._element).hasClass(CLASS_NAME_DISABLED) || this._element.hasAttribute('disabled')) {
           return;
         }
 
@@ -6757,7 +6754,7 @@
 
 
     var NAME = 'toast';
-    var VERSION = '4.6.1';
+    var VERSION = '4.6.2';
     var DATA_KEY = 'bs.toast';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $__default["default"].fn[NAME];
@@ -6871,7 +6868,7 @@
       ;
 
       _proto._getConfig = function _getConfig(config) {
-        config = _extends$1({}, Default, $__default["default"](this._element).data(), _typeof(config) === 'object' && config ? config : {});
+        config = _extends$1({}, Default, $__default["default"](this._element).data(), typeof config === 'object' && config ? config : {});
         Util.typeCheckConfig(NAME, config, this.constructor.DefaultType);
         return config;
       };
@@ -6914,7 +6911,7 @@
           var $element = $__default["default"](this);
           var data = $element.data(DATA_KEY);
 
-          var _config = _typeof(config) === 'object' && config;
+          var _config = typeof config === 'object' && config;
 
           if (!data) {
             data = new Toast(this, _config);

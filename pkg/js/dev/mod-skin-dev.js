@@ -20,30 +20,18 @@
 
   var _this = void 0;
 
-  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
   /* global MyAMS */
 
   /**
    * MyAMS generic skin features
    */
-  var $ = MyAMS.$;
-  var _initialized = false;
-  var skin = {
+  const $ = MyAMS.$;
+  let _initialized = false;
+  const skin = {
     /**
      * Main *skin* module initialization
      */
-    init: function init() {
+    init: () => {
       if (_initialized) {
         return;
       }
@@ -57,10 +45,10 @@
         });
       }
 
-      $('.hint').mousedown(function (evt) {
+      $('.hint').mousedown(evt => {
         $(evt.currentTarget).tooltip('hide');
       });
-      $(document).on('clear.ams.content', function () {
+      $(document).on('clear.ams.content', () => {
         $('.tooltip').remove();
       }); // check URL when hash is changed
 
@@ -73,7 +61,7 @@
      *
      * @param element: the element to initialize
      */
-    initElement: function initElement(element) {
+    initElement: element => {
       if (!MyAMS.config.enableTooltips) {
         $('.hint', element).tooltip({
           html: MyAMS.config.enableHtmlTooltips
@@ -88,13 +76,13 @@
      * triggered when the window location hash is modified; this can notably occur when a
      * navigation menu, for example, is clicked.
      */
-    checkURL: function checkURL() {
-      return new Promise(function (resolve, reject) {
-        var nav = MyAMS.dom.nav;
-        var hash = location.hash,
+    checkURL: () => {
+      return new Promise((resolve, reject) => {
+        const nav = MyAMS.dom.nav;
+        let hash = location.hash,
             url = hash.replace(/^#/, ''),
             tag = null;
-        var tagPosition = url.indexOf('!');
+        const tagPosition = url.indexOf('!');
 
         if (tagPosition > 0) {
           hash = hash.substring(0, tagPosition + 1);
@@ -102,28 +90,28 @@
           url = url.substring(0, tagPosition);
         }
 
-        var menu;
+        let menu;
 
         if (url) {
           // new hash
-          var container = $('#content');
+          let container = $('#content');
 
           if (!container.exists()) {
             container = MyAMS.dom.root;
           }
 
-          menu = $("a[href=\"".concat(hash, "\"]"), nav); // load specified URL into '#content'
+          menu = $(`a[href="${hash}"]`, nav); // load specified URL into '#content'
 
-          MyAMS.skin.loadURL(url, container).then(function () {
-            var prefix = $('html head title').data('ams-title-prefix'),
-                fullPrefix = prefix ? "".concat(prefix, " > ") : '';
-            document.title = "".concat(fullPrefix).concat($('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || menu.text().trim() || document.title);
+          MyAMS.skin.loadURL(url, container).then(() => {
+            const prefix = $('html head title').data('ams-title-prefix'),
+                  fullPrefix = prefix ? `${prefix} > ` : '';
+            document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || menu.text().trim() || document.title}`;
 
             if (tag) {
-              var anchor = $("#".concat(tag));
+              const anchor = $(`#${tag}`);
 
               if (anchor.exists()) {
-                MyAMS.require('helpers').then(function () {
+                MyAMS.require('helpers').then(() => {
                   MyAMS.helpers.scrollTo('#main', anchor, {
                     offset: -15
                   });
@@ -133,7 +121,7 @@
 
 
             if (menu.exists()) {
-              MyAMS.require('nav').then(function () {
+              MyAMS.require('nav').then(() => {
                 MyAMS.nav.setActiveMenu(menu);
                 MyAMS.nav.drawBreadcrumbs();
               }).then(resolve);
@@ -144,16 +132,16 @@
         } else {
           // empty hash! We try to check if a specific menu was activated with a custom
           // data attribute, otherwise we go to the first navigation menu!
-          var activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
+          const activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
 
           if (activeUrl) {
-            menu = $("a[href=\"".concat(activeUrl, "\"]"), nav);
+            menu = $(`a[href="${activeUrl}"]`, nav);
           } else {
             menu = $('ul li a[href!="#"]', nav).first();
           }
 
           if (menu.exists()) {
-            MyAMS.require('nav').then(function () {
+            MyAMS.require('nav').then(() => {
               MyAMS.nav.setActiveMenu(menu);
 
               if (activeUrl) {
@@ -182,37 +170,37 @@
      * @param options: additional options to AJAX call
      * @returns {Promise<string>}
      */
-    loadURL: function loadURL(url, target) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      return new Promise(function (resolve, reject) {
+    loadURL: function (url, target) {
+      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      return new Promise((resolve, reject) => {
         if (url.startsWith('#')) {
           url = url.substr(1);
         }
 
         target = $(target);
-        MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, target).then(function (status) {
+        MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, target).then(status => {
           if (!status) {
             // applied veto!
             return;
           }
 
-          var defaults = {
+          const defaults = {
             type: 'GET',
             url: url,
             dataType: 'html',
             cache: false,
-            beforeSend: function beforeSend() {
-              target.html("<h1 class=\"loading\"><i class=\"fa fa-cog fa-spin\"></i> ".concat(MyAMS.i18n.LOADING, "</h1>"));
+            beforeSend: () => {
+              target.html(`<h1 class="loading"><i class="fa fa-cog fa-spin"></i> ${MyAMS.i18n.LOADING}</h1>`);
 
               if (options && options.preLoadCallback) {
                 MyAMS.core.executeFunctionByName(options.preLoadCallback, _this, options.preLoadCallbackOptions);
               }
 
               if (target.attr('id') === 'content') {
-                MyAMS.require('nav').then(function () {
-                  var prefix = $('html head title').data('ams-title-prefix'),
-                      fullPrefix = prefix ? "".concat(prefix, " > ") : '';
-                  document.title = "".concat(fullPrefix).concat($('.breadcrumb li:last-child').text());
+                MyAMS.require('nav').then(() => {
+                  const prefix = $('html head title').data('ams-title-prefix'),
+                        fullPrefix = prefix ? `${prefix} > ` : '';
+                  document.title = `${fullPrefix}${$('.breadcrumb li:last-child').text()}`;
                   MyAMS.dom.root.animate({
                     scrollTop: 0
                   }, 'fast');
@@ -220,8 +208,8 @@
               }
             }
           };
-          var settings = $.extend({}, defaults, options),
-              veto = {
+          const settings = $.extend({}, defaults, options),
+                veto = {
             veto: false
           };
           target.trigger('before-load.ams.content', [settings, veto]);
@@ -230,57 +218,51 @@
             return;
           }
 
-          $.ajax(settings).then(function (result, status, xhr) {
+          $.ajax(settings).then((result, status, xhr) => {
             if ($.isArray(result)) {
-              var _result = result;
-
-              var _result2 = _slicedToArray(_result, 3);
-
-              result = _result2[0];
-              status = _result2[1];
-              xhr = _result2[2];
+              [result, status, xhr] = result;
             }
 
-            MyAMS.require('ajax').then(function () {
-              var response = MyAMS.ajax.getResponse(xhr);
+            MyAMS.require('ajax').then(() => {
+              const response = MyAMS.ajax.getResponse(xhr);
 
               if (response) {
-                var dataType = response.contentType,
-                    _result3 = response.data;
+                const dataType = response.contentType,
+                      result = response.data;
                 $('.loading', target).remove();
 
                 switch (dataType) {
                   case 'json':
-                    MyAMS.ajax.handleJSON(_result3, target);
-                    resolve(_result3, status, xhr);
+                    MyAMS.ajax.handleJSON(result, target);
+                    resolve(result, status, xhr);
                     break;
 
                   case 'script':
                   case 'xml':
-                    resolve(_result3, status, xhr);
+                    resolve(result, status, xhr);
                     break;
 
                   case 'html':
                   case 'text':
                   default:
                     target.parents('.hidden').removeClass('hidden');
-                    MyAMS.core.executeFunctionByName(target.data('ams-clear-content') || MyAMS.config.clearContent, document, target).then(function () {
+                    MyAMS.core.executeFunctionByName(target.data('ams-clear-content') || MyAMS.config.clearContent, document, target).then(() => {
                       target.css({
                         opacity: '0.0'
-                      }).html(_result3).removeClass('hidden').delay(30).animate({
+                      }).html(result).removeClass('hidden').delay(30).animate({
                         opacity: '1.0'
                       }, 300);
-                      MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(function () {
+                      MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(() => {
                         MyAMS.form && MyAMS.form.setFocus(target);
 
                         if (options && options.afterLoadCallback) {
-                          MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(function () {
+                          MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(() => {
                             target.trigger('after-load.ams.content');
-                            resolve(_result3, status, xhr);
+                            resolve(result, status, xhr);
                           }, reject);
                         } else {
                           target.trigger('after-load.ams.content');
-                          resolve(_result3, status, xhr);
+                          resolve(result, status, xhr);
                         }
                       }, reject);
                     }, reject);
@@ -289,8 +271,9 @@
                 MyAMS.stats && MyAMS.stats.logPageview();
               }
             });
-          }, function (xhr, status, error) {
-            target.html("<h3 class=\"error\"><i class=\"fa fa-exclamation-triangle text-danger\"></i> \n\t\t\t\t\t\t\t\t".concat(MyAMS.i18n.ERROR, " ").concat(error, "</h3>").concat(xhr.responseText));
+          }, (xhr, status, error) => {
+            target.html(`<h3 class="error"><i class="fa fa-exclamation-triangle text-danger"></i> 
+								${MyAMS.i18n.ERROR} ${error}</h3>${xhr.responseText}`);
             reject(error);
           });
         });

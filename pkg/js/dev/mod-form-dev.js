@@ -16,98 +16,81 @@
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
-  _exports.showFormSubmitWarning = showFormSubmitWarning;
-  _exports.getFormValidators = getFormValidators;
   _exports.checkFormValidators = checkFormValidators;
-  _exports.initFormSubmitButton = initFormSubmitButton;
-  _exports.resetFormSubmitButton = resetFormSubmitButton;
-  _exports.getFormData = getFormData;
-  _exports.initFormData = initFormData;
-  _exports.getFormTarget = getFormTarget;
-  _exports.initFormTarget = initFormTarget;
+  _exports.form = void 0;
+  _exports.formSubmitCallback = formSubmitCallback;
   _exports.getFormAction = getFormAction;
   _exports.getFormAjaxSettings = getFormAjaxSettings;
+  _exports.getFormData = getFormData;
+  _exports.getFormDownloadTarget = getFormDownloadTarget;
   _exports.getFormProgressSettings = getFormProgressSettings;
   _exports.getFormProgressState = getFormProgressState;
-  _exports.submitForm = submitForm;
-  _exports.formSubmitCallback = formSubmitCallback;
-  _exports.resetFormAfterSubmit = resetFormAfterSubmit;
-  _exports.resetFormAfterError = resetFormAfterError;
-  _exports.getFormDownloadTarget = getFormDownloadTarget;
+  _exports.getFormTarget = getFormTarget;
+  _exports.getFormValidators = getFormValidators;
+  _exports.initFormData = initFormData;
   _exports.initFormDownloadTarget = initFormDownloadTarget;
+  _exports.initFormSubmitButton = initFormSubmitButton;
+  _exports.initFormTarget = initFormTarget;
+  _exports.resetFormAfterError = resetFormAfterError;
+  _exports.resetFormAfterSubmit = resetFormAfterSubmit;
   _exports.resetFormDownloadTarget = resetFormDownloadTarget;
-  _exports.form = void 0;
-
-  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+  _exports.resetFormSubmitButton = resetFormSubmitButton;
+  _exports.showFormSubmitWarning = showFormSubmitWarning;
+  _exports.submitForm = submitForm;
 
   /* global MyAMS, tinyMCE */
 
   /**
    * MyAMS forms support
    */
-  var $ = MyAMS.$;
+  const $ = MyAMS.$;
 
   if (!$.templates) {
-    var jsrender = require('jsrender');
+    const jsrender = require('jsrender');
 
     $.templates = jsrender.templates;
   }
 
-  var _initialized = false;
+  let _initialized = false;
   /**
    * MyAMS "form" module
    */
 
-  var form = {
-    init: function init() {
+  const form = {
+    init: () => {
       if (_initialized) {
         return;
       }
 
       _initialized = true; // Add click listener on submit buttons
 
-      $(document).on('click', '[type="submit"], .submit', function (evt) {
-        var button = $(evt.currentTarget);
+      $(document).on('click', '[type="submit"], .submit', evt => {
+        const button = $(evt.currentTarget);
 
         if (button.exists()) {
           $(button).closest('form').data('ams-submit-button', button);
         }
       }); // Cancel clicks on readonly checkbox
 
-      $(document).on('click', 'input[type="checkbox"][readonly]', function () {
+      $(document).on('click', 'input[type="checkbox"][readonly]', () => {
         return false;
       }); // Initialize generic and custom reset handlers
 
       $(document).on('reset', MyAMS.form.resetHandler);
       $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler); // Submit form when CTRL+Enter key is pressed in textarea
 
-      $(document).on('keydown', 'textarea', function (evt) {
+      $(document).on('keydown', 'textarea', evt => {
         if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
-          var _form = $(evt.currentTarget).closest('form');
-
-          $('button[type="submit"]', _form).first().click();
+          const form = $(evt.currentTarget).closest('form');
+          $('button[type="submit"]', form).first().click();
         }
       }); // Always blur readonly inputs
 
-      $(document).on('focus', 'input[readonly]', function (evt) {
+      $(document).on('focus', 'input[readonly]', evt => {
         $(evt.currentTarget).blur();
       }); // Prevent bootstrap dialog from blocking TinyMCE focus
 
-      $(document).on('focusin', function (evt) {
+      $(document).on('focusin', evt => {
         if ($(evt.target).closest('.mce-window').length >= 0) {
           evt.stopImmediatePropagation();
         }
@@ -115,12 +98,12 @@
 
       $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
     },
-    initElement: function initElement(element) {
+    initElement: element => {
       if (typeof element === 'string') {
         element = $(element);
       }
 
-      var forms;
+      let forms;
 
       if (MyAMS.config.warnOnFormChange) {
         forms = $('form[data-ams-warn-on-change!="false"]', element);
@@ -128,17 +111,17 @@
         forms = $('form[data-ams-warn-on-change="true"]', element);
       }
 
-      forms.each(function (idx, elt) {
-        var form = $(elt),
-            formData = form.data(),
-            callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
-        $('input, select, textarea, [data-ams-changed-event]', form).each(function (idx, elt) {
-          var input = $(elt),
-              inputData = input.data();
+      forms.each((idx, elt) => {
+        const form = $(elt),
+              formData = form.data(),
+              callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
+        $('input, select, textarea, [data-ams-changed-event]', form).each((idx, elt) => {
+          const input = $(elt),
+                inputData = input.data();
 
           if (inputData.amsIgnoreChange !== true) {
-            var event = inputData.amsChangedEvent || 'change';
-            input.on(event, function () {
+            const event = inputData.amsChangedEvent || 'change';
+            input.on(event, () => {
               MyAMS.form.setChanged(form);
               MyAMS.core.executeFunctionByName(inputData.amsChangedCallback || callback, document, form, input);
             });
@@ -147,10 +130,10 @@
       });
       MyAMS.form.setFocus(element);
     },
-    setFocus: function setFocus(element) {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          var focused = $('[data-ams-focus-target]', element).first();
+    setFocus: element => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          let focused = $('[data-ams-focus-target]', element).first();
 
           if (!focused.exists()) {
             var _window, _window$process, _window$process$env;
@@ -170,34 +153,34 @@
         }, 100);
       });
     },
-    checkBeforeUnload: function checkBeforeUnload() {
+    checkBeforeUnload: () => {
       if (MyAMS.i18n) {
-        var forms = $('form[data-ams-form-changed="true"]');
+        const forms = $('form[data-ams-form-changed="true"]');
 
         if (forms.exists()) {
           return MyAMS.i18n.FORM_CHANGED_WARNING;
         }
       }
     },
-    confirmChangedForm: function confirmChangedForm(element) {
-      return new Promise(function (resolve, reject) {
-        var forms = $('form[data-ams-form-changed="true"]', element);
+    confirmChangedForm: element => {
+      return new Promise((resolve, reject) => {
+        const forms = $('form[data-ams-form-changed="true"]', element);
 
         if (forms.exists()) {
-          MyAMS.require('alert').then(function () {
+          MyAMS.require('alert').then(() => {
             MyAMS.alert.bigBox({
               status: 'danger',
               title: MyAMS.i18n.WARNING,
               icon: 'text-danger fa-bell',
               message: MyAMS.i18n.FORM_CHANGED_WARNING
-            }).then(function (button) {
+            }).then(button => {
               if (button === 'success') {
                 MyAMS.form.resetChanged(forms);
               }
 
               resolve(button);
             });
-          }, function () {
+          }, () => {
             reject("Missing 'alert' module!");
           });
         } else {
@@ -210,7 +193,7 @@
     /**
      * Update form "chenged" status flag
      */
-    setChanged: function setChanged(form) {
+    setChanged: form => {
       form.attr('data-ams-form-changed', true);
     },
 
@@ -219,8 +202,8 @@
      *
      * @param event: the original reset event
      */
-    resetHandler: function resetHandler(event) {
-      var form = $(event.target);
+    resetHandler: event => {
+      const form = $(event.target);
       MyAMS.form.clearAlerts(form);
       MyAMS.form.handleDefaultReset(form);
     },
@@ -228,7 +211,7 @@
     /**
      * Clear remaining form alerts before submitting form
      */
-    clearAlerts: function clearAlerts(form) {
+    clearAlerts: form => {
       $('.alert-danger, SPAN.state-error', form).not('.persistent').remove();
       $('.state-error', form).removeClassPrefix('state-');
       $('.invalid-feedback', form).remove();
@@ -238,13 +221,13 @@
     /**
      * Call reset callbacks defined on a form
      */
-    handleDefaultReset: function handleDefaultReset(form) {
-      setTimeout(function () {
+    handleDefaultReset: form => {
+      setTimeout(() => {
         form.find('.select2').trigger('change');
-        $('[data-ams-reset-callback]', form).each(function (idx, elt) {
-          var element = $(elt),
-              data = element.data(),
-              callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
+        $('[data-ams-reset-callback]', form).each((idx, elt) => {
+          const element = $(elt),
+                data = element.data(),
+                callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
 
           if (callback !== undefined) {
             callback.call(document, form, element, data.amsResetCallbackOptions);
@@ -257,7 +240,7 @@
     /**
      * Reset form changed flag
      */
-    resetChanged: function resetChanged(form) {
+    resetChanged: form => {
       if (form !== undefined) {
         $(form).removeAttr('data-ams-form-changed');
       }
@@ -266,16 +249,16 @@
     /**
      * Custom reset handler
      */
-    customResetHandler: function customResetHandler(event) {
-      var form = $(event.target),
-          data = form.data();
+    customResetHandler: event => {
+      const form = $(event.target),
+            data = form.data();
 
       if (data.amsResetHandler) {
         if (data.amsKeepDefault !== true && data.amsResetKeepDefault !== true) {
           event.preventDefault();
         }
 
-        var callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
+        const callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
 
         if (callback !== undefined) {
           callback.call(document, event, form, data.amsResetHandlerOptions);
@@ -290,13 +273,13 @@
      * @param input: input name
      * @param message: associated message
      */
-    setInvalid: function setInvalid(form, input, message) {
+    setInvalid: (form, input, message) => {
       if (typeof input === 'string') {
-        input = $("[name=\"".concat(input, "\"]"), form);
+        input = $(`[name="${input}"]`, form);
       }
 
       if (input.exists()) {
-        var widget = input.closest('.form-widget');
+        const widget = input.closest('.form-widget');
         $('.invalid-feedback', widget).remove();
         $('<span>').text(message).addClass('is-invalid invalid-feedback').appendTo(widget);
         input.removeClass('valid').addClass('is-invalid');
@@ -312,8 +295,8 @@
      * @param buttonData: submit button data
      * @param options: submit options
      */
-    getSettings: function getSettings(form, formData, button, buttonData, options) {
-      var defaults = {
+    getSettings: (form, formData, button, buttonData, options) => {
+      const defaults = {
         submitWarning: showFormSubmitWarning,
         getValidators: getFormValidators,
         checkValidators: checkFormValidators,
@@ -352,12 +335,12 @@
         initDownloadTarget: initFormDownloadTarget,
         resetDownloadTarget: resetFormDownloadTarget
       },
-          settings = $.extend({}, defaults); // extend default values with form, button and options properties
+            settings = $.extend({}, defaults); // extend default values with form, button and options properties
 
-      $.extendPrefix(settings, 'amsForm', function (value) {
+      $.extendPrefix(settings, 'amsForm', value => {
         return MyAMS.core.getFunctionByName(value) || value;
       }, formData, buttonData);
-      $.extendOnly(settings, function (value) {
+      $.extendOnly(settings, value => {
         return MyAMS.core.getFunctionByName(value) || value;
       }, options);
       return settings;
@@ -370,8 +353,8 @@
      * @param handler: AJAX submit target
      * @param options: submit options
      */
-    submit: function submit(form, handler) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    submit: function (form, handler) {
+      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       // check arguments
       form = $(form);
 
@@ -379,16 +362,16 @@
         return false;
       }
 
-      if (_typeof(handler) === 'object') {
+      if (typeof handler === 'object') {
         options = handler;
         handler = undefined;
       } // initialize default settings
 
 
-      var formData = form.data(),
-          button = $(formData.amsSubmitButton),
-          buttonData = button.data() || {},
-          settings = MyAMS.form.getSettings(form, formData, button, buttonData, options); // prevent multiple submits
+      const formData = form.data(),
+            button = $(formData.amsSubmitButton),
+            buttonData = button.data() || {},
+            settings = MyAMS.form.getSettings(form, formData, button, buttonData, options); // prevent multiple submits
 
       if (formData.submitted) {
         settings.submitWarning(form, settings);
@@ -396,21 +379,21 @@
       } // check custom submit validators
 
 
-      settings.checkValidators(form, settings).then(function (status) {
+      settings.checkValidators(form, settings).then(status => {
         // check validation status
         if (status !== 'success') {
           return;
         } // submit form
 
 
-        MyAMS.require('ajax', 'i18n').then(function () {
-          MyAMS.ajax.check($.fn.ajaxSubmit, "".concat(MyAMS.env.baseURL, "../ext/jquery-form").concat(MyAMS.env.extext, ".js")).then(function () {
+        MyAMS.require('ajax', 'i18n').then(() => {
+          MyAMS.ajax.check($.fn.ajaxSubmit, `${MyAMS.env.baseURL}../ext/jquery-form${MyAMS.env.extext}.js`).then(() => {
             // clear alerts and initialize submit button
             settings.clearAlerts(form, settings);
             settings.initSubmitButton(form, settings, button); // extract and initialize custom submit data
 
-            var postData = settings.getData(form, settings, formData, button, buttonData, options),
-                veto = {
+            const postData = settings.getData(form, settings, formData, button, buttonData, options),
+                  veto = {
               veto: false
             };
             settings.initData(form, settings, button, postData, options, veto);
@@ -421,17 +404,17 @@
             } // get and initialize post target
 
 
-            var target = settings.getTarget(form, settings, formData, buttonData);
+            const target = settings.getTarget(form, settings, formData, buttonData);
 
             if (target && target.exists()) {
               settings.initTarget(form, settings, target);
             } // get form action and POST settings
 
 
-            var action = settings.getAction(form, settings, handler),
-                ajaxSettings = settings.getAjaxSettings(form, settings, button, postData, action, target); // get and initialize download target
+            const action = settings.getAction(form, settings, handler),
+                  ajaxSettings = settings.getAjaxSettings(form, settings, button, postData, action, target); // get and initialize download target
 
-            var downloadTarget = settings.getDownloadTarget(form, settings);
+            const downloadTarget = settings.getDownloadTarget(form, settings);
 
             if (downloadTarget) {
               settings.initDownloadTarget(form, settings, downloadTarget, ajaxSettings);
@@ -465,9 +448,9 @@
   function showFormSubmitWarning(form
   /*, settings */
   ) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (!form.data('ams-form-hide-submitted')) {
-        MyAMS.require('i18n', 'alert').then(function () {
+        MyAMS.require('i18n', 'alert').then(() => {
           MyAMS.alert.messageBox({
             status: 'warning',
             title: MyAMS.i18n.WAIT,
@@ -493,10 +476,10 @@
   function getFormValidators(form
   /*, settings */
   ) {
-    var result = new Map(),
-        formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
-    var validators = [];
-    $(formValidators).each(function (idx, elt) {
+    const result = new Map(),
+          formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
+    let validators = [];
+    $(formValidators).each((idx, elt) => {
       if (!elt) {
         return;
       }
@@ -508,11 +491,11 @@
       result.set(form, validators);
     }
 
-    $('[data-ams-form-validator]', form).each(function (idx, elt) {
-      var element = $(elt),
-          elementValidators = (element.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
+    $('[data-ams-form-validator]', form).each((idx, elt) => {
+      const element = $(elt),
+            elementValidators = (element.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
       validators = [];
-      $(elementValidators).each(function (innerIdx, innerElt) {
+      $(elementValidators).each((innerIdx, innerElt) => {
         if (!innerElt) {
           return;
         }
@@ -537,56 +520,31 @@
 
 
   function checkFormValidators(form, settings) {
-    return new Promise(function (resolve, reject) {
-      var validators = settings.getValidators(form, settings);
+    return new Promise((resolve, reject) => {
+      const validators = settings.getValidators(form, settings);
 
       if (!validators.size) {
         resolve('success');
         return;
       }
 
-      var checks = [];
+      const checks = [];
 
-      var _iterator = _createForOfIteratorHelper(validators.entries()),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var _step$value = _slicedToArray(_step.value, 2),
-              context = _step$value[0],
-              contextValidators = _step$value[1];
-
-          var _iterator2 = _createForOfIteratorHelper(contextValidators),
-              _step2;
-
-          try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var validator = _step2.value;
-              checks.push(MyAMS.core.executeFunctionByName(validator, document, form, context));
-            }
-          } catch (err) {
-            _iterator2.e(err);
-          } finally {
-            _iterator2.f();
-          }
+      for (const [context, contextValidators] of validators.entries()) {
+        for (const validator of contextValidators) {
+          checks.push(MyAMS.core.executeFunctionByName(validator, document, form, context));
         }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
       }
 
       $.when.apply($, checks).then(function () {
-        var status = 'success',
+        let status = 'success',
             output = [];
 
         for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
           results[_key] = arguments[_key];
         }
 
-        for (var _i = 0, _results = results; _i < _results.length; _i++) {
-          var result = _results[_i];
-
+        for (const result of results) {
           if (result !== true) {
             status = 'error';
 
@@ -599,8 +557,8 @@
         }
 
         if (output.length > 0) {
-          MyAMS.require('i18n', 'alert').then(function () {
-            var header = output.length === 1 ? MyAMS.i18n.ERROR_OCCURED : MyAMS.i18n.ERRORS_OCCURED;
+          MyAMS.require('i18n', 'alert').then(() => {
+            const header = output.length === 1 ? MyAMS.i18n.ERROR_OCCURED : MyAMS.i18n.ERRORS_OCCURED;
             MyAMS.alert.alert({
               parent: form,
               status: 'danger',
@@ -612,7 +570,7 @@
         } else {
           resolve(status);
         }
-      }, function () {
+      }, () => {
         reject('error');
       });
     });
@@ -624,10 +582,10 @@
 
 
   function initFormSubmitButton(form, settings, button) {
-    var text = button.data('ams-loading-text') || button.text().trim();
+    const text = button.data('ams-loading-text') || button.text().trim();
 
     if (text) {
-      button.data('original-text', button.text()).prop('disabled', true).text("".concat(text, "..."));
+      button.data('original-text', button.text()).prop('disabled', true).text(`${text}...`);
       $('<div>').addClass('progress').appendTo(button);
     } else {
       // button without text
@@ -638,12 +596,12 @@
 
   function resetFormSubmitButton(form, settings, button) {
     $('.progress', button).remove();
-    var text = button.data('original-text');
+    const text = button.data('original-text');
 
     if (text) {
       button.text(text);
     } else {
-      var html = button.data('original-html');
+      const html = button.data('original-html');
 
       if (html) {
         button.html(html);
@@ -655,8 +613,8 @@
 
 
   function getFormData(form, settings, formData, button, buttonData, options) {
-    var data = $.extend({}, formData.amsFormData, buttonData.amsFormData, options.data),
-        name = button.attr('name');
+    const data = $.extend({}, formData.amsFormData, buttonData.amsFormData, options.data),
+          name = button.attr('name');
 
     if (name) {
       data[name] = button.val();
@@ -667,7 +625,7 @@
 
 
   function initFormData(form, settings, button, postData, options, veto) {
-    var callback = settings.initDataCallback;
+    const callback = settings.initDataCallback;
 
     if (callback) {
       $.extend(postData, callback(form, settings, button, postData, options, veto));
@@ -684,8 +642,16 @@
   } // initialize form target
 
 
-  var TARGET_INIT_TEMPLATE_STRING = "\n\t<div class=\"row m-3\">\n\t\t<div class=\"text-center w-100\">\n\t\t\t<i class=\"fa fa-3x fa-cog fa-spin\"></i>\n\t\t\t{{if message}}\n\t\t\t<strong>{{:message}}</strong>\n\t\t\t{{/if}}\n\t\t</div>\n\t</div>";
-  var TARGET_INIT_TEMPLATE = $.templates({
+  const TARGET_INIT_TEMPLATE_STRING = `
+	<div class="row m-3">
+		<div class="text-center w-100">
+			<i class="fa fa-3x fa-cog fa-spin"></i>
+			{{if message}}
+			<strong>{{:message}}</strong>
+			{{/if}}
+		</div>
+	</div>`;
+  const TARGET_INIT_TEMPLATE = $.templates({
     markup: TARGET_INIT_TEMPLATE_STRING
   });
 
@@ -698,8 +664,8 @@
 
 
   function getFormAction(form, settings, handler) {
-    var url;
-    var formHandler = handler || settings.submitHandler;
+    let url;
+    const formHandler = handler || settings.submitHandler;
 
     if (formHandler.startsWith(window.location.protocol)) {
       url = formHandler;
@@ -712,16 +678,16 @@
 
 
   function getFormAjaxSettings(form, settings, button, postData, action, target) {
-    var base = {
+    const base = {
       url: action,
       type: 'post',
       cache: false,
       data: postData,
       dataType: settings.datatype,
-      beforeSerialize: function beforeSerialize(form
+      beforeSerialize: (form
       /*, options */
-      ) {
-        var veto = {
+      ) => {
+        const veto = {
           veto: false
         };
         form.trigger('before-serialize.ams.form', [veto]);
@@ -734,10 +700,10 @@
           tinyMCE.triggerSave();
         }
       },
-      beforeSubmit: function beforeSubmit(data, form
+      beforeSubmit: (data, form
       /*, options */
-      ) {
-        var veto = {
+      ) => {
+        const veto = {
           veto: false
         };
         form.trigger('before-submit.ams.form', [data, veto]);
@@ -749,19 +715,19 @@
         form.data('submitted', true);
 
         if (settings.resetBeforeSubmit) {
-          setTimeout(function () {
+          setTimeout(() => {
             settings.resetSubmitButton(form, settings, button);
           }, 250);
         }
       },
-      uploadProgress: function uploadProgress(evt, position, total, completed) {
-        $('.progress', button).css('background-image', "linear-gradient(to right, white -45%, green ".concat(completed, "%, red ").concat(completed, "%, red)"));
+      uploadProgress: (evt, position, total, completed) => {
+        $('.progress', button).css('background-image', `linear-gradient(to right, white -45%, green ${completed}%, red ${completed}%, red)`);
       },
-      complete: function complete(xhr) {
+      complete: xhr => {
         form.trigger('complete.ams.form', [xhr]);
       },
-      success: function success(result, status, request, form) {
-        var veto = {
+      success: (result, status, request, form) => {
+        const veto = {
           veto: false
         };
         form.trigger('submit-success.ams.form', [result, status, request, veto]);
@@ -771,7 +737,7 @@
         }
 
         if (result && result.status !== 'error' && result.closeForm !== false) {
-          var modal = form.closest('.modal-dialog');
+          const modal = form.closest('.modal-dialog');
 
           if (modal.exists() && !settings.keepModalOpen) {
             MyAMS.modal && MyAMS.modal.close(modal);
@@ -785,8 +751,8 @@
           MyAMS.form.resetChanged(form);
         }
       },
-      error: function error(request, status, _error, form) {
-        form.trigger('submit-error.ams.form', [request, status, _error, target]);
+      error: (request, status, error, form) => {
+        form.trigger('submit-error.ams.form', [request, status, error, target]);
 
         if (target) {
           settings.resetAfterError(form, settings, button, target);
@@ -801,14 +767,14 @@
 
 
   function getFormProgressSettings(form, settings, button, postData) {
-    var handler = settings.progressHandler;
+    const handler = settings.progressHandler;
 
     if (handler) {
       // check fieldname
-      var fieldname = settings.progressFieldName;
+      const fieldname = settings.progressFieldName;
       postData[fieldname] = MyAMS.core.generateUUID(); // check progress target
 
-      var progressTarget = button;
+      let progressTarget = button;
 
       if (settings.progressTarget) {
         progressTarget = $(settings.progressTarget);
@@ -827,10 +793,10 @@
 
 
   function getFormProgressState(form, settings, postData, progress, target) {
-    var timeout = setTimeout(_getProgressState, progress.interval);
+    let timeout = setTimeout(_getProgressState, progress.interval);
 
     function _getProgressState() {
-      var data = {};
+      const data = {};
       data[progress.fieldname] = postData[progress.fieldname];
       MyAMS.ajax.post(progress.handler, data).then(MyAMS.core.getFunctionByName(progress.callback || function (result, status) {
         if ($.isArray(result)) {
@@ -843,10 +809,10 @@
             if (result.message) {
               target.text(result.message);
             } else {
-              var text = result.progress || target.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
+              let text = result.progress || target.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
 
               if (result.current) {
-                text += ": ".concat(result.current, " / ").concat(result.length || 100);
+                text += `: ${result.current} / ${result.length || 100}`;
               } else {
                 text += '...';
               }
@@ -893,10 +859,10 @@
 
 
   function formSubmitCallback(form, settings, target, result, status, request) {
-    var dataType = settings.datatype;
+    let dataType = settings.datatype;
 
     if (!dataType) {
-      var response = MyAMS.ajax.getResponse(request);
+      const response = MyAMS.ajax.getResponse(request);
 
       if (response) {
         dataType = response.contentType;
@@ -924,8 +890,8 @@
         target.html(result).delay(50).animate({
           opacity: '1.0'
         }, 250);
-        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(function () {
-          MyAMS.require('helpers').then(function () {
+        MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, target).then(() => {
+          MyAMS.require('helpers').then(() => {
             MyAMS.helpers.scrollTo('#main', target, {
               offset: -15
             });
@@ -933,10 +899,10 @@
         });
     }
 
-    var callback = request.getResponseHeader('X-AMS-Callback');
+    const callback = request.getResponseHeader('X-AMS-Callback');
 
     if (callback) {
-      var options = request.getResponseHeader('X-AMS-Callback-Options') || "{}";
+      const options = request.getResponseHeader('X-AMS-Callback-Options') || "{}";
       MyAMS.core.executeFunctionByName(callback, document, form, settings, options, result, status, request);
     }
 
@@ -983,7 +949,7 @@
 
 
   function initFormDownloadTarget(form, settings, target, ajaxSettings) {
-    var iframe = $("iframe[name=\"".concat(target, "\"]"));
+    let iframe = $(`iframe[name="${target}"]`);
 
     if (!iframe.exists()) {
       iframe = $('<iframe>').attr('name', target).hide().appendTo(MyAMS.dom.root);
@@ -997,17 +963,17 @@
 
 
   function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
-    var modal = form.closest('.modal-dialog'),
-        keepModal = settings.keepModalOpen;
+    const modal = form.closest('.modal-dialog'),
+          keepModal = settings.keepModalOpen;
 
     if (modal.exists() && keepModal !== true) {
-      MyAMS.require('modal').then(function () {
+      MyAMS.require('modal').then(() => {
         MyAMS.modal.close(modal);
       });
     }
 
     if (!ajaxSettings.progress) {
-      setTimeout(function () {
+      setTimeout(() => {
         settings.resetAfterSubmit(form, settings, button);
         MyAMS.ajax && MyAMS.ajax.stop();
         MyAMS.form.resetChanged(form);

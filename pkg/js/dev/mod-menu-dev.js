@@ -23,7 +23,7 @@
   /**
    * MyAMS menus management
    */
-  var $ = MyAMS.$;
+  const $ = MyAMS.$;
   /**
    * Context menu handler
    */
@@ -33,20 +33,20 @@
       menu = menu.parents('a').first();
     }
 
-    var menuData = menu.data();
+    const menuData = menu.data();
 
     if (menuData.toggle === 'modal') {
-      MyAMS.require('modal').then(function () {
+      MyAMS.require('modal').then(() => {
         MyAMS.modal.open(menu);
       });
     } else {
-      var href = menu.attr('href') || menuData.amsUrl;
+      let href = menu.attr('href') || menuData.amsUrl;
 
       if (!href || href.startsWith('javascript:') || menu.attr('target')) {
         return;
       }
 
-      var hrefGetter = MyAMS.core.getFunctionByName(href);
+      const hrefGetter = MyAMS.core.getFunctionByName(href);
 
       if (typeof hrefGetter === 'function') {
         href = hrefGetter(menu);
@@ -59,12 +59,12 @@
       if (typeof href === 'function') {
         href(menu);
       } else {
-        MyAMS.require('form', 'skin').then(function () {
+        MyAMS.require('form', 'skin').then(() => {
           href = href.replace(/%23/, '#');
-          var target = menu.data('ams-target');
+          const target = menu.data('ams-target');
 
           if (target) {
-            MyAMS.form.confirmChangedForm(target).then(function (status) {
+            MyAMS.form.confirmChangedForm(target).then(status => {
               if (status !== 'success') {
                 return;
               }
@@ -72,7 +72,7 @@
               MyAMS.skin.loadURL(href, target, menu.data('ams-link-options'), menu.data('ams-link-callback'));
             });
           } else {
-            MyAMS.form.confirmChangedForm().then(function (status) {
+            MyAMS.form.confirmChangedForm().then(status => {
               if (status !== 'success') {
                 return;
               }
@@ -81,7 +81,7 @@
                 if (href !== location.hash) {
                   if (MyAMS.dom.root.hasClass('mobile-view-activated')) {
                     MyAMS.dom.root.removeClass('hidden-menu');
-                    setTimeout(function () {
+                    setTimeout(() => {
                       window.location.hash = href;
                     }, 50);
                   } else {
@@ -98,18 +98,18 @@
     }
   }
 
-  var _initialized = false;
+  let _initialized = false;
   /**
    * MyAMS "menu" module
    */
 
-  var menu = {
+  const menu = {
     /**
      * Global module initialization.
      * This function extends jQuery with a "contextMenu()" function, which
      * allows to create a new context menu.
      */
-    init: function init() {
+    init: () => {
       if (_initialized) {
         return;
       }
@@ -119,11 +119,11 @@
         /**
          * JQuery context menu constructor
          */
-        contextMenu: function contextMenu(settings) {
+        contextMenu: function (settings) {
           function getMenuPosition(mouse, direction) {
-            var win = $(window)[direction](),
-                menu = $(settings.menuSelector)[direction]();
-            var position = mouse; // opening menu would pass the side of the page
+            const win = $(window)[direction](),
+                  menu = $(settings.menuSelector)[direction]();
+            let position = mouse; // opening menu would pass the side of the page
 
             if (mouse + menu > win && menu < mouse) {
               position -= menu;
@@ -132,11 +132,11 @@
             return position;
           }
 
-          return this.each(function (idx, elt) {
-            var source = $(elt),
-                menu = $(settings.menuSelector); // Set flag on menu items
+          return this.each((idx, elt) => {
+            const source = $(elt),
+                  menu = $(settings.menuSelector); // Set flag on menu items
 
-            $('a', menu).each(function (idx, elt) {
+            $('a', menu).each((idx, elt) => {
               $(elt).data('ams-context-menu', true);
             });
             source.on("contextmenu", function (evt) {
@@ -150,7 +150,7 @@
                 position: 'fixed',
                 left: getMenuPosition(evt.clientX, 'width') - 10,
                 top: getMenuPosition(evt.clientY, 'height') - 10
-              }).off('click').on('click', function (clickEvt) {
+              }).off('click').on('click', clickEvt => {
                 clickEvt.stopPropagation();
                 clickEvt.preventDefault();
                 menu.dropdown('hide');
@@ -160,21 +160,21 @@
               return false;
             }); // make sure menu closes on any click
 
-            $(document).click(function () {
+            $(document).click(() => {
               menu.dropdown('hide');
             });
           });
         }
       }); // Automatically set orientation of dropdown menus
 
-      $(document).on('show.bs.dropdown', '.btn-group', function (evt) {
+      $(document).on('show.bs.dropdown', '.btn-group', evt => {
         // check menu height
-        var menu = $(evt.currentTarget),
-            ul = menu.children('.dropdown-menu'),
-            menuRect = menu.get(0).getBoundingClientRect(),
-            position = menuRect.top,
-            buttonHeight = menuRect.height,
-            menuHeight = ul.outerHeight();
+        const menu = $(evt.currentTarget),
+              ul = menu.children('.dropdown-menu'),
+              menuRect = menu.get(0).getBoundingClientRect(),
+              position = menuRect.top,
+              buttonHeight = menuRect.height,
+              menuHeight = ul.outerHeight();
 
         if (position > menuHeight && $(window).height() - position < buttonHeight + menuHeight) {
           menu.addClass("dropup");
@@ -182,13 +182,13 @@
 
 
         $('input, select, textarea', ul).first().focus();
-      }).on('hidden.bs.dropdown', '.btn-group', function (evt) {
+      }).on('hidden.bs.dropdown', '.btn-group', evt => {
         // always reset after close
         $(evt.currentTarget).removeClass('dropup');
       });
-      $(document).on('hide.bs.dropdown', function (evt) {
+      $(document).on('hide.bs.dropdown', evt => {
         if (evt.clickEvent) {
-          var dropdown = $(evt.clickEvent.target).parents('.dropdown-menu');
+          const dropdown = $(evt.clickEvent.target).parents('.dropdown-menu');
 
           if (dropdown.data('ams-click-dismiss') === false) {
             evt.preventDefault();

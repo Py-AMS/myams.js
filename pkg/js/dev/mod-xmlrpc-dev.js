@@ -23,8 +23,8 @@
   /**
    * MyAMS XML-RPC protocol support
    */
-  var $ = MyAMS.$;
-  var xmlrpc = {};
+  const $ = MyAMS.$;
+  const xmlrpc = {};
   /**
    * Global module initialization
    */

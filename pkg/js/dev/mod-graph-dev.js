@@ -23,8 +23,8 @@
   /**
    * MyAMS graphs management
    */
-  var $ = MyAMS.$;
-  var graph = {};
+  const $ = MyAMS.$;
+  const graph = {};
   /**
    * Global module initialization
    */

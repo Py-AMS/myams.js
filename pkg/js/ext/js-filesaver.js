@@ -13,8 +13,6 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
   (function (global, factory) {
     if (typeof define === "function" && define.amd) {
       define([], factory);
@@ -41,12 +39,12 @@
     // The one and only way of getting global scope in all environments
     // https://stackoverflow.com/q/3277182/1008999
 
-    var _global = (typeof window === "undefined" ? "undefined" : _typeof(window)) === 'object' && window.window === window ? window : (typeof self === "undefined" ? "undefined" : _typeof(self)) === 'object' && self.self === self ? self : (typeof global === "undefined" ? "undefined" : _typeof(global)) === 'object' && global.global === global ? global : void 0;
+    var _global = typeof window === 'object' && window.window === window ? window : typeof self === 'object' && self.self === self ? self : typeof global === 'object' && global.global === global ? global : void 0;
 
     function bom(blob, opts) {
       if (typeof opts === 'undefined') opts = {
         autoBom: false
-      };else if (_typeof(opts) !== 'object') {
+      };else if (typeof opts !== 'object') {
         console.warn('Depricated: Expected third argument to be a object');
         opts = {
           autoBom: !opts
@@ -99,7 +97,7 @@
     }
 
     var saveAs = _global.saveAs || // probably in some web worker
-    (typeof window === "undefined" ? "undefined" : _typeof(window)) !== 'object' || window !== _global ? function saveAs() {}
+    typeof window !== 'object' || window !== _global ? function saveAs() {}
     /* noop */
     // Use download attribute first if possible (#193 Lumia mobile)
     : 'download' in HTMLAnchorElement.prototype ? function saveAs(blob, name, opts) {
@@ -166,7 +164,7 @@
 
       var isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
 
-      if ((isChromeIOS || force && isSafari) && (typeof FileReader === "undefined" ? "undefined" : _typeof(FileReader)) === 'object') {
+      if ((isChromeIOS || force && isSafari) && typeof FileReader === 'object') {
         // Safari doesn't allow downloading of blob urls
         var reader = new FileReader();
 

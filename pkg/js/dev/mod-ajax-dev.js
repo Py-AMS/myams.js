@@ -18,18 +18,12 @@
   });
   _exports.ajax = void 0;
 
-  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
   /* global jQuery, MyAMS, Cookies */
 
   /**
    * MyAMS AJAX features
    */
-  var $ = MyAMS.$;
+  const $ = MyAMS.$;
   /**
    * CSRF cookie checker
    *
@@ -42,7 +36,7 @@
   /*, options */
   ) {
     if (window.Cookies) {
-      var token = Cookies.get(MyAMS.config.csrfCookieName);
+      const token = Cookies.get(MyAMS.config.csrfCookieName);
 
       if (token) {
         request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
@@ -50,52 +44,38 @@
     }
   }
 
-  var ajax = {
+  const ajax = {
     /**
      * Check for a given feature, and download script if necessary
      *
      * @param checker: pointer to a resource which will be downloaded if undefined
      * @param source: URL of a javascript file containing requested resource
-     * @param callback: pointer to a function which will be called after the script is
-     * 		downloaded; first argument of this callback is a boolean value indicating if the
-     * 	    script was downloaded for the first time or not
-     * @param options: additional callback options argument
      */
-    check: function check(checker, source) {
-      return new Promise(function (resolve, reject) {
-        var deferred = [];
+    check: (checker, source) => {
+      return new Promise((resolve, reject) => {
+        const deferred = [];
 
         if (checker === undefined) {
           if (!(source instanceof Array)) {
             source = [source];
           }
 
-          var _iterator = _createForOfIteratorHelper(source),
-              _step;
-
-          try {
-            for (_iterator.s(); !(_step = _iterator.n()).done;) {
-              var src = _step.value;
-              deferred.push(MyAMS.core.getScript(src));
-            }
-          } catch (err) {
-            _iterator.e(err);
-          } finally {
-            _iterator.f();
+          for (const src of source) {
+            deferred.push(MyAMS.core.getScript(src));
           }
         } else {
           if (!(checker instanceof Array)) {
             checker = [checker];
           }
 
-          for (var index = 0; index < checker.length; index++) {
-            if (checker[index] === undefined) {
-              deferred.push(MyAMS.core.getScript(source[index]));
+          checker.forEach((elt, idx) => {
+            if (elt === undefined) {
+              deferred.push(MyAMS.core.getScript(source[idx]));
             }
-          }
+          });
         }
 
-        $.when.apply($, deferred).then(function () {
+        $.when.apply($, deferred).then(() => {
           resolve(deferred.length > 0);
         }, reject);
       });
@@ -106,22 +86,22 @@
      *
      * @param addr
      */
-    getAddr: function getAddr(addr) {
-      var href = addr || $('html head base').attr('href') || window.location.href;
-      return href.substr(0, href.lastIndexOf('/') + 1);
+    getAddr: addr => {
+      const href = addr || $('html head base').attr('href') || window.location.href;
+      return href.substring(0, href.lastIndexOf('/') + 1);
     },
 
     /**
      * JQuery AJAX start callback
      */
-    start: function start() {
+    start: () => {
       $('#ajax-gear').show();
     },
 
     /**
      * JQuery AJAX stop callback
      */
-    stop: function stop() {
+    stop: () => {
       $('#ajax-gear').hide();
     },
 
@@ -130,7 +110,7 @@
      *
      * @param event: source event
      */
-    progress: function progress(event) {
+    progress: event => {
       if (!event.lengthComputable) {
         return;
       }
@@ -140,7 +120,7 @@
       }
 
       if (console) {
-        console.debug && console.debug("".concat(Math.round(event.loaded / event.total * 100), "%"));
+        console.debug && console.debug(`${Math.round(event.loaded / event.total * 100)}%`);
       }
     },
 
@@ -152,9 +132,9 @@
      * @param params: url params
      * @param options: AJAX call options
      */
-    get: function get(url, params, options) {
-      return new Promise(function (resolve, reject) {
-        var addr;
+    get: (url, params, options) => {
+      return new Promise((resolve, reject) => {
+        let addr;
 
         if (url.startsWith(window.location.protocol)) {
           addr = url;
@@ -162,7 +142,7 @@
           addr = MyAMS.ajax.getAddr() + url;
         }
 
-        var defaults = {
+        const defaults = {
           url: addr,
           type: 'get',
           cache: false,
@@ -170,10 +150,10 @@
           dataType: 'json',
           beforeSend: checkCsrfHeader
         };
-        var settings = $.extend({}, defaults, options);
-        $.ajax(settings).then(function (result, status, xhr) {
+        const settings = $.extend({}, defaults, options);
+        $.ajax(settings).then((result, status, xhr) => {
           resolve(result, status, xhr);
-        }, function (xhr, status, error) {
+        }, (xhr, status, error) => {
           reject(error);
         });
       });
@@ -186,9 +166,9 @@
      * @param data: submit data
      * @param options: AJAX call options
      */
-    post: function post(url, data, options) {
-      return new Promise(function (resolve, reject) {
-        var addr;
+    post: (url, data, options) => {
+      return new Promise((resolve, reject) => {
+        let addr;
 
         if (url.startsWith(window.location.protocol)) {
           addr = url;
@@ -196,7 +176,7 @@
           addr = MyAMS.ajax.getAddr() + url;
         }
 
-        var defaults = {
+        const defaults = {
           url: addr,
           type: 'post',
           cache: false,
@@ -204,10 +184,10 @@
           dataType: 'json',
           beforeSend: checkCsrfHeader
         };
-        var settings = $.extend({}, defaults, options);
-        $.ajax(settings).then(function (result, status, xhr) {
+        const settings = $.extend({}, defaults, options);
+        $.ajax(settings).then((result, status, xhr) => {
           resolve(result, status, xhr);
-        }, function (xhr, status, error) {
+        }, (xhr, status, error) => {
           reject(error);
         });
       });
@@ -219,9 +199,9 @@
      * This form of function can be used in MyAMS "href" or "data-ams-url" attributes, like in
      * <a href="MyAMS.ajax.getJSON?url=...">Click me!</a>.
      */
-    getJSON: function getJSON() {
-      return function (source, options) {
-        var url = options.url;
+    getJSON: () => {
+      return (source, options) => {
+        const url = options.url;
         delete options.url;
         return MyAMS.ajax.post(url, options).then(MyAMS.ajax.handleJSON);
       };
@@ -230,12 +210,12 @@
     /**
      * Extract datatype and result from response object
      */
-    getResponse: function getResponse(request) {
-      var dataType = 'unknown',
+    getResponse: request => {
+      let dataType = 'unknown',
           result;
 
       if (request) {
-        var contentType = request.getResponseHeader('content-type');
+        let contentType = request.getResponseHeader('content-type');
 
         if (!contentType) {
           try {
@@ -312,15 +292,15 @@
      * @param form: source form
      * @param target
      */
-    handleJSON: function handleJSON(result, form, target) {
+    handleJSON: (result, form, target) => {
       function closeForm() {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           if (form !== undefined) {
-            MyAMS.require('form').then(function () {
+            MyAMS.require('form').then(() => {
               MyAMS.form.resetChanged(form);
-            }).then(function () {
+            }).then(() => {
               if (result.closeForm !== false) {
-                MyAMS.require('modal').then(function () {
+                MyAMS.require('modal').then(() => {
                   MyAMS.modal.close(form);
                 }).then(resolve, reject);
               } else {
@@ -333,10 +313,10 @@
         });
       }
 
-      var url = null,
+      let url = null,
           loadTarget = null;
-      var status = result.status,
-          promises = [];
+      const status = result.status,
+            promises = [];
 
       if (target instanceof jQuery && !target.length) {
         target = null;
@@ -345,14 +325,14 @@
       switch (status) {
         case 'alert':
           if (window.alert) {
-            var alert = result.alert;
-            window.alert("".concat(alert.title, "\n\n").concat(alert.content));
+            const alert = result.alert;
+            window.alert(`${alert.title}\n\n${alert.content}`);
           }
 
           break;
 
         case 'error':
-          promises.push(MyAMS.require('error').then(function () {
+          promises.push(MyAMS.require('error').then(() => {
             MyAMS.error.showErrors(form, result);
           }));
           break;
@@ -371,7 +351,7 @@
           break;
 
         case 'modal':
-          promises.push(MyAMS.require('modal').then(function () {
+          promises.push(MyAMS.require('modal').then(() => {
             MyAMS.modal.open(result.location);
           }));
           break;
@@ -381,20 +361,20 @@
           url = result.location || window.location.hash;
 
           if (url.startsWith('#')) {
-            url = url.substr(1);
+            url = url.substring(1);
           }
 
           loadTarget = $(result.target || target || '#content');
-          promises.push(MyAMS.require('skin').then(function () {
+          promises.push(MyAMS.require('skin').then(() => {
             MyAMS.skin.loadURL(url, loadTarget, {
               preLoadCallback: MyAMS.core.getFunctionByName(result.preReload || function () {
-                $('[data-ams-pre-reload]', loadTarget).each(function (index, element) {
+                $('[data-ams-pre-reload]', loadTarget).each((index, element) => {
                   MyAMS.core.executeFunctionByName($(element).data('ams-pre-reload'));
                 });
               }),
               preLoadCallbackOptions: result.preReloadOptions,
               afterLoadCallback: MyAMS.core.getFunctionByName(result.postReload || function () {
-                $('[data-ams-post-reload]', loadTarget).each(function (index, element) {
+                $('[data-ams-post-reload]', loadTarget).each((index, element) => {
                   MyAMS.core.executeFunctionByName($(element).data('ams-post-reload'));
                 });
               }),
@@ -428,12 +408,12 @@
         default:
           if (result.code) {
             // Standard HTTP error?
-            promises.push(MyAMS.require('error').then(function () {
+            promises.push(MyAMS.require('error').then(() => {
               MyAMS.error.showHTTPError(result);
             }));
           } else {
             if (window.console) {
-              console.warn && console.warn("Unhandled JSON response status: ".concat(status));
+              console.warn && console.warn(`Unhandled JSON response status: ${status}`);
             }
           }
 
@@ -441,8 +421,8 @@
 
 
       if (result.content) {
-        var content = result.content,
-            container = $(content.target || target || '#content');
+        const content = result.content,
+              container = $(content.target || target || '#content');
 
         if (typeof content === 'string') {
           container.html(content);
@@ -453,7 +433,7 @@
             container.html(content.html);
           }
 
-          promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
+          promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
             if (!content.keepHidden) {
               container.removeClass('hidden');
             }
@@ -463,40 +443,26 @@
 
 
       if (result.contents) {
-        var _iterator2 = _createForOfIteratorHelper(result.contents),
-            _step2;
+        for (const content of result.contents) {
+          const container = $(content.target);
 
-        try {
-          var _loop = function _loop() {
-            var content = _step2.value;
-            var container = $(content.target);
-
-            if (content.text) {
-              container.text(content.text);
-            } else {
-              container.html(content.html);
-            }
-
-            promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(function () {
-              if (!content.keepHidden) {
-                container.removeClass('hidden');
-              }
-            }));
-          };
-
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            _loop();
+          if (content.text) {
+            container.text(content.text);
+          } else {
+            container.html(content.html);
           }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
+
+          promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
+            if (!content.keepHidden) {
+              container.removeClass('hidden');
+            }
+          }));
         }
       } // Response with message
 
 
       if (result.message && !result.code) {
-        promises.push(MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.message === 'string') {
             MyAMS.alert.smallBox({
               status: status,
@@ -505,7 +471,7 @@
               timeout: 3000
             });
           } else {
-            var message = result.message;
+            const message = result.message;
             MyAMS.alert.alert({
               parent: form,
               status: message.status || status,
@@ -519,7 +485,7 @@
 
 
       if (result.messagebox) {
-        promises.push(MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.messagebox === 'string') {
             MyAMS.alert.messageBox({
               status: status,
@@ -529,7 +495,7 @@
               timeout: 10000
             });
           } else {
-            var message = result.messagebox;
+            const message = result.messagebox;
             MyAMS.alert.messageBox({
               status: message.status || status,
               title: message.title || MyAMS.i18n.ERROR_OCCURED,
@@ -544,7 +510,7 @@
 
 
       if (result.smallbox) {
-        promises.push(MyAMS.require('alert').then(function () {
+        promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.smallbox === 'string') {
             MyAMS.alert.smallBox({
               status: status,
@@ -553,7 +519,7 @@
               timeout: 3000
             });
           } else {
-            var message = result.smallbox;
+            const message = result.smallbox;
             MyAMS.alert.smallBox({
               status: message.status || status,
               message: message.message,
@@ -572,23 +538,12 @@
 
 
       if (result.events) {
-        var _iterator3 = _createForOfIteratorHelper(result.events),
-            _step3;
-
-        try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var event = _step3.value;
-
-            if (typeof event === 'string') {
-              form.trigger(event, result.eventOptions);
-            } else {
-              form.trigger(event.event, event.options);
-            }
+        for (const event of result.events) {
+          if (typeof event === 'string') {
+            form.trigger(event, result.eventOptions);
+          } else {
+            form.trigger(event.event, event.options);
           }
-        } catch (err) {
-          _iterator3.e(err);
-        } finally {
-          _iterator3.f();
         }
       } // Response with single callback
 
@@ -599,29 +554,14 @@
 
 
       if (result.callbacks) {
-        var _iterator4 = _createForOfIteratorHelper(result.callbacks),
-            _step4;
-
-        try {
-          var _loop2 = function _loop2() {
-            var callback = _step4.value;
-
-            if (typeof callback === 'string') {
-              promises.push(MyAMS.core.executeFunctionByName(callback, document, form, result.options));
-            } else {
-              promises.push(MyAMS.require(callback.module || []).then(function () {
-                MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
-              }));
-            }
-          };
-
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-            _loop2();
+        for (const callback of result.callbacks) {
+          if (typeof callback === 'string') {
+            promises.push(MyAMS.core.executeFunctionByName(callback, document, form, result.options));
+          } else {
+            promises.push(MyAMS.require(callback.module || []).then(() => {
+              MyAMS.core.executeFunctionByName(callback.callback, document, form, callback.options);
+            }));
           }
-        } catch (err) {
-          _iterator4.e(err);
-        } finally {
-          _iterator4.f();
         }
       }
 
@@ -631,9 +571,9 @@
     /**
      * JQuery AJAX error handler
      */
-    error: function error(event, response, request, _error) {
+    error: (event, response, request, error) => {
       // user shouldn't be notified of aborted requests
-      if (_error === 'abort') {
+      if (error === 'abort') {
         return;
       } // don't display errors on OK status
 
@@ -647,24 +587,24 @@
         return;
       }
 
-      var parsedResponse = MyAMS.ajax.getResponse(response);
+      const parsedResponse = MyAMS.ajax.getResponse(response);
 
       if (parsedResponse) {
         if (parsedResponse.contentType === 'json') {
           MyAMS.ajax.handleJSON(parsedResponse.data);
           response.x_ams_handled = true;
         } else {
-          MyAMS.require('i18n', 'alert').then(function () {
-            var title = _error || event.statusText || event.type,
-                message = parsedResponse.responseText;
+          MyAMS.require('i18n', 'alert').then(() => {
+            const title = error || event.statusText || event.type,
+                  message = parsedResponse.responseText;
             MyAMS.alert.messageBox({
               status: 'error',
               title: MyAMS.i18n.ERROR_OCCURED,
-              content: "<h4>".concat(title, "</h4><p>").concat(message || '', "</p>"),
+              content: `<h4>${title}</h4><p>${message || ''}</p>`,
               icon: 'fa-exclamation-triangle',
               timeout: 5000
             });
-          }, function () {
+          }, () => {
             if (window.console) {
               console.error && console.error(event);
               console.debug && console.debug(parsedResponse);
@@ -687,13 +627,13 @@
 
   if (typeof jest === 'undefined') {
     // don't check cookies extension in test mode!
-    ajax.check(window.Cookies, "".concat(MyAMS.env.baseURL, "../ext/js-cookie").concat(MyAMS.env.extext, ".js")).then(function () {
-      var _xhr = $.ajaxSettings.xhr;
+    ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`).then(() => {
+      const xhr = $.ajaxSettings.xhr;
       $.ajaxSetup({
-        beforeSend: function beforeSend(request, options) {
+        beforeSend: (request, options) => {
           if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
             if (window.Cookies !== undefined) {
-              var token = Cookies.get(MyAMS.config.csrfCookieName);
+              const token = Cookies.get(MyAMS.config.csrfCookieName);
 
               if (token) {
                 request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
@@ -703,12 +643,12 @@
         },
         progress: ajax.progress,
         progressUpload: ajax.progress,
-        xhr: function xhr() {
-          var request = _xhr();
+        xhr: function () {
+          const request = xhr();
 
           if (request && typeof request.addEventListener === 'function') {
             if (ajax.progress) {
-              request.addEventListener('progress', function (evt) {
+              request.addEventListener('progress', evt => {
                 MyAMS.ajax.progress(evt);
               }, false);
             }

@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.13.1
+------
+ - updated switchers icons management in tree module
+ - ajax and alert modules refactoring
+ - replaced Gulp-uglify plug-in by Gulp-terser
+
+
 1.13.0
 ------
  - updated dependencies: Bootstrap, Babel, DataTables, Jest, JQuery, JQuery-UI, Webpack...

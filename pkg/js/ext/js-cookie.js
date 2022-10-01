@@ -13,8 +13,6 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
   /*!
    * JavaScript Cookie v2.2.0
    * https://github.com/js-cookie/js-cookie
@@ -32,7 +30,7 @@
       registeredInModuleLoader = true;
     }
 
-    if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
+    if (typeof exports === 'object') {
       module.exports = factory();
       registeredInModuleLoader = true;
     }

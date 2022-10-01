@@ -18,74 +18,56 @@
   });
   _exports.tree = void 0;
 
-  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
   /* global MyAMS */
 
   /**
    * MyAMS tree management
    */
-  var $ = MyAMS.$;
-  var tree = {
+  const $ = MyAMS.$;
+  const tree = {
     /**
      * Open/close tree node inside a table
      */
-    switchTreeNode: function switchTreeNode(evt) {
-      var removeChildNodes = function removeChildNodes(nodeId) {
-        $("tr[data-ams-tree-node-parent-id=\"".concat(nodeId, "\"]")).each(function (idx, elt) {
-          var row = $(elt);
+    switchTreeNode: evt => {
+      const removeChildNodes = nodeId => {
+        $(`tr[data-ams-tree-node-parent-id="${nodeId}"]`).each((idx, elt) => {
+          const row = $(elt);
           removeChildNodes(row.data('ams-tree-node-id'));
           dtTable.row(row).remove().draw();
         });
       };
 
-      var node = $(evt.currentTarget),
-          switcher = $('i.switch', node),
-          tr = node.parents('tr').first(),
-          table = tr.parents('table').first(),
-          dtTable = table.DataTable();
+      const node = $(evt.currentTarget),
+            switcher = $('.switcher', node),
+            tr = node.parents('tr').first(),
+            table = tr.parents('table').first(),
+            dtTable = table.DataTable();
       node.tooltip('hide');
 
-      if (switcher.hasClass('minus')) {
+      if (switcher.hasClass('expanded')) {
         removeChildNodes(tr.data('ams-tree-node-id'));
-        MyAMS.core.switchIcon(switcher, 'minus-square', 'plus-square', 'far');
-        switcher.removeClass('minus');
+        switcher.html('<i class="far fa-plus-square"></i>').removeClass('expanded');
       } else {
-        var location = tr.data('ams-location') || table.data('ams-location') || '',
-            treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
-            sourceName = tr.data('ams-element-name');
-        MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+        const location = tr.data('ams-location') || table.data('ams-location') || '',
+              treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
+              sourceName = tr.data('ams-element-name');
+        switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 
-        MyAMS.require('ajax').then(function () {
-          MyAMS.ajax.post("".concat(location, "/").concat(sourceName, "/").concat(treeNodesTarget), {
+        MyAMS.require('ajax').then(() => {
+          MyAMS.ajax.post(`${location}/${sourceName}/${treeNodesTarget}`, {
             can_sort: !$('td.sorter', tr).is(':empty')
-          }).then(function (result) {
+          }).then(result => {
             if (result.length > 0) {
-              var newRow;
+              let newRow;
 
-              var _iterator = _createForOfIteratorHelper(result),
-                  _step;
-
-              try {
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  var row = _step.value;
-                  newRow = $(row);
-                  dtTable.row.add(newRow).draw();
-                  MyAMS.core.initContent(newRow).then();
-                }
-              } catch (err) {
-                _iterator.e(err);
-              } finally {
-                _iterator.f();
+              for (const row of result) {
+                newRow = $(row);
+                dtTable.row.add(newRow).draw();
+                MyAMS.core.initContent(newRow).then();
               }
             }
 
-            MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-            switcher.addClass('minus');
+            switcher.html('<i class="far fa-minus-square"></i>').addClass('expanded');
           });
         });
       }
@@ -94,43 +76,41 @@
     /**
      * Open close all tree nodes
      */
-    switchTree: function switchTree(evt) {
-      var node = $(evt.currentTarget),
-          switcher = $('i.switch', node),
-          th = node.parents('th'),
-          table = th.parents('table').first(),
-          tableID = table.data('ams-tree-node-id'),
-          dtTable = table.DataTable();
+    switchTree: evt => {
+      const node = $(evt.currentTarget),
+            switcher = $('.switcher', node),
+            th = node.parents('th'),
+            table = th.parents('table').first(),
+            tableID = table.data('ams-tree-node-id'),
+            dtTable = table.DataTable();
       node.tooltip('hide');
 
-      if (switcher.hasClass('minus')) {
-        $('tr[data-ams-tree-node-parent-id]').filter("tr[data-ams-tree-node-parent-id!=\"".concat(tableID, "\"]")).each(function (idx, elt) {
+      if (switcher.hasClass('expanded')) {
+        $('tr[data-ams-tree-node-parent-id]').filter(`tr[data-ams-tree-node-parent-id!="${tableID}"]`).each((idx, elt) => {
           dtTable.row(elt).remove().draw();
         });
-        $('i.switch', table).each(function (idx, elt) {
-          MyAMS.core.switchIcon($(elt), 'minus-square', 'plus-square', 'far');
-          $(elt).removeClass('minus');
+        $('.switcher', table).each((idx, elt) => {
+          $(elt).html('<i class="far fa-plus-square"></i>').removeClass('expanded');
         });
       } else {
-        var location = table.data('ams-location') || '',
-            target = table.data('ams-tree-nodes-target') || 'get-tree.json',
-            tr = $('tbody tr', table.first());
-        MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+        const location = table.data('ams-location') || '',
+              target = table.data('ams-tree-nodes-target') || 'get-tree.json',
+              tr = $('tbody tr', table.first());
+        switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 
-        MyAMS.require('ajax').then(function () {
-          MyAMS.ajax.post("".concat(location, "/").concat(target), {
+        MyAMS.require('ajax').then(() => {
+          MyAMS.ajax.post(`${location}/${target}`, {
             can_sort: !$('td.sorter', tr).is(':empty')
-          }).then(function (result) {
-            $("tr[data-ams-tree-node-id]", table).each(function (idx, elt) {
+          }).then(result => {
+            $(`tr[data-ams-tree-node-id]`, table).each((idx, elt) => {
               dtTable.row(elt).remove().draw();
             });
-            $(result).each(function (idx, elt) {
-              var newRow = $(elt);
+            $(result).each((idx, elt) => {
+              const newRow = $(elt);
               dtTable.row.add(newRow).draw();
             });
             MyAMS.core.initContent(table).then();
-            MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-            switcher.addClass('minus');
+            switcher.html('<i class="far fa-minus-square"></i>').addClass('expanded');
           });
         });
       }
@@ -142,14 +122,14 @@
      * @param form: source form, which can be null if callback wasn't triggered from a form
      * @param options: callback options
      */
-    deleteElement: function deleteElement(form, options) {
+    deleteElement: (form, options) => {
       console.debug(options);
-      var nodeId = options.node_id;
+      const nodeId = options.node_id;
 
       if (nodeId) {
-        $("tr[data-ams-tree-node-parent-id=\"".concat(nodeId, "\"]")).each(function (idx, elt) {
-          var table = $(elt).parents('table'),
-              dtTable = table.DataTable();
+        $(`tr[data-ams-tree-node-parent-id="${nodeId}"]`).each((idx, elt) => {
+          const table = $(elt).parents('table'),
+                dtTable = table.DataTable();
           dtTable.row(elt).remove().draw();
         });
       }
@@ -158,26 +138,26 @@
     /**
      * Sort and re-parent tree elements
      */
-    sortTree: function sortTree(evt, details) {
-      var table = $(evt.target),
-          dtTable = table.DataTable(),
-          data = $(table).data();
-      var target = data.amsReorderUrl;
+    sortTree: (evt, details) => {
+      const table = $(evt.target),
+            dtTable = table.DataTable(),
+            data = $(table).data();
+      let target = data.amsReorderUrl;
 
       if (target) {
         // Disable row click handler
-        var row = $(data.amsReorderSource.node);
+        const row = $(data.amsReorderSource.node);
         row.data('ams-disabled-handlers', 'click');
 
         try {
           // Get root ID
-          var tableID = row.parents('table').first().data('ams-tree-node-id'); // Get moved row ID
+          const tableID = row.parents('table').first().data('ams-tree-node-id'); // Get moved row ID
 
-          var rowID = row.data('ams-tree-node-id');
-          var rowParentID = row.data('ams-tree-node-parent-id'); // Get new parent ID
+          const rowID = row.data('ams-tree-node-id');
+          const rowParentID = row.data('ams-tree-node-parent-id'); // Get new parent ID
 
-          var parent = row.prev('tr');
-          var parentID, switcher, action;
+          const parent = row.prev('tr');
+          let parentID, switcher, action;
 
           if (parent.exists()) {
             // Move below an existing row
@@ -221,20 +201,20 @@
           } // Call ordering target
 
 
-          var localTarget = MyAMS.core.getFunctionByName(target);
+          const localTarget = MyAMS.core.getFunctionByName(target);
 
           if (typeof localTarget === 'function') {
             localTarget.call(table, dnd_table, post_data);
           } else {
             if (!target.startsWith(window.location.protocol)) {
-              var location = data.amsLocation;
+              const location = data.amsLocation;
 
               if (location) {
-                target = "".concat(location, "/").concat(target);
+                target = `${location}/${target}`;
               }
             }
 
-            var postData = {
+            const postData = {
               action: action,
               child: rowID,
               parent: parentID,
@@ -242,18 +222,18 @@
               can_sort: !$('td.sorter', row).is(':empty')
             };
 
-            MyAMS.require('ajax').then(function () {
-              MyAMS.ajax.post(target, postData).then(function (result) {
-                var removeRow = function removeRow(rowID) {
-                  var row = $("tr[data-ams-tree-node-id=\"".concat(rowID, "\"]"));
+            MyAMS.require('ajax').then(() => {
+              MyAMS.ajax.post(target, postData).then(result => {
+                const removeRow = rowID => {
+                  const row = $(`tr[data-ams-tree-node-id="${rowID}"]`);
                   dtTable.row(row).remove().draw();
                 };
 
-                var removeChildRows = function removeChildRows(rowID) {
-                  var childs = $("tr[data-ams-tree-node-parent-id=\"".concat(rowID, "\"]"));
-                  childs.each(function (idx, elt) {
-                    var childRow = $(elt),
-                        childID = childRow.attr('data-ams-tree-node-id');
+                const removeChildRows = rowID => {
+                  const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`);
+                  childs.each((idx, elt) => {
+                    const childRow = $(elt),
+                          childID = childRow.attr('data-ams-tree-node-id');
                     removeChildRows(childID);
                     dtTable.row(childRow).remove().draw();
                   });
@@ -271,24 +251,14 @@
                   removeChildRows(parentID);
                   removeChildRows(rowID);
                   dtTable.row(row).remove().draw();
-                  var newRow, oldRow;
+                  let newRow, oldRow;
 
-                  var _iterator2 = _createForOfIteratorHelper(result),
-                      _step2;
-
-                  try {
-                    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-                      var resultRow = _step2.value;
-                      newRow = $(resultRow);
-                      oldRow = $("tr[id=\"".concat(newRow.attr('id'), "\"]"));
-                      dtTable.row(oldRow).remove().draw();
-                      dtTable.row.add(newRow).draw();
-                      MyAMS.core.initContent(newRow).then();
-                    }
-                  } catch (err) {
-                    _iterator2.e(err);
-                  } finally {
-                    _iterator2.f();
+                  for (const resultRow of result) {
+                    newRow = $(resultRow);
+                    oldRow = $(`tr[id="${newRow.attr('id')}"]`);
+                    dtTable.row(oldRow).remove().draw();
+                    dtTable.row.add(newRow).draw();
+                    MyAMS.core.initContent(newRow).then();
                   }
                 }
               });

@@ -1345,10 +1345,6 @@ const ajax = {
    *
    * @param checker: pointer to a resource which will be downloaded if undefined
    * @param source: URL of a javascript file containing requested resource
-   * @param callback: pointer to a function which will be called after the script is
-   * 		downloaded; first argument of this callback is a boolean value indicating if the
-   * 	    script was downloaded for the first time or not
-   * @param options: additional callback options argument
    */
   check: (checker, source) => {
     return new Promise((resolve, reject) => {
@@ -1367,11 +1363,11 @@ const ajax = {
           checker = [checker];
         }
 
-        for (let index = 0; index < checker.length; index++) {
-          if (checker[index] === undefined) {
-            deferred.push(MyAMS.core.getScript(source[index]));
+        checker.forEach((elt, idx) => {
+          if (elt === undefined) {
+            deferred.push(MyAMS.core.getScript(source[idx]));
           }
-        }
+        });
       }
 
       $.when.apply($, deferred).then(() => {
@@ -1385,22 +1381,22 @@ const ajax = {
    *
    * @param addr
    */
-  getAddr: function (addr) {
+  getAddr: addr => {
     const href = addr || $('html head base').attr('href') || window.location.href;
-    return href.substr(0, href.lastIndexOf('/') + 1);
+    return href.substring(0, href.lastIndexOf('/') + 1);
   },
 
   /**
    * JQuery AJAX start callback
    */
-  start: function () {
+  start: () => {
     $('#ajax-gear').show();
   },
 
   /**
    * JQuery AJAX stop callback
    */
-  stop: function () {
+  stop: () => {
     $('#ajax-gear').hide();
   },
 
@@ -1409,7 +1405,7 @@ const ajax = {
    *
    * @param event: source event
    */
-  progress: function (event) {
+  progress: event => {
     if (!event.lengthComputable) {
       return;
     }
@@ -1431,7 +1427,7 @@ const ajax = {
    * @param params: url params
    * @param options: AJAX call options
    */
-  get: function (url, params, options) {
+  get: (url, params, options) => {
     return new Promise((resolve, reject) => {
       let addr;
 
@@ -1465,7 +1461,7 @@ const ajax = {
    * @param data: submit data
    * @param options: AJAX call options
    */
-  post: function (url, data, options) {
+  post: (url, data, options) => {
     return new Promise((resolve, reject) => {
       let addr;
 
@@ -1498,7 +1494,7 @@ const ajax = {
    * This form of function can be used in MyAMS "href" or "data-ams-url" attributes, like in
    * <a href="MyAMS.ajax.getJSON?url=...">Click me!</a>.
    */
-  getJSON: function () {
+  getJSON: () => {
     return (source, options) => {
       const url = options.url;
       delete options.url;
@@ -1509,7 +1505,7 @@ const ajax = {
   /**
    * Extract datatype and result from response object
    */
-  getResponse: function (request) {
+  getResponse: request => {
     let dataType = 'unknown',
         result;
 
@@ -1591,7 +1587,7 @@ const ajax = {
    * @param form: source form
    * @param target
    */
-  handleJSON: function (result, form, target) {
+  handleJSON: (result, form, target) => {
     function closeForm() {
       return new Promise((resolve, reject) => {
         if (form !== undefined) {
@@ -1660,7 +1656,7 @@ const ajax = {
         url = result.location || window.location.hash;
 
         if (url.startsWith('#')) {
-          url = url.substr(1);
+          url = url.substring(1);
         }
 
         loadTarget = $(result.target || target || '#content');
@@ -1870,7 +1866,7 @@ const ajax = {
   /**
    * JQuery AJAX error handler
    */
-  error: function (event, response, request, error) {
+  error: (event, response, request, error) => {
     // user shouldn't be notified of aborted requests
     if (error === 'abort') {
       return;
@@ -7890,21 +7886,20 @@ const tree = {
     };
 
     const node = $(evt.currentTarget),
-          switcher = $('i.switch', node),
+          switcher = $('.switcher', node),
           tr = node.parents('tr').first(),
           table = tr.parents('table').first(),
           dtTable = table.DataTable();
     node.tooltip('hide');
 
-    if (switcher.hasClass('minus')) {
+    if (switcher.hasClass('expanded')) {
       removeChildNodes(tr.data('ams-tree-node-id'));
-      MyAMS.core.switchIcon(switcher, 'minus-square', 'plus-square', 'far');
-      switcher.removeClass('minus');
+      switcher.html('<i class="far fa-plus-square"></i>').removeClass('expanded');
     } else {
       const location = tr.data('ams-location') || table.data('ams-location') || '',
             treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
             sourceName = tr.data('ams-element-name');
-      MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+      switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.post(`${location}/${sourceName}/${treeNodesTarget}`, {
@@ -7920,8 +7915,7 @@ const tree = {
             }
           }
 
-          MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-          switcher.addClass('minus');
+          switcher.html('<i class="far fa-minus-square"></i>').addClass('expanded');
         });
       });
     }
@@ -7932,26 +7926,25 @@ const tree = {
    */
   switchTree: evt => {
     const node = $(evt.currentTarget),
-          switcher = $('i.switch', node),
+          switcher = $('.switcher', node),
           th = node.parents('th'),
           table = th.parents('table').first(),
           tableID = table.data('ams-tree-node-id'),
           dtTable = table.DataTable();
     node.tooltip('hide');
 
-    if (switcher.hasClass('minus')) {
+    if (switcher.hasClass('expanded')) {
       $('tr[data-ams-tree-node-parent-id]').filter(`tr[data-ams-tree-node-parent-id!="${tableID}"]`).each((idx, elt) => {
         dtTable.row(elt).remove().draw();
       });
-      $('i.switch', table).each((idx, elt) => {
-        MyAMS.core.switchIcon($(elt), 'minus-square', 'plus-square', 'far');
-        $(elt).removeClass('minus');
+      $('.switcher', table).each((idx, elt) => {
+        $(elt).html('<i class="far fa-plus-square"></i>').removeClass('expanded');
       });
     } else {
       const location = table.data('ams-location') || '',
             target = table.data('ams-tree-nodes-target') || 'get-tree.json',
             tr = $('tbody tr', table.first());
-      MyAMS.core.switchIcon(switcher, 'plus-square', 'cog', 'fas');
+      switcher.html('<i class="fas fa-spinner fa-spin"></i>');
 
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.post(`${location}/${target}`, {
@@ -7965,8 +7958,7 @@ const tree = {
             dtTable.row.add(newRow).draw();
           });
           MyAMS.core.initContent(table).then();
-          MyAMS.core.switchIcon(switcher, 'cog', 'minus-square', 'far');
-          switcher.addClass('minus');
+          switcher.html('<i class="far fa-minus-square"></i>').addClass('expanded');
         });
       });
     }

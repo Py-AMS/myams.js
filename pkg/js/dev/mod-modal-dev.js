@@ -16,30 +16,30 @@
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
-  _exports.modalToggleEventHandler = modalToggleEventHandler;
-  _exports.modalShownEventHandler = modalShownEventHandler;
+  _exports.dynamicModalHiddenEventHandler = dynamicModalHiddenEventHandler;
   _exports.dynamicModalShowEventHandler = dynamicModalShowEventHandler;
   _exports.dynamicModalShownEventHandler = dynamicModalShownEventHandler;
+  _exports.modal = void 0;
   _exports.modalDismissEventHandler = modalDismissEventHandler;
   _exports.modalHiddenEventHandler = modalHiddenEventHandler;
-  _exports.dynamicModalHiddenEventHandler = dynamicModalHiddenEventHandler;
-  _exports.modal = void 0;
+  _exports.modalShownEventHandler = modalShownEventHandler;
+  _exports.modalToggleEventHandler = modalToggleEventHandler;
 
   /* global MyAMS */
 
   /**
    * MyAMS modal dialogs support
    */
-  var $ = MyAMS.$;
-  var _initialized = false;
+  const $ = MyAMS.$;
+  let _initialized = false;
   /*
    * Standard data-toggle="modal" handler
    */
 
   function modalToggleEventHandler(evt) {
-    return new Promise(function (resolve, reject) {
-      var source = $(evt.currentTarget),
-          handlers = source.data('ams-disabled-handlers');
+    return new Promise((resolve, reject) => {
+      const source = $(evt.currentTarget),
+            handlers = source.data('ams-disabled-handlers');
 
       if (source.attr('disabled') || source.hasClass('disabled') || handlers === true || handlers === 'click' || handlers === 'all') {
         resolve(false);
@@ -57,7 +57,7 @@
 
       evt.preventDefault();
       source.tooltip('hide');
-      MyAMS.modal.open(source).then(function () {
+      MyAMS.modal.open(source).then(() => {
         resolve(true);
       }, reject);
     });
@@ -69,18 +69,18 @@
 
 
   function modalShownEventHandler(evt) {
-    var zIndexModal = 1100; // Enable modals stacking
+    const zIndexModal = 1100; // Enable modals stacking
 
-    var dialog = $(evt.target),
-        visibleModalsCount = $('.modal:visible').length,
-        zIndex = zIndexModal + 100 * visibleModalsCount;
+    const dialog = $(evt.target),
+          visibleModalsCount = $('.modal:visible').length,
+          zIndex = zIndexModal + 100 * visibleModalsCount;
     dialog.css('z-index', zIndex);
-    setTimeout(function () {
+    setTimeout(() => {
       $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
     }, 0); // Check form contents before closing modals
 
-    $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', function (evt) {
-      var handler = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
+    $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', evt => {
+      const handler = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
       return MyAMS.core.executeFunctionByName(handler, document, evt);
     });
   }
@@ -93,7 +93,7 @@
 
 
   function dynamicModalShowEventHandler(evt) {
-    var dialog = $(evt.target);
+    const dialog = $(evt.target);
     return MyAMS.core.executeFunctionByName(dialog.data('ams-init-content') || MyAMS.config.initContent, document, dialog);
   }
   /**
@@ -105,9 +105,9 @@
 
 
   function dynamicModalShownEventHandler(evt) {
-    return new Promise(function (resolve, reject) {
-      MyAMS.require('form').then(function () {
-        var modal = $(evt.target);
+    return new Promise((resolve, reject) => {
+      MyAMS.require('form').then(() => {
+        const modal = $(evt.target);
         MyAMS.form.setFocus(modal);
         resolve(modal);
       }, reject);
@@ -119,13 +119,13 @@
 
 
   function modalDismissEventHandler(evt) {
-    return new Promise(function (resolve, reject) {
-      var source = $(evt.currentTarget),
-          dialog = source.parents('.modal').first();
+    return new Promise((resolve, reject) => {
+      const source = $(evt.currentTarget),
+            dialog = source.parents('.modal').first();
       dialog.data('modal-result', $(evt.currentTarget).data('modal-dismiss-value'));
 
       if (MyAMS.form) {
-        MyAMS.form.confirmChangedForm(dialog).then(function (status) {
+        MyAMS.form.confirmChangedForm(dialog).then(status => {
           if (status === 'success') {
             dialog.modal('hide');
           }
@@ -162,8 +162,8 @@
 
 
   function dynamicModalHiddenEventHandler(evt) {
-    var dialog = $(evt.target);
-    MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog).then(function () {
+    const dialog = $(evt.target);
+    MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog).then(() => {
       if (dialog.data('dynamic') === true) {
         dialog.remove();
       }
@@ -174,8 +174,8 @@
    */
 
 
-  var modal = {
-    init: function init() {
+  const modal = {
+    init: () => {
       if (_initialized) {
         return;
       }
@@ -185,27 +185,27 @@
       if (MyAMS.config.ajaxNav) {
         // Initialize modal dialogs links
         // Standard Bootstrap handlers are removed!!
-        $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', function (evt) {
+        $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', evt => {
           evt.stopPropagation();
-          var handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
+          const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
           MyAMS.core.executeFunctionByName(handler, document, evt);
         });
       } // Handle modal shown event to allow modals stacking
 
 
-      $(document).on('shown.bs.modal', '.modal', function (evt) {
-        var handler = $(evt.currentTarget).data('ams-shown-handler') || modalShownEventHandler;
+      $(document).on('shown.bs.modal', '.modal', evt => {
+        const handler = $(evt.currentTarget).data('ams-shown-handler') || modalShownEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
       }); // Handle modal hidden event to check remaining modals
 
-      $(document).on('hidden.bs.modal', '.modal', function (evt) {
-        var handler = $(evt.currentTarget).data('ams-hidden-handler') || modalHiddenEventHandler;
+      $(document).on('hidden.bs.modal', '.modal', evt => {
+        const handler = $(evt.currentTarget).data('ams-hidden-handler') || modalHiddenEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
       });
     },
-    open: function open(source, options) {
-      return new Promise(function (resolve, reject) {
-        var sourceData = {},
+    open: (source, options) => {
+      return new Promise((resolve, reject) => {
+        let sourceData = {},
             url = source;
 
         if (typeof source !== 'string') {
@@ -213,7 +213,7 @@
           url = source.attr('href') || sourceData.amsUrl;
         }
 
-        var urlGetter = MyAMS.core.getFunctionByName(url);
+        const urlGetter = MyAMS.core.getFunctionByName(url);
 
         if (typeof urlGetter === 'function') {
           url = urlGetter(source);
@@ -233,14 +233,14 @@
             url: url,
             cache: sourceData.amsAllowCache === undefined ? false : sourceData.amsAllowCache,
             data: options
-          }).then(function (data, status, request) {
-            var modal = null;
+          }).then((data, status, request) => {
+            let modal = null;
 
-            MyAMS.require('ajax').then(function () {
-              var response = MyAMS.ajax.getResponse(request),
-                  dataType = response.contentType,
-                  result = response.data;
-              var content, dialog, dialogData, dialogOptions, settings;
+            MyAMS.require('ajax').then(() => {
+              const response = MyAMS.ajax.getResponse(request),
+                    dataType = response.contentType,
+                    result = response.data;
+              let content, dialog, dialogData, dialogOptions, settings;
 
               switch (dataType) {
                 case 'json':
@@ -267,7 +267,7 @@
                   }
 
               }
-            }).then(function () {
+            }).then(() => {
               resolve(modal);
             });
           });
@@ -280,14 +280,14 @@
      *
      * @param element: the element contained into closed modal
      */
-    close: function close(element) {
+    close: element => {
       if (typeof element === 'string') {
         element = $(element);
       } else if (typeof element === 'undefined') {
         element = $('.modal-dialog:last');
       }
 
-      var dialog = element.objectOrParentWithClass('modal');
+      const dialog = element.objectOrParentWithClass('modal');
 
       if (dialog.length > 0) {
         dialog.modal('hide');

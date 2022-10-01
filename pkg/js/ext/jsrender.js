@@ -13,8 +13,6 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
   /*! JsRender v1.0.11: http://jsviews.com/#jsrender */
 
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
@@ -32,7 +30,7 @@
     // global var is the this object, which is window when running in the usual browser environment
     var $ = global.jQuery;
 
-    if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object") {
+    if (typeof exports === "object") {
       // CommonJS e.g. Browserify
       module.exports = $ ? factory(global, $) : function ($) {
         // If no global jQuery, take optional jQuery passed as parameter: require('jsrender')(jQuery)
@@ -161,7 +159,7 @@
         extendCtx: extendCtx,
         syntaxErr: syntaxError,
         onStore: {
-          template: function template(name, item) {
+          template: function (name, item) {
             if (item === null) {
               delete $render[name];
             } else if (name) {
@@ -177,7 +175,7 @@
         // Update advanced settings
         _thp: tagHandlersFromProps,
         _gm: getMethod,
-        _tg: function _tg() {},
+        _tg: function () {},
         // Constructor for tagDef
         _cnvt: convertVal,
         _tag: renderTag,
@@ -185,7 +183,7 @@
         _err: onRenderError,
         _cp: retVal,
         // Get observable contextual parameters (or properties) ~foo=expr. In JsRender, simply returns val.
-        _sq: function _sq(token) {
+        _sq: function (token) {
           if (token === "constructor") {
             syntaxError("");
           }
@@ -195,7 +193,7 @@
       },
       settings: {
         delimiters: $viewsDelimiters,
-        advanced: function advanced(value) {
+        advanced: function (value) {
           return value ? ($extend($subSettingsAdvanced, value), $sub.advSet(), $viewsSettings) : $subSettingsAdvanced;
         }
       },
@@ -507,7 +505,7 @@
               res._cxp = {
                 path: _ocp,
                 ind: 0,
-                updateValue: function updateValue(val, path) {
+                updateValue: function (val, path) {
                   $.observable(res[0]).setProperty(_ocp, val); // Set the value (res[0]._ocp)
 
                   return this;
@@ -550,7 +548,7 @@
           // view as 'this' context. If the helper ~foo() was in a data-link expression, the view will have a 'temporary' linkCtx property too.
           // Note that helper functions on deeper paths will have specific this pointers, from the preceding path.
           // For example, ~util.foo() will have the ~util object as 'this' pointer
-          wrapped = function wrapped() {
+          wrapped = function () {
             return res.apply(!this || this === global ? callView : this, arguments);
           };
 
@@ -1192,7 +1190,7 @@
       getRsc: getResource,
       _getTmpl: getTemplate,
       _getOb: getPathObject,
-      getCache: function getCache(key) {
+      getCache: function (key) {
         // Get cached value of computed value
         if ($subSettings._cchCt > this.cache._ct) {
           this.cache = {
@@ -1719,7 +1717,7 @@
 
       cnstr = new Function(args, cnstr);
 
-      constructor = function constructor() {
+      constructor = function () {
         cnstr.apply(this, arguments); // Pass additional parentRef str and parent obj to have a parentRef pointer on instance
 
         if (parent = arguments[getterCount + 1]) {
@@ -1802,7 +1800,7 @@
             cnt,
             onStore = $sub.onStore[storeName];
 
-        if (name && _typeof(name) === OBJECT && !name.nodeType && !name.markup && !name.getTgt && !(storeName === "viewModel" && name.getters || name.extend)) {
+        if (name && typeof name === OBJECT && !name.nodeType && !name.markup && !name.getTgt && !(storeName === "viewModel" && name.getters || name.extend)) {
           // Call to $.views.things(items[, parentTmpl]),
           // Adding items to the store
           // If name is a hash, then item is parentTmpl. Iterate over hash and call store for key.
@@ -1931,7 +1929,7 @@
         noIteration = context; // passing boolean as second param - noIteration
 
         context = undefined;
-      } else if (_typeof(context) !== OBJECT) {
+      } else if (typeof context !== OBJECT) {
         context = undefined; // context must be a boolean (noIteration) or a plain object
       }
 
@@ -2971,7 +2969,7 @@
         // map.propsArr is the full array of {key:..., prop:...} objects
         propsArr = [];
 
-        if (_typeof(source) === OBJECT || $isFunction(source)) {
+        if (typeof source === OBJECT || $isFunction(source)) {
           for (key in source) {
             prop = source[key];
 
@@ -3251,7 +3249,7 @@
 
       $tags({
         "if": {
-          render: function render(val) {
+          render: function (val) {
             // This function is called once for {{if}} and once for each {{else}}.
             // We will use the tag.rendering object for carrying rendering state across the calls.
             // If not done (a previous block has not been rendered), look at expression for this block and render the block if expression is truthy
@@ -3268,10 +3266,10 @@
         },
         "for": {
           sortDataMap: dataMap(getTargetSorted),
-          init: function init(val, cloned) {
+          init: function (val, cloned) {
             this.setDataMap(this.tagCtxs);
           },
-          render: function render(val) {
+          render: function (val) {
             // This function is called once for {{for}} and once for each {{else}}.
             // We will use the tag.rendering object for carrying rendering state across the calls.
             var value,
@@ -3321,7 +3319,7 @@
 
             return result;
           },
-          setDataMap: function setDataMap(tagCtxs) {
+          setDataMap: function (tagCtxs) {
             var tagCtx,
                 props,
                 paramsProps,
@@ -3369,7 +3367,7 @@
         encode: dataEncode,
         unencode: dataUnencode,
         // Includes > encoding since rConvertMarkers in JsViews does not skip > characters in attribute strings
-        url: function url(text) {
+        url: function (text) {
           // URL encoding helper.
           return text != undefined ? encodeURI("" + text) : text === null ? text : ""; // null returns null, e.g. to remove attribute. undefined returns ""
         }

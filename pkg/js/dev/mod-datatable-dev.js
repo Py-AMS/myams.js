@@ -23,8 +23,8 @@
   /**
    * MyAMS datatables management
    */
-  var $ = MyAMS.$;
-  var datatable = {};
+  const $ = MyAMS.$;
+  const datatable = {};
   /**
    * Global module initialization
    */

@@ -23,7 +23,7 @@
   /**
    * MyAMS i18n translations
    */
-  var $ = MyAMS.$;
+  const $ = MyAMS.$;
   /**
    * Internal function used to copy text to clipboard
    *
@@ -31,13 +31,13 @@
    */
 
   function doCopy(text) {
-    var copied = false;
+    let copied = false;
 
     if (window.clipboardData && window.clipboardData.setData) {
       // IE specific code
       copied = clipboardData.setData("Text", text);
     } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-      var textarea = $('<textarea>');
+      const textarea = $('<textarea>');
       textarea.val(text).css('position', 'fixed') // prevent scrolling to bottom of page in Edge
       .appendTo(MyAMS.dom.root);
       textarea.get(0).select();
@@ -54,7 +54,7 @@
     }
 
     if (copied) {
-      MyAMS.require('i18n', 'alert').then(function () {
+      MyAMS.require('i18n', 'alert').then(() => {
         MyAMS.alert.smallBox({
           status: 'success',
           message: text.length > 1 ? MyAMS.i18n.CLIPBOARD_TEXT_COPY_OK : MyAMS.i18n.CLIPBOARD_CHARACTER_COPY_OK,
@@ -63,23 +63,23 @@
         });
       });
     } else {
-      MyAMS.require('i18n').then(function () {
+      MyAMS.require('i18n').then(() => {
         prompt(MyAMS.i18n.CLIPBOARD_COPY, text);
       });
     }
   }
 
-  var clipboard = {
+  const clipboard = {
     /**
      * Copy given text to system's clipboard
      *
      * @param text: text to be copied
      */
-    copy: function copy(text) {
+    copy: text => {
       if (typeof text === 'undefined') {
         return function () {
-          var source = $(this),
-              text = source.text();
+          const source = $(this),
+                text = source.text();
           source.parents('.btn-group').removeClass('open');
           doCopy(text);
         };

@@ -23,10 +23,10 @@
   /**
    * MyAMS stats management
    */
-  var $ = MyAMS.$;
-  var stats = {
-    logPageview: function logPageview() {},
-    logEvent: function logEvent() {}
+  const $ = MyAMS.$;
+  const stats = {
+    logPageview: function () {},
+    logEvent: function () {}
   };
   /**
    * Global module initialization

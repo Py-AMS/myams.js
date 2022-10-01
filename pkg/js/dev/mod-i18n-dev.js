@@ -23,9 +23,9 @@
   /**
    * MyAMS i18n translations
    */
-  var $ = MyAMS.$;
-  var _initialized = false;
-  var i18n = {
+  const $ = MyAMS.$;
+  let _initialized = false;
+  const i18n = {
     language: 'en',
     INFO: "Information",
     WARNING: "!! WARNING !!",
@@ -73,20 +73,20 @@
     /**
      * MyAMS i18n package
      */
-    init: function init() {
-      var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      return new Promise(function (resolve, reject) {
+    init: function () {
+      let force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      return new Promise((resolve, reject) => {
         if (_initialized && !force) {
           resolve();
           return;
         }
 
         _initialized = true;
-        var html = $('html'),
-            lang = html.attr('lang') || html.attr('xml:lang');
+        const html = $('html'),
+              lang = html.attr('lang') || html.attr('xml:lang');
 
         if (lang && !lang.startsWith('en')) {
-          MyAMS.core.getScript("".concat(MyAMS.env.baseURL, "i18n/myams-").concat(lang.substr(0, 2), ".js")).then(resolve, reject);
+          MyAMS.core.getScript(`${MyAMS.env.baseURL}i18n/myams-${lang.substr(0, 2)}.js`).then(resolve, reject);
         } else {
           resolve();
         }
