@@ -7,7 +7,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const stream = require('webpack-stream');
 const replace = require('gulp-replace');
 const rename = require('gulp-rename');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-terser');
 const sass = require('gulp-sass')(require('sass'));
 const clean = require('gulp-clean-css');
 
