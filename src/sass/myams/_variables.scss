@@ -212,6 +212,12 @@ $list-striped-bg:           darken($body-bg, 10%) !default;
 // Modals styles
 $modal-inner-padding:        0.5rem !default;
 
+// Thumbnails styles
+$thumbnails-size:                    128px;
+$thumbnails-padding:                 8px;
+$thumbnails-sort-helper-bg:          $body;
+$thumbnails-sort-placeholder-border: $primary;
+
 
 @import '../../../node_modules/bootstrap/scss/functions';
 @import '../../../node_modules/bootstrap/scss/variables';

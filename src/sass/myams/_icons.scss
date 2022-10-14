@@ -1,6 +1,21 @@
 
+@import "variables";
+
+
 .thumbnail {
-  min-width: 128px;
+  min-width: $thumbnails-size;
+}
+
+.media-thumbnail {
+  min-width: calc(#{$thumbnails-size} + 2 * #{$thumbnails-padding} + 2px);
+
+  &.ui-sortable-helper {
+    background-color: $thumbnails-sort-helper-bg;
+  }
+  &.ui-sortable-placeholder {
+    border: 1px dotted $thumbnails-sort-placeholder-border !important;
+    visibility: visible !important;
+  }
 }
 
 .fa-shake {
