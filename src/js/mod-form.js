@@ -411,6 +411,17 @@ export const form = {
 
 		// disable standard submit
 		return false;
+	},
+
+	/**
+	 * Submit a form from a button click handler
+	 */
+	submitForm: (evt) => {
+		const
+			button = $(evt.currentTarget),
+			form = button.parents('form');
+		form.data('ams-submit-button', button);
+		form.submit();
 	}
 };
 
