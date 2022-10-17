@@ -31,16 +31,19 @@ export const events = {
 	initElement: (element) => {
 		$('[data-ams-events-handlers]', element).each((idx, elt) => {
 			const
-				context = $(elt),
-				handlers = context.data('ams-events-handlers');
+				source = $(elt),
+				handlers = source.data('ams-events-handlers');
 			if (handlers) {
+				const
+					selector = source.data('ams-events-handlers-context'),
+					context = selector ? source.parents(selector) : source;
 				for (const [event, handler] of Object.entries(handlers)) {
 					context.on(event, (event, ...options) => {
 						if (options.length > 0) {
 							MyAMS.core.executeFunctionByName(handler, document, event, ...options);
 						} else {
 							MyAMS.core.executeFunctionByName(handler, document, event,
-								context.data('ams-events-options') || {});
+								source.data('ams-events-options') || {});
 						}
 					});
 				}
