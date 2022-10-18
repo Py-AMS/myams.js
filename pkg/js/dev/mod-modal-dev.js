@@ -274,6 +274,18 @@
         }
       });
     },
+    fitWidthToImage: (evt, options) => {
+      setTimeout(() => {
+        const source = evt.currentTarget,
+              image = options ? $(options['resize-target']) : source;
+
+        if (image.exists()) {
+          const dialog = image.parents('.modal-dialog'),
+                padding = dialog.width() - image.width();
+          dialog.css('max-width', Math.min($(window).width(), image.get(0).naturalWidth + padding));
+        }
+      }, 150);
+    },
 
     /**
      * Close modal associated with given element

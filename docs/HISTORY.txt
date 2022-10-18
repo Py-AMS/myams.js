@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.14.0
+------
+ - added click handler to submit a form from a standard action button
+ - added thumbnails variables and support classes
+ - added support to set a context for custom events handlers
+ - added modals helper to set dialog width according to internal image width
+
 1.13.1
 ------
  - updated switchers icons management in tree module

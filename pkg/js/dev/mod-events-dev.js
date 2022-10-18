@@ -41,10 +41,13 @@
     },
     initElement: element => {
       $('[data-ams-events-handlers]', element).each((idx, elt) => {
-        const context = $(elt),
-              handlers = context.data('ams-events-handlers');
+        const source = $(elt),
+              handlers = source.data('ams-events-handlers');
 
         if (handlers) {
+          const selector = source.data('ams-events-handlers-context'),
+                context = selector ? source.parents(selector) : source;
+
           for (const [event, handler] of Object.entries(handlers)) {
             context.on(event, function (event) {
               for (var _len = arguments.length, options = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -54,7 +57,7 @@
               if (options.length > 0) {
                 MyAMS.core.executeFunctionByName(handler, document, event, ...options);
               } else {
-                MyAMS.core.executeFunctionByName(handler, document, event, context.data('ams-events-options') || {});
+                MyAMS.core.executeFunctionByName(handler, document, event, source.data('ams-events-options') || {});
               }
             });
           }
