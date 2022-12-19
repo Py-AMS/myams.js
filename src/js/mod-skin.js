@@ -114,7 +114,7 @@ export const skin = {
 				} else {
 					menu = $('ul li a[href!="#"]', nav).first();
 				}
-				if (menu.exists()) {
+				if (menu.length > 0) {
 					MyAMS.require('nav').then(() => {
 						MyAMS.nav.setActiveMenu(menu);
 						if (activeUrl) {
