@@ -533,8 +533,8 @@ export function datatables(element) {
 						if (data.stateRestore && !loaded.stateRestore && !$.fn.dataTables.stateRestore) {
 							bases.push(`${baseJS}dataTables.stateRestore${MyAMS.env.extext}.js`);
 							extensions.push(`${baseJS}stateRestore.bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-select-bs4'] = `${baseCSS}stateRestore.bootstrap4${MyAMS.env.extext}.css`;
-							loaded.select = true;
+							css['dt-staterestore-bs4'] = `${baseCSS}stateRestore.bootstrap4${MyAMS.env.extext}.css`;
+							loaded.stateRestore = true;
 						}
 					});
 					$.when.apply($, bases.map(MyAMS.core.getScript)).then(() => {
