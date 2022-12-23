@@ -393,8 +393,8 @@ export function datatables(element) {
 				`${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then((firstLoad) => {
 				const required = [];
 				if (firstLoad) {
-					required.push(MyAMS.core.getScript(`${baseJS}dataTables-bootstrap4${MyAMS.env.extext}.js`));
-					required.push(MyAMS.core.getCSS(`${baseCSS}dataTables-bootstrap4${MyAMS.env.extext}.css`, 'datatables-bs4'));
+					required.push(MyAMS.core.getScript(`${baseJS}dataTables.bootstrap4${MyAMS.env.extext}.js`));
+					required.push(MyAMS.core.getCSS(`${baseCSS}dataTables.bootstrap4${MyAMS.env.extext}.css`, 'datatables-bs4'));
 				}
 				$.when.apply($, required).then(() => {
 					const
@@ -417,23 +417,23 @@ export function datatables(element) {
 							data.buttons = table.data('buttons');
 						}
 						if (data.autoFill && !loaded.autoFill && !$.fn.dataTable.AutoFill) {
-							bases.push(`${baseJS}autoFill${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}autoFill-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-autofill-bs4'] = `${baseCSS}autoFill-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.autoFill${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}autoFill.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-autofill-bs4'] = `${baseCSS}autoFill.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.autoFill = true;
 						}
 						if (data.buttons) {
 							if (!loaded.buttons && !$.fn.dataTable.Buttons) {
-								bases.push(`${baseJS}buttons${MyAMS.env.extext}.js`);
-								extensions.push(`${baseJS}buttons-bootstrap4${MyAMS.env.extext}.js`);
-								extensions.push(`${baseJS}buttons-html5${MyAMS.env.extext}.js`);
-								css['dt-buttons-bs4'] = `${baseCSS}buttons-bootstrap4${MyAMS.env.extext}.css`;
+								bases.push(`${baseJS}dataTables.buttons${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}buttons.bootstrap4${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}buttons.html5${MyAMS.env.extext}.js`);
+								css['dt-buttons-bs4'] = `${baseCSS}buttons.bootstrap4${MyAMS.env.extext}.css`;
 								loaded.buttons = true;
 							}
 							if ($.isArray(data.buttons)) {
 								if (data.buttons.indexOf('print') >= 0) {
 									if (!loaded.buttons_print && !$.fn.dataTable.ext.buttons.print) {
-										depends.push(`${baseJS}buttons-print${MyAMS.env.extext}.js`);
+										depends.push(`${baseJS}buttons.print${MyAMS.env.extext}.js`);
 										loaded.buttons_print = true;
 									}
 								}
@@ -452,82 +452,88 @@ export function datatables(element) {
 								}
 								if (data.buttons.indexOf('colvis') >= 0) {
 									if (!loaded.buttons_colvis && !$.fn.dataTable.ext.buttons.colvis) {
-										depends.push(`${baseJS}buttons-colVis${MyAMS.env.extext}.js`);
+										depends.push(`${baseJS}buttons.colVis${MyAMS.env.extext}.js`);
 										loaded.buttons_colvis = true;
 									}
 								}
 							}
 						}
 						if (data.colReorder && !loaded.colReorder && !$.fn.dataTable.ColReorder) {
-							bases.push(`${baseJS}colReorder${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}colReorder-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-colreorder-bs4'] = `${baseCSS}colReorder-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.colReorder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}colReorder.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-colreorder-bs4'] = `${baseCSS}colReorder.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.colReorder = true;
 						}
 						if (data.fixedColumns && !loaded.fixedColumns && !$.fn.dataTable.FixedColumns) {
-							bases.push(`${baseJS}fixedColumns${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}fixedColumns-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-fixedcolumns-bs4'] = `${baseCSS}fixedColumns-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.fixedColumns${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}fixedColumns.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-fixedcolumns-bs4'] = `${baseCSS}fixedColumns.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.fixedColumns = true;
 						}
 						if (data.fixedHeader && !loaded.fixedHeader && !$.fn.dataTable.FixedHeader) {
-							bases.push(`${baseJS}fixedHeader${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}fixedHeader-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-fixedheader-bs4'] = `${baseCSS}fixedHeader-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.fixedHeader${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}fixedHeader.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-fixedheader-bs4'] = `${baseCSS}fixedHeader.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.fixedHeader = true;
 						}
 						if (data.keyTable && !loaded.keyTable && !$.fn.dataTable.KeyTable) {
-							bases.push(`${baseJS}keyTable${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}keyTable-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-keytable-bs4'] = `${baseCSS}keyTable-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.keyTable${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}keyTable.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-keytable-bs4'] = `${baseCSS}keyTable.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.keyTable = true;
 						}
 						if ((data.responsive !== false) && !loaded.responsive && !$.fn.dataTable.Responsive) {
-							bases.push(`${baseJS}responsive${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}responsive-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-responsive-bs4'] = `${baseCSS}responsive-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.responsive${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}responsive.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-responsive-bs4'] = `${baseCSS}responsive.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.responsive = true;
 						}
 						if (data.rowGroup && !loaded.rowGroup && !$.fn.dataTable.RowGroup) {
-							bases.push(`${baseJS}rowGroup${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}rowGroup-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-rowgroup-bs4'] = `${baseCSS}rowGroup-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.rowGroup${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}rowGroup.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-rowgroup-bs4'] = `${baseCSS}rowGroup.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.rowGroup = true;
 						}
 						if (data.rowReorder && !loaded.rowReorder && !$.fn.dataTable.RowReorder) {
-							bases.push(`${baseJS}rowReorder${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}rowReorder-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-rowreorder-bs4'] = `${baseCSS}rowReorder-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.rowReorder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}rowReorder.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-rowreorder-bs4'] = `${baseCSS}rowReorder.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.rowReorder = true;
 						}
 						if (data.scroller && !loaded.scroller && !$.fn.dataTable.Scroller) {
-							bases.push(`${baseJS}scroller${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}scroller-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-scroller-bs4'] = `${baseCSS}scroller-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.scroller${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}scroller.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-scroller-bs4'] = `${baseCSS}scroller.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.scroller = true;
 						}
 						if (data.searchBuilder && !loaded.searchBuilder && !$.fn.dataTable.SearchBuilder) {
-							bases.push(`${baseJS}searchBuilder${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}searchBuilder-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-searchbuilder-bs4'] = `${baseCSS}searchBuilder-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.searchBuilder${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}searchBuilder.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-searchbuilder-bs4'] = `${baseCSS}searchBuilder.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.searchBuilder = true;
 						}
 						if (data.searchPanes && !loaded.searchPanes && !$.fn.dataTable.SearchPanes) {
 							if (!loaded.select && !$.fn.dataTable.select) {
-								bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
-								extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
-								css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+								bases.push(`${baseJS}dataTables.select${MyAMS.env.extext}.js`);
+								extensions.push(`${baseJS}select.bootstrap4${MyAMS.env.extext}.js`);
+								css['dt-select-bs4'] = `${baseCSS}select.bootstrap4${MyAMS.env.extext}.css`;
 								loaded.select = true;
 							}
-							extensions.push(`${baseJS}searchPanes${MyAMS.env.extext}.js`);
-							depends.push(`${baseJS}searchPanes-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-searchpanes-bs4'] = `${baseCSS}searchPanes-bootstrap4${MyAMS.env.extext}.css`;
+							extensions.push(`${baseJS}dataTables.searchPanes${MyAMS.env.extext}.js`);
+							depends.push(`${baseJS}searchPanes.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-searchpanes-bs4'] = `${baseCSS}searchPanes.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.searchPanes = true;
 						}
 						if (data.select && !loaded.select && !$.fn.dataTable.select) {
-							bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
-							extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
-							css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+							bases.push(`${baseJS}dataTables.select${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}select.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-select-bs4'] = `${baseCSS}select.bootstrap4${MyAMS.env.extext}.css`;
+							loaded.select = true;
+						}
+						if (data.stateRestore && !loaded.stateRestore && !$.fn.dataTables.stateRestore) {
+							bases.push(`${baseJS}dataTables.stateRestore${MyAMS.env.extext}.js`);
+							extensions.push(`${baseJS}stateRestore.bootstrap4${MyAMS.env.extext}.js`);
+							css['dt-select-bs4'] = `${baseCSS}stateRestore.bootstrap4${MyAMS.env.extext}.css`;
 							loaded.select = true;
 						}
 					});
