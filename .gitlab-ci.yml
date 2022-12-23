@@ -27,11 +27,11 @@ bootstrap:
 
 test-js:
     stage: test
-    image: node:12.17.0
+    image: node:18.12.1
     script:
         - npm install --no-audit
         - apt update && apt install -y python3-pip
-        - pip3 install anybadge==1.14.0
+        - pip3 install anybadge
         - mkdir ./coverage
         - (npm run coverage | tee coverage/coverage.log) || true
         - GLOBAL_COVER=$(grep "All files" coverage/coverage.log | awk -F'|' '{print $2}')
@@ -44,7 +44,7 @@ test-js:
 
 eslint:
     stage: quality
-    image: node:12.17.0
+    image: node:18.12.1
     allow_failure: true
     script:
         - npm install --no-audit
