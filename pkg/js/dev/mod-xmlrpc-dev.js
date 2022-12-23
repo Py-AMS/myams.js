@@ -17,20 +17,18 @@
     value: true
   });
   _exports.xmlrpc = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS XML-RPC protocol support
    */
+
   const $ = MyAMS.$;
   const xmlrpc = {};
+
   /**
    * Global module initialization
    */
-
   _exports.xmlrpc = xmlrpc;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('xmlrpc');

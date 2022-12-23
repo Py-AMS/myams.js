@@ -17,20 +17,18 @@
     value: true
   });
   _exports.jsonrpc = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS JSON-RPC protocol support
    */
+
   const $ = MyAMS.$;
   const jsonrpc = {};
+
   /**
    * Global module initialization
    */
-
   _exports.jsonrpc = jsonrpc;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('jsonrpc');

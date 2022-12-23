@@ -27,6 +27,7 @@
     }
   })(void 0, function () {
     "use strict";
+
     /*
     * FileSaver.js
     * A saveAs() FileSaver implementation.
@@ -38,9 +39,7 @@
     */
     // The one and only way of getting global scope in all environments
     // https://stackoverflow.com/q/3277182/1008999
-
     var _global = typeof window === 'object' && window.window === window ? window : typeof self === 'object' && self.self === self ? self : typeof global === 'object' && global.global === global ? global : void 0;
-
     function bom(blob, opts) {
       if (typeof opts === 'undefined') opts = {
         autoBom: false
@@ -57,26 +56,20 @@
           type: blob.type
         });
       }
-
       return blob;
     }
-
     function download(url, name, opts) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url);
       xhr.responseType = 'blob';
-
       xhr.onload = function () {
         saveAs(xhr.response, name, opts);
       };
-
       xhr.onerror = function () {
         console.error('could not download file');
       };
-
       xhr.send();
     }
-
     function corsEnabled(url) {
       var xhr = new XMLHttpRequest(); // use sync to avoid popup blocker
 
@@ -84,7 +77,6 @@
       xhr.send();
       return xhr.status >= 200 && xhr.status <= 299;
     } // `a.click()` doesn't work for all browsers (#465)
-
 
     function click(node) {
       try {
@@ -95,8 +87,8 @@
         node.dispatchEvent(evt);
       }
     }
-
-    var saveAs = _global.saveAs || // probably in some web worker
+    var saveAs = _global.saveAs ||
+    // probably in some web worker
     typeof window !== 'object' || window !== _global ? function saveAs() {}
     /* noop */
     // Use download attribute first if possible (#193 Lumia mobile)
@@ -112,7 +104,6 @@
       if (typeof blob === 'string') {
         // Support regular links
         a.href = blob;
-
         if (a.origin !== location.origin) {
           corsEnabled(a.href) ? download(blob, name, opts) : click(a, a.target = '_blank');
         } else {
@@ -132,7 +123,6 @@
     } // Use msSaveOrOpenBlob as a second approach
     : 'msSaveOrOpenBlob' in navigator ? function saveAs(blob, name, opts) {
       name = name || blob.name || 'download';
-
       if (typeof blob === 'string') {
         if (corsEnabled(blob)) {
           download(blob, name, opts);
@@ -152,22 +142,16 @@
       // Open a popup immediately do go around popup blocker
       // Mostly only avalible on user interaction and the fileReader is async so...
       popup = popup || open('', '_blank');
-
       if (popup) {
         popup.document.title = popup.document.body.innerText = 'downloading...';
       }
-
       if (typeof blob === 'string') return download(blob, name, opts);
       var force = blob.type === 'application/octet-stream';
-
       var isSafari = /constructor/i.test(_global.HTMLElement) || _global.safari;
-
       var isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
-
       if ((isChromeIOS || force && isSafari) && typeof FileReader === 'object') {
         // Safari doesn't allow downloading of blob urls
         var reader = new FileReader();
-
         reader.onloadend = function () {
           var url = reader.result;
           url = isChromeIOS ? url : url.replace(/^data:[^;]*;/, 'data:attachment/file;');
@@ -187,8 +171,8 @@
         }, 4E4); // 40s
       }
     };
-    _global.saveAs = saveAs.saveAs = saveAs;
 
+    _global.saveAs = saveAs.saveAs = saveAs;
     if (typeof module !== 'undefined') {
       module.exports = saveAs;
     }

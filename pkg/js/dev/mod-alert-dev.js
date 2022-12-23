@@ -17,24 +17,20 @@
     value: true
   });
   _exports.alert = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS alerts management
    */
-  const $ = MyAMS.$;
 
+  const $ = MyAMS.$;
   if (!$.templates) {
     const jsrender = require('jsrender');
-
     $.templates = jsrender.templates;
   }
+
   /**
    * Alert template
    */
-
-
   const ALERT_TEMPLATE_STRING = `
 	<div class="alert alert-{{:status}}" role="alert">
 		<button type="button" class="close" data-dismiss="alert" 
@@ -60,6 +56,7 @@
     markup: ALERT_TEMPLATE_STRING,
     allowCode: true
   });
+
   /**
    * Standard message template
    */
@@ -94,6 +91,7 @@
     markup: MESSAGE_TEMPLATE_STRING,
     allowCode: true
   });
+
   /**
    * Small box message template
    */
@@ -121,6 +119,7 @@
     markup: SMALLBOX_TEMPLATE_STRING,
     allowCode: true
   });
+
   /**
    * Big box message template
    */
@@ -161,6 +160,7 @@
     markup: BIGBOX_TEMPLATE_STRING,
     allowCode: true
   });
+
   /**
    * Main alert object
    */
@@ -179,22 +179,18 @@
     alert: function () {
       let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let status = props.status || 'info';
-
       if (status === 'error') {
         status = 'danger';
       }
-
       props.status = status;
       $(`.alert-${status}`, props.parent).not('.persistent').remove();
       $(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
-
       MyAMS.require('helpers').then(() => {
         MyAMS.helpers.scrollTo('#content', props.parent, {
           offset: -15
         });
       });
     },
-
     /**
      * Display notification message on bottom right
      *
@@ -210,23 +206,18 @@
     messageBox: function () {
       let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let status = props.status || 'info';
-
       if (status === 'error') {
         status = 'danger';
       }
-
       props.status = status;
       let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
-
       if (wrapper.length === 0) {
         wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass).appendTo(MyAMS.dom.root);
       }
-
       $(MESSAGE_TEMPLATE.render(props)).appendTo(wrapper).toast('show').on('hidden.bs.toast', evt => {
         $(evt.currentTarget).remove();
       });
     },
-
     /**
      * Display small notification message on top right
      *
@@ -235,23 +226,18 @@
     smallBox: function () {
       let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let status = props.status || 'info';
-
       if (status === 'error') {
         status = 'danger';
       }
-
       props.status = status;
       let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
-
       if (wrapper.length === 0) {
         wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass).appendTo(MyAMS.dom.root);
       }
-
       $(SMALLBOX_TEMPLATE.render(props)).appendTo(wrapper).toast('show').on('hidden.bs.toast', evt => {
         $(evt.currentTarget).remove();
       });
     },
-
     /**
      * Modal message box
      *
@@ -262,13 +248,10 @@
       let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       return new Promise((resolve, reject) => {
         let status = props.status || 'info';
-
         if (status === 'error') {
           status = 'danger';
         }
-
         props.status = status;
-
         MyAMS.require('modal').then(() => {
           const alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
           alert.on('shown.bs.modal', evt => {
@@ -285,12 +268,11 @@
       });
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.alert = alert;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('alert');

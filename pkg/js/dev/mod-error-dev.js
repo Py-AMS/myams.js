@@ -17,12 +17,11 @@
     value: true
   });
   _exports.error = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS errors management
    */
+
   const $ = MyAMS.$;
   const ERRORS_TEMPLATE_STRING = `
 	<div class="alert alert-{{:status}}" role="alert">
@@ -94,10 +93,9 @@
           // full errors with widgets
           MyAMS.require('i18n', 'ajax', 'alert', 'form').then(() => {
             // clear previous alerts
-            MyAMS.form.clearAlerts(parent); // create new alert
-
+            MyAMS.form.clearAlerts(parent);
+            // create new alert
             const messages = [];
-
             for (const message of errors.messages || []) {
               if (typeof message === 'string') {
                 messages.push({
@@ -108,44 +106,37 @@
                 messages.push(message);
               }
             }
-
             for (const widget of errors.widgets || []) {
               messages.push({
                 header: widget.label,
                 message: widget.message
               });
             }
-
             const header = errors.header || (messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
-                  props = {
-              status: 'danger',
-              header: header,
-              message: errors.error || null,
-              messages: messages
-            };
-            $(ERROR_TEMPLATE.render(props)).prependTo(parent); // update status of invalid widgets
-
+              props = {
+                status: 'danger',
+                header: header,
+                message: errors.error || null,
+                messages: messages
+              };
+            $(ERROR_TEMPLATE.render(props)).prependTo(parent);
+            // update status of invalid widgets
             for (const widget of errors.widgets || []) {
               let input;
-
               if (widget.id) {
                 input = $(`#${widget.id}`, parent);
               } else {
                 input = $(`[name="${widget.name}"]`, parent);
               }
-
               if (input.exists()) {
                 MyAMS.form.setInvalid(parent, input, widget.message);
               }
             }
-
             MyAMS.require('helpers').then(() => {
               let scrollBox = parent.parents('.modal-body');
-
               if (!scrollBox.exists()) {
                 scrollBox = $('#main');
               }
-
               MyAMS.helpers.scrollTo(scrollBox, parent, {
                 offset: -15
               });
@@ -154,7 +145,6 @@
         }
       });
     },
-
     /**
      * Display message for standard HTTP error
      *
@@ -174,12 +164,11 @@
       });
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.error = error;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('error');

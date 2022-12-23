@@ -17,22 +17,20 @@
     value: true
   });
   _exports.clipboard = void 0;
-
   /* global MyAMS, clipboardData */
-
   /**
    * MyAMS i18n translations
    */
+
   const $ = MyAMS.$;
+
   /**
    * Internal function used to copy text to clipboard
    *
    * @param text: text to be copied
    */
-
   function doCopy(text) {
     let copied = false;
-
     if (window.clipboardData && window.clipboardData.setData) {
       // IE specific code
       copied = clipboardData.setData("Text", text);
@@ -41,10 +39,8 @@
       textarea.val(text).css('position', 'fixed') // prevent scrolling to bottom of page in Edge
       .appendTo(MyAMS.dom.root);
       textarea.get(0).select();
-
       try {
         document.execCommand('copy'); // security exception may be thrown by some browsers!
-
         copied = true;
       } catch (e) {
         console.warn("Clipboard copy failed!", e);
@@ -52,7 +48,6 @@
         textarea.remove();
       }
     }
-
     if (copied) {
       MyAMS.require('i18n', 'alert').then(() => {
         MyAMS.alert.smallBox({
@@ -68,7 +63,6 @@
       });
     }
   }
-
   const clipboard = {
     /**
      * Copy given text to system's clipboard
@@ -79,7 +73,7 @@
       if (typeof text === 'undefined') {
         return function () {
           const source = $(this),
-                text = source.text();
+            text = source.text();
           source.parents('.btn-group').removeClass('open');
           doCopy(text);
         };
@@ -88,12 +82,11 @@
       }
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.clipboard = clipboard;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('clipboard');

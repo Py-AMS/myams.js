@@ -17,12 +17,11 @@
     value: true
   });
   _exports.i18n = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS i18n translations
    */
+
   const $ = MyAMS.$;
   let _initialized = false;
   const i18n = {
@@ -59,7 +58,6 @@
     LAST_UPDATE: "Last update: ",
     DT_COLUMNS: "Columns",
     NO_SELECTED_VALUE: "No selected value",
-
     /**
      * Plug-ins translations container
      */
@@ -69,7 +67,6 @@
         searchPlaceholder: "Search..."
       }
     },
-
     /**
      * MyAMS i18n package
      */
@@ -80,11 +77,9 @@
           resolve();
           return;
         }
-
         _initialized = true;
         const html = $('html'),
-              lang = html.attr('lang') || html.attr('xml:lang');
-
+          lang = html.attr('lang') || html.attr('xml:lang');
         if (lang && !lang.startsWith('en')) {
           MyAMS.core.getScript(`${MyAMS.env.baseURL}i18n/myams-${lang.substr(0, 2)}.js`).then(resolve, reject);
         } else {
@@ -93,12 +88,11 @@
       });
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.i18n = i18n;
-
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('i18n');
   } else {

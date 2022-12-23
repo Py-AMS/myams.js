@@ -17,20 +17,18 @@
     value: true
   });
   _exports.datatable = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS datatables management
    */
+
   const $ = MyAMS.$;
   const datatable = {};
+
   /**
    * Global module initialization
    */
-
   _exports.datatable = datatable;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('datatable');

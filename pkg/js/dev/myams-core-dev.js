@@ -29,10 +29,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ext_registry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ext-registry */ "./src/js/ext-registry.js");
 /* global $, FontAwesome */
-
 /**
  * MyAMS base features
  */
+
 if (!window.jQuery) {
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
 }
@@ -41,7 +41,6 @@ if (!window.jQuery) {
 /**
  * Init JQuery extensions
  */
-
 function init($) {
   /**
    * String prototype extensions
@@ -54,12 +53,10 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.replace(/-(.)/g, (dash, rest) => {
         return rest.toUpperCase();
       });
     },
-
     /**
      * Replace camelCase string with dashed name
      */
@@ -67,12 +64,10 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.replace(/[A-Z]/g, cap => {
         return `-${cap.toLowerCase()}`;
       });
     },
-
     /**
      * Convert first letter only to lowercase
      */
@@ -80,10 +75,8 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.charAt(0).toLowerCase() + this.slice(1);
     },
-
     /**
      * Convert URL params to object
      */
@@ -91,23 +84,20 @@ function init($) {
       if (!this) {
         return this;
       }
-
       const str = decodeURIComponent(this),
-            chunks = str.split('&'),
-            obj = {};
-
+        chunks = str.split('&'),
+        obj = {};
       for (const chunk of chunks) {
         const [key, val] = chunk.split('=', 2);
         obj[key] = val;
       }
-
       return obj;
     }
   });
+
   /**
    * Array class prototype extension
    */
-
   $.extend(Array.prototype, {
     /**
      * Extend an array with another one
@@ -118,10 +108,10 @@ function init($) {
       }
     }
   });
+
   /**
    * Global JQuery object extensions
    */
-
   $.extend($, {
     /**
      * Extend source object with given extensions, but only for properties matching
@@ -137,7 +127,6 @@ function init($) {
       for (var _len = arguments.length, extensions = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
         extensions[_key - 3] = arguments[_key];
       }
-
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (key.startsWith(prefix)) {
@@ -145,10 +134,8 @@ function init($) {
           }
         }
       }
-
       return source;
     },
-
     /**
      * Extend source with given extensions, but only for existing attributes
      *
@@ -161,7 +148,6 @@ function init($) {
       for (var _len2 = arguments.length, extensions = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
         extensions[_key2 - 2] = arguments[_key2];
       }
-
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -169,14 +155,13 @@ function init($) {
           }
         }
       }
-
       return source;
     }
   });
+
   /**
    * New JQuery functions
    */
-
   $.fn.extend({
     /**
      * Check if current object is empty or not
@@ -184,7 +169,6 @@ function init($) {
     exists: function () {
       return $(this).length > 0;
     },
-
     /**
      * Get object if it supports given CSS class,
      * otherwise look for parents
@@ -193,10 +177,8 @@ function init($) {
       if (this.hasClass(klass)) {
         return this;
       }
-
       return this.parents(`.${klass}`);
     },
-
     /**
      * Build an array of attributes of the given selection
      */
@@ -207,7 +189,6 @@ function init($) {
       });
       return result;
     },
-
     /**
      * CSS style function - get or set object style attribute
      * Code from Aram Kocharyan on stackoverflow.com
@@ -218,11 +199,10 @@ function init($) {
         // Ensure we have a DOM node
         if (typeof node === 'undefined') {
           return false;
-        } // CSSStyleDeclaration
-
-
-        const style = node.style; // Getter/Setter
-
+        }
+        // CSSStyleDeclaration
+        const style = node.style;
+        // Getter/Setter
         if (typeof styleName !== 'undefined') {
           if (typeof value !== 'undefined') {
             // Set style property
@@ -241,7 +221,6 @@ function init($) {
       });
       return result;
     },
-
     /**
      * Remove CSS classes starting with a given prefix
      */
@@ -255,31 +234,27 @@ function init($) {
       return this;
     }
   });
+
   /**
    * JQuery 'hasvalue' function expression
    * Filter inputs containing value:
    *
    *     $('span:hasvalue("value")')
    */
-
-  $.expr[":"].hasvalue = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].hasvalue = function (obj, index, meta /*, stack*/) {
     return $(obj).val() !== "";
   };
+
   /**
    * JQuery 'econtains' function expression
    * Case insensitive contains expression:
    *
    *     $('span:econtains("text")')
    */
-
-
-  $.expr[":"].econtains = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].econtains = function (obj, index, meta /*, stack*/) {
     return (obj.textContent || obj.innerText || $(obj).text() || "").toLowerCase() === meta[3].toLowerCase();
   };
+
   /**
    * JQuery 'withtext' expression
    * Case sensitive exact search expression.
@@ -287,13 +262,10 @@ function init($) {
    *
    *    $('span:withtext("text")')
    */
-
-
-  $.expr[":"].withtext = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].withtext = function (obj, index, meta /*, stack*/) {
     return (obj.textContent || obj.innerText || $(obj).text() || "") === meta[3];
   };
+
   /**
    * JQuery filter on parents class
    * This filter is often combined with ":not()" to select DOM objects which don't have
@@ -304,31 +276,25 @@ function init($) {
    *
    * will select all elements with ".hint" class which don't have a parent with '.nohints' class.
    */
-
-
-  $.expr[':'].parents = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[':'].parents = function (obj, index, meta /*, stack*/) {
     return $(obj).parents(meta[3]).length > 0;
   };
-
   $(document).ready(() => {
     const html = $('html');
     html.removeClass('no-js').addClass('js');
     MyAMS.core.executeFunctionByName(html.data('ams-init-page') || MyAMS.config.initPage);
   });
 }
+
 /**
  * Get list of modules names required by given element
  *
  * @param element: parent element
  * @returns {*[]}
  */
-
 function getModules(element) {
   let modules = [];
   const mods = element.data('ams-modules');
-
   if (typeof mods === 'string') {
     modules = modules.concat(mods.trim().split(/[\s,;]+/));
   } else if (mods) {
@@ -338,10 +304,8 @@ function getModules(element) {
       modules.push(entry);
     }
   }
-
   $('[data-ams-modules]', element).each((idx, elt) => {
     const mods = $(elt).data('ams-modules');
-
     if (typeof mods === 'string') {
       modules = modules.concat(mods.trim().split(/[\s,;]+/));
     } else if (mods) {
@@ -354,26 +318,25 @@ function getModules(element) {
   });
   return [...new Set(modules)];
 }
+
 /**
  * Main page initialization
  */
-
 function initPage() {
   return MyAMS.require('i18n').then(() => {
     MyAMS.dom = getDOM();
     MyAMS.theme = getTheme();
     executeFunctionByName(MyAMS.config.initData, window, MyAMS.dom.root);
     const modules = getModules(MyAMS.dom.root);
-
     MyAMS.require(...modules).then(() => {
       for (const moduleName of MyAMS.config.modules) {
         executeFunctionByName(`MyAMS.${moduleName}.init`);
       }
-
       executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
     });
   });
 }
+
 /**
  * Data attributes initializer
  *
@@ -384,59 +347,48 @@ function initPage() {
  *
  * @param element: parent element
  */
-
 function initData(element) {
   $('[data-ams-data]', element).each((idx, elt) => {
     const $elt = $(elt),
-          data = $elt.data('ams-data');
-
+      data = $elt.data('ams-data');
     if (data) {
       for (const name in data) {
         if (!Object.prototype.hasOwnProperty.call(data, name)) {
           continue;
         }
-
         let elementData = data[name];
-
         if (typeof elementData !== 'string') {
           elementData = JSON.stringify(elementData);
         }
-
         $elt.attr(`data-${name}`, elementData);
       }
     }
-
     $elt.removeAttr('data-ams-data');
   });
 }
+
 /**
  * Main content initialization; this function will initialize all plug-ins, callbacks and
  * events listeners in the selected element
  *
  * @param element: source element to initialize
  */
-
 function initContent() {
   let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
   if (element === null) {
     element = $('body');
   }
-
   element = $(element);
-
   function initElementModules() {
     for (const moduleName of MyAMS.config.modules) {
       executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
     }
   }
-
   return new Promise((resolve, reject) => {
     executeFunctionByName(MyAMS.config.initData, window, element);
     const modules = getModules(element);
     return MyAMS.require(...modules).then(() => {
       element.trigger('before-init.ams.content');
-
       if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
         MyAMS.registry.initElement(element).then(() => {
           initElementModules();
@@ -453,6 +405,7 @@ function initContent() {
     });
   });
 }
+
 /**
  * Container clearing function.
  *
@@ -467,35 +420,29 @@ function initContent() {
  * @param element: the parent element which may be cleaned
  * @returns {Promise<boolean>}
  */
-
 function clearContent(element) {
   if (typeof element === 'string') {
     element = $(element);
   }
-
   return new Promise((resolve, reject) => {
     const veto = {
       veto: false
     };
     $(document).trigger('clear.ams.content', [veto, element]);
-
     if (!veto.veto) {
       MyAMS.require('events').then(() => {
         $(MyAMS.events.getHandlers(element, 'clear.ams.content')).each((idx, elt) => {
           $(elt).trigger('clear.ams.content', [veto]);
-
           if (veto.veto) {
             return false;
           }
         });
-
         if (!veto.veto) {
           $(MyAMS.events.getHandlers(element, 'cleared.ams.content')).each((idx, elt) => {
             $(elt).trigger('cleared.ams.content');
           });
           $(document).trigger('cleared.ams.content', [element]);
         }
-
         resolve(!veto.veto);
       }, () => {
         reject("Missing MyAMS.events module!");
@@ -505,6 +452,7 @@ function clearContent(element) {
     }
   });
 }
+
 /**
  * Get an object given by name
  *
@@ -512,19 +460,15 @@ function clearContent(element) {
  * @param context: source context, or window if undefined
  * @returns {Object|undefined}
  */
-
 function getObject(objectName, context) {
   if (!objectName) {
     return undefined;
   }
-
   if (typeof objectName !== 'string') {
     return objectName;
   }
-
   const namespaces = objectName.split('.');
   context = context === undefined || context === null ? window : context;
-
   for (const name of namespaces) {
     try {
       context = context[name];
@@ -532,9 +476,9 @@ function getObject(objectName, context) {
       return undefined;
     }
   }
-
   return context;
 }
+
 /**
  * Get function object from name
  *
@@ -542,7 +486,6 @@ function getObject(objectName, context) {
  * @param context: source context; window if undefined
  * @returns {function|undefined}
  */
-
 function getFunctionByName(functionName, context) {
   if (functionName === null || typeof functionName === 'undefined') {
     return undefined;
@@ -551,11 +494,9 @@ function getFunctionByName(functionName, context) {
   } else if (typeof functionName !== 'string') {
     return undefined;
   }
-
   const namespaces = functionName.split("."),
-        func = namespaces.pop();
+    func = namespaces.pop();
   context = context === undefined || context === null ? window : context;
-
   for (const name of namespaces) {
     try {
       context = context[name];
@@ -563,13 +504,13 @@ function getFunctionByName(functionName, context) {
       return undefined;
     }
   }
-
   try {
     return context[func];
   } catch (e) {
     return undefined;
   }
 }
+
 /**
  * Execute a function, given by it's name
  *
@@ -578,36 +519,32 @@ function getFunctionByName(functionName, context) {
  * @param args...: optional function arguments
  * @returns {*}: result of the called function
  */
-
-function executeFunctionByName(functionName, context
-/*, args */
-) {
+function executeFunctionByName(functionName, context /*, args */) {
   const func = getFunctionByName(functionName, window);
-
   if (typeof func === 'function') {
     const args = Array.prototype.slice.call(arguments, 2);
     return func.apply(context, args);
   }
 }
+
 /**
  * Get target URL matching given source
  *
  * Given URL can include variable names (with their namespace), given between braces,
  * as in {MyAMS.env.baseURL}
  */
-
 function getSource(url) {
   return url.replace(/{[^{}]*}/g, match => {
     return getObject(match.substr(1, match.length - 2));
   });
 }
+
 /**
  * Dynamic script loader function
  *
  * @param url: script URL
  * @param options: a set of options to be added to AJAX call
  */
-
 function getScript(url) {
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return new Promise((resolve, reject) => {
@@ -625,30 +562,27 @@ function getScript(url) {
     });
   });
 }
+
 /**
  * Get CSS matching given URL
  *
  * @param url: CSS source URL
  * @param name: name of the given CSS
  */
-
 function getCSS(url, name) {
-  return new Promise((resolve
-  /*, reject */
-  ) => {
+  return new Promise((resolve /*, reject */) => {
     const head = $('HEAD');
     let style = $(`style[data-ams-id="${name}"]`, head);
-
     if (style.length === 0) {
       style = $('<style>').attr('data-ams-id', name).text(`@import "${getSource(url)}";`).appendTo(head);
       const styleInterval = setInterval(() => {
         try {
           // eslint-disable-next-line no-unused-vars
           const _check = style[0].sheet.cssRules; // Is only populated when file is loaded
-
           clearInterval(styleInterval);
           resolve(true);
-        } catch (e) {// CSS is not loaded yet, just wait...
+        } catch (e) {
+          // CSS is not loaded yet, just wait...
         }
       }, 10);
     } else {
@@ -656,6 +590,7 @@ function getCSS(url, name) {
     }
   });
 }
+
 /**
  * Extract parameter value from given query string
  *
@@ -663,39 +598,35 @@ function getCSS(url, name) {
  * @param varName: variable name
  * @returns {boolean|*}
  */
-
 function getQueryVar(src, varName) {
   // Check src
   if (typeof src !== 'string' || src.indexOf('?') < 0) {
     return undefined;
   }
-
   if (!src.endsWith('&')) {
     src += '&';
-  } // Dynamic replacement RegExp
-
-
-  const regex = new RegExp(`.*?[&\\?]${varName}=(.*?)&.*`); // Apply RegExp to the query string
-
-  const val = src.replace(regex, "$1"); // If the string is the same, we didn't find a match - return null
-
+  }
+  // Dynamic replacement RegExp
+  const regex = new RegExp(`.*?[&\\?]${varName}=(.*?)&.*`);
+  // Apply RegExp to the query string
+  const val = src.replace(regex, "$1");
+  // If the string is the same, we didn't find a match - return null
   return val === src ? null : val;
 }
+
 /**
  * Generate a random ID
  */
-
 function generateId() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
-
   return s4() + s4() + s4() + s4();
 }
+
 /**
  * Generate a random unique UUID
  */
-
 function generateUUID() {
   let d = new Date().getTime();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -704,6 +635,7 @@ function generateUUID() {
     return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
   });
 }
+
 /**
  * Switch a FontAwesome icon.
  * Use FontAwesome API to get image as SVG, if FontAwesome is loaded from Javascript and is using
@@ -714,20 +646,16 @@ function generateUUID() {
  * @param toClass: new CSS class (without "fa-" prefix)
  * @param prefix: icon prefix (defaults to "fa")
  */
-
 function switchIcon(element, fromClass, toClass) {
   let prefix = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa';
-
   if (typeof element === 'string') {
     element = $(element);
   }
-
   if (MyAMS.config.useSVGIcons) {
     const iconDef = FontAwesome.findIconDefinition({
       iconName: toClass,
       prefix: prefix
     });
-
     if (iconDef) {
       element.html(FontAwesome.icon(iconDef).html);
     }
@@ -735,6 +663,7 @@ function switchIcon(element, fromClass, toClass) {
     element.removeClass(`fa-${fromClass}`).addClass(`fa-${toClass}`);
   }
 }
+
 /**
  * MyAMS base environment
  *
@@ -747,13 +676,12 @@ function switchIcon(element, fromClass, toClass) {
  *     baseURL: string
  * }}
  */
-
 function getEnv($) {
   const script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
-        src = script.attr('src'),
-        devmode = src ? src.indexOf('-dev.js') >= 0 : true,
-        // testing mode
-  bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
+    src = script.attr('src'),
+    devmode = src ? src.indexOf('-dev.js') >= 0 : true,
+    // testing mode
+    bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
   return {
     bundle: bundle,
     devmode: devmode,
@@ -762,28 +690,24 @@ function getEnv($) {
     baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
   };
 }
+
 /**
  * MyAMS theme getter
  */
-
-
 function getTheme() {
   let theme;
-
   if (MyAMS.env.bundle) {
     theme = MyAMS.theme;
   } else {
     const css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
     theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
   }
-
   return theme;
 }
+
 /**
  * Get base DOM elements
  */
-
-
 function getDOM() {
   return {
     page: $('html'),
@@ -794,6 +718,7 @@ function getDOM() {
     shortcuts: $('#shortcuts')
   };
 }
+
 /**
  * MyAMS default configuration
  *
@@ -815,47 +740,45 @@ function getDOM() {
  *      isMobile: boolean, true if device is detected as mobile
  *      device: string: 'mobile' or 'desktop'
  */
-
-
 const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()),
-      config = {
-  modules: [],
-  ajaxNav: true,
-  enableFastclick: true,
-  useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
-  menuSpeed: 235,
-  initPage: 'MyAMS.core.initPage',
-  initData: 'MyAMS.core.initData',
-  initContent: 'MyAMS.core.initContent',
-  clearContent: 'MyAMS.core.clearContent',
-  useRegistry: true,
-  alertsContainerClass: 'toast-wrapper',
-  safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
-  csrfCookieName: 'csrf_token',
-  csrfHeaderName: 'X-CSRF-Token',
-  enableTooltips: true,
-  enableHtmlTooltips: true,
-  warnOnFormChange: true,
-  formChangeCallback: null,
-  isMobile: isMobile,
-  device: isMobile ? 'mobile' : 'desktop'
-},
-      core = {
-  getObject: getObject,
-  getFunctionByName: getFunctionByName,
-  executeFunctionByName: executeFunctionByName,
-  getSource: getSource,
-  getScript: getScript,
-  getCSS: getCSS,
-  getQueryVar: getQueryVar,
-  generateId: generateId,
-  generateUUID: generateUUID,
-  switchIcon: switchIcon,
-  initPage: initPage,
-  initData: initData,
-  initContent: initContent,
-  clearContent: clearContent
-};
+  config = {
+    modules: [],
+    ajaxNav: true,
+    enableFastclick: true,
+    useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
+    menuSpeed: 235,
+    initPage: 'MyAMS.core.initPage',
+    initData: 'MyAMS.core.initData',
+    initContent: 'MyAMS.core.initContent',
+    clearContent: 'MyAMS.core.clearContent',
+    useRegistry: true,
+    alertsContainerClass: 'toast-wrapper',
+    safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
+    csrfCookieName: 'csrf_token',
+    csrfHeaderName: 'X-CSRF-Token',
+    enableTooltips: true,
+    enableHtmlTooltips: true,
+    warnOnFormChange: true,
+    formChangeCallback: null,
+    isMobile: isMobile,
+    device: isMobile ? 'mobile' : 'desktop'
+  },
+  core = {
+    getObject: getObject,
+    getFunctionByName: getFunctionByName,
+    executeFunctionByName: executeFunctionByName,
+    getSource: getSource,
+    getScript: getScript,
+    getCSS: getCSS,
+    getQueryVar: getQueryVar,
+    generateId: generateId,
+    generateUUID: generateUUID,
+    switchIcon: switchIcon,
+    initPage: initPage,
+    initData: initData,
+    initContent: initContent,
+    clearContent: clearContent
+  };
 const MyAMS = {
   $: $,
   env: getEnv($),
@@ -879,7 +802,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "registry": function() { return /* binding */ registry; }
 /* harmony export */ });
 /* global $, MyAMS */
-
 /**
  * MyAMS dynamic plug-ins loading management
  */
@@ -903,46 +825,40 @@ class Plugin {
     let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let loaded = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     // plug-in name
-    this.name = name; // plug-in source URL
-
-    this.src = props.src; // plug-in associated CSS
-
-    this.css = props.css; // plug-in callbacks
-
+    this.name = name;
+    // plug-in source URL
+    this.src = props.src;
+    // plug-in associated CSS
+    this.css = props.css;
+    // plug-in callbacks
     this.callbacks = [];
-
     if (props.callback) {
       this.callbacks.push({
         callback: props.callback,
         context: props.context || 'body'
       });
-    } // async plug-ins are loaded simultaneously; sync ones are loaded and called after...
-
-
-    this.async = props.async === undefined ? true : props.async; // loaded flag
-
+    }
+    // async plug-ins are loaded simultaneously; sync ones are loaded and called after...
+    this.async = props.async === undefined ? true : props.async;
+    // loaded flag
     this.loaded = loaded;
   }
+
   /**
    * Load plug-in from remote script
    *
    * @returns {Promise<void>|*}
    */
-
-
   load() {
     return new Promise((resolve, reject) => {
       if (!this.loaded) {
         const deferred = [];
-
         if (this.src) {
           deferred.push(MyAMS.core.getScript(this.src));
         }
-
         if (this.css) {
           deferred.push(MyAMS.core.getCSS(this.css, `${this.name}_css`));
         }
-
         $.when.apply($, deferred).then(() => {
           this.loaded = true;
           resolve();
@@ -952,86 +868,71 @@ class Plugin {
       }
     });
   }
+
   /**
    * Run plug-in
    *
    * @param element: plug-in execution context
    */
-
-
   run(element) {
     const results = [];
-
     for (const callback of this.callbacks) {
       if (typeof callback.callback === 'string') {
         console.debug(`Resolving callback ${callback.callback}`);
         callback.callback = MyAMS.core.getFunctionByName(callback.callback) || callback.callback;
       }
-
       results.push(callback.callback(element, callback.context));
     }
-
     return Promise.all(results);
   }
-
 }
+
 /**
  * Plug-ins registry class
  */
-
-
 class PluginsRegistry {
   constructor() {
     this.plugins = new Map();
   }
+
   /**
    * Register new plug-in
    *
    * @param props: plugin function caller, or object containing plug-in properties
    * @param name: plug-in unique name
    */
-
-
   register(props, name) {
     // check arguments
     if (!name && Object.prototype.hasOwnProperty.call(props, 'name')) {
       name = props.name;
-    } // check for already registered plug-in
-
-
+    }
+    // check for already registered plug-in
     const plugins = this.plugins;
-
     if (plugins.has(name)) {
       if (window.console) {
         console.debug && console.debug(`Plug-in ${name} is already registered!`);
       }
-
       const plugin = plugins.get(name);
       let addContext = true;
-
       for (const callback of plugin.callbacks) {
         if (callback.callback === props.callback && callback.context === props.context) {
           addContext = false;
           break;
         }
       }
-
       if (addContext) {
         plugin.callbacks.push({
           callback: props.callback,
           context: props.context || 'body'
         });
       }
-
       return plugin;
-    } // register new plug-in
-
-
+    }
+    // register new plug-in
     if (typeof props === 'string') {
       // callable name
       props = MyAMS.core.getFunctionByName(props);
     }
-
     if (typeof props === 'function') {
       // callable object
       plugins.set(name, new Plugin(name, {
@@ -1040,27 +941,24 @@ class PluginsRegistry {
     } else if (typeof props === 'object') {
       // plug-in properties object
       plugins.set(name, new Plugin(name, props, !(props.src || props.css)));
-    } // check callback
-
-
+    }
+    // check callback
     return plugins.get(name);
   }
+
   /**
    * Load plug-ins declared into DOM element
    *
    * @param element
    */
-
-
   load(element) {
     // scan element for new plug-ins
     const asyncPlugins = [],
-          syncPlugins = [];
+      syncPlugins = [];
     $('[data-ams-plugins]', element).each((idx, elt) => {
       const source = $(elt),
-            names = source.data('ams-plugins');
+        names = source.data('ams-plugins');
       let plugin, props;
-
       if (typeof names === 'string') {
         for (const name of names.split(/[\s,;]+/)) {
           const lowerName = name.toLowerCase();
@@ -1072,7 +970,6 @@ class PluginsRegistry {
             async: source.data(`ams-plugin-${lowerName}-async`)
           };
           plugin = this.register(props, name);
-
           if (!plugin.loaded) {
             if (props.async === false) {
               syncPlugins.push(plugin.load());
@@ -1088,7 +985,6 @@ class PluginsRegistry {
             context: source
           });
           plugin = this.register(props);
-
           if (!plugin.loaded) {
             if (plugin.async === false) {
               syncPlugins.push(plugin.load());
@@ -1098,37 +994,33 @@ class PluginsRegistry {
           }
         }
       }
-    }); // load plug-ins
-
-    let result = $.when.apply($, asyncPlugins); // eslint-disable-next-line no-unused-vars
-
+    });
+    // load plug-ins
+    let result = $.when.apply($, asyncPlugins);
+    // eslint-disable-next-line no-unused-vars
     for (const plugin of syncPlugins) {
       result = result.done(() => {});
     }
-
     return result;
   }
+
   /**
    * Run registered plug-ins on given element
    *
    * @param element: source element
    * @param names: array list of plug-ins to activate, or all registered plug-ins if null
    */
-
-
   run(element) {
     let names = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     // check for disabled plug-ins
     const disabled = new Set();
     $('[data-ams-plugins-disabled]', element).each((idx, elt) => {
       const names = $(elt).data('ams-plugins-disabled').split(/[\s,;]+/);
-
       for (const name of names) {
         disabled.add(name);
       }
     });
     const plugins = this.plugins;
-
     if (names) {
       // only run given plug-ins, EVEN DISABLED ONES
       for (const name of names) {
@@ -1142,21 +1034,17 @@ class PluginsRegistry {
         if (disabled.has(name)) {
           continue;
         }
-
         plugin.run(element);
       }
     }
   }
-
 }
-
 const plugins = new PluginsRegistry();
 const registry = {
   /**
    * Plug-ins registry
    */
   plugins: plugins,
-
   /**
    * Initialize plug-ins registry from DOM
    *
@@ -1165,11 +1053,10 @@ const registry = {
   initElement: function () {
     let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
     // populate data attributes
-    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element); // load plug-ins from given DOM element
-
+    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element);
+    // load plug-ins from given DOM element
     return plugins.load(element);
   },
-
   /**
    * Register a new plug-in through Javascript instead of HTML data attributes
    *
@@ -1180,7 +1067,6 @@ const registry = {
   register: function (plugin, name, callback) {
     return plugins.register(plugin, name, callback);
   },
-
   /**
    * Run registered plug-ins on given element
    *
@@ -1206,15 +1092,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ myams_require; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS dynamic module loader
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 function getModule(module, name) {
   let moduleSrc, moduleCss;
-
   if (typeof module === 'object') {
     moduleSrc = module.src;
     moduleCss = module.css;
@@ -1229,35 +1113,29 @@ function getModule(module, name) {
       moduleSrc = `${MyAMS.env.baseURL}mod-${module}${MyAMS.env.devext}.js`;
     }
   }
-
   const deferred = [MyAMS.core.getScript(moduleSrc, {
     async: true
   }, console.error)];
-
   if (moduleCss) {
     deferred.push(MyAMS.core.getCSS(moduleCss, `${name}_css`));
   }
-
   return deferred;
 }
+
 /**
  * Dynamic loading of MyAMS modules
  *
  * @param modules: single module name, or array of modules names
  * @returns Promise
  */
-
-
 function myams_require() {
   for (var _len = arguments.length, modules = new Array(_len), _key = 0; _key < _len; _key++) {
     modules[_key] = arguments[_key];
   }
-
   return new Promise((resolve, reject) => {
     const names = [],
-          deferred = [],
-          loaded = MyAMS.config.modules;
-
+      deferred = [],
+      loaded = MyAMS.config.modules;
     for (const module of modules) {
       if (typeof module === 'string') {
         if (loaded.indexOf(module) < 0) {
@@ -1282,7 +1160,6 @@ function myams_require() {
         }
       }
     }
-
     $.when.apply($, deferred).then(() => {
       for (const moduleName of names) {
         if (loaded.indexOf(moduleName) < 0) {
@@ -1290,7 +1167,6 @@ function myams_require() {
           MyAMS.core.executeFunctionByName(`MyAMS.${moduleName}.init`);
         }
       }
-
       resolve();
     }, () => {
       reject(`Can't load requested modules (${names})!`);
@@ -1385,15 +1261,16 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+
 _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"], {
   require: _ext_require__WEBPACK_IMPORTED_MODULE_1__["default"]
 });
 const html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
-
 if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.13.1  */
+
+/** Version: 1.14.1  */
 }();
 /******/ })()
 ;

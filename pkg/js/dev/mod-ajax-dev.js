@@ -17,13 +17,13 @@
     value: true
   });
   _exports.ajax = void 0;
-
   /* global jQuery, MyAMS, Cookies */
-
   /**
    * MyAMS AJAX features
    */
+
   const $ = MyAMS.$;
+
   /**
    * CSRF cookie checker
    *
@@ -31,19 +31,14 @@
    *
    * @param request: outgoing request
    */
-
-  function checkCsrfHeader(request
-  /*, options */
-  ) {
+  function checkCsrfHeader(request /*, options */) {
     if (window.Cookies) {
       const token = Cookies.get(MyAMS.config.csrfCookieName);
-
       if (token) {
         request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
       }
     }
   }
-
   const ajax = {
     /**
      * Check for a given feature, and download script if necessary
@@ -54,12 +49,10 @@
     check: (checker, source) => {
       return new Promise((resolve, reject) => {
         const deferred = [];
-
         if (checker === undefined) {
           if (!(source instanceof Array)) {
             source = [source];
           }
-
           for (const src of source) {
             deferred.push(MyAMS.core.getScript(src));
           }
@@ -67,20 +60,17 @@
           if (!(checker instanceof Array)) {
             checker = [checker];
           }
-
           checker.forEach((elt, idx) => {
             if (elt === undefined) {
               deferred.push(MyAMS.core.getScript(source[idx]));
             }
           });
         }
-
         $.when.apply($, deferred).then(() => {
           resolve(deferred.length > 0);
         }, reject);
       });
     },
-
     /**
      * Get AJAX URL relative to current page
      *
@@ -90,21 +80,18 @@
       const href = addr || $('html head base').attr('href') || window.location.href;
       return href.substring(0, href.lastIndexOf('/') + 1);
     },
-
     /**
      * JQuery AJAX start callback
      */
     start: () => {
       $('#ajax-gear').show();
     },
-
     /**
      * JQuery AJAX stop callback
      */
     stop: () => {
       $('#ajax-gear').hide();
     },
-
     /**
      * Handle AJAX upload or download progress event
      *
@@ -114,16 +101,13 @@
       if (!event.lengthComputable) {
         return;
       }
-
       if (event.loaded >= event.total) {
         return;
       }
-
       if (console) {
         console.debug && console.debug(`${Math.round(event.loaded / event.total * 100)}%`);
       }
     },
-
     /**
      * Get data from given URL.
      * This is a simple wrapper around JQuery AJAX api to keep MyAMS API consistent
@@ -135,13 +119,11 @@
     get: (url, params, options) => {
       return new Promise((resolve, reject) => {
         let addr;
-
         if (url.startsWith(window.location.protocol)) {
           addr = url;
         } else {
           addr = MyAMS.ajax.getAddr() + url;
         }
-
         const defaults = {
           url: addr,
           type: 'get',
@@ -158,7 +140,6 @@
         });
       });
     },
-
     /**
      * Post data to given URL
      *
@@ -169,13 +150,11 @@
     post: (url, data, options) => {
       return new Promise((resolve, reject) => {
         let addr;
-
         if (url.startsWith(window.location.protocol)) {
           addr = url;
         } else {
           addr = MyAMS.ajax.getAddr() + url;
         }
-
         const defaults = {
           url: addr,
           type: 'post',
@@ -192,7 +171,6 @@
         });
       });
     },
-
     /**
      * Post data to given URL and handle result as JSON
      *
@@ -206,17 +184,14 @@
         return MyAMS.ajax.post(url, options).then(MyAMS.ajax.handleJSON);
       };
     },
-
     /**
      * Extract datatype and result from response object
      */
     getResponse: request => {
       let dataType = 'unknown',
-          result;
-
+        result;
       if (request) {
         let contentType = request.getResponseHeader('content-type');
-
         if (!contentType) {
           try {
             contentType = request.responseXML.contentType;
@@ -224,7 +199,6 @@
             contentType = null;
           }
         }
-
         if (contentType) {
           // Get server response
           if (contentType.startsWith('application/javascript')) {
@@ -239,7 +213,6 @@
           } else {
             // Supposed to be JSON...
             result = request.responseJSON;
-
             if (result) {
               dataType = 'json';
             } else {
@@ -264,13 +237,11 @@
           dataType = 'json';
         }
       }
-
       return {
         contentType: dataType,
         data: result
       };
     },
-
     /**
      * Handle a server response in JSON format
      *
@@ -312,36 +283,29 @@
           }
         });
       }
-
       let url = null,
-          loadTarget = null;
+        loadTarget = null;
       const status = result.status,
-            promises = [];
-
+        promises = [];
       if (target instanceof jQuery && !target.length) {
         target = null;
       }
-
       switch (status) {
         case 'alert':
           if (window.alert) {
             const alert = result.alert;
             window.alert(`${alert.title}\n\n${alert.content}`);
           }
-
           break;
-
         case 'error':
           promises.push(MyAMS.require('error').then(() => {
             MyAMS.error.showErrors(form, result);
           }));
           break;
-
         case 'message':
         case 'messagebox':
         case 'smallbox':
           break;
-
         case 'info':
         case 'success':
         case 'notify':
@@ -349,21 +313,17 @@
         case 'callbacks':
           promises.push(closeForm());
           break;
-
         case 'modal':
           promises.push(MyAMS.require('modal').then(() => {
             MyAMS.modal.open(result.location);
           }));
           break;
-
         case 'reload':
           closeForm();
           url = result.location || window.location.hash;
-
           if (url.startsWith('#')) {
             url = url.substring(1);
           }
-
           loadTarget = $(result.target || target || '#content');
           promises.push(MyAMS.require('skin').then(() => {
             MyAMS.skin.loadURL(url, loadTarget, {
@@ -382,29 +342,23 @@
             });
           }));
           break;
-
         case 'redirect':
           closeForm();
           url = result.location || window.location.href;
-
           if (url.endsWith('##')) {
             url = url.replace(/##/, window.location.hash);
           }
-
           if (result.window) {
             window.open(url, result.window, result.options);
           } else {
             $(window).off('beforeunload');
-
             if (window.location.href === url) {
               window.location.reload();
             } else {
               window.location.replace(url);
             }
           }
-
           break;
-
         default:
           if (result.code) {
             // Standard HTTP error?
@@ -416,14 +370,12 @@
               console.warn && console.warn(`Unhandled JSON response status: ${status}`);
             }
           }
+      }
 
-      } // Single content response
-
-
+      // Single content response
       if (result.content) {
         const content = result.content,
-              container = $(content.target || target || '#content');
-
+          container = $(content.target || target || '#content');
         if (typeof content === 'string') {
           container.html(content);
         } else {
@@ -432,35 +384,32 @@
           } else {
             container.html(content.html);
           }
-
           promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
             if (!content.keepHidden) {
               container.removeClass('hidden');
             }
           }));
         }
-      } // Multiple contents response
+      }
 
-
+      // Multiple contents response
       if (result.contents) {
         for (const content of result.contents) {
           const container = $(content.target);
-
           if (content.text) {
             container.text(content.text);
           } else {
             container.html(content.html);
           }
-
           promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
             if (!content.keepHidden) {
               container.removeClass('hidden');
             }
           }));
         }
-      } // Response with message
+      }
 
-
+      // Response with message
       if (result.message && !result.code) {
         promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.message === 'string') {
@@ -481,9 +430,9 @@
             });
           }
         }));
-      } // Response with message box
+      }
 
-
+      // Response with message box
       if (result.messagebox) {
         promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.messagebox === 'string') {
@@ -506,9 +455,9 @@
             });
           }
         }));
-      } // Response with small box
+      }
 
-
+      // Response with small box
       if (result.smallbox) {
         promises.push(MyAMS.require('alert').then(() => {
           if (typeof result.smallbox === 'string') {
@@ -529,14 +478,14 @@
             });
           }
         }));
-      } // Response with single event
+      }
 
-
+      // Response with single event
       if (result.event) {
         form.trigger(result.event, result.eventOptions);
-      } // Response with multiple events
+      }
 
-
+      // Response with multiple events
       if (result.events) {
         for (const event of result.events) {
           if (typeof event === 'string') {
@@ -545,14 +494,14 @@
             form.trigger(event.event, event.options);
           }
         }
-      } // Response with single callback
+      }
 
-
+      // Response with single callback
       if (result.callback) {
         promises.push(MyAMS.core.executeFunctionByName(result.callback, document, form, result.options));
-      } // Response with multiple callbacks
+      }
 
-
+      // Response with multiple callbacks
       if (result.callbacks) {
         for (const callback of result.callbacks) {
           if (typeof callback === 'string') {
@@ -564,10 +513,8 @@
           }
         }
       }
-
       return Promise.all(promises);
     },
-
     /**
      * JQuery AJAX error handler
      */
@@ -575,20 +522,16 @@
       // user shouldn't be notified of aborted requests
       if (error === 'abort') {
         return;
-      } // don't display errors on OK status
-
-
+      }
+      // don't display errors on OK status
       if (response && response.statusText && response.statusText.toUpperCase() === 'OK') {
         return;
-      } // don't display errors twice (via AJAX HTTP error handler and JSON response)
-
-
+      }
+      // don't display errors twice (via AJAX HTTP error handler and JSON response)
       if (response.x_ams_handled === true) {
         return;
       }
-
       const parsedResponse = MyAMS.ajax.getResponse(response);
-
       if (parsedResponse) {
         if (parsedResponse.contentType === 'json') {
           MyAMS.ajax.handleJSON(parsedResponse.data);
@@ -596,7 +539,7 @@
         } else {
           MyAMS.require('i18n', 'alert').then(() => {
             const title = error || event.statusText || event.type,
-                  message = parsedResponse.responseText;
+              message = parsedResponse.responseText;
             MyAMS.alert.messageBox({
               status: 'error',
               title: MyAMS.i18n.ERROR_OCCURED,
@@ -619,12 +562,11 @@
       }
     }
   };
+
   /**
    * AJAX events callbacks
    */
-
   _exports.ajax = ajax;
-
   if (typeof jest === 'undefined') {
     // don't check cookies extension in test mode!
     ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`).then(() => {
@@ -634,7 +576,6 @@
           if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
             if (window.Cookies !== undefined) {
               const token = Cookies.get(MyAMS.config.csrfCookieName);
-
               if (token) {
                 request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
               }
@@ -645,7 +586,6 @@
         progressUpload: ajax.progress,
         xhr: function () {
           const request = xhr();
-
           if (request && typeof request.addEventListener === 'function') {
             if (ajax.progress) {
               request.addEventListener('progress', evt => {
@@ -653,20 +593,18 @@
               }, false);
             }
           }
-
           return request;
         }
       });
     });
   }
-
   $(document).ajaxStart(ajax.start);
   $(document).ajaxStop(ajax.stop);
   $(document).ajaxError(ajax.error);
+
   /**
    * Global module initialization
    */
-
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('ajax');
   } else {

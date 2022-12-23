@@ -29,10 +29,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ext_registry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ext-registry */ "./src/js/ext-registry.js");
 /* global $, FontAwesome */
-
 /**
  * MyAMS base features
  */
+
 if (!window.jQuery) {
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "jquery");
 }
@@ -41,7 +41,6 @@ if (!window.jQuery) {
 /**
  * Init JQuery extensions
  */
-
 function init($) {
   /**
    * String prototype extensions
@@ -54,12 +53,10 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.replace(/-(.)/g, (dash, rest) => {
         return rest.toUpperCase();
       });
     },
-
     /**
      * Replace camelCase string with dashed name
      */
@@ -67,12 +64,10 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.replace(/[A-Z]/g, cap => {
         return `-${cap.toLowerCase()}`;
       });
     },
-
     /**
      * Convert first letter only to lowercase
      */
@@ -80,10 +75,8 @@ function init($) {
       if (!this) {
         return this;
       }
-
       return this.charAt(0).toLowerCase() + this.slice(1);
     },
-
     /**
      * Convert URL params to object
      */
@@ -91,23 +84,20 @@ function init($) {
       if (!this) {
         return this;
       }
-
       const str = decodeURIComponent(this),
-            chunks = str.split('&'),
-            obj = {};
-
+        chunks = str.split('&'),
+        obj = {};
       for (const chunk of chunks) {
         const [key, val] = chunk.split('=', 2);
         obj[key] = val;
       }
-
       return obj;
     }
   });
+
   /**
    * Array class prototype extension
    */
-
   $.extend(Array.prototype, {
     /**
      * Extend an array with another one
@@ -118,10 +108,10 @@ function init($) {
       }
     }
   });
+
   /**
    * Global JQuery object extensions
    */
-
   $.extend($, {
     /**
      * Extend source object with given extensions, but only for properties matching
@@ -137,7 +127,6 @@ function init($) {
       for (var _len = arguments.length, extensions = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
         extensions[_key - 3] = arguments[_key];
       }
-
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (key.startsWith(prefix)) {
@@ -145,10 +134,8 @@ function init($) {
           }
         }
       }
-
       return source;
     },
-
     /**
      * Extend source with given extensions, but only for existing attributes
      *
@@ -161,7 +148,6 @@ function init($) {
       for (var _len2 = arguments.length, extensions = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
         extensions[_key2 - 2] = arguments[_key2];
       }
-
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -169,14 +155,13 @@ function init($) {
           }
         }
       }
-
       return source;
     }
   });
+
   /**
    * New JQuery functions
    */
-
   $.fn.extend({
     /**
      * Check if current object is empty or not
@@ -184,7 +169,6 @@ function init($) {
     exists: function () {
       return $(this).length > 0;
     },
-
     /**
      * Get object if it supports given CSS class,
      * otherwise look for parents
@@ -193,10 +177,8 @@ function init($) {
       if (this.hasClass(klass)) {
         return this;
       }
-
       return this.parents(`.${klass}`);
     },
-
     /**
      * Build an array of attributes of the given selection
      */
@@ -207,7 +189,6 @@ function init($) {
       });
       return result;
     },
-
     /**
      * CSS style function - get or set object style attribute
      * Code from Aram Kocharyan on stackoverflow.com
@@ -218,11 +199,10 @@ function init($) {
         // Ensure we have a DOM node
         if (typeof node === 'undefined') {
           return false;
-        } // CSSStyleDeclaration
-
-
-        const style = node.style; // Getter/Setter
-
+        }
+        // CSSStyleDeclaration
+        const style = node.style;
+        // Getter/Setter
         if (typeof styleName !== 'undefined') {
           if (typeof value !== 'undefined') {
             // Set style property
@@ -241,7 +221,6 @@ function init($) {
       });
       return result;
     },
-
     /**
      * Remove CSS classes starting with a given prefix
      */
@@ -255,31 +234,27 @@ function init($) {
       return this;
     }
   });
+
   /**
    * JQuery 'hasvalue' function expression
    * Filter inputs containing value:
    *
    *     $('span:hasvalue("value")')
    */
-
-  $.expr[":"].hasvalue = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].hasvalue = function (obj, index, meta /*, stack*/) {
     return $(obj).val() !== "";
   };
+
   /**
    * JQuery 'econtains' function expression
    * Case insensitive contains expression:
    *
    *     $('span:econtains("text")')
    */
-
-
-  $.expr[":"].econtains = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].econtains = function (obj, index, meta /*, stack*/) {
     return (obj.textContent || obj.innerText || $(obj).text() || "").toLowerCase() === meta[3].toLowerCase();
   };
+
   /**
    * JQuery 'withtext' expression
    * Case sensitive exact search expression.
@@ -287,13 +262,10 @@ function init($) {
    *
    *    $('span:withtext("text")')
    */
-
-
-  $.expr[":"].withtext = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[":"].withtext = function (obj, index, meta /*, stack*/) {
     return (obj.textContent || obj.innerText || $(obj).text() || "") === meta[3];
   };
+
   /**
    * JQuery filter on parents class
    * This filter is often combined with ":not()" to select DOM objects which don't have
@@ -304,31 +276,25 @@ function init($) {
    *
    * will select all elements with ".hint" class which don't have a parent with '.nohints' class.
    */
-
-
-  $.expr[':'].parents = function (obj, index, meta
-  /*, stack*/
-  ) {
+  $.expr[':'].parents = function (obj, index, meta /*, stack*/) {
     return $(obj).parents(meta[3]).length > 0;
   };
-
   $(document).ready(() => {
     const html = $('html');
     html.removeClass('no-js').addClass('js');
     MyAMS.core.executeFunctionByName(html.data('ams-init-page') || MyAMS.config.initPage);
   });
 }
+
 /**
  * Get list of modules names required by given element
  *
  * @param element: parent element
  * @returns {*[]}
  */
-
 function getModules(element) {
   let modules = [];
   const mods = element.data('ams-modules');
-
   if (typeof mods === 'string') {
     modules = modules.concat(mods.trim().split(/[\s,;]+/));
   } else if (mods) {
@@ -338,10 +304,8 @@ function getModules(element) {
       modules.push(entry);
     }
   }
-
   $('[data-ams-modules]', element).each((idx, elt) => {
     const mods = $(elt).data('ams-modules');
-
     if (typeof mods === 'string') {
       modules = modules.concat(mods.trim().split(/[\s,;]+/));
     } else if (mods) {
@@ -354,26 +318,25 @@ function getModules(element) {
   });
   return [...new Set(modules)];
 }
+
 /**
  * Main page initialization
  */
-
 function initPage() {
   return MyAMS.require('i18n').then(() => {
     MyAMS.dom = getDOM();
     MyAMS.theme = getTheme();
     executeFunctionByName(MyAMS.config.initData, window, MyAMS.dom.root);
     const modules = getModules(MyAMS.dom.root);
-
     MyAMS.require(...modules).then(() => {
       for (const moduleName of MyAMS.config.modules) {
         executeFunctionByName(`MyAMS.${moduleName}.init`);
       }
-
       executeFunctionByName(MyAMS.dom.page.data('ams-init-content') || MyAMS.config.initContent);
     });
   });
 }
+
 /**
  * Data attributes initializer
  *
@@ -384,59 +347,48 @@ function initPage() {
  *
  * @param element: parent element
  */
-
 function initData(element) {
   $('[data-ams-data]', element).each((idx, elt) => {
     const $elt = $(elt),
-          data = $elt.data('ams-data');
-
+      data = $elt.data('ams-data');
     if (data) {
       for (const name in data) {
         if (!Object.prototype.hasOwnProperty.call(data, name)) {
           continue;
         }
-
         let elementData = data[name];
-
         if (typeof elementData !== 'string') {
           elementData = JSON.stringify(elementData);
         }
-
         $elt.attr(`data-${name}`, elementData);
       }
     }
-
     $elt.removeAttr('data-ams-data');
   });
 }
+
 /**
  * Main content initialization; this function will initialize all plug-ins, callbacks and
  * events listeners in the selected element
  *
  * @param element: source element to initialize
  */
-
 function initContent() {
   let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
   if (element === null) {
     element = $('body');
   }
-
   element = $(element);
-
   function initElementModules() {
     for (const moduleName of MyAMS.config.modules) {
       executeFunctionByName(`MyAMS.${moduleName}.initElement`, document, element);
     }
   }
-
   return new Promise((resolve, reject) => {
     executeFunctionByName(MyAMS.config.initData, window, element);
     const modules = getModules(element);
     return MyAMS.require(...modules).then(() => {
       element.trigger('before-init.ams.content');
-
       if (MyAMS.config.useRegistry && !element.data('ams-disable-registry')) {
         MyAMS.registry.initElement(element).then(() => {
           initElementModules();
@@ -453,6 +405,7 @@ function initContent() {
     });
   });
 }
+
 /**
  * Container clearing function.
  *
@@ -467,35 +420,29 @@ function initContent() {
  * @param element: the parent element which may be cleaned
  * @returns {Promise<boolean>}
  */
-
 function clearContent(element) {
   if (typeof element === 'string') {
     element = $(element);
   }
-
   return new Promise((resolve, reject) => {
     const veto = {
       veto: false
     };
     $(document).trigger('clear.ams.content', [veto, element]);
-
     if (!veto.veto) {
       MyAMS.require('events').then(() => {
         $(MyAMS.events.getHandlers(element, 'clear.ams.content')).each((idx, elt) => {
           $(elt).trigger('clear.ams.content', [veto]);
-
           if (veto.veto) {
             return false;
           }
         });
-
         if (!veto.veto) {
           $(MyAMS.events.getHandlers(element, 'cleared.ams.content')).each((idx, elt) => {
             $(elt).trigger('cleared.ams.content');
           });
           $(document).trigger('cleared.ams.content', [element]);
         }
-
         resolve(!veto.veto);
       }, () => {
         reject("Missing MyAMS.events module!");
@@ -505,6 +452,7 @@ function clearContent(element) {
     }
   });
 }
+
 /**
  * Get an object given by name
  *
@@ -512,19 +460,15 @@ function clearContent(element) {
  * @param context: source context, or window if undefined
  * @returns {Object|undefined}
  */
-
 function getObject(objectName, context) {
   if (!objectName) {
     return undefined;
   }
-
   if (typeof objectName !== 'string') {
     return objectName;
   }
-
   const namespaces = objectName.split('.');
   context = context === undefined || context === null ? window : context;
-
   for (const name of namespaces) {
     try {
       context = context[name];
@@ -532,9 +476,9 @@ function getObject(objectName, context) {
       return undefined;
     }
   }
-
   return context;
 }
+
 /**
  * Get function object from name
  *
@@ -542,7 +486,6 @@ function getObject(objectName, context) {
  * @param context: source context; window if undefined
  * @returns {function|undefined}
  */
-
 function getFunctionByName(functionName, context) {
   if (functionName === null || typeof functionName === 'undefined') {
     return undefined;
@@ -551,11 +494,9 @@ function getFunctionByName(functionName, context) {
   } else if (typeof functionName !== 'string') {
     return undefined;
   }
-
   const namespaces = functionName.split("."),
-        func = namespaces.pop();
+    func = namespaces.pop();
   context = context === undefined || context === null ? window : context;
-
   for (const name of namespaces) {
     try {
       context = context[name];
@@ -563,13 +504,13 @@ function getFunctionByName(functionName, context) {
       return undefined;
     }
   }
-
   try {
     return context[func];
   } catch (e) {
     return undefined;
   }
 }
+
 /**
  * Execute a function, given by it's name
  *
@@ -578,36 +519,32 @@ function getFunctionByName(functionName, context) {
  * @param args...: optional function arguments
  * @returns {*}: result of the called function
  */
-
-function executeFunctionByName(functionName, context
-/*, args */
-) {
+function executeFunctionByName(functionName, context /*, args */) {
   const func = getFunctionByName(functionName, window);
-
   if (typeof func === 'function') {
     const args = Array.prototype.slice.call(arguments, 2);
     return func.apply(context, args);
   }
 }
+
 /**
  * Get target URL matching given source
  *
  * Given URL can include variable names (with their namespace), given between braces,
  * as in {MyAMS.env.baseURL}
  */
-
 function getSource(url) {
   return url.replace(/{[^{}]*}/g, match => {
     return getObject(match.substr(1, match.length - 2));
   });
 }
+
 /**
  * Dynamic script loader function
  *
  * @param url: script URL
  * @param options: a set of options to be added to AJAX call
  */
-
 function getScript(url) {
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return new Promise((resolve, reject) => {
@@ -625,30 +562,27 @@ function getScript(url) {
     });
   });
 }
+
 /**
  * Get CSS matching given URL
  *
  * @param url: CSS source URL
  * @param name: name of the given CSS
  */
-
 function getCSS(url, name) {
-  return new Promise((resolve
-  /*, reject */
-  ) => {
+  return new Promise((resolve /*, reject */) => {
     const head = $('HEAD');
     let style = $(`style[data-ams-id="${name}"]`, head);
-
     if (style.length === 0) {
       style = $('<style>').attr('data-ams-id', name).text(`@import "${getSource(url)}";`).appendTo(head);
       const styleInterval = setInterval(() => {
         try {
           // eslint-disable-next-line no-unused-vars
           const _check = style[0].sheet.cssRules; // Is only populated when file is loaded
-
           clearInterval(styleInterval);
           resolve(true);
-        } catch (e) {// CSS is not loaded yet, just wait...
+        } catch (e) {
+          // CSS is not loaded yet, just wait...
         }
       }, 10);
     } else {
@@ -656,6 +590,7 @@ function getCSS(url, name) {
     }
   });
 }
+
 /**
  * Extract parameter value from given query string
  *
@@ -663,39 +598,35 @@ function getCSS(url, name) {
  * @param varName: variable name
  * @returns {boolean|*}
  */
-
 function getQueryVar(src, varName) {
   // Check src
   if (typeof src !== 'string' || src.indexOf('?') < 0) {
     return undefined;
   }
-
   if (!src.endsWith('&')) {
     src += '&';
-  } // Dynamic replacement RegExp
-
-
-  const regex = new RegExp(`.*?[&\\?]${varName}=(.*?)&.*`); // Apply RegExp to the query string
-
-  const val = src.replace(regex, "$1"); // If the string is the same, we didn't find a match - return null
-
+  }
+  // Dynamic replacement RegExp
+  const regex = new RegExp(`.*?[&\\?]${varName}=(.*?)&.*`);
+  // Apply RegExp to the query string
+  const val = src.replace(regex, "$1");
+  // If the string is the same, we didn't find a match - return null
   return val === src ? null : val;
 }
+
 /**
  * Generate a random ID
  */
-
 function generateId() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
-
   return s4() + s4() + s4() + s4();
 }
+
 /**
  * Generate a random unique UUID
  */
-
 function generateUUID() {
   let d = new Date().getTime();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -704,6 +635,7 @@ function generateUUID() {
     return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
   });
 }
+
 /**
  * Switch a FontAwesome icon.
  * Use FontAwesome API to get image as SVG, if FontAwesome is loaded from Javascript and is using
@@ -714,20 +646,16 @@ function generateUUID() {
  * @param toClass: new CSS class (without "fa-" prefix)
  * @param prefix: icon prefix (defaults to "fa")
  */
-
 function switchIcon(element, fromClass, toClass) {
   let prefix = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa';
-
   if (typeof element === 'string') {
     element = $(element);
   }
-
   if (MyAMS.config.useSVGIcons) {
     const iconDef = FontAwesome.findIconDefinition({
       iconName: toClass,
       prefix: prefix
     });
-
     if (iconDef) {
       element.html(FontAwesome.icon(iconDef).html);
     }
@@ -735,6 +663,7 @@ function switchIcon(element, fromClass, toClass) {
     element.removeClass(`fa-${fromClass}`).addClass(`fa-${toClass}`);
   }
 }
+
 /**
  * MyAMS base environment
  *
@@ -747,13 +676,12 @@ function switchIcon(element, fromClass, toClass) {
  *     baseURL: string
  * }}
  */
-
 function getEnv($) {
   const script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
-        src = script.attr('src'),
-        devmode = src ? src.indexOf('-dev.js') >= 0 : true,
-        // testing mode
-  bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
+    src = script.attr('src'),
+    devmode = src ? src.indexOf('-dev.js') >= 0 : true,
+    // testing mode
+    bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
   return {
     bundle: bundle,
     devmode: devmode,
@@ -762,28 +690,24 @@ function getEnv($) {
     baseURL: src ? src.substring(0, src.lastIndexOf('/') + 1) : '/'
   };
 }
+
 /**
  * MyAMS theme getter
  */
-
-
 function getTheme() {
   let theme;
-
   if (MyAMS.env.bundle) {
     theme = MyAMS.theme;
   } else {
     const css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
     theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
   }
-
   return theme;
 }
+
 /**
  * Get base DOM elements
  */
-
-
 function getDOM() {
   return {
     page: $('html'),
@@ -794,6 +718,7 @@ function getDOM() {
     shortcuts: $('#shortcuts')
   };
 }
+
 /**
  * MyAMS default configuration
  *
@@ -815,47 +740,45 @@ function getDOM() {
  *      isMobile: boolean, true if device is detected as mobile
  *      device: string: 'mobile' or 'desktop'
  */
-
-
 const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()),
-      config = {
-  modules: [],
-  ajaxNav: true,
-  enableFastclick: true,
-  useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
-  menuSpeed: 235,
-  initPage: 'MyAMS.core.initPage',
-  initData: 'MyAMS.core.initData',
-  initContent: 'MyAMS.core.initContent',
-  clearContent: 'MyAMS.core.clearContent',
-  useRegistry: true,
-  alertsContainerClass: 'toast-wrapper',
-  safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
-  csrfCookieName: 'csrf_token',
-  csrfHeaderName: 'X-CSRF-Token',
-  enableTooltips: true,
-  enableHtmlTooltips: true,
-  warnOnFormChange: true,
-  formChangeCallback: null,
-  isMobile: isMobile,
-  device: isMobile ? 'mobile' : 'desktop'
-},
-      core = {
-  getObject: getObject,
-  getFunctionByName: getFunctionByName,
-  executeFunctionByName: executeFunctionByName,
-  getSource: getSource,
-  getScript: getScript,
-  getCSS: getCSS,
-  getQueryVar: getQueryVar,
-  generateId: generateId,
-  generateUUID: generateUUID,
-  switchIcon: switchIcon,
-  initPage: initPage,
-  initData: initData,
-  initContent: initContent,
-  clearContent: clearContent
-};
+  config = {
+    modules: [],
+    ajaxNav: true,
+    enableFastclick: true,
+    useSVGIcons: window.FontAwesome !== undefined && FontAwesome.config.autoReplaceSvg === 'nest',
+    menuSpeed: 235,
+    initPage: 'MyAMS.core.initPage',
+    initData: 'MyAMS.core.initData',
+    initContent: 'MyAMS.core.initContent',
+    clearContent: 'MyAMS.core.clearContent',
+    useRegistry: true,
+    alertsContainerClass: 'toast-wrapper',
+    safeMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
+    csrfCookieName: 'csrf_token',
+    csrfHeaderName: 'X-CSRF-Token',
+    enableTooltips: true,
+    enableHtmlTooltips: true,
+    warnOnFormChange: true,
+    formChangeCallback: null,
+    isMobile: isMobile,
+    device: isMobile ? 'mobile' : 'desktop'
+  },
+  core = {
+    getObject: getObject,
+    getFunctionByName: getFunctionByName,
+    executeFunctionByName: executeFunctionByName,
+    getSource: getSource,
+    getScript: getScript,
+    getCSS: getCSS,
+    getQueryVar: getQueryVar,
+    generateId: generateId,
+    generateUUID: generateUUID,
+    switchIcon: switchIcon,
+    initPage: initPage,
+    initData: initData,
+    initContent: initContent,
+    clearContent: clearContent
+  };
 const MyAMS = {
   $: $,
   env: getEnv($),
@@ -880,7 +803,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "registry": function() { return /* binding */ registry; }
 /* harmony export */ });
 /* global $, MyAMS */
-
 /**
  * MyAMS dynamic plug-ins loading management
  */
@@ -904,46 +826,40 @@ class Plugin {
     let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let loaded = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     // plug-in name
-    this.name = name; // plug-in source URL
-
-    this.src = props.src; // plug-in associated CSS
-
-    this.css = props.css; // plug-in callbacks
-
+    this.name = name;
+    // plug-in source URL
+    this.src = props.src;
+    // plug-in associated CSS
+    this.css = props.css;
+    // plug-in callbacks
     this.callbacks = [];
-
     if (props.callback) {
       this.callbacks.push({
         callback: props.callback,
         context: props.context || 'body'
       });
-    } // async plug-ins are loaded simultaneously; sync ones are loaded and called after...
-
-
-    this.async = props.async === undefined ? true : props.async; // loaded flag
-
+    }
+    // async plug-ins are loaded simultaneously; sync ones are loaded and called after...
+    this.async = props.async === undefined ? true : props.async;
+    // loaded flag
     this.loaded = loaded;
   }
+
   /**
    * Load plug-in from remote script
    *
    * @returns {Promise<void>|*}
    */
-
-
   load() {
     return new Promise((resolve, reject) => {
       if (!this.loaded) {
         const deferred = [];
-
         if (this.src) {
           deferred.push(MyAMS.core.getScript(this.src));
         }
-
         if (this.css) {
           deferred.push(MyAMS.core.getCSS(this.css, `${this.name}_css`));
         }
-
         $.when.apply($, deferred).then(() => {
           this.loaded = true;
           resolve();
@@ -953,86 +869,71 @@ class Plugin {
       }
     });
   }
+
   /**
    * Run plug-in
    *
    * @param element: plug-in execution context
    */
-
-
   run(element) {
     const results = [];
-
     for (const callback of this.callbacks) {
       if (typeof callback.callback === 'string') {
         console.debug(`Resolving callback ${callback.callback}`);
         callback.callback = MyAMS.core.getFunctionByName(callback.callback) || callback.callback;
       }
-
       results.push(callback.callback(element, callback.context));
     }
-
     return Promise.all(results);
   }
-
 }
+
 /**
  * Plug-ins registry class
  */
-
-
 class PluginsRegistry {
   constructor() {
     this.plugins = new Map();
   }
+
   /**
    * Register new plug-in
    *
    * @param props: plugin function caller, or object containing plug-in properties
    * @param name: plug-in unique name
    */
-
-
   register(props, name) {
     // check arguments
     if (!name && Object.prototype.hasOwnProperty.call(props, 'name')) {
       name = props.name;
-    } // check for already registered plug-in
-
-
+    }
+    // check for already registered plug-in
     const plugins = this.plugins;
-
     if (plugins.has(name)) {
       if (window.console) {
         console.debug && console.debug(`Plug-in ${name} is already registered!`);
       }
-
       const plugin = plugins.get(name);
       let addContext = true;
-
       for (const callback of plugin.callbacks) {
         if (callback.callback === props.callback && callback.context === props.context) {
           addContext = false;
           break;
         }
       }
-
       if (addContext) {
         plugin.callbacks.push({
           callback: props.callback,
           context: props.context || 'body'
         });
       }
-
       return plugin;
-    } // register new plug-in
-
-
+    }
+    // register new plug-in
     if (typeof props === 'string') {
       // callable name
       props = MyAMS.core.getFunctionByName(props);
     }
-
     if (typeof props === 'function') {
       // callable object
       plugins.set(name, new Plugin(name, {
@@ -1041,27 +942,24 @@ class PluginsRegistry {
     } else if (typeof props === 'object') {
       // plug-in properties object
       plugins.set(name, new Plugin(name, props, !(props.src || props.css)));
-    } // check callback
-
-
+    }
+    // check callback
     return plugins.get(name);
   }
+
   /**
    * Load plug-ins declared into DOM element
    *
    * @param element
    */
-
-
   load(element) {
     // scan element for new plug-ins
     const asyncPlugins = [],
-          syncPlugins = [];
+      syncPlugins = [];
     $('[data-ams-plugins]', element).each((idx, elt) => {
       const source = $(elt),
-            names = source.data('ams-plugins');
+        names = source.data('ams-plugins');
       let plugin, props;
-
       if (typeof names === 'string') {
         for (const name of names.split(/[\s,;]+/)) {
           const lowerName = name.toLowerCase();
@@ -1073,7 +971,6 @@ class PluginsRegistry {
             async: source.data(`ams-plugin-${lowerName}-async`)
           };
           plugin = this.register(props, name);
-
           if (!plugin.loaded) {
             if (props.async === false) {
               syncPlugins.push(plugin.load());
@@ -1089,7 +986,6 @@ class PluginsRegistry {
             context: source
           });
           plugin = this.register(props);
-
           if (!plugin.loaded) {
             if (plugin.async === false) {
               syncPlugins.push(plugin.load());
@@ -1099,37 +995,33 @@ class PluginsRegistry {
           }
         }
       }
-    }); // load plug-ins
-
-    let result = $.when.apply($, asyncPlugins); // eslint-disable-next-line no-unused-vars
-
+    });
+    // load plug-ins
+    let result = $.when.apply($, asyncPlugins);
+    // eslint-disable-next-line no-unused-vars
     for (const plugin of syncPlugins) {
       result = result.done(() => {});
     }
-
     return result;
   }
+
   /**
    * Run registered plug-ins on given element
    *
    * @param element: source element
    * @param names: array list of plug-ins to activate, or all registered plug-ins if null
    */
-
-
   run(element) {
     let names = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     // check for disabled plug-ins
     const disabled = new Set();
     $('[data-ams-plugins-disabled]', element).each((idx, elt) => {
       const names = $(elt).data('ams-plugins-disabled').split(/[\s,;]+/);
-
       for (const name of names) {
         disabled.add(name);
       }
     });
     const plugins = this.plugins;
-
     if (names) {
       // only run given plug-ins, EVEN DISABLED ONES
       for (const name of names) {
@@ -1143,21 +1035,17 @@ class PluginsRegistry {
         if (disabled.has(name)) {
           continue;
         }
-
         plugin.run(element);
       }
     }
   }
-
 }
-
 const plugins = new PluginsRegistry();
 const registry = {
   /**
    * Plug-ins registry
    */
   plugins: plugins,
-
   /**
    * Initialize plug-ins registry from DOM
    *
@@ -1166,11 +1054,10 @@ const registry = {
   initElement: function () {
     let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
     // populate data attributes
-    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element); // load plug-ins from given DOM element
-
+    MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element);
+    // load plug-ins from given DOM element
     return plugins.load(element);
   },
-
   /**
    * Register a new plug-in through Javascript instead of HTML data attributes
    *
@@ -1181,7 +1068,6 @@ const registry = {
   register: function (plugin, name, callback) {
     return plugins.register(plugin, name, callback);
   },
-
   /**
    * Run registered plug-ins on given element
    *
@@ -1208,15 +1094,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ myams_require; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS dynamic module loader
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 function getModule(module, name) {
   let moduleSrc, moduleCss;
-
   if (typeof module === 'object') {
     moduleSrc = module.src;
     moduleCss = module.css;
@@ -1231,35 +1115,29 @@ function getModule(module, name) {
       moduleSrc = `${MyAMS.env.baseURL}mod-${module}${MyAMS.env.devext}.js`;
     }
   }
-
   const deferred = [MyAMS.core.getScript(moduleSrc, {
     async: true
   }, console.error)];
-
   if (moduleCss) {
     deferred.push(MyAMS.core.getCSS(moduleCss, `${name}_css`));
   }
-
   return deferred;
 }
+
 /**
  * Dynamic loading of MyAMS modules
  *
  * @param modules: single module name, or array of modules names
  * @returns Promise
  */
-
-
 function myams_require() {
   for (var _len = arguments.length, modules = new Array(_len), _key = 0; _key < _len; _key++) {
     modules[_key] = arguments[_key];
   }
-
   return new Promise((resolve, reject) => {
     const names = [],
-          deferred = [],
-          loaded = MyAMS.config.modules;
-
+      deferred = [],
+      loaded = MyAMS.config.modules;
     for (const module of modules) {
       if (typeof module === 'string') {
         if (loaded.indexOf(module) < 0) {
@@ -1284,7 +1162,6 @@ function myams_require() {
         }
       }
     }
-
     $.when.apply($, deferred).then(() => {
       for (const moduleName of names) {
         if (loaded.indexOf(moduleName) < 0) {
@@ -1292,7 +1169,6 @@ function myams_require() {
           MyAMS.core.executeFunctionByName(`MyAMS.${moduleName}.init`);
         }
       }
-
       resolve();
     }, () => {
       reject(`Can't load requested modules (${names})!`);
@@ -1314,11 +1190,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ajax": function() { return /* binding */ ajax; }
 /* harmony export */ });
 /* global jQuery, MyAMS, Cookies */
-
 /**
  * MyAMS AJAX features
  */
+
 const $ = MyAMS.$;
+
 /**
  * CSRF cookie checker
  *
@@ -1326,19 +1203,14 @@ const $ = MyAMS.$;
  *
  * @param request: outgoing request
  */
-
-function checkCsrfHeader(request
-/*, options */
-) {
+function checkCsrfHeader(request /*, options */) {
   if (window.Cookies) {
     const token = Cookies.get(MyAMS.config.csrfCookieName);
-
     if (token) {
       request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
     }
   }
 }
-
 const ajax = {
   /**
    * Check for a given feature, and download script if necessary
@@ -1349,12 +1221,10 @@ const ajax = {
   check: (checker, source) => {
     return new Promise((resolve, reject) => {
       const deferred = [];
-
       if (checker === undefined) {
         if (!(source instanceof Array)) {
           source = [source];
         }
-
         for (const src of source) {
           deferred.push(MyAMS.core.getScript(src));
         }
@@ -1362,20 +1232,17 @@ const ajax = {
         if (!(checker instanceof Array)) {
           checker = [checker];
         }
-
         checker.forEach((elt, idx) => {
           if (elt === undefined) {
             deferred.push(MyAMS.core.getScript(source[idx]));
           }
         });
       }
-
       $.when.apply($, deferred).then(() => {
         resolve(deferred.length > 0);
       }, reject);
     });
   },
-
   /**
    * Get AJAX URL relative to current page
    *
@@ -1385,21 +1252,18 @@ const ajax = {
     const href = addr || $('html head base').attr('href') || window.location.href;
     return href.substring(0, href.lastIndexOf('/') + 1);
   },
-
   /**
    * JQuery AJAX start callback
    */
   start: () => {
     $('#ajax-gear').show();
   },
-
   /**
    * JQuery AJAX stop callback
    */
   stop: () => {
     $('#ajax-gear').hide();
   },
-
   /**
    * Handle AJAX upload or download progress event
    *
@@ -1409,16 +1273,13 @@ const ajax = {
     if (!event.lengthComputable) {
       return;
     }
-
     if (event.loaded >= event.total) {
       return;
     }
-
     if (console) {
       console.debug && console.debug(`${Math.round(event.loaded / event.total * 100)}%`);
     }
   },
-
   /**
    * Get data from given URL.
    * This is a simple wrapper around JQuery AJAX api to keep MyAMS API consistent
@@ -1430,13 +1291,11 @@ const ajax = {
   get: (url, params, options) => {
     return new Promise((resolve, reject) => {
       let addr;
-
       if (url.startsWith(window.location.protocol)) {
         addr = url;
       } else {
         addr = MyAMS.ajax.getAddr() + url;
       }
-
       const defaults = {
         url: addr,
         type: 'get',
@@ -1453,7 +1312,6 @@ const ajax = {
       });
     });
   },
-
   /**
    * Post data to given URL
    *
@@ -1464,13 +1322,11 @@ const ajax = {
   post: (url, data, options) => {
     return new Promise((resolve, reject) => {
       let addr;
-
       if (url.startsWith(window.location.protocol)) {
         addr = url;
       } else {
         addr = MyAMS.ajax.getAddr() + url;
       }
-
       const defaults = {
         url: addr,
         type: 'post',
@@ -1487,7 +1343,6 @@ const ajax = {
       });
     });
   },
-
   /**
    * Post data to given URL and handle result as JSON
    *
@@ -1501,17 +1356,14 @@ const ajax = {
       return MyAMS.ajax.post(url, options).then(MyAMS.ajax.handleJSON);
     };
   },
-
   /**
    * Extract datatype and result from response object
    */
   getResponse: request => {
     let dataType = 'unknown',
-        result;
-
+      result;
     if (request) {
       let contentType = request.getResponseHeader('content-type');
-
       if (!contentType) {
         try {
           contentType = request.responseXML.contentType;
@@ -1519,7 +1371,6 @@ const ajax = {
           contentType = null;
         }
       }
-
       if (contentType) {
         // Get server response
         if (contentType.startsWith('application/javascript')) {
@@ -1534,7 +1385,6 @@ const ajax = {
         } else {
           // Supposed to be JSON...
           result = request.responseJSON;
-
           if (result) {
             dataType = 'json';
           } else {
@@ -1559,13 +1409,11 @@ const ajax = {
         dataType = 'json';
       }
     }
-
     return {
       contentType: dataType,
       data: result
     };
   },
-
   /**
    * Handle a server response in JSON format
    *
@@ -1607,36 +1455,29 @@ const ajax = {
         }
       });
     }
-
     let url = null,
-        loadTarget = null;
+      loadTarget = null;
     const status = result.status,
-          promises = [];
-
+      promises = [];
     if (target instanceof jQuery && !target.length) {
       target = null;
     }
-
     switch (status) {
       case 'alert':
         if (window.alert) {
           const alert = result.alert;
           window.alert(`${alert.title}\n\n${alert.content}`);
         }
-
         break;
-
       case 'error':
         promises.push(MyAMS.require('error').then(() => {
           MyAMS.error.showErrors(form, result);
         }));
         break;
-
       case 'message':
       case 'messagebox':
       case 'smallbox':
         break;
-
       case 'info':
       case 'success':
       case 'notify':
@@ -1644,21 +1485,17 @@ const ajax = {
       case 'callbacks':
         promises.push(closeForm());
         break;
-
       case 'modal':
         promises.push(MyAMS.require('modal').then(() => {
           MyAMS.modal.open(result.location);
         }));
         break;
-
       case 'reload':
         closeForm();
         url = result.location || window.location.hash;
-
         if (url.startsWith('#')) {
           url = url.substring(1);
         }
-
         loadTarget = $(result.target || target || '#content');
         promises.push(MyAMS.require('skin').then(() => {
           MyAMS.skin.loadURL(url, loadTarget, {
@@ -1677,29 +1514,23 @@ const ajax = {
           });
         }));
         break;
-
       case 'redirect':
         closeForm();
         url = result.location || window.location.href;
-
         if (url.endsWith('##')) {
           url = url.replace(/##/, window.location.hash);
         }
-
         if (result.window) {
           window.open(url, result.window, result.options);
         } else {
           $(window).off('beforeunload');
-
           if (window.location.href === url) {
             window.location.reload();
           } else {
             window.location.replace(url);
           }
         }
-
         break;
-
       default:
         if (result.code) {
           // Standard HTTP error?
@@ -1711,14 +1542,12 @@ const ajax = {
             console.warn && console.warn(`Unhandled JSON response status: ${status}`);
           }
         }
+    }
 
-    } // Single content response
-
-
+    // Single content response
     if (result.content) {
       const content = result.content,
-            container = $(content.target || target || '#content');
-
+        container = $(content.target || target || '#content');
       if (typeof content === 'string') {
         container.html(content);
       } else {
@@ -1727,35 +1556,32 @@ const ajax = {
         } else {
           container.html(content.html);
         }
-
         promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
           if (!content.keepHidden) {
             container.removeClass('hidden');
           }
         }));
       }
-    } // Multiple contents response
+    }
 
-
+    // Multiple contents response
     if (result.contents) {
       for (const content of result.contents) {
         const container = $(content.target);
-
         if (content.text) {
           container.text(content.text);
         } else {
           container.html(content.html);
         }
-
         promises.push(MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, container).then(() => {
           if (!content.keepHidden) {
             container.removeClass('hidden');
           }
         }));
       }
-    } // Response with message
+    }
 
-
+    // Response with message
     if (result.message && !result.code) {
       promises.push(MyAMS.require('alert').then(() => {
         if (typeof result.message === 'string') {
@@ -1776,9 +1602,9 @@ const ajax = {
           });
         }
       }));
-    } // Response with message box
+    }
 
-
+    // Response with message box
     if (result.messagebox) {
       promises.push(MyAMS.require('alert').then(() => {
         if (typeof result.messagebox === 'string') {
@@ -1801,9 +1627,9 @@ const ajax = {
           });
         }
       }));
-    } // Response with small box
+    }
 
-
+    // Response with small box
     if (result.smallbox) {
       promises.push(MyAMS.require('alert').then(() => {
         if (typeof result.smallbox === 'string') {
@@ -1824,14 +1650,14 @@ const ajax = {
           });
         }
       }));
-    } // Response with single event
+    }
 
-
+    // Response with single event
     if (result.event) {
       form.trigger(result.event, result.eventOptions);
-    } // Response with multiple events
+    }
 
-
+    // Response with multiple events
     if (result.events) {
       for (const event of result.events) {
         if (typeof event === 'string') {
@@ -1840,14 +1666,14 @@ const ajax = {
           form.trigger(event.event, event.options);
         }
       }
-    } // Response with single callback
+    }
 
-
+    // Response with single callback
     if (result.callback) {
       promises.push(MyAMS.core.executeFunctionByName(result.callback, document, form, result.options));
-    } // Response with multiple callbacks
+    }
 
-
+    // Response with multiple callbacks
     if (result.callbacks) {
       for (const callback of result.callbacks) {
         if (typeof callback === 'string') {
@@ -1859,10 +1685,8 @@ const ajax = {
         }
       }
     }
-
     return Promise.all(promises);
   },
-
   /**
    * JQuery AJAX error handler
    */
@@ -1870,20 +1694,16 @@ const ajax = {
     // user shouldn't be notified of aborted requests
     if (error === 'abort') {
       return;
-    } // don't display errors on OK status
-
-
+    }
+    // don't display errors on OK status
     if (response && response.statusText && response.statusText.toUpperCase() === 'OK') {
       return;
-    } // don't display errors twice (via AJAX HTTP error handler and JSON response)
-
-
+    }
+    // don't display errors twice (via AJAX HTTP error handler and JSON response)
     if (response.x_ams_handled === true) {
       return;
     }
-
     const parsedResponse = MyAMS.ajax.getResponse(response);
-
     if (parsedResponse) {
       if (parsedResponse.contentType === 'json') {
         MyAMS.ajax.handleJSON(parsedResponse.data);
@@ -1891,7 +1711,7 @@ const ajax = {
       } else {
         MyAMS.require('i18n', 'alert').then(() => {
           const title = error || event.statusText || event.type,
-                message = parsedResponse.responseText;
+            message = parsedResponse.responseText;
           MyAMS.alert.messageBox({
             status: 'error',
             title: MyAMS.i18n.ERROR_OCCURED,
@@ -1914,10 +1734,10 @@ const ajax = {
     }
   }
 };
+
 /**
  * AJAX events callbacks
  */
-
 if (typeof jest === 'undefined') {
   // don't check cookies extension in test mode!
   ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`).then(() => {
@@ -1927,7 +1747,6 @@ if (typeof jest === 'undefined') {
         if (MyAMS.config.safeMethods.indexOf(options.type) < 0) {
           if (window.Cookies !== undefined) {
             const token = Cookies.get(MyAMS.config.csrfCookieName);
-
             if (token) {
               request.setRequestHeader(MyAMS.config.csrfHeaderName, token);
             }
@@ -1938,7 +1757,6 @@ if (typeof jest === 'undefined') {
       progressUpload: ajax.progress,
       xhr: function () {
         const request = xhr();
-
         if (request && typeof request.addEventListener === 'function') {
           if (ajax.progress) {
             request.addEventListener('progress', evt => {
@@ -1946,20 +1764,18 @@ if (typeof jest === 'undefined') {
             }, false);
           }
         }
-
         return request;
       }
     });
   });
 }
-
 $(document).ajaxStart(ajax.start);
 $(document).ajaxStop(ajax.stop);
 $(document).ajaxError(ajax.error);
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('ajax');
 } else {
@@ -1981,22 +1797,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "alert": function() { return /* binding */ alert; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS alerts management
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 if (!$.templates) {
   const jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-
   $.templates = jsrender.templates;
 }
+
 /**
  * Alert template
  */
-
-
 const ALERT_TEMPLATE_STRING = `
 	<div class="alert alert-{{:status}}" role="alert">
 		<button type="button" class="close" data-dismiss="alert" 
@@ -2022,6 +1835,7 @@ const ALERT_TEMPLATE = $.templates({
   markup: ALERT_TEMPLATE_STRING,
   allowCode: true
 });
+
 /**
  * Standard message template
  */
@@ -2056,6 +1870,7 @@ const MESSAGE_TEMPLATE = $.templates({
   markup: MESSAGE_TEMPLATE_STRING,
   allowCode: true
 });
+
 /**
  * Small box message template
  */
@@ -2083,6 +1898,7 @@ const SMALLBOX_TEMPLATE = $.templates({
   markup: SMALLBOX_TEMPLATE_STRING,
   allowCode: true
 });
+
 /**
  * Big box message template
  */
@@ -2123,6 +1939,7 @@ const BIGBOX_TEMPLATE = $.templates({
   markup: BIGBOX_TEMPLATE_STRING,
   allowCode: true
 });
+
 /**
  * Main alert object
  */
@@ -2141,22 +1958,18 @@ const alert = {
   alert: function () {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let status = props.status || 'info';
-
     if (status === 'error') {
       status = 'danger';
     }
-
     props.status = status;
     $(`.alert-${status}`, props.parent).not('.persistent').remove();
     $(ALERT_TEMPLATE.render(props)).prependTo(props.parent);
-
     MyAMS.require('helpers').then(() => {
       MyAMS.helpers.scrollTo('#content', props.parent, {
         offset: -15
       });
     });
   },
-
   /**
    * Display notification message on bottom right
    *
@@ -2172,23 +1985,18 @@ const alert = {
   messageBox: function () {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let status = props.status || 'info';
-
     if (status === 'error') {
       status = 'danger';
     }
-
     props.status = status;
     let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
-
     if (wrapper.length === 0) {
       wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass).appendTo(MyAMS.dom.root);
     }
-
     $(MESSAGE_TEMPLATE.render(props)).appendTo(wrapper).toast('show').on('hidden.bs.toast', evt => {
       $(evt.currentTarget).remove();
     });
   },
-
   /**
    * Display small notification message on top right
    *
@@ -2197,23 +2005,18 @@ const alert = {
   smallBox: function () {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let status = props.status || 'info';
-
     if (status === 'error') {
       status = 'danger';
     }
-
     props.status = status;
     let wrapper = $(`.${MyAMS.config.alertsContainerClass}`);
-
     if (wrapper.length === 0) {
       wrapper = $('<div></div>').addClass(MyAMS.config.alertsContainerClass).appendTo(MyAMS.dom.root);
     }
-
     $(SMALLBOX_TEMPLATE.render(props)).appendTo(wrapper).toast('show').on('hidden.bs.toast', evt => {
       $(evt.currentTarget).remove();
     });
   },
-
   /**
    * Modal message box
    *
@@ -2224,13 +2027,10 @@ const alert = {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return new Promise((resolve, reject) => {
       let status = props.status || 'info';
-
       if (status === 'error') {
         status = 'danger';
       }
-
       props.status = status;
-
       MyAMS.require('modal').then(() => {
         const alert = $(BIGBOX_TEMPLATE.render(props)).appendTo(MyAMS.dom.root);
         alert.on('shown.bs.modal', evt => {
@@ -2247,10 +2047,10 @@ const alert = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('alert');
@@ -2274,10 +2074,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "callbacks": function() { return /* binding */ callbacks; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS callbacks management
  */
+
 const $ = MyAMS.$;
 let _initialized = false;
 const callbacks = {
@@ -2285,7 +2085,6 @@ const callbacks = {
     if (_initialized) {
       return;
     }
-
     _initialized = true;
   },
   initElement: element => {
@@ -2294,7 +2093,6 @@ const callbacks = {
       $('[data-ams-callback]', element).each((idx, elt) => {
         const data = $(elt).data();
         let callbacks = data.amsCallback;
-
         if (typeof callbacks === 'string') {
           try {
             callbacks = JSON.parse(data.amsCallback);
@@ -2302,20 +2100,16 @@ const callbacks = {
             callbacks = data.amsCallback.split(/[\s,;]+/);
           }
         }
-
         if (!$.isArray(callbacks)) {
           callbacks = [callbacks];
         }
-
         for (const callback of callbacks) {
           let callname, callable, source, options;
-
           if (typeof callback === 'string') {
             callname = callback;
             callable = MyAMS.core.getFunctionByName(callname);
             source = data.amsCallbackOptions;
             options = data.amsCallbackOptions;
-
             if (typeof options === 'string') {
               options = options.unserialize();
             }
@@ -2326,12 +2120,10 @@ const callbacks = {
             source = callback.source;
             options = callback.options;
           }
-
           if (typeof callable === 'undefined') {
             if (source) {
               deferred.push(MyAMS.core.getScript(source).then(() => {
                 callable = MyAMS.core.getFunctionByName(callname);
-
                 if (typeof callable === 'undefined') {
                   console.warn(`Missing callback ${callname}!`);
                 } else {
@@ -2350,10 +2142,10 @@ const callbacks = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('callbacks');
@@ -2377,20 +2169,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "clipboard": function() { return /* binding */ clipboard; }
 /* harmony export */ });
 /* global MyAMS, clipboardData */
-
 /**
  * MyAMS i18n translations
  */
+
 const $ = MyAMS.$;
+
 /**
  * Internal function used to copy text to clipboard
  *
  * @param text: text to be copied
  */
-
 function doCopy(text) {
   let copied = false;
-
   if (window.clipboardData && window.clipboardData.setData) {
     // IE specific code
     copied = clipboardData.setData("Text", text);
@@ -2399,10 +2190,8 @@ function doCopy(text) {
     textarea.val(text).css('position', 'fixed') // prevent scrolling to bottom of page in Edge
     .appendTo(MyAMS.dom.root);
     textarea.get(0).select();
-
     try {
       document.execCommand('copy'); // security exception may be thrown by some browsers!
-
       copied = true;
     } catch (e) {
       console.warn("Clipboard copy failed!", e);
@@ -2410,7 +2199,6 @@ function doCopy(text) {
       textarea.remove();
     }
   }
-
   if (copied) {
     MyAMS.require('i18n', 'alert').then(() => {
       MyAMS.alert.smallBox({
@@ -2426,7 +2214,6 @@ function doCopy(text) {
     });
   }
 }
-
 const clipboard = {
   /**
    * Copy given text to system's clipboard
@@ -2437,7 +2224,7 @@ const clipboard = {
     if (typeof text === 'undefined') {
       return function () {
         const source = $(this),
-              text = source.text();
+          text = source.text();
         source.parents('.btn-group').removeClass('open');
         doCopy(text);
       };
@@ -2446,10 +2233,10 @@ const clipboard = {
     }
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('clipboard');
@@ -2473,10 +2260,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "container": function() { return /* binding */ container; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS container management
  */
+
 const $ = MyAMS.$;
 const container = {
   /**
@@ -2488,38 +2275,33 @@ const container = {
     return function (link, params) {
       MyAMS.require('ajax', 'alert', 'i18n').then(() => {
         const cell = link.parents('td').first(),
-              icon = $('i', cell),
-              row = cell.parents('tr'),
-              table = row.parents('table'),
-              col = $(`thead th:nth-child(${cell.index() + 1})`, table);
+          icon = $('i', cell),
+          row = cell.parents('tr'),
+          table = row.parents('table'),
+          col = $(`thead th:nth-child(${cell.index() + 1})`, table);
         let location = link.data('ams-location') || col.data('ams-location') || row.data('ams-location') || table.data('ams-location') || '';
-
         if (location) {
           location += '/';
         }
-
         const updateTarget = link.data('ams-update-target') || col.data('ams-update-target') || row.data('ams-update-target') || table.data('ams-update-target') || 'switch-element-attribute.json',
-              objectName = row.data('ams-element-name'),
-              hint = icon.attr('data-original-title') || icon.attr('title');
+          objectName = row.data('ams-element-name'),
+          hint = icon.attr('data-original-title') || icon.attr('title');
         icon.tooltip('hide').replaceWith('<i class="fas fa-spinner fa-spin"></i>');
         MyAMS.ajax.post(location + updateTarget, {
           object_name: objectName,
           attribute_name: col.data('ams-attribute-name')
         }).then((result, status, xhr) => {
           let icon = $('i', cell);
-
           if (result.status === 'success') {
             if (result.state) {
               icon.replaceWith(`<i class="${col.data('ams-icon-on')}"></i>`);
             } else {
               icon.replaceWith(`<i class="${col.data('ams-icon-off')}"></i>`);
             }
-
             if (hint) {
               icon = $('i', cell);
               icon.addClass('hint').attr('data-original-title', hint);
             }
-
             if (result.handle_json) {
               MyAMS.ajax.handleJSON(result);
             }
@@ -2530,7 +2312,6 @@ const container = {
       });
     };
   },
-
   /**
    * Delete element from container
    *
@@ -2551,19 +2332,16 @@ const container = {
           if (status !== 'success') {
             return;
           }
-
           const cell = link.parents('td'),
-                row = cell.parents('tr'),
-                table = row.parents('table'),
-                col = $(`thead th:nth-child(${cell.index() + 1})`, table);
+            row = cell.parents('tr'),
+            table = row.parents('table'),
+            col = $(`thead th:nth-child(${cell.index() + 1})`, table);
           let location = link.data('ams-location') || col.data('ams-location') || row.data('ams-location') || table.data('ams-location') || '';
-
           if (location) {
             location += '/';
           }
-
           const deleteTarget = link.data('ams-delete-target') || col.data('ams-delete-target') || row.data('ams-delete-target') || table.data('ams-delete-target') || 'delete-element.json',
-                objectName = row.data('ams-element-name');
+            objectName = row.data('ams-element-name');
           MyAMS.ajax.post(location + deleteTarget, {
             'object_name': objectName
           }).then((result, status, xhr) => {
@@ -2573,7 +2351,6 @@ const container = {
               } else {
                 row.remove();
               }
-
               if (result.handle_json) {
                 MyAMS.ajax.handleJSON(result);
               }
@@ -2586,10 +2363,10 @@ const container = {
     };
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('container');
@@ -2613,16 +2390,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "datatable": function() { return /* binding */ datatable; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS datatables management
  */
+
 const $ = MyAMS.$;
 const datatable = {};
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('datatable');
@@ -2648,10 +2425,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
 /* global MyAMS */
-
 /**
  * MyAMS errors management
  */
+
 
 const $ = MyAMS.$;
 const ERRORS_TEMPLATE_STRING = `
@@ -2724,10 +2501,9 @@ const error = {
         // full errors with widgets
         MyAMS.require('i18n', 'ajax', 'alert', 'form').then(() => {
           // clear previous alerts
-          MyAMS.form.clearAlerts(parent); // create new alert
-
+          MyAMS.form.clearAlerts(parent);
+          // create new alert
           const messages = [];
-
           for (const message of errors.messages || []) {
             if (typeof message === 'string') {
               messages.push({
@@ -2738,44 +2514,37 @@ const error = {
               messages.push(message);
             }
           }
-
           for (const widget of errors.widgets || []) {
             messages.push({
               header: widget.label,
               message: widget.message
             });
           }
-
           const header = errors.header || (messages.length > 1 ? MyAMS.i18n.ERRORS_OCCURED : MyAMS.i18n.ERROR_OCCURED),
-                props = {
-            status: 'danger',
-            header: header,
-            message: errors.error || null,
-            messages: messages
-          };
-          $(ERROR_TEMPLATE.render(props)).prependTo(parent); // update status of invalid widgets
-
+            props = {
+              status: 'danger',
+              header: header,
+              message: errors.error || null,
+              messages: messages
+            };
+          $(ERROR_TEMPLATE.render(props)).prependTo(parent);
+          // update status of invalid widgets
           for (const widget of errors.widgets || []) {
             let input;
-
             if (widget.id) {
               input = $(`#${widget.id}`, parent);
             } else {
               input = $(`[name="${widget.name}"]`, parent);
             }
-
             if (input.exists()) {
               MyAMS.form.setInvalid(parent, input, widget.message);
             }
           }
-
           MyAMS.require('helpers').then(() => {
             let scrollBox = parent.parents('.modal-body');
-
             if (!scrollBox.exists()) {
               scrollBox = $('#main');
             }
-
             MyAMS.helpers.scrollTo(scrollBox, parent, {
               offset: -15
             });
@@ -2784,7 +2553,6 @@ const error = {
       }
     });
   },
-
   /**
    * Display message for standard HTTP error
    *
@@ -2804,10 +2572,10 @@ const error = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('error');
@@ -2831,10 +2599,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "events": function() { return /* binding */ events; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS events management
  */
+
 const $ = MyAMS.$;
 let _initialized = false;
 const events = {
@@ -2842,30 +2610,29 @@ const events = {
     if (_initialized) {
       return;
     }
+    _initialized = true;
 
-    _initialized = true; // Initialize custom click handlers
+    // Initialize custom click handlers
+    $(document).on('click', '[data-ams-click-handler]', MyAMS.events.clickHandler);
 
-    $(document).on('click', '[data-ams-click-handler]', MyAMS.events.clickHandler); // Initialize custom change handlers
+    // Initialize custom change handlers
+    $(document).on('change', '[data-ams-change-handler]', MyAMS.events.changeHandler);
 
-    $(document).on('change', '[data-ams-change-handler]', MyAMS.events.changeHandler); // Initialize custom event on click
-
+    // Initialize custom event on click
     $(document).on('click', '[data-ams-click-event]', MyAMS.events.triggerEvent);
   },
   initElement: element => {
     $('[data-ams-events-handlers]', element).each((idx, elt) => {
       const source = $(elt),
-            handlers = source.data('ams-events-handlers');
-
+        handlers = source.data('ams-events-handlers');
       if (handlers) {
         const selector = source.data('ams-events-handlers-context'),
-              context = selector ? source.parents(selector) : source;
-
+          context = selector ? source.parents(selector) : source;
         for (const [event, handler] of Object.entries(handlers)) {
           context.on(event, function (event) {
             for (var _len = arguments.length, options = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
               options[_key - 1] = arguments[_key];
             }
-
             if (options.length > 0) {
               MyAMS.core.executeFunctionByName(handler, document, event, ...options);
             } else {
@@ -2876,7 +2643,6 @@ const events = {
       }
     });
   },
-
   /**
    * Get events handlers on given element for a specific event
    *
@@ -2886,93 +2652,74 @@ const events = {
    */
   getHandlers: (element, event) => {
     const result = [],
-          handlers = element.data('ams-events-handlers');
-
+      handlers = element.data('ams-events-handlers');
     if (handlers && handlers[event]) {
       result.push(element);
     }
-
     $('[data-ams-events-handlers]', element).each((idx, elt) => {
       const context = $(elt),
-            handlers = context.data('ams-events-handlers');
-
+        handlers = context.data('ams-events-handlers');
       if (handlers && handlers[event]) {
         result.push(context);
       }
     });
     return result;
   },
-
   /**
    * Generic click event handler
    */
   clickHandler: event => {
     const source = $(event.currentTarget),
-          handlers = source.data('ams-disabled-handlers');
-
+      handlers = source.data('ams-disabled-handlers');
     if (handlers === true || handlers === 'click' || handlers === 'all') {
       return;
     }
-
     const data = source.data();
-
     if (data.amsClickHandler) {
       if (data.amsPreventDefault !== false && data.amsClickPreventDefault !== false) {
         event.preventDefault();
       }
-
       if (data.amsStopPropagation !== false && data.amsClickStopPropagation !== false) {
         event.stopPropagation();
       }
-
       for (const handler of data.amsClickHandler.split(/[\s,;]+/)) {
         const callback = MyAMS.core.getFunctionByName(handler);
-
         if (callback !== undefined) {
           callback.call(document, event, data.amsClickHandlerOptions);
         }
       }
     }
   },
-
   /**
    * Generic change event handler
    */
   changeHandler: event => {
-    const source = $(event.currentTarget); // Disable change handlers for readonly inputs
+    const source = $(event.currentTarget);
+    // Disable change handlers for readonly inputs
     // These change handlers are activated by IE!!!
-
     if (source.prop('readonly')) {
       return;
     }
-
     const handlers = source.data('ams-disabled-handlers');
-
     if (handlers === true || handlers === 'change' || handlers === 'all') {
       return;
     }
-
     const data = source.data();
-
     if (data.amsChangeHandler) {
       if (data.amsKeepDefault !== false && data.amsChangeKeepDefault !== false) {
         event.preventDefault();
       }
-
       if (data.amsStopPropagation !== false && data.amsChangeStopPropagation !== false) {
         event.stopPropagation();
       }
-
       for (const handler of data.amsChangeHandler.split(/[\s,;]+/)) {
         const callback = MyAMS.core.getFunctionByName(handler);
-
         if (callback !== undefined) {
           callback.call(document, event, data.amsChangeHandlerOptions);
         }
       }
     }
   },
-
   /**
    * Generic click event trigger
    */
@@ -2981,10 +2728,10 @@ const events = {
     $(event.target).trigger(source.data('ams-click-event'), source.data('ams-click-event-options'));
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('events');
 } else {
@@ -3026,86 +2773,84 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "submitForm": function() { return /* binding */ submitForm; }
 /* harmony export */ });
 /* global MyAMS, tinyMCE */
-
 /**
  * MyAMS forms support
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 if (!$.templates) {
   const jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-
   $.templates = jsrender.templates;
 }
-
 let _initialized = false;
+
 /**
  * MyAMS "form" module
  */
-
 const form = {
   init: () => {
     if (_initialized) {
       return;
     }
+    _initialized = true;
 
-    _initialized = true; // Add click listener on submit buttons
-
+    // Add click listener on submit buttons
     $(document).on('click', '[type="submit"], .submit', evt => {
       const button = $(evt.currentTarget);
-
       if (button.exists()) {
         $(button).closest('form').data('ams-submit-button', button);
       }
-    }); // Cancel clicks on readonly checkbox
+    });
 
+    // Cancel clicks on readonly checkbox
     $(document).on('click', 'input[type="checkbox"][readonly]', () => {
       return false;
-    }); // Initialize generic and custom reset handlers
+    });
 
+    // Initialize generic and custom reset handlers
     $(document).on('reset', MyAMS.form.resetHandler);
-    $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler); // Submit form when CTRL+Enter key is pressed in textarea
+    $(document).on('reset', '[data-ams-reset-handler]', MyAMS.form.customResetHandler);
 
+    // Submit form when CTRL+Enter key is pressed in textarea
     $(document).on('keydown', 'textarea', evt => {
       if ((evt.keyCode === 10 || evt.keyCode === 13) && (evt.ctrlKey || evt.metaKey)) {
         const form = $(evt.currentTarget).closest('form');
         $('button[type="submit"]', form).first().click();
       }
-    }); // Always blur readonly inputs
+    });
 
+    // Always blur readonly inputs
     $(document).on('focus', 'input[readonly]', evt => {
       $(evt.currentTarget).blur();
-    }); // Prevent bootstrap dialog from blocking TinyMCE focus
+    });
 
+    // Prevent bootstrap dialog from blocking TinyMCE focus
     $(document).on('focusin', evt => {
       if ($(evt.target).closest('.mce-window').length >= 0) {
         evt.stopImmediatePropagation();
       }
-    }); // Add unload event listener to check for modified forms
+    });
 
+    // Add unload event listener to check for modified forms
     $(window).on('beforeunload', MyAMS.form.checkBeforeUnload);
   },
   initElement: element => {
     if (typeof element === 'string') {
       element = $(element);
     }
-
     let forms;
-
     if (MyAMS.config.warnOnFormChange) {
       forms = $('form[data-ams-warn-on-change!="false"]', element);
     } else {
       forms = $('form[data-ams-warn-on-change="true"]', element);
     }
-
     forms.each((idx, elt) => {
       const form = $(elt),
-            formData = form.data(),
-            callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
+        formData = form.data(),
+        callback = formData.amsChangedCallback || MyAMS.config.formChangeCallback;
       $('input, select, textarea, [data-ams-changed-event]', form).each((idx, elt) => {
         const input = $(elt),
-              inputData = input.data();
-
+          inputData = input.data();
         if (inputData.amsIgnoreChange !== true) {
           const event = inputData.amsChangedEvent || 'change';
           input.on(event, () => {
@@ -3121,21 +2866,16 @@ const form = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         let focused = $('[data-ams-focus-target]', element).first();
-
         if (!focused.exists()) {
-          var _window, _window$process, _window$process$env;
-
-          if (((_window = window) === null || _window === void 0 ? void 0 : (_window$process = _window.process) === null || _window$process === void 0 ? void 0 : (_window$process$env = _window$process.env) === null || _window$process$env === void 0 ? void 0 : _window$process$env.NODE_ENV) === 'test') {
+          if (window?.process?.env?.NODE_ENV === 'test') {
             focused = $('input, select, textarea', element).first();
           } else {
             focused = $('input:enabled:visible, ' + 'select:enabled:visible, ' + 'textarea:enabled:visible', element).first();
           }
         }
-
         if (focused.exists()) {
           focused.get(0).focus();
         }
-
         resolve(focused);
       }, 100);
     });
@@ -3143,7 +2883,6 @@ const form = {
   checkBeforeUnload: () => {
     if (MyAMS.i18n) {
       const forms = $('form[data-ams-form-changed="true"]');
-
       if (forms.exists()) {
         return MyAMS.i18n.FORM_CHANGED_WARNING;
       }
@@ -3152,7 +2891,6 @@ const form = {
   confirmChangedForm: element => {
     return new Promise((resolve, reject) => {
       const forms = $('form[data-ams-form-changed="true"]', element);
-
       if (forms.exists()) {
         MyAMS.require('alert').then(() => {
           MyAMS.alert.bigBox({
@@ -3164,7 +2902,6 @@ const form = {
             if (button === 'success') {
               MyAMS.form.resetChanged(forms);
             }
-
             resolve(button);
           });
         }, () => {
@@ -3176,14 +2913,12 @@ const form = {
       }
     });
   },
-
   /**
    * Update form "chenged" status flag
    */
   setChanged: form => {
     form.attr('data-ams-form-changed', true);
   },
-
   /**
    * Default form reset handler
    *
@@ -3194,7 +2929,6 @@ const form = {
     MyAMS.form.clearAlerts(form);
     MyAMS.form.handleDefaultReset(form);
   },
-
   /**
    * Clear remaining form alerts before submitting form
    */
@@ -3204,7 +2938,6 @@ const form = {
     $('.invalid-feedback', form).remove();
     $('.is-invalid', form).removeClass('is-invalid');
   },
-
   /**
    * Call reset callbacks defined on a form
    */
@@ -3213,9 +2946,8 @@ const form = {
       form.find('.select2').trigger('change');
       $('[data-ams-reset-callback]', form).each((idx, elt) => {
         const element = $(elt),
-              data = element.data(),
-              callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
-
+          data = element.data(),
+          callback = MyAMS.core.getFunctionByName(data.amsResetCallback);
         if (callback !== undefined) {
           callback.call(document, form, element, data.amsResetCallbackOptions);
         }
@@ -3223,7 +2955,6 @@ const form = {
       MyAMS.form.resetChanged(form);
     }, 10);
   },
-
   /**
    * Reset form changed flag
    */
@@ -3232,27 +2963,22 @@ const form = {
       $(form).removeAttr('data-ams-form-changed');
     }
   },
-
   /**
    * Custom reset handler
    */
   customResetHandler: event => {
     const form = $(event.target),
-          data = form.data();
-
+      data = form.data();
     if (data.amsResetHandler) {
       if (data.amsKeepDefault !== true && data.amsResetKeepDefault !== true) {
         event.preventDefault();
       }
-
       const callback = MyAMS.core.getFunctionByName(data.amsResetHandler);
-
       if (callback !== undefined) {
         callback.call(document, event, form, data.amsResetHandlerOptions);
       }
     }
   },
-
   /**
    * Set widget's invalid status
    *
@@ -3264,7 +2990,6 @@ const form = {
     if (typeof input === 'string') {
       input = $(`[name="${input}"]`, form);
     }
-
     if (input.exists()) {
       const widget = input.closest('.form-widget');
       $('.invalid-feedback', widget).remove();
@@ -3272,7 +2997,6 @@ const form = {
       input.removeClass('valid').addClass('is-invalid');
     }
   },
-
   /**
    * Get all settings for given form
    *
@@ -3284,46 +3008,47 @@ const form = {
    */
   getSettings: (form, formData, button, buttonData, options) => {
     const defaults = {
-      submitWarning: showFormSubmitWarning,
-      getValidators: getFormValidators,
-      checkValidators: checkFormValidators,
-      clearAlerts: MyAMS.form.clearAlerts,
-      initSubmitButton: initFormSubmitButton,
-      resetSubmitButton: resetFormSubmitButton,
-      getData: getFormData,
-      initData: initFormData,
-      initDataCallback: null,
-      getTarget: getFormTarget,
-      initTarget: initFormTarget,
-      getAction: getFormAction,
-      getAjaxSettings: getFormAjaxSettings,
-      getProgressSettings: getFormProgressSettings,
-      getProgressState: getFormProgressState,
-      submit: submitForm,
-      datatype: null,
-      submitOptions: null,
-      submitHandler: (form.attr('action') || '').replace(/#/, ''),
-      submitTarget: form.attr('target') || null,
-      submitMessage: null,
-      submitCallback: formSubmitCallback,
-      progressHandler: null,
-      progressFieldName: 'progressId',
-      progressInterval: 1000,
-      progressTarget: null,
-      progressCallback: null,
-      progressEndCallback: null,
-      resetBeforeSubmit: false,
-      keepModalOpen: false,
-      resetAfterSubmit: resetFormAfterSubmit,
-      resetTimeout: 1000,
-      resetAfterError: resetFormAfterError,
-      downloadTarget: null,
-      getDownloadTarget: getFormDownloadTarget,
-      initDownloadTarget: initFormDownloadTarget,
-      resetDownloadTarget: resetFormDownloadTarget
-    },
-          settings = $.extend({}, defaults); // extend default values with form, button and options properties
+        submitWarning: showFormSubmitWarning,
+        getValidators: getFormValidators,
+        checkValidators: checkFormValidators,
+        clearAlerts: MyAMS.form.clearAlerts,
+        initSubmitButton: initFormSubmitButton,
+        resetSubmitButton: resetFormSubmitButton,
+        getData: getFormData,
+        initData: initFormData,
+        initDataCallback: null,
+        getTarget: getFormTarget,
+        initTarget: initFormTarget,
+        getAction: getFormAction,
+        getAjaxSettings: getFormAjaxSettings,
+        getProgressSettings: getFormProgressSettings,
+        getProgressState: getFormProgressState,
+        submit: submitForm,
+        datatype: null,
+        submitOptions: null,
+        submitHandler: (form.attr('action') || '').replace(/#/, ''),
+        submitTarget: form.attr('target') || null,
+        submitMessage: null,
+        submitCallback: formSubmitCallback,
+        progressHandler: null,
+        progressFieldName: 'progressId',
+        progressInterval: 1000,
+        progressTarget: null,
+        progressCallback: null,
+        progressEndCallback: null,
+        resetBeforeSubmit: false,
+        keepModalOpen: false,
+        resetAfterSubmit: resetFormAfterSubmit,
+        resetTimeout: 1000,
+        resetAfterError: resetFormAfterError,
+        downloadTarget: null,
+        getDownloadTarget: getFormDownloadTarget,
+        initDownloadTarget: initFormDownloadTarget,
+        resetDownloadTarget: resetFormDownloadTarget
+      },
+      settings = $.extend({}, defaults);
 
+    // extend default values with form, button and options properties
     $.extendPrefix(settings, 'amsForm', value => {
       return MyAMS.core.getFunctionByName(value) || value;
     }, formData, buttonData);
@@ -3332,7 +3057,6 @@ const form = {
     }, options);
     return settings;
   },
-
   /**
    * Submit given form
    *
@@ -3344,105 +3068,101 @@ const form = {
     let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     // check arguments
     form = $(form);
-
     if (!form.exists()) {
       return false;
     }
-
     if (typeof handler === 'object') {
       options = handler;
       handler = undefined;
-    } // initialize default settings
+    }
 
-
+    // initialize default settings
     const formData = form.data(),
-          button = $(formData.amsSubmitButton),
-          buttonData = button.data() || {},
-          settings = MyAMS.form.getSettings(form, formData, button, buttonData, options); // prevent multiple submits
+      button = $(formData.amsSubmitButton),
+      buttonData = button.data() || {},
+      settings = MyAMS.form.getSettings(form, formData, button, buttonData, options);
 
+    // prevent multiple submits
     if (formData.submitted) {
       settings.submitWarning(form, settings);
       return false;
-    } // check custom submit validators
+    }
 
-
+    // check custom submit validators
     settings.checkValidators(form, settings).then(status => {
       // check validation status
       if (status !== 'success') {
         return;
-      } // submit form
+      }
 
-
+      // submit form
       MyAMS.require('ajax', 'i18n').then(() => {
         MyAMS.ajax.check($.fn.ajaxSubmit, `${MyAMS.env.baseURL}../ext/jquery-form${MyAMS.env.extext}.js`).then(() => {
           // clear alerts and initialize submit button
           settings.clearAlerts(form, settings);
-          settings.initSubmitButton(form, settings, button); // extract and initialize custom submit data
+          settings.initSubmitButton(form, settings, button);
 
+          // extract and initialize custom submit data
           const postData = settings.getData(form, settings, formData, button, buttonData, options),
-                veto = {
-            veto: false
-          };
+            veto = {
+              veto: false
+            };
           settings.initData(form, settings, button, postData, options, veto);
-
           if (veto.veto) {
             settings.resetSubmitButton(form, settings, button);
             return;
-          } // get and initialize post target
+          }
 
-
+          // get and initialize post target
           const target = settings.getTarget(form, settings, formData, buttonData);
-
           if (target && target.exists()) {
             settings.initTarget(form, settings, target);
-          } // get form action and POST settings
+          }
 
-
+          // get form action and POST settings
           const action = settings.getAction(form, settings, handler),
-                ajaxSettings = settings.getAjaxSettings(form, settings, button, postData, action, target); // get and initialize download target
+            ajaxSettings = settings.getAjaxSettings(form, settings, button, postData, action, target);
 
+          // get and initialize download target
           const downloadTarget = settings.getDownloadTarget(form, settings);
-
           if (downloadTarget) {
             settings.initDownloadTarget(form, settings, downloadTarget, ajaxSettings);
-          } // get progress settings
+          }
 
+          // get progress settings
+          ajaxSettings.progress = settings.getProgressSettings(form, settings, button, postData);
 
-          ajaxSettings.progress = settings.getProgressSettings(form, settings, button, postData); // YESSSS!!!!
+          // YESSSS!!!!
           // submit form!!
-
           settings.submit(form, settings, button, postData, ajaxSettings, target);
-
           if (downloadTarget) {
             settings.resetDownloadTarget(form, settings, button, downloadTarget, ajaxSettings);
           }
         });
       });
-    }); // disable standard submit
+    });
 
+    // disable standard submit
     return false;
   },
-
   /**
    * Submit a form from a button click handler
    */
   submitForm: evt => {
     const button = $(evt.currentTarget),
-          form = button.parents('form');
+      form = button.parents('form');
     form.data('ams-submit-button', button);
     form.submit();
   }
 };
+
 /**
  * Show warning message if form was already submitted
  *
  * @param form: submitted form
  * @param settings: computed form settings
  */
-
-function showFormSubmitWarning(form
-/*, settings */
-) {
+function showFormSubmitWarning(form /*, settings */) {
   return new Promise((resolve, reject) => {
     if (!form.data('ams-form-hide-submitted')) {
       MyAMS.require('i18n', 'alert').then(() => {
@@ -3459,6 +3179,7 @@ function showFormSubmitWarning(form
     }
   });
 }
+
 /**
  * Extract custom validators from given form
  *
@@ -3466,43 +3187,36 @@ function showFormSubmitWarning(form
  * @param settings: computed form settings
  * @returns {Map<any, any>}
  */
-
-function getFormValidators(form
-/*, settings */
-) {
+function getFormValidators(form /*, settings */) {
   const result = new Map(),
-        formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
+    formValidators = (form.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
   let validators = [];
   $(formValidators).each((idx, elt) => {
     if (!elt) {
       return;
     }
-
     validators.push(elt);
   });
-
   if (validators.length > 0) {
     result.set(form, validators);
   }
-
   $('[data-ams-form-validator]', form).each((idx, elt) => {
     const element = $(elt),
-          elementValidators = (element.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
+      elementValidators = (element.data('ams-form-validator') || '').trim().split(/[\s,;]+/);
     validators = [];
     $(elementValidators).each((innerIdx, innerElt) => {
       if (!innerElt) {
         return;
       }
-
       validators.push(innerElt);
     });
-
     if (validators.length > 0) {
       result.set(element, validators);
     }
   });
   return result;
 }
+
 /**
  * Check custom form validators.
  * A form can handle several form validators which will be called before the form is submitted.
@@ -3511,36 +3225,28 @@ function getFormValidators(form
  * @param form: checked form
  * @param settings: computed form settings
  */
-
 function checkFormValidators(form, settings) {
   return new Promise((resolve, reject) => {
     const validators = settings.getValidators(form, settings);
-
     if (!validators.size) {
       resolve('success');
       return;
     }
-
     const checks = [];
-
     for (const [context, contextValidators] of validators.entries()) {
       for (const validator of contextValidators) {
         checks.push(MyAMS.core.executeFunctionByName(validator, document, form, context));
       }
     }
-
     $.when.apply($, checks).then(function () {
       let status = 'success',
-          output = [];
-
+        output = [];
       for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
         results[_key] = arguments[_key];
       }
-
       for (const result of results) {
         if (result !== true) {
           status = 'error';
-
           if (typeof result === 'string') {
             output.push(result);
           } else if ($.isArray(result) && result.length > 0) {
@@ -3548,7 +3254,6 @@ function checkFormValidators(form, settings) {
           }
         }
       }
-
       if (output.length > 0) {
         MyAMS.require('i18n', 'alert').then(() => {
           const header = output.length === 1 ? MyAMS.i18n.ERROR_OCCURED : MyAMS.i18n.ERRORS_OCCURED;
@@ -3568,14 +3273,13 @@ function checkFormValidators(form, settings) {
     });
   });
 }
+
 /**
  * Initialize form submit button
  * Button is disabled and text is updated
  */
-
 function initFormSubmitButton(form, settings, button) {
   const text = button.data('ams-loading-text') || button.text().trim();
-
   if (text) {
     button.data('original-text', button.text()).prop('disabled', true).text(`${text}...`);
     $('<div>').addClass('progress').appendTo(button);
@@ -3583,52 +3287,48 @@ function initFormSubmitButton(form, settings, button) {
     // button without text
     button.data('original-html', button.html()).prop('disabled', true).html('<i class="fa fa-cog fa-spin"></i>');
   }
-} // reset form submit button
+}
 
+// reset form submit button
 function resetFormSubmitButton(form, settings, button) {
   $('.progress', button).remove();
   const text = button.data('original-text');
-
   if (text) {
     button.text(text);
   } else {
     const html = button.data('original-html');
-
     if (html) {
       button.html(html);
     }
   }
-
   button.prop('disabled', false);
-} // get form data
+}
 
+// get form data
 function getFormData(form, settings, formData, button, buttonData, options) {
   const data = $.extend({}, formData.amsFormData, buttonData.amsFormData, options.data),
-        name = button.attr('name');
-
+    name = button.attr('name');
   if (name) {
     data[name] = button.val();
   }
-
   return data;
-} // initialize form data
+}
 
+// initialize form data
 function initFormData(form, settings, button, postData, options, veto) {
   const callback = settings.initDataCallback;
-
   if (callback) {
     $.extend(postData, callback(form, settings, button, postData, options, veto));
   }
-
   form.trigger('init-data.ams.form', [postData, veto]);
-} // get form target
+}
 
-function getFormTarget(form, settings
-/*, formData, buttonData */
-) {
+// get form target
+function getFormTarget(form, settings /*, formData, buttonData */) {
   return $(settings.submitTarget);
-} // initialize form target
+}
 
+// initialize form target
 const TARGET_INIT_TEMPLATE_STRING = `
 	<div class="row m-3">
 		<div class="text-center w-100">
@@ -3646,21 +3346,21 @@ function initFormTarget(form, settings, target) {
     message: settings.submitMessage
   }));
   target.parents('.hidden').removeClass('hidden');
-} // get form action
+}
 
+// get form action
 function getFormAction(form, settings, handler) {
   let url;
   const formHandler = handler || settings.submitHandler;
-
   if (formHandler.startsWith(window.location.protocol)) {
     url = formHandler;
   } else {
     url = MyAMS.ajax.getAddr() + formHandler;
   }
-
   return url;
-} // get AJAX POST submit settings
+}
 
+// get AJAX POST submit settings
 function getFormAjaxSettings(form, settings, button, postData, action, target) {
   const base = {
     url: action,
@@ -3668,36 +3368,27 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
     cache: false,
     data: postData,
     dataType: settings.datatype,
-    beforeSerialize: (form
-    /*, options */
-    ) => {
+    beforeSerialize: (form /*, options */) => {
       const veto = {
         veto: false
       };
       form.trigger('before-serialize.ams.form', [veto]);
-
       if (veto.veto) {
         return false;
       }
-
       if (typeof window.tinyMCE !== 'undefined') {
         tinyMCE.triggerSave();
       }
     },
-    beforeSubmit: (data, form
-    /*, options */
-    ) => {
+    beforeSubmit: (data, form /*, options */) => {
       const veto = {
         veto: false
       };
       form.trigger('before-submit.ams.form', [data, veto]);
-
       if (veto.veto) {
         return false;
       }
-
       form.data('submitted', true);
-
       if (settings.resetBeforeSubmit) {
         setTimeout(() => {
           settings.resetSubmitButton(form, settings, button);
@@ -3715,19 +3406,15 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
         veto: false
       };
       form.trigger('submit-success.ams.form', [result, status, request, veto]);
-
       if (veto.veto) {
         return;
       }
-
       if (result && result.status !== 'error' && result.closeForm !== false) {
         const modal = form.closest('.modal-dialog');
-
         if (modal.exists() && !settings.keepModalOpen) {
           MyAMS.modal && MyAMS.modal.close(modal);
         }
       }
-
       try {
         settings.submitCallback(form, settings, target, result, status, request);
       } finally {
@@ -3737,32 +3424,28 @@ function getFormAjaxSettings(form, settings, button, postData, action, target) {
     },
     error: (request, status, error, form) => {
       form.trigger('submit-error.ams.form', [request, status, error, target]);
-
       if (target) {
         settings.resetAfterError(form, settings, button, target);
       }
-
       settings.resetAfterSubmit(form, settings, button);
     },
     iframe: false
   };
   return $.extend({}, base, settings.submitOptions);
-} // get form submit processing progress settings
+}
 
+// get form submit processing progress settings
 function getFormProgressSettings(form, settings, button, postData) {
   const handler = settings.progressHandler;
-
   if (handler) {
     // check fieldname
     const fieldname = settings.progressFieldName;
-    postData[fieldname] = MyAMS.core.generateUUID(); // check progress target
-
+    postData[fieldname] = MyAMS.core.generateUUID();
+    // check progress target
     let progressTarget = button;
-
     if (settings.progressTarget) {
       progressTarget = $(settings.progressTarget);
     }
-
     return {
       handler: handler,
       interval: settings.progressInterval,
@@ -3772,11 +3455,11 @@ function getFormProgressSettings(form, settings, button, postData) {
       endCallback: settings.progressEndCallback
     };
   }
-} // get form submit progress state
+}
 
+// get form submit progress state
 function getFormProgressState(form, settings, postData, progress, target) {
   let timeout = setTimeout(_getProgressState, progress.interval);
-
   function _getProgressState() {
     const data = {};
     data[progress.fieldname] = postData[progress.fieldname];
@@ -3785,23 +3468,19 @@ function getFormProgressState(form, settings, postData, progress, target) {
         status = result[1];
         result = result[0];
       }
-
       if (status === 'success') {
         if (result.status === 'running') {
           if (result.message) {
             target.text(result.message);
           } else {
             let text = result.progress || target.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
-
             if (result.current) {
               text += `: ${result.current} / ${result.length || 100}`;
             } else {
               text += '...';
             }
-
             target.text(text);
           }
-
           timeout = setTimeout(_getProgressState, progress.interval);
         } else if (result.status === 'finished') {
           _clearProgressState();
@@ -3811,22 +3490,22 @@ function getFormProgressState(form, settings, postData, progress, target) {
       }
     }), _clearProgressState);
   }
-
   function _clearProgressState() {
     clearTimeout(timeout);
     settings.resetSubmitButton(form, settings, target);
     MyAMS.core.executeFunctionByName(progress.endCallback, document, form, settings, target);
     MyAMS.form.resetChanged(form);
   }
-} // submit form
+}
 
+// submit form
 function submitForm(form, settings, button, postData, ajaxSettings, target) {
   if (ajaxSettings.progress) {
     settings.getProgressState(form, settings, postData, ajaxSettings.progress, target);
   }
-
   form.ajaxSubmit(ajaxSettings);
 }
+
 /**
  * Default form submit callback
  * 
@@ -3837,29 +3516,23 @@ function submitForm(form, settings, button, postData, ajaxSettings, target) {
  * @param status
  * @param request
  */
-
 function formSubmitCallback(form, settings, target, result, status, request) {
   let dataType = settings.datatype;
-
   if (!dataType) {
     const response = MyAMS.ajax.getResponse(request);
-
     if (response) {
       dataType = response.contentType;
       result = response.data;
     }
   }
-
   switch (dataType) {
     case 'binary':
     case 'script':
     case 'xml':
       break;
-
     case 'json':
       MyAMS.ajax.handleJSON(result, form, target);
       break;
-
     default:
       // text or html
       MyAMS.form.resetChanged(form);
@@ -3878,16 +3551,14 @@ function formSubmitCallback(form, settings, target, result, status, request) {
         });
       });
   }
-
   const callback = request.getResponseHeader('X-AMS-Callback');
-
   if (callback) {
     const options = request.getResponseHeader('X-AMS-Callback-Options') || "{}";
     MyAMS.core.executeFunctionByName(callback, document, form, settings, options, result, status, request);
   }
-
   form.trigger('after-submit.ams.form', [result]);
 }
+
 /**
  * Reset AJAX form after submit
  * 
@@ -3895,19 +3566,18 @@ function formSubmitCallback(form, settings, target, result, status, request) {
  * @param settings: computed form settings
  * @param button: button used to submit the form, if any
  */
-
 function resetFormAfterSubmit(form, settings, button) {
   if (form.data('submitted')) {
     settings.resetSubmitButton(form, settings, button);
     form.data('submitted', false);
     form.removeData('ams-submit-button');
     form.trigger('after-reset.ams.form');
-
     if (form.data('ams-reset-after-submit')) {
       form.get(0).reset();
     }
   }
 }
+
 /**
  * Reset form after submit error
  *
@@ -3915,38 +3585,36 @@ function resetFormAfterSubmit(form, settings, button) {
  * @param settings: computed form settings
  * @param target: previous form target
  */
-
 function resetFormAfterError(form, settings, target) {
   $('i', target).removeClass('fa-spin').removeClass('fa-cog').addClass('fa-ambulance');
-} // get form download target
+}
 
+// get form download target
 function getFormDownloadTarget(form, settings) {
   return settings.downloadTarget;
-} // initialize download target
+}
 
+// initialize download target
 function initFormDownloadTarget(form, settings, target, ajaxSettings) {
   let iframe = $(`iframe[name="${target}"]`);
-
   if (!iframe.exists()) {
     iframe = $('<iframe>').attr('name', target).hide().appendTo(MyAMS.dom.root);
   }
-
   $.extend(ajaxSettings, {
     iframe: true,
     iframeTarget: iframe
   });
-} // reset if download target
+}
 
+// reset if download target
 function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
   const modal = form.closest('.modal-dialog'),
-        keepModal = settings.keepModalOpen;
-
+    keepModal = settings.keepModalOpen;
   if (modal.exists() && keepModal !== true) {
     MyAMS.require('modal').then(() => {
       MyAMS.modal.close(modal);
     });
   }
-
   if (!ajaxSettings.progress) {
     setTimeout(() => {
       settings.resetAfterSubmit(form, settings, button);
@@ -3955,10 +3623,10 @@ function resetFormDownloadTarget(form, settings, button, target, ajaxSettings) {
     }, settings.resetTimeout);
   }
 }
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('form');
@@ -3982,16 +3650,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "graph": function() { return /* binding */ graph; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS graphs management
  */
+
 const $ = MyAMS.$;
 const graph = {};
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('graph');
@@ -4015,10 +3683,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "helpers": function() { return /* binding */ helpers; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS generic helpers
  */
+
 const $ = MyAMS.$;
 const helpers = {
   /**
@@ -4026,24 +3694,20 @@ const helpers = {
    */
   clearValue: evt => {
     const target = $(evt.currentTarget).data('target');
-
     if (target) {
       $(target).val(null);
     }
   },
-
   /**
    * Click handler used to clear datetime input
    */
   clearDatetimeValue: evt => {
     const target = $(evt.currentTarget).data('target'),
-          picker = $(target).data('datetimepicker');
-
+      picker = $(target).data('datetimepicker');
     if (picker) {
       picker.date(null);
     }
   },
-
   /**
    * Scroll anchor parent element to given anchor
    *
@@ -4054,13 +3718,12 @@ const helpers = {
   scrollTo: function () {
     let parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
     let anchor = arguments.length > 1 ? arguments[1] : undefined;
-    let { ...props
+    let {
+      ...props
     } = arguments.length > 2 ? arguments[2] : undefined;
-
     if (typeof anchor === 'string') {
       anchor = $(anchor);
     }
-
     if (anchor.exists()) {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.check($.fn.scrollTo, `${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
@@ -4069,42 +3732,36 @@ const helpers = {
       });
     }
   },
-
   /**
    * Store location hash when redirecting to log in form
    */
   setLoginHash: () => {
     const form = $('#login_form'),
-          hash = $(`input[name="login_form.widgets.hash"]`, form);
+      hash = $(`input[name="login_form.widgets.hash"]`, form);
     hash.val(window.location.hash);
   },
-
   /**
    * SEO input helper
    */
   setSEOStatus: evt => {
     const input = $(evt.target),
-          progress = input.siblings('.progress').children('.progress-bar'),
-          length = Math.min(input.val().length, 100);
+      progress = input.siblings('.progress').children('.progress-bar'),
+      length = Math.min(input.val().length, 100);
     let status = 'success';
-
     if (length < 20 || length > 80) {
       status = 'danger';
     } else if (length < 40 || length > 66) {
       status = 'warning';
     }
-
     progress.removeClassPrefix('bg-').addClass('bg-' + status).css('width', length + '%');
   },
-
   /**
    * Select2 change helper
    */
   select2ChangeHelper: evt => {
     const source = $(evt.currentTarget),
-          data = source.data(),
-          target = $(data.amsSelect2HelperTarget);
-
+      data = source.data(),
+      target = $(data.amsSelect2HelperTarget);
     switch (data.amsSelect2HelperType) {
       case 'html':
         target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
@@ -4119,23 +3776,18 @@ const helpers = {
               target.empty();
             }
           });
-
           callback(result);
         }).catch(() => {
           target.empty();
         });
         break;
-
       default:
         const callback = data.amsSelect2HelperCallback;
-
         if (callback) {
           MyAMS.core.executeFunctionByName(callback, source, data);
         }
-
     }
   },
-
   /**
    * Refresh a DOM element with content provided in
    * the <code>options</code> object.
@@ -4158,7 +3810,6 @@ const helpers = {
       }, reject);
     });
   },
-
   /**
    * Refresh a form widget with content provided in
    * the <code>options</code> object
@@ -4171,7 +3822,7 @@ const helpers = {
   refreshWidget: (form, options) => {
     return new Promise((resolve, reject) => {
       let widget = $(`[id="${options.widget_id}"]`),
-          group = widget.parents('.widget-group');
+        group = widget.parents('.widget-group');
       MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, group).then(() => {
         group.replaceWith($(options.content));
         widget = $(`[id="${options.widget_id}"]`);
@@ -4182,7 +3833,6 @@ const helpers = {
       }, reject);
     });
   },
-
   /**
    * Add new row to table
    *
@@ -4193,10 +3843,9 @@ const helpers = {
   addTableRow: (form, options) => {
     return new Promise((resolve, reject) => {
       const selector = `table[id="${options.table_id}"]`,
-            table = $(selector),
-            dtTable = table.DataTable();
+        table = $(selector),
+        dtTable = table.DataTable();
       let newRow;
-
       if (options.data) {
         dtTable.rows.add(options.data).draw();
         newRow = $(`tr[id="${options.row_id}"]`, table);
@@ -4210,7 +3859,6 @@ const helpers = {
       }
     });
   },
-
   /**
    * Refresh a table row with content provided in
    * the <code>options</code> object
@@ -4223,20 +3871,17 @@ const helpers = {
   refreshTableRow: (form, options) => {
     return new Promise((resolve, reject) => {
       const selector = `tr[id="${options.row_id}"]`,
-            row = $(selector),
-            table = row.parents('table').first();
-
+        row = $(selector),
+        table = row.parents('table').first();
       if (options.data) {
         if ($.fn.DataTable) {
           const dtTable = table.DataTable();
-
           if (typeof options.data === 'string') {
             dtTable.row(selector).remove();
             dtTable.row.add($(options.data)).draw();
           } else {
             dtTable.row(selector).data(options.data).draw();
           }
-
           resolve(row);
         } else {
           reject('No DataTable plug-in available!');
@@ -4250,7 +3895,6 @@ const helpers = {
       }
     });
   },
-
   /**
    * Refresh a single image with content provided in
    * the <code>options</code> object.
@@ -4264,7 +3908,6 @@ const helpers = {
     const image = $(`[id="${options.image_id}"]`);
     image.attr('src', options.src);
   },
-
   /**
    * Move given element to the end of it's parent
    *
@@ -4275,7 +3918,6 @@ const helpers = {
     const parent = element.parent();
     return element.detach().appendTo(parent);
   },
-
   /**
    * Add given element to the end of specified parent
    *
@@ -4294,14 +3936,11 @@ const helpers = {
     element = $(element);
     parent = $(parent);
     const result = element.appendTo(parent);
-
     if (props.scrollTo) {
       MyAMS.helpers.scrollTo(props.scrollParent, element);
     }
-
     return result;
   },
-
   /**
    * Toggle dropdown associated with given event target
    *
@@ -4311,10 +3950,10 @@ const helpers = {
     $(evt.target).closest('.dropdown-menu').dropdown('hide');
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('helpers');
@@ -4338,10 +3977,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "i18n": function() { return /* binding */ i18n; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS i18n translations
  */
+
 const $ = MyAMS.$;
 let _initialized = false;
 const i18n = {
@@ -4378,7 +4017,6 @@ const i18n = {
   LAST_UPDATE: "Last update: ",
   DT_COLUMNS: "Columns",
   NO_SELECTED_VALUE: "No selected value",
-
   /**
    * Plug-ins translations container
    */
@@ -4388,7 +4026,6 @@ const i18n = {
       searchPlaceholder: "Search..."
     }
   },
-
   /**
    * MyAMS i18n package
    */
@@ -4399,11 +4036,9 @@ const i18n = {
         resolve();
         return;
       }
-
       _initialized = true;
       const html = $('html'),
-            lang = html.attr('lang') || html.attr('xml:lang');
-
+        lang = html.attr('lang') || html.attr('xml:lang');
       if (lang && !lang.startsWith('en')) {
         MyAMS.core.getScript(`${MyAMS.env.baseURL}i18n/myams-${lang.substr(0, 2)}.js`).then(resolve, reject);
       } else {
@@ -4412,10 +4047,10 @@ const i18n = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('i18n');
 } else {
@@ -4437,16 +4072,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "jsonrpc": function() { return /* binding */ jsonrpc; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS JSON-RPC protocol support
  */
+
 const $ = MyAMS.$;
 const jsonrpc = {};
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('jsonrpc');
@@ -4470,56 +4105,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "menu": function() { return /* binding */ menu; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS menus management
  */
+
 const $ = MyAMS.$;
+
 /**
  * Context menu handler
  */
-
 function _contextMenuHandler(menu) {
   if (menu.get(0).tagName !== 'A') {
     menu = menu.parents('a').first();
   }
-
   const menuData = menu.data();
-
   if (menuData.toggle === 'modal') {
     MyAMS.require('modal').then(() => {
       MyAMS.modal.open(menu);
     });
   } else {
     let href = menu.attr('href') || menuData.amsUrl;
-
     if (!href || href.startsWith('javascript:') || menu.attr('target')) {
       return;
     }
-
     const hrefGetter = MyAMS.core.getFunctionByName(href);
-
     if (typeof hrefGetter === 'function') {
       href = hrefGetter(menu);
     }
-
     if (typeof href === 'undefined') {
       return;
     }
-
     if (typeof href === 'function') {
       href(menu);
     } else {
       MyAMS.require('form', 'skin').then(() => {
         href = href.replace(/%23/, '#');
         const target = menu.data('ams-target');
-
         if (target) {
           MyAMS.form.confirmChangedForm(target).then(status => {
             if (status !== 'success') {
               return;
             }
-
             MyAMS.skin.loadURL(href, target, menu.data('ams-link-options'), menu.data('ams-link-callback'));
           });
         } else {
@@ -4527,7 +4153,6 @@ function _contextMenuHandler(menu) {
             if (status !== 'success') {
               return;
             }
-
             if (href.startsWith('#')) {
               if (href !== location.hash) {
                 if (MyAMS.dom.root.hasClass('mobile-view-activated')) {
@@ -4548,12 +4173,11 @@ function _contextMenuHandler(menu) {
     }
   }
 }
-
 let _initialized = false;
+
 /**
  * MyAMS "menu" module
  */
-
 const menu = {
   /**
    * Global module initialization.
@@ -4564,7 +4188,6 @@ const menu = {
     if (_initialized) {
       return;
     }
-
     _initialized = true;
     $.fn.extend({
       /**
@@ -4573,20 +4196,19 @@ const menu = {
       contextMenu: function (settings) {
         function getMenuPosition(mouse, direction) {
           const win = $(window)[direction](),
-                menu = $(settings.menuSelector)[direction]();
-          let position = mouse; // opening menu would pass the side of the page
-
+            menu = $(settings.menuSelector)[direction]();
+          let position = mouse;
+          // opening menu would pass the side of the page
           if (mouse + menu > win && menu < mouse) {
             position -= menu;
           }
-
           return position;
         }
-
         return this.each((idx, elt) => {
           const source = $(elt),
-                menu = $(settings.menuSelector); // Set flag on menu items
+            menu = $(settings.menuSelector);
 
+          // Set flag on menu items
           $('a', menu).each((idx, elt) => {
             $(elt).data('ams-context-menu', true);
           });
@@ -4594,9 +4216,8 @@ const menu = {
             // return native menu if pressing CTRL key
             if (evt.ctrlKey) {
               return;
-            } // open menu
-
-
+            }
+            // open menu
             menu.data('contextmenu-event-source', source).dropdown('show').css({
               position: 'fixed',
               left: getMenuPosition(evt.clientX, 'width') - 10,
@@ -4605,33 +4226,32 @@ const menu = {
               clickEvt.stopPropagation();
               clickEvt.preventDefault();
               menu.dropdown('hide');
-
               _contextMenuHandler($(clickEvt.target));
             });
             return false;
-          }); // make sure menu closes on any click
+          });
 
+          // make sure menu closes on any click
           $(document).click(() => {
             menu.dropdown('hide');
           });
         });
       }
-    }); // Automatically set orientation of dropdown menus
+    });
 
+    // Automatically set orientation of dropdown menus
     $(document).on('show.bs.dropdown', '.btn-group', evt => {
       // check menu height
       const menu = $(evt.currentTarget),
-            ul = menu.children('.dropdown-menu'),
-            menuRect = menu.get(0).getBoundingClientRect(),
-            position = menuRect.top,
-            buttonHeight = menuRect.height,
-            menuHeight = ul.outerHeight();
-
+        ul = menu.children('.dropdown-menu'),
+        menuRect = menu.get(0).getBoundingClientRect(),
+        position = menuRect.top,
+        buttonHeight = menuRect.height,
+        menuHeight = ul.outerHeight();
       if (position > menuHeight && $(window).height() - position < buttonHeight + menuHeight) {
         menu.addClass("dropup");
-      } // activate first input
-
-
+      }
+      // activate first input
       $('input, select, textarea', ul).first().focus();
     }).on('hidden.bs.dropdown', '.btn-group', evt => {
       // always reset after close
@@ -4640,7 +4260,6 @@ const menu = {
     $(document).on('hide.bs.dropdown', evt => {
       if (evt.clickEvent) {
         const dropdown = $(evt.clickEvent.target).parents('.dropdown-menu');
-
         if (dropdown.data('ams-click-dismiss') === false) {
           evt.preventDefault();
           return false;
@@ -4649,10 +4268,10 @@ const menu = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('menu');
@@ -4683,35 +4302,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "modalToggleEventHandler": function() { return /* binding */ modalToggleEventHandler; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS modal dialogs support
  */
+
 const $ = MyAMS.$;
 let _initialized = false;
+
 /*
  * Standard data-toggle="modal" handler
  */
-
 function modalToggleEventHandler(evt) {
   return new Promise((resolve, reject) => {
     const source = $(evt.currentTarget),
-          handlers = source.data('ams-disabled-handlers');
-
+      handlers = source.data('ams-disabled-handlers');
     if (source.attr('disabled') || source.hasClass('disabled') || handlers === true || handlers === 'click' || handlers === 'all') {
       resolve(false);
       return;
     }
-
     if (source.data('ams-context-menu') === true) {
       resolve(false);
       return;
     }
-
     if (source.data('ams-stop-propagation') === true) {
       evt.stopPropagation();
     }
-
     evt.preventDefault();
     source.tooltip('hide');
     MyAMS.modal.open(source).then(() => {
@@ -4719,45 +4334,46 @@ function modalToggleEventHandler(evt) {
     }, reject);
   });
 }
+
 /**
  * Standard modal shown event handler
  * This handler is used to allow modals stacking
  */
-
 function modalShownEventHandler(evt) {
-  const zIndexModal = 1100; // Enable modals stacking
+  const zIndexModal = 1100;
 
+  // Enable modals stacking
   const dialog = $(evt.target),
-        visibleModalsCount = $('.modal:visible').length,
-        zIndex = zIndexModal + 100 * visibleModalsCount;
+    visibleModalsCount = $('.modal:visible').length,
+    zIndex = zIndexModal + 100 * visibleModalsCount;
   dialog.css('z-index', zIndex);
   setTimeout(() => {
     $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
-  }, 0); // Check form contents before closing modals
-
+  }, 0);
+  // Check form contents before closing modals
   $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', evt => {
     const handler = $(evt.currentTarget).data('ams-dismiss-handler') || modalDismissEventHandler;
     return MyAMS.core.executeFunctionByName(handler, document, evt);
   });
 }
+
 /**
  * Dynamic modal 'show' callback
  * This callback is used to initialize modal's viewport size
  *
  * @param evt: source event
  */
-
 function dynamicModalShowEventHandler(evt) {
   const dialog = $(evt.target);
   return MyAMS.core.executeFunctionByName(dialog.data('ams-init-content') || MyAMS.config.initContent, document, dialog);
 }
+
 /**
  * Dynamic modal 'shown' callback
  * This callback is used to set focus on first modal input
  *
  * @param evt: source event
  */
-
 function dynamicModalShownEventHandler(evt) {
   return new Promise((resolve, reject) => {
     MyAMS.require('form').then(() => {
@@ -4767,16 +4383,15 @@ function dynamicModalShownEventHandler(evt) {
     }, reject);
   });
 }
+
 /**
  * Modal dismiss handler
  */
-
 function modalDismissEventHandler(evt) {
   return new Promise((resolve, reject) => {
     const source = $(evt.currentTarget),
-          dialog = source.parents('.modal').first();
+      dialog = source.parents('.modal').first();
     dialog.data('modal-result', $(evt.currentTarget).data('modal-dismiss-value'));
-
     if (MyAMS.form) {
       MyAMS.form.confirmChangedForm(dialog).then(status => {
         if (status === 'success') {
@@ -4789,29 +4404,27 @@ function modalDismissEventHandler(evt) {
     }
   });
 }
+
 /**
  * Standard modal hidden event handler
  *
  * If several visible modals are still, a "modal-open" class is added to body to ensure
  * modals are still visible.
  */
-
 function modalHiddenEventHandler() {
   if ($('.modal:visible').length > 0) {
     $.fn.modal.Constructor.prototype._checkScrollbar();
-
     $.fn.modal.Constructor.prototype._setScrollbar();
-
     $('body').addClass('modal-open');
   }
 }
+
 /**
  * Dynamic modal 'hidden' callback
  * This callback is used to clear and remove dynamic modals
  *
  * @param evt: source event
  */
-
 function dynamicModalHiddenEventHandler(evt) {
   const dialog = $(evt.target);
   MyAMS.core.executeFunctionByName(dialog.data('ams-clear-content') || MyAMS.config.clearContent, document, dialog).then(() => {
@@ -4820,18 +4433,16 @@ function dynamicModalHiddenEventHandler(evt) {
     }
   });
 }
+
 /**
  * Main modal module definition
  */
-
 const modal = {
   init: () => {
     if (_initialized) {
       return;
     }
-
     _initialized = true;
-
     if (MyAMS.config.ajaxNav) {
       // Initialize modal dialogs links
       // Standard Bootstrap handlers are removed!!
@@ -4840,14 +4451,15 @@ const modal = {
         const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
       });
-    } // Handle modal shown event to allow modals stacking
+    }
 
-
+    // Handle modal shown event to allow modals stacking
     $(document).on('shown.bs.modal', '.modal', evt => {
       const handler = $(evt.currentTarget).data('ams-shown-handler') || modalShownEventHandler;
       MyAMS.core.executeFunctionByName(handler, document, evt);
-    }); // Handle modal hidden event to check remaining modals
+    });
 
+    // Handle modal hidden event to check remaining modals
     $(document).on('hidden.bs.modal', '.modal', evt => {
       const handler = $(evt.currentTarget).data('ams-hidden-handler') || modalHiddenEventHandler;
       MyAMS.core.executeFunctionByName(handler, document, evt);
@@ -4856,23 +4468,18 @@ const modal = {
   open: (source, options) => {
     return new Promise((resolve, reject) => {
       let sourceData = {},
-          url = source;
-
+        url = source;
       if (typeof source !== 'string') {
         sourceData = source.data();
         url = source.attr('href') || sourceData.amsUrl;
       }
-
       const urlGetter = MyAMS.core.getFunctionByName(url);
-
       if (typeof urlGetter === 'function') {
         url = urlGetter(source);
       }
-
       if (!url) {
         reject("No provided URL!");
       }
-
       if (url.startsWith('#')) {
         // Open inner modal
         $(url).modal('show');
@@ -4885,22 +4492,18 @@ const modal = {
           data: options
         }).then((data, status, request) => {
           let modal = null;
-
           MyAMS.require('ajax').then(() => {
             const response = MyAMS.ajax.getResponse(request),
-                  dataType = response.contentType,
-                  result = response.data;
+              dataType = response.contentType,
+              result = response.data;
             let content, dialog, dialogData, dialogOptions, settings;
-
             switch (dataType) {
               case 'json':
                 MyAMS.ajax.handleJSON(result, $($(source).data('ams-json-target') || '#content'));
                 break;
-
               case 'script':
               case 'xml':
                 break;
-
               case 'html':
               case 'text':
               default:
@@ -4911,11 +4514,9 @@ const modal = {
                 settings = $.extend({}, dialogOptions, dialogData.amsOptions);
                 settings = MyAMS.core.executeFunctionByName(dialogData.amsInit, dialog, settings) || settings;
                 modal = $('<div>').addClass('modal fade').attr('tabIndex', '-1').data('dynamic', true).append(content).on('show.bs.modal', dynamicModalShowEventHandler).on('shown.bs.modal', dynamicModalShownEventHandler).on('hidden.bs.modal', dynamicModalHiddenEventHandler).modal(settings);
-
                 if (MyAMS.stats && !(sourceData.amsLogEvent === false || dialogData.amsLogEvent === false)) {
                   MyAMS.stats.logPageview(url);
                 }
-
             }
           }).then(() => {
             resolve(modal);
@@ -4927,16 +4528,14 @@ const modal = {
   fitWidthToImage: (evt, options) => {
     setTimeout(() => {
       const source = evt.currentTarget,
-            image = options ? $(options['resize-target']) : source;
-
+        image = options ? $(options['resize-target']) : source;
       if (image.exists()) {
         const dialog = image.parents('.modal-dialog'),
-              padding = dialog.width() - image.width();
+          padding = dialog.width() - image.width();
         dialog.css('max-width', Math.min($(window).width(), image.get(0).naturalWidth + padding));
       }
     }, 150);
   },
-
   /**
    * Close modal associated with given element
    *
@@ -4948,18 +4547,16 @@ const modal = {
     } else if (typeof element === 'undefined') {
       element = $('.modal-dialog:last');
     }
-
     const dialog = element.objectOrParentWithClass('modal');
-
     if (dialog.length > 0) {
       dialog.modal('hide');
     }
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('modal');
 } else {
@@ -4983,156 +4580,129 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "nav": function() { return /* binding */ nav; }
 /* harmony export */ });
 /* global MyAMS, FontAwesome, Hammer */
-
 /**
  * MyAMS navigation module
  */
+
 const $ = MyAMS.$;
+
 /**
  * Dynamic navigation menu class
  */
-
 class MenuHeader {
   constructor(props) {
     this.props = props;
   }
-
   render() {
     return $('<li class="header"></li>').text(this.props.header || '');
   }
-
 }
-
 class MenuDivider {
   render() {
     return $('<li class="divider"></li>');
   }
-
 }
-
 class Menu {
   constructor(items) {
     this.items = items;
   }
-
   render() {
     const menu = $('<div></div>');
-
     for (const item of this.items) {
       if (item.label) {
         const props = $('<li></li>'),
-              link = $('<a></a>').attr('href', item.href || '#').attr('title', item.label);
-
+          link = $('<a></a>').attr('href', item.href || '#').attr('title', item.label);
         for (const [key, val] of Object.entries(item.attrs || {})) {
           link.attr(key, val);
         }
-
         if (item.icon) {
           $('<i class="fa-lg fa-fw mr-1"></i>').addClass(item.icon).appendTo(link);
         }
-
         $('<span class="menu-item-parent"></span>').text(item.label).appendTo(link);
-
         if (item.badge) {
           $('<span class="badge ml-1 mr-3 float-right"></span>').addClass(`bg-${item.badge.status}`).text(item.badge.value).appendTo(link);
         }
-
         link.appendTo(props);
-
         if (item.items) {
           $('<ul></ul>').append(new Menu(item.items).render()).appendTo(props);
         }
-
         props.appendTo(menu);
       } else {
         new MenuDivider().render().appendTo(menu);
       }
     }
-
     return menu.children();
   }
-
 }
-
 class NavigationMenu {
   constructor(menus, parent, settings) {
     this.menus = menus;
     this.parent = parent;
     this.settings = settings;
   }
-
   getMenus() {
     const nav = $('<ul></ul>');
-
     for (const props of this.menus) {
       if (props.header !== undefined) {
         nav.append(new MenuHeader(props).render());
       }
-
       nav.append(new Menu(props.items).render());
     }
-
     return nav;
   }
-
   render() {
     const menus = this.getMenus();
     this.init(menus);
     this.parent.append(menus);
   }
-
   init(menus) {
-    const settings = this.settings; // add mark to menus with children
-
+    const settings = this.settings;
+    // add mark to menus with children
     menus.find('li').each((idx, elt) => {
       const menuItem = $(elt);
-
       if (menuItem.find('ul').length > 0) {
-        const firstLink = menuItem.find('a:first'); // add multi-level sign next to link
-
+        const firstLink = menuItem.find('a:first');
+        // add multi-level sign next to link
         const sign = $(`<b class="collapse-sign">${settings.closedSign}</b>`);
         sign.on('click', evt => {
           evt.preventDefault();
         });
-        firstLink.append(sign); // avoid jumping to top of page when href is a #
-
+        firstLink.append(sign);
+        // avoid jumping to top of page when href is a #
         if (firstLink.attr('href') === '#') {
           firstLink.click(() => {
             return false;
           });
         }
       }
-    }); // slide down open menus
-
+    });
+    // slide down open menus
     menus.find('li.open').each((idx, elt) => {
       const menu = $(elt),
-            subMenu = $('> ul', menu);
+        subMenu = $('> ul', menu);
       subMenu.slideDown(settings.speed);
       menu.find('>a b.collapse-sign').html(settings.openedSign);
-    }); // open active level
-
+    });
+    // open active level
     menus.find('li.active').each((idx, elt) => {
       const activeParent = $(elt).parents('ul'),
-            activeItem = activeParent.parent('li');
+        activeItem = activeParent.parent('li');
       activeParent.slideDown(settings.speed);
       activeItem.find('b:first').html(settings.openedSign);
       activeItem.addClass('open');
-    }); // handle click event
-
+    });
+    // handle click event
     menus.find("li a").on('click', evt => {
       const link = $(evt.currentTarget);
-
       if (link.hasClass('active')) {
         return;
       }
-
       link.parents('li').removeClass('active');
       const href = link.attr('href').replace(/^#/, ''),
-            parentUL = link.parent().find("ul");
-
+        parentUL = link.parent().find("ul");
       if (settings.accordion) {
         const parents = link.parent().parents("ul"),
-              visibleMenus = menus.find("ul:visible");
+          visibleMenus = menus.find("ul:visible");
         visibleMenus.each((visibleIndex, visibleElt) => {
           let close = true;
           parents.each((parentIndex, parentElt) => {
@@ -5141,10 +4711,8 @@ class NavigationMenu {
               return false;
             }
           });
-
           if (close && parentUL !== visibleElt) {
             const visibleItem = $(visibleElt);
-
             if (href || !visibleItem.hasClass('active')) {
               visibleItem.slideUp(settings.speed, () => {
                 visibleItem.parent("li").removeClass('open').find("b:first").delay(settings.speed).html(settings.closedSign);
@@ -5153,9 +4721,7 @@ class NavigationMenu {
           }
         });
       }
-
       const firstUL = link.parent().find("ul:first");
-
       if (!href && firstUL.is(":visible") && !firstUL.hasClass("active")) {
         firstUL.slideUp(settings.speed, () => {
           link.parent("li").removeClass("open").find("b:first").delay(settings.speed).html(settings.closedSign);
@@ -5167,10 +4733,10 @@ class NavigationMenu {
       }
     });
   }
-
 }
 let _initialized = false,
-    _hammer = null;
+  _hammer = null;
+
 /**
  * Main navigation module
  */
@@ -5188,32 +4754,26 @@ function _openPage(href) {
     }
   }
 }
+
 /**
  * Main link click event handler
  *
  * @param evt
  */
-
-
 function linkClickHandler(evt) {
   return new Promise((resolve, reject) => {
     const link = $(evt.currentTarget),
-          handlers = link.data('ams-disabled-handlers');
-
+      handlers = link.data('ams-disabled-handlers');
     if (handlers === true || handlers === 'click' || handlers === 'all') {
       return;
     }
-
     let href = link.attr('href') || link.data('ams-url');
-
     if (!href || href.startsWith('javascript:') || link.attr('target') || link.data('ams-context-menu') === true) {
       return;
     }
-
     evt.preventDefault();
     evt.stopPropagation();
     let url, target, params;
-
     if (href.indexOf('?') >= 0) {
       url = href.split('?');
       target = url[0];
@@ -5222,13 +4782,10 @@ function linkClickHandler(evt) {
       target = href;
       params = undefined;
     }
-
     const hrefGetter = MyAMS.core.getFunctionByName(target);
-
     if (typeof hrefGetter === 'function') {
       href = hrefGetter(link, params);
     }
-
     if (!href) {
       resolve(null);
     } else if (typeof href === 'function') {
@@ -5237,13 +4794,11 @@ function linkClickHandler(evt) {
       // Standard AJAX or browser URL call
       // Convert %23 characters to #
       href = href.replace(/%23/, '#');
-
       if (evt.ctrlKey) {
         window.open && window.open(href);
         resolve();
       } else {
         const linkTarget = link.data('ams-target') || link.attr('target');
-
         if (linkTarget) {
           if (linkTarget === '_blank') {
             window.open && window.open(href);
@@ -5257,7 +4812,6 @@ function linkClickHandler(evt) {
                 if (result !== 'success') {
                   return;
                 }
-
                 MyAMS.skin && MyAMS.skin.loadURL(href, linkTarget, link.data('ams-link-options'), link.data('ams-link-callback')).then(resolve, reject);
               });
             } else {
@@ -5270,12 +4824,10 @@ function linkClickHandler(evt) {
               if (result !== 'success') {
                 return;
               }
-
               _openPage(href);
             }).then(resolve);
           } else {
             _openPage(href);
-
             resolve();
           }
         }
@@ -5291,27 +4843,24 @@ const nav = {
     if (_initialized) {
       return;
     }
-
     _initialized = true;
     $.fn.extend({
       navigationMenu: function (options) {
         if (this.length === 0) {
           return;
         }
-
         const data = this.data();
         const defaults = {
           accordion: data.amsMenuAccordion !== false,
           speed: 200
         };
-
         if (MyAMS.config.useSVGIcons) {
           const downIcon = FontAwesome.findIconDefinition({
-            iconName: 'angle-down'
-          }),
-                upIcon = FontAwesome.findIconDefinition({
-            iconName: 'angle-up'
-          });
+              iconName: 'angle-down'
+            }),
+            upIcon = FontAwesome.findIconDefinition({
+              iconName: 'angle-up'
+            });
           $.extend(defaults, {
             closedSign: `<em data-fa-i2svg>${FontAwesome.icon(downIcon).html}</em>`,
             openedSign: `<em data-fa-i2svg>${FontAwesome.icon(upIcon).html}</em>`
@@ -5322,10 +4871,8 @@ const nav = {
             openedSign: '<em class="fa fa-angle-up"></em>'
           });
         }
-
         const settings = $.extend({}, defaults, options),
-              menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
-
+          menuFactory = MyAMS.core.getObject(data.amsMenuFactory) || NavigationMenu;
         if (data.amsMenuConfig) {
           MyAMS.require('ajax', 'skin').then(() => {
             MyAMS.ajax.get(data.amsMenuConfig).then(result => {
@@ -5340,85 +4887,77 @@ const nav = {
         }
       }
     });
-
     if (MyAMS.config.ajaxNav) {
       // Disable clicks on # hrefs
       $(document).on('click', 'a[href="#"]', evt => {
         evt.preventDefault();
-      }); // Activate clicks
+      });
 
+      // Activate clicks
       $(document).on('click', 'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', evt => {
         // check for specific click handler
         const handler = $(evt).data('ams-click-handler');
-
         if (handler) {
           return;
-        } // check for DataTable collapse handler
-
-
+        }
+        // check for DataTable collapse handler
         if (evt.target.tagName === 'TD') {
           const target = $(evt.target);
-
           if (target.hasClass('dtr-control')) {
             const table = target.parents('table.datatable');
-
             if (table.hasClass('collapsed')) {
               return;
             }
           }
         }
-
         return linkClickHandler(evt);
-      }); // Blank target clicks
+      });
 
+      // Blank target clicks
       $(document).on('click', 'a[target="_blank"]', evt => {
         evt.preventDefault();
         const target = $(evt.currentTarget);
         window.open && window.open(target.attr('href'));
         MyAMS.stats && MyAMS.stats.logEvent(target.data('ams-stats-category') || 'Navigation', target.data('ams-stats-action') || 'External', target.data('ams-stats-label') || target.attr('href'));
-      }); // Top target clicks
+      });
 
+      // Top target clicks
       $(document).on('click', 'a[target="_top"]', evt => {
         evt.preventDefault();
         MyAMS.form && MyAMS.form.confirmChangedForm().then(result => {
           if (result !== 'success') {
             return;
           }
-
           window.location = $(evt.currentTarget).attr('href');
         });
-      }); // Disable clicks on disabled tabs
+      });
 
+      // Disable clicks on disabled tabs
       $(document).on("click", '.nav-tabs a[data-toggle=tab]', evt => {
         if ($(evt.currentTarget).parent('li').hasClass("disabled")) {
           evt.stopPropagation();
           evt.preventDefault();
           return false;
         }
-      }); // Enable tabs dynamic loading
+      });
 
+      // Enable tabs dynamic loading
       $(document).on('show.bs.tab', evt => {
         let link = $(evt.target);
-
         if (link.exists() && link.get(0).tagName !== 'A') {
           link = $('a[href]', link);
         }
-
         const data = link.data();
-
         if (data && data.amsUrl) {
           if (data.amsTabLoaded) {
             return;
           }
-
           link.append('<i class="fa fa-spin fa-cog ml-1"></i>');
-
           MyAMS.require('skin').then(() => {
             MyAMS.skin.loadURL(data.amsUrl, link.attr('href')).then(() => {
               if (data.amsTabLoadOnce) {
                 data.amsTabLoaded = true;
               }
-
               $('i', link).remove();
             }, () => {
               $('i', link).remove();
@@ -5426,12 +4965,10 @@ const nav = {
           });
         }
       });
-
       if (!MyAMS.config.isMobile) {
         MyAMS.dom.root.addClass('desktop-detected');
       } else {
         MyAMS.dom.root.addClass('mobile-detected');
-
         MyAMS.require('ajax').then(() => {
           if (MyAMS.config.enableFastclick) {
             MyAMS.ajax.check($.fn.noClickDelay, `${MyAMS.env.baseURL}../ext/js-smartclick${MyAMS.env.extext}.js`).then(() => {
@@ -5439,22 +4976,18 @@ const nav = {
               $('a', '#hide-menu').noClickDelay();
             });
           }
-
           if (MyAMS.dom.root.exists()) {
             MyAMS.ajax.check(window.Hammer, `${MyAMS.env.baseURL}../ext/hammer${MyAMS.env.extext}.js`).then(() => {
               _hammer = new Hammer.Manager(MyAMS.dom.root.get(0));
-
               _hammer.add(new Hammer.Pan({
                 direction: Hammer.DIRECTION_HORIZONTAL,
                 threshold: 200
               }));
-
               _hammer.on('panright', () => {
                 if (!MyAMS.dom.root.hasClass('hidden-menu')) {
                   MyAMS.nav.switchMenu();
                 }
               });
-
               _hammer.on('panleft', () => {
                 if (MyAMS.dom.root.hasClass('hidden-menu')) {
                   MyAMS.nav.switchMenu();
@@ -5465,7 +4998,6 @@ const nav = {
         });
       }
     }
-
     nav.restoreState();
   },
   initElement: element => {
@@ -5473,7 +5005,6 @@ const nav = {
       speed: MyAMS.config.menuSpeed
     });
   },
-
   /**
    * Display current active menu
    *
@@ -5486,11 +5017,9 @@ const nav = {
     menu.parents('li').addClass('open active').children('ul').addClass('active').show();
     menu.parents('li:first').removeClass('open');
     menu.parents('ul').addClass(menu.attr('href').replace(/^#/, '') ? 'active' : '').show();
-
     if (menu.exists()) {
       const scroll = nav.scrollTop(),
-            position = $(menu).parents('li:last').position();
-
+        position = $(menu).parents('li:last').position();
       if (position.top < scroll) {
         nav.scrollTop(position.top);
       } else if (position.top > nav.height() + scroll) {
@@ -5498,7 +5027,6 @@ const nav = {
       }
     }
   },
-
   /**
    * Internal breadcrumbs drawing function
    *
@@ -5507,7 +5035,6 @@ const nav = {
   drawBreadcrumbs: () => {
     const crumb = $('ol.breadcrumb', '#ribbon');
     $('li', crumb).not('.persistent').remove();
-
     if (!$('li', crumb).exists()) {
       const template = `<li class="breadcrumb-item">
 					<a class="p-r-1" href="${$('a[href!="#"]:first', MyAMS.dom.nav).attr('href')}">
@@ -5516,16 +5043,14 @@ const nav = {
 				</li>`;
       crumb.append($(template));
     }
-
     $('li.active >a', MyAMS.dom.nav).each((idx, elt) => {
       const menu = $(elt),
-            text = $.trim(menu.clone().children('.badge').remove().end().text()),
-            href = menu.attr('href'),
-            item = $('<li class="breadcrumb-item"></li>').append(href.replace(/^#/, '') ? $('<a></a>').html(text).attr('href', href) : text);
+        text = $.trim(menu.clone().children('.badge').remove().end().text()),
+        href = menu.attr('href'),
+        item = $('<li class="breadcrumb-item"></li>').append(href.replace(/^#/, '') ? $('<a></a>').html(text).attr('href', href) : text);
       crumb.append(item);
     });
   },
-
   /**
    * Click handler for navigation menu "minify" button
    *
@@ -5534,13 +5059,11 @@ const nav = {
   minifyMenu: evt => {
     evt && evt.preventDefault();
     MyAMS.dom.root.toggleClass('minified');
-
     if (MyAMS.dom.root.hasClass('minified')) {
       MyAMS.core.switchIcon($('i', evt.currentTarget), 'arrow-circle-left', 'arrow-circle-right');
     } else {
       MyAMS.core.switchIcon($('i', evt.currentTarget), 'arrow-circle-right', 'arrow-circle-left');
     }
-
     if (window.localStorage) {
       if (MyAMS.dom.root.hasClass('minified')) {
         localStorage.setItem('window-state', 'minified');
@@ -5549,7 +5072,6 @@ const nav = {
       }
     }
   },
-
   /**
    * Click handler for menu hide button
    *
@@ -5558,7 +5080,6 @@ const nav = {
   switchMenu: evt => {
     evt && evt.preventDefault();
     MyAMS.dom.root.toggleClass('hidden-menu');
-
     if (window.localStorage) {
       if (MyAMS.dom.root.hasClass('hidden-menu')) {
         localStorage.setItem('window-state', 'hidden-menu');
@@ -5567,7 +5088,6 @@ const nav = {
       }
     }
   },
-
   /**
    * Restore window state on application startup
    *
@@ -5577,7 +5097,6 @@ const nav = {
     // restore window state
     if (window.localStorage) {
       const state = localStorage.getItem('window-state');
-
       if (state === 'minified') {
         MyAMS.nav.minifyMenu({
           currentTarget: $('#minifyme'),
@@ -5589,10 +5108,10 @@ const nav = {
     }
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('nav');
 } else {
@@ -5614,21 +5133,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "notifications": function() { return /* binding */ notifications; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS notifications handlers
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 if (!$.templates) {
   const jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-
   $.templates = jsrender.templates;
 }
+
 /**
  * Notifications list template string
  */
-
 
 const ITEM_TEMPLATE_STRING = `
 	<li class="p-1 my-1{{if status}} alert-{{:status}}{{/if}}">
@@ -5671,7 +5188,6 @@ const LIST_TEMPLATE = $.templates({
   markup: LIST_TEMPLATE_STRING,
   allowCode: true
 });
-
 class NotificationsList {
   /**
    * List constructor
@@ -5684,13 +5200,12 @@ class NotificationsList {
     this.values = values;
     this.options = options;
   }
+
   /**
    * Render list into given parent
    *
    * @param parent: JQUery parent object into which the list must be rendered
    */
-
-
   render(parent) {
     $(parent).html(LIST_TEMPLATE.render(this.values, {
       itemTemplate: ITEM_TEMPLATE,
@@ -5699,9 +5214,7 @@ class NotificationsList {
       options: this.options
     }));
   }
-
 }
-
 const notifications = {
   /**
    * Check permission to display desktop notifications
@@ -5713,10 +5226,8 @@ const notifications = {
       } catch (e) {
         return false;
       }
-
       return true;
     };
-
     return new Promise((resolve, reject) => {
       if (!('Notification' in window)) {
         console.debug("Notifications are not supported by this browser!");
@@ -5743,7 +5254,6 @@ const notifications = {
   checkUserPermission: () => {
     MyAMS.notifications.checkPermission().then(() => {});
   },
-
   /**
    * Load user notifications
    *
@@ -5752,9 +5262,9 @@ const notifications = {
    */
   getNotifications: (evt, options) => {
     const data = $.extend({}, options, evt.data),
-          target = $(evt.target),
-          current = $(evt.currentTarget),
-          remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
+      target = $(evt.target),
+      current = $(evt.currentTarget),
+      remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
     return new Promise((resolve, reject) => {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(result => {
@@ -5767,7 +5277,6 @@ const notifications = {
       }, reject);
     });
   },
-
   /**
    * Add new notification to notifications list
    *
@@ -5776,17 +5285,15 @@ const notifications = {
    */
   addNotification: (message, showDesktop) => {
     const pane = $('ul', '#notifications-pane'),
-          notification = $(ITEM_TEMPLATE.render(message)),
-          badge = $('#notifications-count'),
-          count = parseInt(badge.text()) || 0;
+      notification = $(ITEM_TEMPLATE.render(message)),
+      badge = $('#notifications-count'),
+      count = parseInt(badge.text()) || 0;
     pane.prepend(notification);
     badge.text(count + 1);
-
     if (showDesktop) {
       notifications.showDesktopNotification(message);
     }
   },
-
   /**
    * Show new desktop notification
    *
@@ -5797,14 +5304,12 @@ const notifications = {
       if (!status) {
         return;
       }
-
       const options = {
-        title: message.title,
-        body: message.message,
-        icon: message.source.avatar
-      },
-            notification = new Notification(options.title, options);
-
+          title: message.title,
+          body: message.message,
+          icon: message.source.avatar
+        },
+        notification = new Notification(options.title, options);
       if (message.url) {
         notification.onclick = () => {
           window.open(message.url);
@@ -5813,10 +5318,10 @@ const notifications = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (MyAMS.env.bundle) {
   MyAMS.config.modules.push('notifications');
 } else {
@@ -5851,17 +5356,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "validate": function() { return /* binding */ validate; }
 /* harmony export */ });
 /* global MyAMS, bsCustomFileInput */
-
 /**
  * MyAMS standard plugins
  */
-const $ = MyAMS.$;
 
+const $ = MyAMS.$;
 if (!$.templates) {
   const jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
-
   $.templates = jsrender.templates;
 }
+
 /**
  * Fieldset checker plug-in
  *
@@ -5888,7 +5392,6 @@ if (!$.templates) {
  *  - change-handler: this optional handler will be called on checker switch
  *  - cancel-default: if "true", the default behaviour will not be executed on checker switch
  */
-
 
 const CHECKER_TEMPLATE_STRING = `
 	<span class="custom-control custom-switch">
@@ -5920,66 +5423,58 @@ const CHECKER_TEMPLATE = $.templates({
 function checker(element) {
   return new Promise(resolve => {
     const checkers = $('legend.checker', element);
-
     if (checkers.length > 0) {
       checkers.each((idx, elt) => {
         const legend = $(elt),
-              data = legend.data();
-
+          data = legend.data();
         if (!data.amsChecker) {
           const fieldset = legend.parent('fieldset'),
-                state = data.amsCheckerState || data.amsState,
-                checked = fieldset.hasClass('switched') || state === 'on',
-                fieldName = data.amsCheckerFieldname || data.amsFieldname || `checker_${MyAMS.core.generateId()}`,
-                fieldId = fieldName.replace(/\./g, '_'),
-                prefix = data.amsCheckerHiddenPrefix || data.amsHiddenPrefix,
-                marker = data.amsCheckerMarker || data.amsMarker || false,
-                checkerMode = data.amsCheckerMode || data.amsMode || 'hide',
-                checkedValue = data.amsCheckerValueOn || data.amsValueOn || 'true',
-                uncheckedValue = data.amsCheckerValueOff || data.amsValueOff || 'false',
-                value = data.amsCheckerValue || data.amsValue,
-                readonly = data.amsCheckerReadonly || data.amsReadonly,
-                props = {
-            legend: legend.text(),
-            fieldName: fieldName,
-            fieldId: fieldId,
-            value: value || true,
-            checked: checked,
-            readonly: readonly,
-            prefix: prefix,
-            state: state,
-            checkedValue: checkedValue,
-            uncheckedValue: uncheckedValue,
-            marker: marker
-          },
-                veto = {
-            veto: false
-          };
+            state = data.amsCheckerState || data.amsState,
+            checked = fieldset.hasClass('switched') || state === 'on',
+            fieldName = data.amsCheckerFieldname || data.amsFieldname || `checker_${MyAMS.core.generateId()}`,
+            fieldId = fieldName.replace(/\./g, '_'),
+            prefix = data.amsCheckerHiddenPrefix || data.amsHiddenPrefix,
+            marker = data.amsCheckerMarker || data.amsMarker || false,
+            checkerMode = data.amsCheckerMode || data.amsMode || 'hide',
+            checkedValue = data.amsCheckerValueOn || data.amsValueOn || 'true',
+            uncheckedValue = data.amsCheckerValueOff || data.amsValueOff || 'false',
+            value = data.amsCheckerValue || data.amsValue,
+            readonly = data.amsCheckerReadonly || data.amsReadonly,
+            props = {
+              legend: legend.text(),
+              fieldName: fieldName,
+              fieldId: fieldId,
+              value: value || true,
+              checked: checked,
+              readonly: readonly,
+              prefix: prefix,
+              state: state,
+              checkedValue: checkedValue,
+              uncheckedValue: uncheckedValue,
+              marker: marker
+            },
+            veto = {
+              veto: false
+            };
           legend.trigger('before-init.ams.checker', [legend, props, veto]);
-
           if (veto.veto) {
             return;
           }
-
           legend.html(CHECKER_TEMPLATE.render(props));
           $('input', legend).change(evt => {
             const input = $(evt.target),
-                  checked = input.is(':checked'),
-                  veto = {
-              veto: false
-            };
+              checked = input.is(':checked'),
+              veto = {
+                veto: false
+              };
             legend.trigger('before-switch.ams.checker', [legend, veto]);
-
             if (veto.veto) {
               input.prop('checked', !checked);
               return;
             }
-
             MyAMS.core.executeFunctionByName(data.amsCheckerChangeHandler || data.amsChangeHandler, document, legend, checked);
-
             if (!data.amsCheckerCancelDefault && !data.amsCancelDefault) {
               const prefix = input.siblings('.prefix');
-
               if (checkerMode === 'hide') {
                 if (checked) {
                   fieldset.removeClass('switched');
@@ -5998,12 +5493,10 @@ function checker(element) {
           });
           legend.closest('form').on('reset', () => {
             const checker = $('.checker', legend);
-
             if (checker.prop('checked') !== checked) {
               checker.click();
             }
           });
-
           if (!checked) {
             if (checkerMode === 'hide') {
               fieldset.addClass('switched');
@@ -6011,7 +5504,6 @@ function checker(element) {
               fieldset.prop('disabled', true);
             }
           }
-
           legend.trigger('after-init.ams.checker', [legend]);
           legend.data('ams-checker', true);
         }
@@ -6022,6 +5514,7 @@ function checker(element) {
     }
   });
 }
+
 /**
  * Context menu plug-in
  */
@@ -6029,26 +5522,23 @@ function checker(element) {
 function contextMenu(element) {
   return new Promise((resolve, reject) => {
     const menus = $('.context-menu', element);
-
     if (menus.length > 0) {
       MyAMS.require('menu').then(() => {
         menus.each((idx, elt) => {
           const menu = $(elt),
-                data = menu.data(),
-                options = {
-            menuSelector: data.amsContextmenuSelector || data.amsMenuSelector
-          };
+            data = menu.data(),
+            options = {
+              menuSelector: data.amsContextmenuSelector || data.amsMenuSelector
+            };
           let settings = $.extend({}, options, data.amsContextmenuOptions || data.amsOptions);
           settings = MyAMS.core.executeFunctionByName(data.amsContextmenuInitCallback || data.amsInit, document, menu, settings) || settings;
           const veto = {
             veto: false
           };
           menu.trigger('before-init.ams.contextmenu', [menu, settings, veto]);
-
           if (veto.veto) {
             return;
           }
-
           const plugin = menu.contextMenu(settings);
           MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
           menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
@@ -6061,6 +5551,7 @@ function contextMenu(element) {
     }
   });
 }
+
 /**
  * JQuery Datatable plug-in
  */
@@ -6073,17 +5564,16 @@ const _datatablesHelpers = {
       if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3}$/)) {
         return 'date-euro';
       }
-
       return null;
     });
     types.detect.unshift(data => {
       if (data !== null && data.match(/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-3][0-9]{3} - ([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
         return 'datetime-euro';
       }
-
       return null;
-    }); // Add sorting methods
+    });
 
+    // Add sorting methods
     $.extend(types.order, {
       // numeric values using commas separators
       "numeric-comma-asc": (a, b) => {
@@ -6104,7 +5594,6 @@ const _datatablesHelpers = {
       "date-euro-pre": a => {
         const trimmed = $.trim(a);
         let x;
-
         if (trimmed !== '') {
           const frDate = trimmed.split('/');
           x = (frDate[2] + frDate[1] + frDate[0]) * 1;
@@ -6124,7 +5613,6 @@ const _datatablesHelpers = {
       "datetime-euro-pre": a => {
         const trimmed = $.trim(a);
         let x;
-
         if (trimmed !== '') {
           const frDateTime = trimmed.split(' - ');
           const frDate = frDateTime[0].split('/');
@@ -6144,7 +5632,6 @@ const _datatablesHelpers = {
       }
     });
   },
-
   /**
    * Store reorder source before reorder
    *
@@ -6155,7 +5642,6 @@ const _datatablesHelpers = {
     const table = $(evt.target);
     table.data('ams-reorder-source', node);
   },
-
   /**
    * Handle table rows reordering
    *
@@ -6164,52 +5650,42 @@ const _datatablesHelpers = {
   reorderRows: function (evt) {
     return new Promise((resolve, reject) => {
       const table = $(evt.target),
-            dtTable = table.DataTable(),
-            data = table.data(); // extract target and URL
-
+        dtTable = table.DataTable(),
+        data = table.data();
+      // extract target and URL
       let target = data.amsReorderInputTarget,
-          url = data.amsReorderUrl,
-          ids;
-
+        url = data.amsReorderUrl,
+        ids;
       if (!(target || url)) {
         resolve();
-      } // extract reordered rows IDs
-
-
+      }
+      // extract reordered rows IDs
       const rows = $('tbody tr', table),
-            getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
-
+        getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
       if (typeof getter === 'function') {
         ids = $.makeArray(rows).map(getter);
       } else {
         ids = rows.listattr(getter);
-      } // set target input value (if any)
-
-
+      }
+      // set target input value (if any)
       const separator = data.amsReorderSeparator || ';';
-
       if (target) {
         target = $(target);
-
         if (target.exists()) {
           target.val(ids.join(separator));
         }
       } else {
         ids = ids.join(separator);
-      } // call target URL (if any)
-
-
+      }
+      // call target URL (if any)
       if (url) {
         url = MyAMS.core.executeFunctionByName(url, document, table) || url;
-
         if (!(url.startsWith(window.location.protocol) || url.startsWith('/'))) {
           const location = table.data('ams-location');
           url = `${location || ''}/${url}`;
         }
-
         if (ids.length > 0) {
           let postData;
-
           if (data.amsReorderPostData) {
             postData = MyAMS.core.executeFunctionByName(data.amsReorderPostData, document, table, ids);
           } else {
@@ -6217,7 +5693,6 @@ const _datatablesHelpers = {
             postData = {};
             postData[attr] = ids;
           }
-
           MyAMS.require('ajax').then(() => {
             MyAMS.ajax.post(url, postData).then((result, status, xhr) => {
               $('td.sorter', table).each((idx, elt) => {
@@ -6225,13 +5700,11 @@ const _datatablesHelpers = {
                 dtTable.row($(elt).parents('tr').get(0)).invalidate().draw();
               });
               const callback = data.amsReorderCallback;
-
               if (callback) {
                 MyAMS.core.executeFunctionByName(callback, document, table, result, status, xhr).then(function () {
                   for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
                     results[_key] = arguments[_key];
                   }
-
                   resolve.apply(table, ...results);
                 });
               } else {
@@ -6248,29 +5721,25 @@ const _datatablesHelpers = {
 };
 function datatables(element) {
   const baseJS = `${MyAMS.env.baseURL}../ext/datatables/`,
-        baseCSS = `${MyAMS.env.baseURL}../../css/ext/datatables/`;
+    baseCSS = `${MyAMS.env.baseURL}../../css/ext/datatables/`;
   return new Promise((resolve, reject) => {
     const tables = $('.datatable', element);
-
     if (tables.length > 0) {
       MyAMS.ajax.check($.fn.dataTable, `${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then(firstLoad => {
         const required = [];
-
         if (firstLoad) {
-          required.push(MyAMS.core.getScript(`${baseJS}dataTables-bootstrap4${MyAMS.env.extext}.js`));
-          required.push(MyAMS.core.getCSS(`${baseCSS}dataTables-bootstrap4${MyAMS.env.extext}.css`, 'datatables-bs4'));
+          required.push(MyAMS.core.getScript(`${baseJS}dataTables.bootstrap4${MyAMS.env.extext}.js`));
+          required.push(MyAMS.core.getCSS(`${baseCSS}dataTables.bootstrap4${MyAMS.env.extext}.css`, 'datatables-bs4'));
         }
-
         $.when.apply($, required).then(() => {
           const css = {},
-                bases = [],
-                extensions = [],
-                depends = [],
-                loaded = {};
+            bases = [],
+            extensions = [],
+            depends = [],
+            loaded = {};
           tables.each((idx, elt) => {
             const table = $(elt),
-                  data = table.data();
-
+              data = table.data();
             if (data.buttons === 'default') {
               table.attr('data-buttons', '["copy", "print"]');
               table.removeData('buttons');
@@ -6280,38 +5749,33 @@ function datatables(element) {
               table.removeData('buttons');
               data.buttons = table.data('buttons');
             }
-
             if (data.autoFill && !loaded.autoFill && !$.fn.dataTable.AutoFill) {
-              bases.push(`${baseJS}autoFill${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}autoFill-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-autofill-bs4'] = `${baseCSS}autoFill-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.autoFill${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}autoFill.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-autofill-bs4'] = `${baseCSS}autoFill.bootstrap4${MyAMS.env.extext}.css`;
               loaded.autoFill = true;
             }
-
             if (data.buttons) {
               if (!loaded.buttons && !$.fn.dataTable.Buttons) {
-                bases.push(`${baseJS}buttons${MyAMS.env.extext}.js`);
-                extensions.push(`${baseJS}buttons-bootstrap4${MyAMS.env.extext}.js`);
-                extensions.push(`${baseJS}buttons-html5${MyAMS.env.extext}.js`);
-                css['dt-buttons-bs4'] = `${baseCSS}buttons-bootstrap4${MyAMS.env.extext}.css`;
+                bases.push(`${baseJS}dataTables.buttons${MyAMS.env.extext}.js`);
+                extensions.push(`${baseJS}buttons.bootstrap4${MyAMS.env.extext}.js`);
+                extensions.push(`${baseJS}buttons.html5${MyAMS.env.extext}.js`);
+                css['dt-buttons-bs4'] = `${baseCSS}buttons.bootstrap4${MyAMS.env.extext}.css`;
                 loaded.buttons = true;
               }
-
               if ($.isArray(data.buttons)) {
                 if (data.buttons.indexOf('print') >= 0) {
                   if (!loaded.buttons_print && !$.fn.dataTable.ext.buttons.print) {
-                    depends.push(`${baseJS}buttons-print${MyAMS.env.extext}.js`);
+                    depends.push(`${baseJS}buttons.print${MyAMS.env.extext}.js`);
                     loaded.buttons_print = true;
                   }
                 }
-
                 if (data.buttons.indexOf('excel') >= 0) {
                   if (!loaded.buttons_excel && !$.fn.dataTable.ext.buttons.excelHtml5) {
                     bases.push(`${baseJS}jszip${MyAMS.env.extext}.js`);
                     loaded.buttons_excel = true;
                   }
                 }
-
                 if (data.buttons.indexOf('pdf') >= 0) {
                   if (!loaded.buttons_pdf && !window.pdfMake) {
                     bases.push(`${baseJS}pdfmake${MyAMS.env.extext}.js`);
@@ -6319,97 +5783,90 @@ function datatables(element) {
                     loaded.buttons_pdf = true;
                   }
                 }
-
                 if (data.buttons.indexOf('colvis') >= 0) {
                   if (!loaded.buttons_colvis && !$.fn.dataTable.ext.buttons.colvis) {
-                    depends.push(`${baseJS}buttons-colVis${MyAMS.env.extext}.js`);
+                    depends.push(`${baseJS}buttons.colVis${MyAMS.env.extext}.js`);
                     loaded.buttons_colvis = true;
                   }
                 }
               }
             }
-
             if (data.colReorder && !loaded.colReorder && !$.fn.dataTable.ColReorder) {
-              bases.push(`${baseJS}colReorder${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}colReorder-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-colreorder-bs4'] = `${baseCSS}colReorder-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.colReorder${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}colReorder.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-colreorder-bs4'] = `${baseCSS}colReorder.bootstrap4${MyAMS.env.extext}.css`;
               loaded.colReorder = true;
             }
-
             if (data.fixedColumns && !loaded.fixedColumns && !$.fn.dataTable.FixedColumns) {
-              bases.push(`${baseJS}fixedColumns${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}fixedColumns-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-fixedcolumns-bs4'] = `${baseCSS}fixedColumns-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.fixedColumns${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}fixedColumns.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-fixedcolumns-bs4'] = `${baseCSS}fixedColumns.bootstrap4${MyAMS.env.extext}.css`;
               loaded.fixedColumns = true;
             }
-
             if (data.fixedHeader && !loaded.fixedHeader && !$.fn.dataTable.FixedHeader) {
-              bases.push(`${baseJS}fixedHeader${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}fixedHeader-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-fixedheader-bs4'] = `${baseCSS}fixedHeader-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.fixedHeader${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}fixedHeader.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-fixedheader-bs4'] = `${baseCSS}fixedHeader.bootstrap4${MyAMS.env.extext}.css`;
               loaded.fixedHeader = true;
             }
-
             if (data.keyTable && !loaded.keyTable && !$.fn.dataTable.KeyTable) {
-              bases.push(`${baseJS}keyTable${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}keyTable-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-keytable-bs4'] = `${baseCSS}keyTable-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.keyTable${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}keyTable.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-keytable-bs4'] = `${baseCSS}keyTable.bootstrap4${MyAMS.env.extext}.css`;
               loaded.keyTable = true;
             }
-
             if (data.responsive !== false && !loaded.responsive && !$.fn.dataTable.Responsive) {
-              bases.push(`${baseJS}responsive${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}responsive-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-responsive-bs4'] = `${baseCSS}responsive-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.responsive${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}responsive.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-responsive-bs4'] = `${baseCSS}responsive.bootstrap4${MyAMS.env.extext}.css`;
               loaded.responsive = true;
             }
-
             if (data.rowGroup && !loaded.rowGroup && !$.fn.dataTable.RowGroup) {
-              bases.push(`${baseJS}rowGroup${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}rowGroup-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-rowgroup-bs4'] = `${baseCSS}rowGroup-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.rowGroup${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}rowGroup.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-rowgroup-bs4'] = `${baseCSS}rowGroup.bootstrap4${MyAMS.env.extext}.css`;
               loaded.rowGroup = true;
             }
-
             if (data.rowReorder && !loaded.rowReorder && !$.fn.dataTable.RowReorder) {
-              bases.push(`${baseJS}rowReorder${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}rowReorder-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-rowreorder-bs4'] = `${baseCSS}rowReorder-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.rowReorder${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}rowReorder.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-rowreorder-bs4'] = `${baseCSS}rowReorder.bootstrap4${MyAMS.env.extext}.css`;
               loaded.rowReorder = true;
             }
-
             if (data.scroller && !loaded.scroller && !$.fn.dataTable.Scroller) {
-              bases.push(`${baseJS}scroller${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}scroller-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-scroller-bs4'] = `${baseCSS}scroller-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.scroller${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}scroller.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-scroller-bs4'] = `${baseCSS}scroller.bootstrap4${MyAMS.env.extext}.css`;
               loaded.scroller = true;
             }
-
             if (data.searchBuilder && !loaded.searchBuilder && !$.fn.dataTable.SearchBuilder) {
-              bases.push(`${baseJS}searchBuilder${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}searchBuilder-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-searchbuilder-bs4'] = `${baseCSS}searchBuilder-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.searchBuilder${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}searchBuilder.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-searchbuilder-bs4'] = `${baseCSS}searchBuilder.bootstrap4${MyAMS.env.extext}.css`;
               loaded.searchBuilder = true;
             }
-
             if (data.searchPanes && !loaded.searchPanes && !$.fn.dataTable.SearchPanes) {
               if (!loaded.select && !$.fn.dataTable.select) {
-                bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
-                extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
-                css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+                bases.push(`${baseJS}dataTables.select${MyAMS.env.extext}.js`);
+                extensions.push(`${baseJS}select.bootstrap4${MyAMS.env.extext}.js`);
+                css['dt-select-bs4'] = `${baseCSS}select.bootstrap4${MyAMS.env.extext}.css`;
                 loaded.select = true;
               }
-
-              extensions.push(`${baseJS}searchPanes${MyAMS.env.extext}.js`);
-              depends.push(`${baseJS}searchPanes-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-searchpanes-bs4'] = `${baseCSS}searchPanes-bootstrap4${MyAMS.env.extext}.css`;
+              extensions.push(`${baseJS}dataTables.searchPanes${MyAMS.env.extext}.js`);
+              depends.push(`${baseJS}searchPanes.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-searchpanes-bs4'] = `${baseCSS}searchPanes.bootstrap4${MyAMS.env.extext}.css`;
               loaded.searchPanes = true;
             }
-
             if (data.select && !loaded.select && !$.fn.dataTable.select) {
-              bases.push(`${baseJS}select${MyAMS.env.extext}.js`);
-              extensions.push(`${baseJS}select-bootstrap4${MyAMS.env.extext}.js`);
-              css['dt-select-bs4'] = `${baseCSS}select-bootstrap4${MyAMS.env.extext}.css`;
+              bases.push(`${baseJS}dataTables.select${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}select.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-select-bs4'] = `${baseCSS}select.bootstrap4${MyAMS.env.extext}.css`;
+              loaded.select = true;
+            }
+            if (data.stateRestore && !loaded.stateRestore && !$.fn.dataTables.stateRestore) {
+              bases.push(`${baseJS}dataTables.stateRestore${MyAMS.env.extext}.js`);
+              extensions.push(`${baseJS}stateRestore.bootstrap4${MyAMS.env.extext}.js`);
+              css['dt-select-bs4'] = `${baseCSS}stateRestore.bootstrap4${MyAMS.env.extext}.css`;
               loaded.select = true;
             }
           });
@@ -6419,140 +5876,116 @@ function datatables(element) {
                 if (firstLoad) {
                   _datatablesHelpers.init();
                 }
-
                 for (const [name, url] of Object.entries(css)) {
                   MyAMS.core.getCSS(url, name);
                 }
-
                 tables.each((idx, elt) => {
                   const table = $(elt);
-
                   if ($.fn.dataTable.isDataTable(table)) {
                     return;
                   }
+                  const data = table.data();
 
-                  const data = table.data(); // initialize dom property
-
+                  // initialize dom property
                   let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
-
                   if (!dom) {
                     if (data.buttons) {
                       dom += "B";
                     }
-
                     if (data.searchBuilder) {
                       dom += "Q";
                     }
-
                     if (data.searchPanes) {
                       dom += "P";
                     }
-
                     if (data.searching !== false || data.lengthChange !== false) {
                       dom += "<'row px-2'";
-
                       if (data.searching !== false) {
                         dom += "<'col-sm-6 col-md-8'f>";
                       }
-
                       if (data.lengthChange !== false) {
                         dom += "<'col-sm-6 col-md-4'l>";
                       }
-
                       dom += ">";
                     }
-
                     dom += "<'row'<'col-sm-12'tr>>";
-
                     if (data.info !== false || data.paging !== false) {
                       dom += "<'row px-2 py-1'";
-
                       if (data.info !== false) {
                         dom += "<'col-sm-12 col-md-5'i>";
                       }
-
                       if (data.paging !== false) {
                         dom += "<'col-sm-12 col-md-7'p>";
                       }
-
                       dom += ">";
                     }
                   }
-
                   if (!data.buttons && !data.searchBuilder && !data.searchPanes && data.searching === false || data.lengthChange === false) {
                     table.siblings('h3').addClass('mb-0');
-                  } // initialize default options
+                  }
 
-
+                  // initialize default options
                   const defaultOptions = {
                     language: data.amsDatatableLanguage || data.amsLanguage || MyAMS.i18n.plugins.datatables,
                     responsive: true,
                     dom: dom
-                  }; // initialize sorting
+                  };
 
+                  // initialize sorting
                   let order = data.amsDatatableOrder || data.amsOrder;
-
                   if (typeof order === 'string') {
                     const orders = order.split(';');
                     order = [];
-
                     for (const col of orders) {
                       const colOrder = col.split(',');
                       colOrder[0] = parseInt(colOrder[0]);
                       order.push(colOrder);
                     }
                   }
-
                   if (order) {
                     defaultOptions.order = order;
-                  } // initialize columns definition based on header settings
+                  }
 
-
+                  // initialize columns definition based on header settings
                   const heads = $('thead th', table),
-                        columns = [];
+                    columns = [];
                   heads.each((idx, th) => {
                     columns[idx] = $(th).data('ams-column') || {};
                   });
                   const sortables = heads.listattr('data-ams-sortable');
-
                   for (const iterator of sortables.entries()) {
                     const [idx, sortable] = iterator;
-
                     if (data.rowReorder) {
                       columns[idx].sortable = false;
                     } else if (sortable !== undefined) {
                       columns[idx].sortable = typeof sortable === 'string' ? JSON.parse(sortable) : sortable;
                     }
                   }
-
                   const types = heads.listattr('data-ams-type');
-
                   for (const iterator of types.entries()) {
                     const [idx, stype] = iterator;
-
                     if (stype !== undefined) {
                       columns[idx].type = stype;
                     }
                   }
+                  defaultOptions.columns = columns;
 
-                  defaultOptions.columns = columns; // initialize final settings and initialize plug-in
-
+                  // initialize final settings and initialize plug-in
                   let settings = $.extend({}, defaultOptions, data.amsDatatableOptions || data.amsOptions);
                   settings = MyAMS.core.executeFunctionByName(data.amsDatatableInitCallback || data.amsInit, document, table, settings) || settings;
                   const veto = {
                     veto: false
                   };
                   table.trigger('before-init.ams.datatable', [table, settings, veto]);
-
                   if (veto.veto) {
                     return;
                   }
-
                   setTimeout(() => {
                     const plugin = table.DataTable(settings);
                     MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
-                    table.trigger('after-init.ams.datatable', [table, plugin]); // set reorder events
+                    table.trigger('after-init.ams.datatable', [table, plugin]);
 
+                    // set reorder events
                     if (settings.rowReorder) {
                       plugin.on('pre-row-reorder', MyAMS.core.getFunctionByName(data.amsDatatablePreReorder || data.amsPreReorder) || _datatablesHelpers.preReorder);
                       plugin.on('row-reorder', MyAMS.core.getFunctionByName(data.amsDatatableReordered || data.amsReordered) || _datatablesHelpers.reorderRows);
@@ -6570,6 +6003,7 @@ function datatables(element) {
     }
   });
 }
+
 /**
  * Bootstrap 4 Tempus/Dominus date/time picker
  */
@@ -6577,59 +6011,52 @@ function datatables(element) {
 function datetime(element) {
   return new Promise((resolve, reject) => {
     const inputs = $('.datetime', element);
-
     if (inputs.length > 0) {
       MyAMS.ajax.check(window.moment, `${MyAMS.env.baseURL}../ext/moment${MyAMS.env.extext}.js`).then(() => {
         MyAMS.ajax.check($.fn.datetimepicker, `${MyAMS.env.baseURL}../ext/tempusdominus-bootstrap4${MyAMS.env.extext}.js`).then(firstLoad => {
           const required = [];
-
           if (firstLoad) {
             required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/tempusdominus-bootstrap4${MyAMS.env.extext}.css`, 'tempusdominus'));
           }
-
           $.when.apply($, required).then(() => {
             inputs.each((idx, elt) => {
               const input = $(elt),
-                    data = input.data(),
-                    defaultOptions = {
-                locale: data.amsDatetimeLanguage || data.amsLanguage || MyAMS.i18n.language,
-                icons: {
-                  time: 'far fa-clock',
-                  date: 'far fa-calendar',
-                  up: 'fas fa-arrow-up',
-                  down: 'fas fa-arrow-down',
-                  previous: 'fas fa-chevron-left',
-                  next: 'fas fa-chevron-right',
-                  today: 'far fa-calendar-check-o',
-                  clear: 'far fa-trash',
-                  close: 'far fa-times'
-                },
-                date: input.val(),
-                format: data.amsDatetimeFormat || data.amsFormat
-              };
+                data = input.data(),
+                defaultOptions = {
+                  locale: data.amsDatetimeLanguage || data.amsLanguage || MyAMS.i18n.language,
+                  icons: {
+                    time: 'far fa-clock',
+                    date: 'far fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'far fa-calendar-check-o',
+                    clear: 'far fa-trash',
+                    close: 'far fa-times'
+                  },
+                  date: input.val(),
+                  format: data.amsDatetimeFormat || data.amsFormat
+                };
               let settings = $.extend({}, defaultOptions, data.datetimeOptions || data.options);
               settings = MyAMS.core.executeFunctionByName(data.amsDatetimeInitCallback || data.amsInit, document, input, settings) || settings;
               const veto = {
                 veto: false
               };
               input.trigger('before-init.ams.datetime', [input, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               input.datetimepicker(settings);
               const plugin = input.data('datetimepicker');
-
               if (data.amsDatetimeIsoTarget || data.amsIsoTarget) {
                 input.on('change.datetimepicker', evt => {
                   const source = $(evt.currentTarget),
-                        data = source.data(),
-                        target = $(data.amsDatetimeIsoTarget || data.amsIsoTarget);
+                    data = source.data(),
+                    target = $(data.amsDatetimeIsoTarget || data.amsIsoTarget);
                   target.val(evt.date ? evt.date.toISOString(true) : null);
                 });
               }
-
               input.trigger('after-init.ams.datetime', [input, plugin]);
             });
           });
@@ -6642,6 +6069,7 @@ function datetime(element) {
     }
   });
 }
+
 /**
  * JQuery-UI drag and drop plug-ins
  */
@@ -6649,14 +6077,13 @@ function datetime(element) {
 function dragdrop(element) {
   return new Promise((resolve, reject) => {
     const dragitems = $('.draggable, .droppable, .sortable, .resizable', element);
-
     if (dragitems.length > 0) {
       MyAMS.ajax.check($.fn.draggable, `${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
         MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/jquery-ui.structure${MyAMS.env.extext}.css`, 'jquery-ui').then(() => {
           dragitems.each((idx, elt) => {
             const item = $(elt),
-                  data = item.data(); // draggable components
-
+              data = item.data();
+            // draggable components
             if (item.hasClass('draggable')) {
               const dragOptions = {
                 cursor: data.amsDraggableCursor || 'move',
@@ -6673,18 +6100,15 @@ function dragdrop(element) {
                 veto: false
               };
               item.trigger('before-init.ams.draggable', [item, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = item.draggable(settings);
               item.disableSelection();
               MyAMS.core.executeFunctionByName(data.amsDraggableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
               item.trigger('after-init.ams.draggable', [item, plugin]);
-            } // droppable components
-
-
+            }
+            // droppable components
             if (item.hasClass('droppable')) {
               const dropOptions = {
                 accept: data.amsDroppableAccept || data.amsAccept,
@@ -6696,17 +6120,14 @@ function dragdrop(element) {
                 veto: false
               };
               item.trigger('before-init.ams.droppable', [item, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = item.droppable(settings);
               MyAMS.core.executeFunctionByName(data.amsDroppableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
               item.trigger('after-init.ams.droppable', [item, plugin]);
-            } // sortable components
-
-
+            }
+            // sortable components
             if (item.hasClass('sortable')) {
               const sortOptions = {
                 items: data.amsSortableItems,
@@ -6725,18 +6146,15 @@ function dragdrop(element) {
                 veto: false
               };
               item.trigger('before-init.ams.sortable', [item, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = item.sortable(settings);
               item.disableSelection();
               MyAMS.core.executeFunctionByName(data.amsSortableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
               item.trigger('after-init.ams.sortable', [item, plugin]);
-            } // resizable components
-
-
+            }
+            // resizable components
             if (item.hasClass('resizable')) {
               const resizeOptions = {
                 autoHide: data.amsResizableAutohide === false ? true : data.amsResizableAutohide,
@@ -6753,11 +6171,9 @@ function dragdrop(element) {
                 veto: false
               };
               item.trigger('before-init.ams.resizable', [item, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = item.resizable(settings);
               item.disableSelection();
               MyAMS.core.executeFunctionByName(data.amsResizableAfterInitCallback || data.amsAfterInit, document, item, plugin, settings);
@@ -6773,6 +6189,7 @@ function dragdrop(element) {
     }
   });
 }
+
 /**
  * ACE text editor
  */
@@ -6780,26 +6197,22 @@ function dragdrop(element) {
 function editor(element) {
   return new Promise((resolve, reject) => {
     const editors = $('.editor textarea', element);
-
     if (editors.length > 0) {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.check(window.ace, `${MyAMS.env.baseURL}../ext/ace/ace${MyAMS.env.extext}.js`).then(firstLoad => {
           const ace = window.ace,
-                deferred = [];
-
+            deferred = [];
           if (firstLoad) {
             ace.config.set('basePath', `${MyAMS.env.baseURL}../ext/ace`);
             deferred.push(MyAMS.core.getScript(`${MyAMS.env.baseURL}../ext/ace/ext-modelist${MyAMS.env.extext}.js`));
           }
-
           $.when.apply($, deferred).then(() => {
             editors.each((idx, elt) => {
               const textarea = $(elt),
-                    widget = textarea.parents('.editor'),
-                    data = textarea.data(),
-                    modeList = ace.require('ace/ext/modelist'),
-                    mode = data.amsEditorMode || data.amsMode || modeList.getModeForPath(data.amsEditorFilename || data.amsFilename || 'text.txt').mode;
-
+                widget = textarea.parents('.editor'),
+                data = textarea.data(),
+                modeList = ace.require('ace/ext/modelist'),
+                mode = data.amsEditorMode || data.amsMode || modeList.getModeForPath(data.amsEditorFilename || data.amsFilename || 'text.txt').mode;
               setTimeout(() => {
                 // create editor DIV
                 const textEditor = $('<div>', {
@@ -6808,8 +6221,8 @@ function editor(element) {
                   height: textarea.height(),
                   'class': textarea.attr('class')
                 }).insertBefore(textarea);
-                textarea.css('display', 'none'); // initialize editor
-
+                textarea.css('display', 'none');
+                // initialize editor
                 const defaultOptions = {
                   mode: mode,
                   fontSize: 12,
@@ -6826,26 +6239,20 @@ function editor(element) {
                   veto: false
                 };
                 textarea.trigger('before-init.ams.editor', [textarea, settings, veto]);
-
                 if (veto.veto) {
                   return;
                 }
-
                 const editor = ace.edit(textEditor[0]);
                 editor.setOptions(settings);
-
                 if (MyAMS.theme === 'darkmode') {
                   editor.setTheme('ace/theme/dracula');
                 } else {
                   editor.setTheme('ace/theme/textmate');
                 }
-
                 editor.session.setValue(textarea.val());
-
                 if (textarea.attr('disabled')) {
                   editor.setReadOnly(true);
                 }
-
                 editor.session.on('change', () => {
                   textarea.val(editor.session.getValue());
                 });
@@ -6864,6 +6271,7 @@ function editor(element) {
     }
   });
 }
+
 /**
  * Bootstrap custom file input manager
  */
@@ -6871,26 +6279,23 @@ function editor(element) {
 function fileInput(element) {
   return new Promise((resolve, reject) => {
     const inputs = $('.custom-file-input', element);
-
     if (inputs.length > 0) {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.check(window.bsCustomFileInput, `${MyAMS.env.baseURL}../ext/bs-custom-file-input${MyAMS.env.extext}.js`).then(() => {
           inputs.each((idx, elt) => {
             const input = $(elt),
-                  inputId = input.attr('id'),
-                  inputSelector = inputId ? `#${inputId}` : input.attr('name'),
-                  form = $(elt.form),
-                  formId = form.attr('id'),
-                  formSelector = formId ? `#${formId}` : form.attr('name'),
-                  veto = {
-              veto: false
-            };
+              inputId = input.attr('id'),
+              inputSelector = inputId ? `#${inputId}` : input.attr('name'),
+              form = $(elt.form),
+              formId = form.attr('id'),
+              formSelector = formId ? `#${formId}` : form.attr('name'),
+              veto = {
+                veto: false
+              };
             input.trigger('before-init.ams.fileinput', [input, veto]);
-
             if (veto.veto) {
               return;
             }
-
             bsCustomFileInput.init(inputSelector, formSelector);
             input.trigger('after-init.ams.fileinput', [input]);
           });
@@ -6903,6 +6308,7 @@ function fileInput(element) {
     }
   });
 }
+
 /**
  * Image area select plug-in integration
  */
@@ -6910,62 +6316,56 @@ function fileInput(element) {
 function imgAreaSelect(element) {
   return new Promise((resolve, reject) => {
     const images = $('.imgareaselect', element);
-
     if (images.length > 0) {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.check($.fn.imgAreaSelect, `${MyAMS.env.baseURL}../ext/jquery-imgareaselect${MyAMS.env.extext}.js`).then(firstLoad => {
           const required = [];
-
           if (firstLoad) {
             required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/imgareaselect-animated${MyAMS.env.extext}.css`, 'imgareaselect'));
           }
-
           $.when.apply($, required).then(() => {
             images.each((idx, elt) => {
               const image = $(elt);
-
               if (image.data('imgAreaSelect')) {
                 return; // already initialized
               }
 
               const data = image.data(),
-                    parentSelector = data.amsImgareaselectParent || data.amsParent,
-                    parent = parentSelector ? image.parents(parentSelector) : 'body',
-                    defaultOptions = {
-                instance: true,
-                handles: true,
-                parent: parent,
-                x1: data.amsImgareaselectX1 || data.amsX1 || 0,
-                y1: data.amsImgareaselectY1 || data.amsY1 || 0,
-                x2: data.amsImgareaselectX2 || data.amsX2 || data.amsImgareaselectImageWidth || data.amsImageWidth,
-                y2: data.amsImgareaselectY2 || data.amsY2 || data.amsImgareaselectImageHeight || data.amsImageHeight,
-                imageWidth: data.amsImgareaselectImageWidth || data.amsImageWidth,
-                imageHeight: data.amsImgareaselectImageHeight || data.amsImageHeight,
-                imgWidth: data.amsImgareaselectThumbWidth || data.amsThumbWidth,
-                imgHeight: data.amsImgareaselectThumbHeight || data.amsThumbHeight,
-                minWidth: 128,
-                minHeight: 128,
-                aspectRatio: data.amsImgareaselectAspectRatio || data.amsAspectRatio,
-                onSelectEnd: MyAMS.core.getFunctionByName(data.amsImgareaselectSelectEnd || data.amsSelectedEnd) || function (img, selection) {
-                  const target = data.amsImgareaselectTargetField || data.amsTargetField || 'image_';
-                  $(`input[name="${target}x1"]`, parent).val(selection.x1);
-                  $(`input[name="${target}y1"]`, parent).val(selection.y1);
-                  $(`input[name="${target}x2"]`, parent).val(selection.x2);
-                  $(`input[name="${target}y2"]`, parent).val(selection.y2);
-                }
-              };
+                parentSelector = data.amsImgareaselectParent || data.amsParent,
+                parent = parentSelector ? image.parents(parentSelector) : 'body',
+                defaultOptions = {
+                  instance: true,
+                  handles: true,
+                  parent: parent,
+                  x1: data.amsImgareaselectX1 || data.amsX1 || 0,
+                  y1: data.amsImgareaselectY1 || data.amsY1 || 0,
+                  x2: data.amsImgareaselectX2 || data.amsX2 || data.amsImgareaselectImageWidth || data.amsImageWidth,
+                  y2: data.amsImgareaselectY2 || data.amsY2 || data.amsImgareaselectImageHeight || data.amsImageHeight,
+                  imageWidth: data.amsImgareaselectImageWidth || data.amsImageWidth,
+                  imageHeight: data.amsImgareaselectImageHeight || data.amsImageHeight,
+                  imgWidth: data.amsImgareaselectThumbWidth || data.amsThumbWidth,
+                  imgHeight: data.amsImgareaselectThumbHeight || data.amsThumbHeight,
+                  minWidth: 128,
+                  minHeight: 128,
+                  aspectRatio: data.amsImgareaselectAspectRatio || data.amsAspectRatio,
+                  onSelectEnd: MyAMS.core.getFunctionByName(data.amsImgareaselectSelectEnd || data.amsSelectedEnd) || function (img, selection) {
+                    const target = data.amsImgareaselectTargetField || data.amsTargetField || 'image_';
+                    $(`input[name="${target}x1"]`, parent).val(selection.x1);
+                    $(`input[name="${target}y1"]`, parent).val(selection.y1);
+                    $(`input[name="${target}x2"]`, parent).val(selection.x2);
+                    $(`input[name="${target}y2"]`, parent).val(selection.y2);
+                  }
+                };
               let settings = $.extend({}, defaultOptions, data.amsImgareaselectOptions || data.amsOptions);
               settings = MyAMS.core.executeFunctionByName(data.amsImgareaselectInitCallback || data.amsInit, document, image, settings) || settings;
               const veto = {
                 veto: false
               };
               image.trigger('before-init.ams.imgareaselect', [image, settings, veto]);
-
               if (veto.veto) {
                 return;
-              } // add timeout to update plug-in if displayed into a modal dialog
-
-
+              }
+              // add timeout to update plug-in if displayed into a modal dialog
               setTimeout(() => {
                 const plugin = image.imgAreaSelect(settings);
                 image.trigger('after-init.ams.imgareaselect', [image, plugin]);
@@ -6981,6 +6381,7 @@ function imgAreaSelect(element) {
     }
   });
 }
+
 /**
  * Select2 plug-in integration
  */
@@ -7000,21 +6401,17 @@ const _select2Helpers = {
 function select2(element) {
   return new Promise((resolve, reject) => {
     const selects = $('.select2', element);
-
     if (selects.length > 0) {
       MyAMS.require('ajax', 'helpers').then(() => {
         MyAMS.ajax.check($.fn.select2, `${MyAMS.env.baseURL}../ext/select2/select2${MyAMS.env.extext}.js`).then(firstLoad => {
           const required = [];
-
           if (firstLoad) {
             required.push(MyAMS.core.getScript(`${MyAMS.env.baseURL}../ext/select2/i18n/${MyAMS.i18n.language}.js`));
           }
-
           $.when.apply($, required).then(() => {
             selects.each((idx, elt) => {
               const select = $(elt),
-                    data = select.data();
-
+                data = select.data();
               if (data.select2) {
                 return; // already initialized
               }
@@ -7030,12 +6427,10 @@ function select2(element) {
                 tokenizer: MyAMS.core.getFunctionByName(data.amsSelect2Tokenizer || data.amsTokenizer)
               };
               const ajaxUrl = data.amsSelect2AjaxUrl || data.amsAjaxUrl || data['ajax-Url'];
-
               if (ajaxUrl) {
                 // check AJAX data helper function
                 let ajaxParamsHelper;
                 const ajaxParams = MyAMS.core.getFunctionByName(data.amsSelect2AjaxParams || data.amsAjaxParams || data['ajax-Params']) || data.amsSelect2AjaxParams || data.amsAjaxParams || data['ajax-Params'];
-
                 if (typeof ajaxParams === 'function') {
                   ajaxParamsHelper = ajaxParams;
                 } else if (ajaxParams) {
@@ -7043,7 +6438,6 @@ function select2(element) {
                     return _select2Helpers.select2AjaxParamsHelper(params, ajaxParams);
                   };
                 }
-
                 defaultOptions.ajax = {
                   url: MyAMS.core.getFunctionByName(data.amsSelect2AjaxUrl || data.amsAjaxUrl) || data.amsSelect2AjaxUrl || data.amsAjaxUrl,
                   data: ajaxParamsHelper || MyAMS.core.getFunctionByName(data.amsSelect2AjaxData || data.amsAjaxData) || data.amsSelect2AjaxData || data.amsAjaxData,
@@ -7052,31 +6446,26 @@ function select2(element) {
                 };
                 defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength || data.amsMinimumInputLength || data.minimumInputLength || 1;
               }
-
               if (select.hasClass('sortable')) {
                 // create hidden input for sortable selections
                 const hidden = $(`<input type="hidden" name="${select.attr('name')}">`).insertAfter(select);
                 hidden.val($('option:selected', select).listattr('value').join(data.amsSelect2Separator || ','));
                 select.data('select2-target', hidden).removeAttr('name');
-
                 defaultOptions.templateSelection = data => {
                   const elt = $(data.element);
                   elt.attr('data-content', elt.html());
                   return data.text;
                 };
               }
-
               let settings = $.extend({}, defaultOptions, data.amsSelect2Options || data.amsOptions);
               settings = MyAMS.core.executeFunctionByName(data.amsSelect2InitCallback || data.amsInit, document, select, settings) || settings;
               const veto = {
                 veto: false
               };
               select.trigger('before-init.ams.select2', [select, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = select.select2(settings);
               select.on('select2:opening select2:selecting select2:unselecting select2:clearing', evt => {
                 // handle disabled selects
@@ -7087,7 +6476,6 @@ function select2(element) {
               select.on('select2:opening', evt => {
                 // handle z-index in modals
                 const modal = $(evt.currentTarget).parents('.modal').first();
-
                 if (modal.exists()) {
                   const zIndex = parseInt(modal.css('z-index'));
                   plugin.data('select2').$dropdown.css('z-index', zIndex + 1);
@@ -7097,13 +6485,11 @@ function select2(element) {
                 // handle dropdown automatic focus
                 setTimeout(() => {
                   const dropdown = $('.select2-search__field', plugin.data('select2').$dropdown);
-
                   if (dropdown.exists()) {
                     dropdown.get(0).focus();
                   }
                 }, 50);
               });
-
               if (select.hasClass('sortable')) {
                 MyAMS.ajax.check($.fn.sortable, `${MyAMS.env.baseURL}../ext/jquery-ui${MyAMS.env.extext}.js`).then(() => {
                   select.parent().find('ul.select2-selection__rendered').sortable({
@@ -7114,16 +6500,14 @@ function select2(element) {
                   });
                   select.on('select2:select select2:unselect', evt => {
                     const id = evt.params.data.id,
-                          target = $(evt.currentTarget),
-                          option = target.children(`option[value="${id}"]`);
+                      target = $(evt.currentTarget),
+                      option = target.children(`option[value="${id}"]`);
                     MyAMS.helpers.moveElementToParentEnd(option);
                     target.trigger('change');
-
                     _select2Helpers.select2UpdateHiddenField(target);
                   });
                 });
               }
-
               MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
               select.trigger('after-init.ams.select2', [select, plugin]);
             });
@@ -7137,6 +6521,7 @@ function select2(element) {
     }
   });
 }
+
 /**
  * SVG image plug-in
  */
@@ -7144,18 +6529,15 @@ function select2(element) {
 function svgPlugin(element) {
   return new Promise(resolve => {
     const svgs = $('.svg-container', element);
-
     if (svgs.length > 0) {
       svgs.each((idx, elt) => {
         const container = $(elt),
-              svg = $('svg', container),
-              width = svg.attr('width'),
-              height = svg.attr('height');
-
+          svg = $('svg', container),
+          width = svg.attr('width'),
+          height = svg.attr('height');
         if (width && height) {
           elt.setAttribute('viewBox', `0 0 ${Math.round(parseFloat(width))} ${Math.round(parseFloat(height))}`);
         }
-
         svg.attr('width', '100%').attr('height', 'auto');
       });
       resolve(svgs);
@@ -7164,6 +6546,7 @@ function svgPlugin(element) {
     }
   });
 }
+
 /**
  * Fieldset switcher plug-in
  *
@@ -7174,46 +6557,38 @@ function svgPlugin(element) {
 function switcher(element) {
   return new Promise(resolve => {
     const switchers = $('legend.switcher', element);
-
     if (switchers.length > 0) {
       switchers.each((idx, elt) => {
         const legend = $(elt),
-              fieldset = legend.parent('fieldset'),
-              data = legend.data(),
-              state = data.amsSwitcherState || data.amsState,
-              minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
-              plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
-
+          fieldset = legend.parent('fieldset'),
+          data = legend.data(),
+          state = data.amsSwitcherState || data.amsState,
+          minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
+          plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
         if (!data.amsSwitcher) {
           const veto = {
             veto: false
           };
           legend.trigger('before-init.ams.switcher', [legend, data, veto]);
-
           if (veto.veto) {
             return;
           }
-
           $(`<i class="fa fa-${state === 'open' ? minusClass : plusClass} mr-2"></i>`).prependTo(legend);
           legend.on('click', evt => {
             evt.preventDefault();
             const veto = {};
             legend.trigger('before-switch.ams.switcher', [legend, veto]);
-
             if (veto.veto) {
               return;
             }
-
             if (fieldset.hasClass('switched')) {
               fieldset.removeClass('switched');
               MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
               legend.trigger('opened.ams.switcher', [legend]);
               const id = legend.attr('id');
-
               if (id) {
                 $(`legend.switcher[data-ams-switcher-sync="${id}"]`, fieldset).each((idx, elt) => {
                   const switcher = $(elt);
-
                   if (switcher.parents('fieldset').hasClass('switched')) {
                     switcher.click();
                   }
@@ -7225,11 +6600,9 @@ function switcher(element) {
               legend.trigger('closed.ams.switcher', [legend]);
             }
           });
-
           if (state !== 'open') {
             fieldset.addClass('switched');
           }
-
           legend.trigger('after-init.ams.switcher', [legend]);
           legend.data('ams-switcher', true);
         }
@@ -7240,6 +6613,7 @@ function switcher(element) {
     }
   });
 }
+
 /**
  * TinyMCE HTML editor plug-in
  */
@@ -7247,95 +6621,86 @@ function switcher(element) {
 function tinymce(element) {
   return new Promise((resolve, reject) => {
     const editors = $('.tinymce', element);
-
     if (editors.length > 0) {
       MyAMS.require('ajax', 'i18n').then(() => {
         const baseURL = `${MyAMS.env.baseURL}../ext/tinymce${MyAMS.env.devmode ? '/dev' : ''}`;
         MyAMS.ajax.check(window.tinymce, `${baseURL}/tinymce${MyAMS.env.extext}.js`).then(firstLoad => {
           const deferred = [];
-
           if (firstLoad) {
             tinymce.baseURL = baseURL;
             tinymce.suffix = MyAMS.env.extext;
             deferred.push(MyAMS.core.getScript(`${baseURL}/jquery.tinymce.min.js`));
-            deferred.push(MyAMS.core.getScript(`${baseURL}/themes/silver/theme${MyAMS.env.extext}.js`)); // Prevent Bootstrap dialog from blocking focusin
-
+            deferred.push(MyAMS.core.getScript(`${baseURL}/themes/silver/theme${MyAMS.env.extext}.js`));
+            // Prevent Bootstrap dialog from blocking focusin
             $(document).on('focusin', evt => {
               if ($(evt.target).closest(".tox-tinymce, .tox-tinymce-aux, " + ".moxman-window, .tam-assetmanager-root").length) {
                 evt.stopImmediatePropagation();
               }
-            }); // Remove editor before cleaning content
-
+            });
+            // Remove editor before cleaning content
             $(document).on('clear.ams.content', (evt, veto, element) => {
               $('.tinymce', element).each((idx, elt) => {
                 const editorId = $(elt).attr('id'),
-                      editor = window.tinymce.get(editorId);
-
+                  editor = window.tinymce.get(editorId);
                 if (editor !== null) {
                   editor.remove();
                 }
               });
             });
           }
-
           $.when.apply($, deferred).then(() => {
             editors.each((idx, elt) => {
               const editor = $(elt),
-                    data = editor.data(),
-                    defaultOptions = {
-                selector: `textarea#${editor.attr('id')}`,
-                base_url: baseURL,
-                theme: data.amsTinymceTheme || data.amsTheme || 'silver',
-                language: MyAMS.i18n.language,
-                menubar: data.amsTinymceMenubar !== false && data.amsMenubar !== false,
-                statusbar: data.amsTinymceStatusbar !== false && data.amsStatusbar !== false,
-                plugins: data.amsTinymcePlugins || data.amsPlugins || ["advlist autosave autolink lists link charmap print preview hr anchor pagebreak", "searchreplace wordcount visualblocks visualchars code fullscreen", "insertdatetime nonbreaking save table contextmenu directionality", "emoticons paste textcolor colorpicker textpattern autoresize"],
-                toolbar: data.amsTinymceToolbar || data.amsToolbar,
-                toolbar1: data.amsTinymceToolbar1 === false || data.amsToolbar1 === false ? false : data.amsTinymceToolbar1 || data.amsToolbar1 || "undo redo | pastetext | styleselect | bold italic | " + "alignleft aligncenter alignright alignjustify | " + "bullist numlist outdent indent",
-                toolbar2: data.amsTinymceToolbar2 === false || data.amsToolbar2 === false ? false : data.amsTinymceToolbar2 || data.amsToolbar2 || "forecolor backcolor emoticons | charmap link image media | " + "fullscreen preview print | code",
-                content_css: data.amsTinymceContentCss || data.amsContentCss,
-                formats: data.amsTinymceFormats || data.amsFormats,
-                style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
-                block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
-                valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
-                image_advtab: true,
-                image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) || data.amsTinymceImageList || data.amsImageList,
-                image_class_list: data.amsTinymceImageClassList || data.amsImageClassList,
-                link_list: MyAMS.core.getFunctionByName(data.amsTinymceLinkList || data.amsLinkList) || data.amsTinymceLinkList || data.amsLinkList,
-                link_class_list: data.amsTinymceLinkClassList || data.amsLinkClassList,
-                paste_as_text: data.amsTinymcePasteAsText === undefined && data.amsPasteAsText === undefined ? true : data.amsTinymcePasteAsText || data.amsPasteAsText,
-                paste_auto_cleanup_on_paste: data.amsTinymcePasteAutoCleanup === undefined && data.amsPasteAutoCleanup === undefined ? true : data.amsTinymcePasteAutoCleanup || data.amsPasteAutoCleanup,
-                paste_strip_class_attributes: data.amsTinymcePasteStripClassAttributes || data.amsPasteStripClassAttributes || 'all',
-                paste_remove_spans: data.amsTinymcePasteRemoveSpans === undefined && data.amsPasteRemoveSpans === undefined ? true : data.amsTinymcePasteRemoveSpans || data.amsPasteRemoveSpans,
-                paste_remove_styles: data.amsTinymcePasteRemoveStyles === undefined || data.amsPasteRemoveStyles === undefined ? true : data.amsTinymcePasteRemoveStyles || data.amsPasteRemoveStyles,
-                height: data.amsTinymceHeight || data.amsHeight || 50,
-                min_height: 50,
-                resize: true,
-                autoresize_min_height: 50,
-                autoresize_max_height: 500
-              };
+                data = editor.data(),
+                defaultOptions = {
+                  selector: `textarea#${editor.attr('id')}`,
+                  base_url: baseURL,
+                  theme: data.amsTinymceTheme || data.amsTheme || 'silver',
+                  language: MyAMS.i18n.language,
+                  menubar: data.amsTinymceMenubar !== false && data.amsMenubar !== false,
+                  statusbar: data.amsTinymceStatusbar !== false && data.amsStatusbar !== false,
+                  plugins: data.amsTinymcePlugins || data.amsPlugins || ["advlist autosave autolink lists link charmap print preview hr anchor pagebreak", "searchreplace wordcount visualblocks visualchars code fullscreen", "insertdatetime nonbreaking save table contextmenu directionality", "emoticons paste textcolor colorpicker textpattern autoresize"],
+                  toolbar: data.amsTinymceToolbar || data.amsToolbar,
+                  toolbar1: data.amsTinymceToolbar1 === false || data.amsToolbar1 === false ? false : data.amsTinymceToolbar1 || data.amsToolbar1 || "undo redo | pastetext | styleselect | bold italic | " + "alignleft aligncenter alignright alignjustify | " + "bullist numlist outdent indent",
+                  toolbar2: data.amsTinymceToolbar2 === false || data.amsToolbar2 === false ? false : data.amsTinymceToolbar2 || data.amsToolbar2 || "forecolor backcolor emoticons | charmap link image media | " + "fullscreen preview print | code",
+                  content_css: data.amsTinymceContentCss || data.amsContentCss,
+                  formats: data.amsTinymceFormats || data.amsFormats,
+                  style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
+                  block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
+                  valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
+                  image_advtab: true,
+                  image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) || data.amsTinymceImageList || data.amsImageList,
+                  image_class_list: data.amsTinymceImageClassList || data.amsImageClassList,
+                  link_list: MyAMS.core.getFunctionByName(data.amsTinymceLinkList || data.amsLinkList) || data.amsTinymceLinkList || data.amsLinkList,
+                  link_class_list: data.amsTinymceLinkClassList || data.amsLinkClassList,
+                  paste_as_text: data.amsTinymcePasteAsText === undefined && data.amsPasteAsText === undefined ? true : data.amsTinymcePasteAsText || data.amsPasteAsText,
+                  paste_auto_cleanup_on_paste: data.amsTinymcePasteAutoCleanup === undefined && data.amsPasteAutoCleanup === undefined ? true : data.amsTinymcePasteAutoCleanup || data.amsPasteAutoCleanup,
+                  paste_strip_class_attributes: data.amsTinymcePasteStripClassAttributes || data.amsPasteStripClassAttributes || 'all',
+                  paste_remove_spans: data.amsTinymcePasteRemoveSpans === undefined && data.amsPasteRemoveSpans === undefined ? true : data.amsTinymcePasteRemoveSpans || data.amsPasteRemoveSpans,
+                  paste_remove_styles: data.amsTinymcePasteRemoveStyles === undefined || data.amsPasteRemoveStyles === undefined ? true : data.amsTinymcePasteRemoveStyles || data.amsPasteRemoveStyles,
+                  height: data.amsTinymceHeight || data.amsHeight || 50,
+                  min_height: 50,
+                  resize: true,
+                  autoresize_min_height: 50,
+                  autoresize_max_height: 500
+                };
               const plugins = data.amsTinymceExternalPlugins || data.amsExternalPlugins;
-
               if (plugins) {
                 const names = plugins.split(/\s+/);
-
                 for (const name of names) {
                   const src = editor.data(`ams-tinymce-plugin-${name}`) || editor.data(`ams-plugin-${name}`);
                   window.tinymce.PluginManager.load(name, MyAMS.core.getSource(src));
                 }
               }
-
               let settings = $.extend({}, defaultOptions, data.amsTinymceOptions || data.amsOptions);
               settings = MyAMS.core.executeFunctionByName(data.amsTinymceInitCallback || data.amsInit, document, editor, settings) || settings;
               const veto = {
                 veto: false
               };
               editor.trigger('before-init.ams.tinymce', [editor, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               setTimeout(() => {
                 const plugin = editor.tinymce(settings);
                 MyAMS.core.executeFunctionByName(data.amsTinymceAfterInitCallback || data.amsAfterInit, document, editor, plugin, settings);
@@ -7352,6 +6717,7 @@ function tinymce(element) {
     }
   });
 }
+
 /**
  * Bootstrap treeview plug-in
  */
@@ -7359,70 +6725,65 @@ function tinymce(element) {
 function treeview(element) {
   return new Promise((resolve, reject) => {
     const trees = $('.treeview', element);
-
     if (trees.length > 0) {
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.check($.fn.treview, `${MyAMS.env.baseURL}../ext/bootstrap-treeview${MyAMS.env.extext}.js`).then(firstLoad => {
           const required = [];
-
           if (firstLoad) {
             required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/bootstrap-treeview${MyAMS.env.extext}.css`, 'treeview'));
           }
-
           $.when.apply($, required).then(() => {
             trees.each((idx, elt) => {
               const treeview = $(elt),
-                    data = treeview.data(),
-                    dataOptions = {
-                data: data.amsTreeviewData,
-                levels: data.amsTreeviewLevels,
-                injectStyle: data.amsTreeviewInjectStyle,
-                expandIcon: data.amsTreeviewExpandIcon || 'far fa-fw fa-plus-square',
-                collapseIcon: data.amsTreeviewCollaspeIcon || 'far fa-fw fa-minus-square',
-                emptyIcon: data.amsTreeviewEmptyIcon,
-                nodeIcon: data.amsTreeviewNodeIcon,
-                selectedIcon: data.amsTreeviewSelectedIcon,
-                checkedIcon: data.amsTreeviewCheckedIcon || 'far fa-fw fa-check-square',
-                uncheckedIcon: data.amsTreeviewUncheckedIcon || 'far fa-fw fa-square',
-                color: data.amsTreeviewColor,
-                backColor: data.amsTreeviewBackColor,
-                borderColor: data.amsTreeviewBorderColor,
-                onHoverColor: data.amsTreeviewHoverColor,
-                selectedColor: data.amsTreeviewSelectedColor,
-                selectedBackColor: data.amsTreeviewSelectedBackColor,
-                unselectableColor: data.amsTreeviewUnselectableColor || 'rgba(1,1,1,0.25)',
-                unselectableBackColor: data.amsTreeviewUnselectableBackColor || 'rgba(1,1,1,0.25)',
-                enableLinks: data.amsTreeviewEnableLinks,
-                highlightSelected: data.amsTreeviewHighlightSelected,
-                highlightSearchResults: data.amsTreeviewhighlightSearchResults,
-                showBorder: data.amsTreeviewShowBorder,
-                showIcon: data.amsTreeviewShowIcon,
-                showCheckbox: data.amsTreeviewShowCheckbox,
-                showTags: data.amsTreeviewShowTags,
-                toggleUnselectable: data.amsTreeviewToggleUnselectable,
-                multiSelect: data.amsTreeviewMultiSelect,
-                onNodeChecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeChecked),
-                onNodeCollapsed: MyAMS.core.getFunctionByName(data.amsTreeviewNodeCollapsed),
-                onNodeDisabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeDisabled),
-                onNodeEnabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeEnabled),
-                onNodeExpanded: MyAMS.core.getFunctionByName(data.amsTreeviewNodeExpanded),
-                onNodeSelected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeSelected),
-                onNodeUnchecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnchecked),
-                onNodeUnselected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnselected),
-                onSearchComplete: MyAMS.core.getFunctionByName(data.amsTreeviewSearchComplete),
-                onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
-              };
+                data = treeview.data(),
+                dataOptions = {
+                  data: data.amsTreeviewData,
+                  levels: data.amsTreeviewLevels,
+                  injectStyle: data.amsTreeviewInjectStyle,
+                  expandIcon: data.amsTreeviewExpandIcon || 'far fa-fw fa-plus-square',
+                  collapseIcon: data.amsTreeviewCollaspeIcon || 'far fa-fw fa-minus-square',
+                  emptyIcon: data.amsTreeviewEmptyIcon,
+                  nodeIcon: data.amsTreeviewNodeIcon,
+                  selectedIcon: data.amsTreeviewSelectedIcon,
+                  checkedIcon: data.amsTreeviewCheckedIcon || 'far fa-fw fa-check-square',
+                  uncheckedIcon: data.amsTreeviewUncheckedIcon || 'far fa-fw fa-square',
+                  color: data.amsTreeviewColor,
+                  backColor: data.amsTreeviewBackColor,
+                  borderColor: data.amsTreeviewBorderColor,
+                  onHoverColor: data.amsTreeviewHoverColor,
+                  selectedColor: data.amsTreeviewSelectedColor,
+                  selectedBackColor: data.amsTreeviewSelectedBackColor,
+                  unselectableColor: data.amsTreeviewUnselectableColor || 'rgba(1,1,1,0.25)',
+                  unselectableBackColor: data.amsTreeviewUnselectableBackColor || 'rgba(1,1,1,0.25)',
+                  enableLinks: data.amsTreeviewEnableLinks,
+                  highlightSelected: data.amsTreeviewHighlightSelected,
+                  highlightSearchResults: data.amsTreeviewhighlightSearchResults,
+                  showBorder: data.amsTreeviewShowBorder,
+                  showIcon: data.amsTreeviewShowIcon,
+                  showCheckbox: data.amsTreeviewShowCheckbox,
+                  showTags: data.amsTreeviewShowTags,
+                  toggleUnselectable: data.amsTreeviewToggleUnselectable,
+                  multiSelect: data.amsTreeviewMultiSelect,
+                  onNodeChecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeChecked),
+                  onNodeCollapsed: MyAMS.core.getFunctionByName(data.amsTreeviewNodeCollapsed),
+                  onNodeDisabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeDisabled),
+                  onNodeEnabled: MyAMS.core.getFunctionByName(data.amsTreeviewNodeEnabled),
+                  onNodeExpanded: MyAMS.core.getFunctionByName(data.amsTreeviewNodeExpanded),
+                  onNodeSelected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeSelected),
+                  onNodeUnchecked: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnchecked),
+                  onNodeUnselected: MyAMS.core.getFunctionByName(data.amsTreeviewNodeUnselected),
+                  onSearchComplete: MyAMS.core.getFunctionByName(data.amsTreeviewSearchComplete),
+                  onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
+                };
               let settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
               settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit, document, treeview, settings) || settings;
               const veto = {
                 veto: false
               };
               treeview.trigger('before-init.ams.treeview', [treeview, settings, veto]);
-
               if (veto.veto) {
                 return;
               }
-
               const plugin = treeview.treeview(settings);
               MyAMS.core.executeFunctionByName(data.amsTreeviewAfterInitCallback || data.amsAfterInit, document, treeview, plugin, settings);
               treeview.trigger('after-init.ams.treeview', [treeview, plugin]);
@@ -7436,6 +6797,7 @@ function treeview(element) {
     }
   });
 }
+
 /**
  * Form validation plug-in
  */
@@ -7443,65 +6805,60 @@ function treeview(element) {
 function validate(element) {
   return new Promise((resolve, reject) => {
     const forms = $('form:not([novalidate])', element);
-
     if (forms.length > 0) {
       MyAMS.require('ajax', 'i18n').then(() => {
         MyAMS.ajax.check($.fn.validate, `${MyAMS.env.baseURL}../ext/validate/jquery-validate${MyAMS.env.extext}.js`).then(firstLoad => {
           if (firstLoad && MyAMS.i18n.language !== 'en') {
             MyAMS.core.getScript(`${MyAMS.env.baseURL}../ext/validate/i18n/messages_${MyAMS.i18n.language}${MyAMS.env.extext}.js`).then(() => {});
           }
-
           forms.each((idx, elt) => {
             const form = $(elt),
-                  data = form.data(),
-                  dataOptions = {
-              ignore: null,
-              invalidHandler: MyAMS.core.getFunctionByName(data.amsValidateInvalidHandler) || ((evt, validator) => {
-                // automatically display hidden fields with errors!
-                $('span.is-invalid', form).remove();
-                $('.is-invalid', form).removeClass('is-invalid');
-
-                for (const error of validator.errorList) {
-                  const element = $(error.element),
-                        panels = element.parents('.tab-pane'),
-                        fieldsets = element.parents('fieldset.switched');
-                  fieldsets.each((idx, elt) => {
-                    $('legend.switcher', elt).click();
+              data = form.data(),
+              dataOptions = {
+                ignore: null,
+                invalidHandler: MyAMS.core.getFunctionByName(data.amsValidateInvalidHandler) || ((evt, validator) => {
+                  // automatically display hidden fields with errors!
+                  $('span.is-invalid', form).remove();
+                  $('.is-invalid', form).removeClass('is-invalid');
+                  for (const error of validator.errorList) {
+                    const element = $(error.element),
+                      panels = element.parents('.tab-pane'),
+                      fieldsets = element.parents('fieldset.switched');
+                    fieldsets.each((idx, elt) => {
+                      $('legend.switcher', elt).click();
+                    });
+                    panels.each((idx, elt) => {
+                      const panel = $(elt),
+                        tabs = panel.parents('.tab-content').siblings('.nav-tabs');
+                      $(`li:nth-child(${panel.index() + 1})`, tabs).addClass('is-invalid');
+                      $('li.is-invalid:first a', tabs).click();
+                    });
+                  }
+                }),
+                errorElement: data.amsValidateErrorElement || 'span',
+                errorClass: data.amsValidateErrorClass || 'is-invalid',
+                errorPlacement: MyAMS.core.getFunctionByName(data.amsValidateErrorPlacement) || ((error, element) => {
+                  error.addClass('invalid-feedback');
+                  element.closest('.form-widget').append(error);
+                }),
+                submitHandler: MyAMS.core.getFunctionByName(data.amsValidateSubmitHandler) || (form.attr('data-async') !== undefined ? () => {
+                  MyAMS.require('form').then(() => {
+                    MyAMS.form.submit(form);
                   });
-                  panels.each((idx, elt) => {
-                    const panel = $(elt),
-                          tabs = panel.parents('.tab-content').siblings('.nav-tabs');
-                    $(`li:nth-child(${panel.index() + 1})`, tabs).addClass('is-invalid');
-                    $('li.is-invalid:first a', tabs).click();
-                  });
-                }
-              }),
-              errorElement: data.amsValidateErrorElement || 'span',
-              errorClass: data.amsValidateErrorClass || 'is-invalid',
-              errorPlacement: MyAMS.core.getFunctionByName(data.amsValidateErrorPlacement) || ((error, element) => {
-                error.addClass('invalid-feedback');
-                element.closest('.form-widget').append(error);
-              }),
-              submitHandler: MyAMS.core.getFunctionByName(data.amsValidateSubmitHandler) || (form.attr('data-async') !== undefined ? () => {
-                MyAMS.require('form').then(() => {
-                  MyAMS.form.submit(form);
-                });
-              } : () => {
-                form.get(0).submit();
-              })
-            };
+                } : () => {
+                  form.get(0).submit();
+                })
+              };
             $('[data-ams-validate-rules]', form).each((idx, elt) => {
               if (idx === 0) {
                 dataOptions.rules = {};
               }
-
               dataOptions.rules[$(elt).attr('name')] = $(elt).data('ams-validate-rules');
             });
             $('[data-ams-validate-messages]', form).each((idx, elt) => {
               if (idx === 0) {
                 dataOptions.messages = {};
               }
-
               dataOptions.messages[$(elt).attr('name')] = $(elt).data('ams-validate-messages');
             });
             let settings = $.extend({}, dataOptions, data.amsValidateOptions || data.amsOptions);
@@ -7510,11 +6867,9 @@ function validate(element) {
               veto: false
             };
             form.trigger('before-init.ams.validate', [form, settings, veto]);
-
             if (veto.veto) {
               return;
             }
-
             const plugin = form.validate(settings);
             MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
             form.trigger('after-init.ams.validate', [form, plugin]);
@@ -7526,6 +6881,7 @@ function validate(element) {
     }
   });
 }
+
 /**
  * Global module initialization
  */
@@ -7545,10 +6901,10 @@ if (window.MyAMS) {
   MyAMS.registry.register(switcher, 'switcher');
   MyAMS.registry.register(tinymce, 'tinymce');
   MyAMS.registry.register(treeview, 'treeview');
-  MyAMS.registry.register(validate, 'validate'); // register module
+  MyAMS.registry.register(validate, 'validate');
 
+  // register module
   MyAMS.config.modules.push('plugins');
-
   if (!MyAMS.env.bundle) {
     console.debug("MyAMS: plugins module loaded...");
   }
@@ -7568,12 +6924,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "skin": function() { return /* binding */ skin; }
 /* harmony export */ });
 var _this = undefined;
-
 /* global MyAMS */
-
 /**
  * MyAMS generic skin features
  */
+
 const $ = MyAMS.$;
 let _initialized = false;
 const skin = {
@@ -7584,27 +6939,26 @@ const skin = {
     if (_initialized) {
       return;
     }
+    _initialized = true;
 
-    _initialized = true; // handle tooltips
-
+    // handle tooltips
     if (MyAMS.config.enableTooltips) {
       MyAMS.dom.root.tooltip({
         selector: '.hint',
         html: MyAMS.config.enableHtmlTooltips
       });
     }
-
     $('.hint').mousedown(evt => {
       $(evt.currentTarget).tooltip('hide');
     });
     $(document).on('clear.ams.content', () => {
       $('.tooltip').remove();
-    }); // check URL when hash is changed
+    });
 
+    // check URL when hash is changed
     skin.checkURL();
     $(window).on('hashchange', skin.checkURL);
   },
-
   /**
    * Specific content initialization
    *
@@ -7617,7 +6971,6 @@ const skin = {
       });
     }
   },
-
   /**
    * URL checking function.
    *
@@ -7629,36 +6982,29 @@ const skin = {
     return new Promise((resolve, reject) => {
       const nav = MyAMS.dom.nav;
       let hash = location.hash,
-          url = hash.replace(/^#/, ''),
-          tag = null;
+        url = hash.replace(/^#/, ''),
+        tag = null;
       const tagPosition = url.indexOf('!');
-
       if (tagPosition > 0) {
         hash = hash.substring(0, tagPosition + 1);
         tag = url.substring(tagPosition + 1);
         url = url.substring(0, tagPosition);
       }
-
       let menu;
-
       if (url) {
         // new hash
         let container = $('#content');
-
         if (!container.exists()) {
           container = MyAMS.dom.root;
         }
-
-        menu = $(`a[href="${hash}"]`, nav); // load specified URL into '#content'
-
+        menu = $(`a[href="${hash}"]`, nav);
+        // load specified URL into '#content'
         MyAMS.skin.loadURL(url, container).then(() => {
           const prefix = $('html head title').data('ams-title-prefix'),
-                fullPrefix = prefix ? `${prefix} > ` : '';
+            fullPrefix = prefix ? `${prefix} > ` : '';
           document.title = `${fullPrefix}${$('[data-ams-page-title]:first', container).data('ams-page-title') || menu.attr('title') || menu.text().trim() || document.title}`;
-
           if (tag) {
             const anchor = $(`#${tag}`);
-
             if (anchor.exists()) {
               MyAMS.require('helpers').then(() => {
                 MyAMS.helpers.scrollTo('#main', anchor, {
@@ -7666,9 +7012,8 @@ const skin = {
                 });
               });
             }
-          } // try to activate matching navigation menu
-
-
+          }
+          // try to activate matching navigation menu
           if (menu.exists()) {
             MyAMS.require('nav').then(() => {
               MyAMS.nav.setActiveMenu(menu);
@@ -7682,17 +7027,14 @@ const skin = {
         // empty hash! We try to check if a specific menu was activated with a custom
         // data attribute, otherwise we go to the first navigation menu!
         const activeUrl = $('[data-ams-active-menu]').data('ams-active-menu');
-
         if (activeUrl) {
           menu = $(`a[href="${activeUrl}"]`, nav);
         } else {
           menu = $('ul li a[href!="#"]', nav).first();
         }
-
-        if (menu.exists()) {
+        if (menu.length > 0) {
           MyAMS.require('nav').then(() => {
             MyAMS.nav.setActiveMenu(menu);
-
             if (activeUrl) {
               MyAMS.nav.drawBreadcrumbs();
             } else {
@@ -7707,7 +7049,6 @@ const skin = {
       }
     });
   },
-
   /**
    * Load specific URL into given container target.
    *
@@ -7725,14 +7066,12 @@ const skin = {
       if (url.startsWith('#')) {
         url = url.substr(1);
       }
-
       target = $(target);
       MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, target).then(status => {
         if (!status) {
           // applied veto!
           return;
         }
-
         const defaults = {
           type: 'GET',
           url: url,
@@ -7740,15 +7079,13 @@ const skin = {
           cache: false,
           beforeSend: () => {
             target.html(`<h1 class="loading"><i class="fa fa-cog fa-spin"></i> ${MyAMS.i18n.LOADING}</h1>`);
-
             if (options && options.preLoadCallback) {
               MyAMS.core.executeFunctionByName(options.preLoadCallback, _this, options.preLoadCallbackOptions);
             }
-
             if (target.attr('id') === 'content') {
               MyAMS.require('nav').then(() => {
                 const prefix = $('html head title').data('ams-title-prefix'),
-                      fullPrefix = prefix ? `${prefix} > ` : '';
+                  fullPrefix = prefix ? `${prefix} > ` : '';
                 document.title = `${fullPrefix}${$('.breadcrumb li:last-child').text()}`;
                 MyAMS.dom.root.animate({
                   scrollTop: 0
@@ -7758,39 +7095,32 @@ const skin = {
           }
         };
         const settings = $.extend({}, defaults, options),
-              veto = {
-          veto: false
-        };
+          veto = {
+            veto: false
+          };
         target.trigger('before-load.ams.content', [settings, veto]);
-
         if (veto.veto) {
           return;
         }
-
         $.ajax(settings).then((result, status, xhr) => {
           if ($.isArray(result)) {
             [result, status, xhr] = result;
           }
-
           MyAMS.require('ajax').then(() => {
             const response = MyAMS.ajax.getResponse(xhr);
-
             if (response) {
               const dataType = response.contentType,
-                    result = response.data;
+                result = response.data;
               $('.loading', target).remove();
-
               switch (dataType) {
                 case 'json':
                   MyAMS.ajax.handleJSON(result, target);
                   resolve(result, status, xhr);
                   break;
-
                 case 'script':
                 case 'xml':
                   resolve(result, status, xhr);
                   break;
-
                 case 'html':
                 case 'text':
                 default:
@@ -7803,7 +7133,6 @@ const skin = {
                     }, 300);
                     MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(() => {
                       MyAMS.form && MyAMS.form.setFocus(target);
-
                       if (options && options.afterLoadCallback) {
                         MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(() => {
                           target.trigger('after-load.ams.content');
@@ -7816,7 +7145,6 @@ const skin = {
                     }, reject);
                   }, reject);
               }
-
               MyAMS.stats && MyAMS.stats.logPageview();
             }
           });
@@ -7829,10 +7157,10 @@ const skin = {
     });
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('skin');
@@ -7856,19 +7184,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "stats": function() { return /* binding */ stats; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS stats management
  */
+
 const $ = MyAMS.$;
 const stats = {
   logPageview: function () {},
   logEvent: function () {}
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('stats');
@@ -7892,10 +7220,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "tree": function() { return /* binding */ tree; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS tree management
  */
+
 const $ = MyAMS.$;
 const tree = {
   /**
@@ -7909,55 +7237,48 @@ const tree = {
         dtTable.row(row).remove().draw();
       });
     };
-
     const node = $(evt.currentTarget),
-          switcher = $('.switcher', node),
-          tr = node.parents('tr').first(),
-          table = tr.parents('table').first(),
-          dtTable = table.DataTable();
+      switcher = $('.switcher', node),
+      tr = node.parents('tr').first(),
+      table = tr.parents('table').first(),
+      dtTable = table.DataTable();
     node.tooltip('hide');
-
     if (switcher.hasClass('expanded')) {
       removeChildNodes(tr.data('ams-tree-node-id'));
       switcher.html('<i class="far fa-plus-square"></i>').removeClass('expanded');
     } else {
       const location = tr.data('ams-location') || table.data('ams-location') || '',
-            treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
-            sourceName = tr.data('ams-element-name');
+        treeNodesTarget = tr.data('ams-tree-nodes-target') || table.data('ams-tree-nodes-target') || 'get-tree-nodes.json',
+        sourceName = tr.data('ams-element-name');
       switcher.html('<i class="fas fa-spinner fa-spin"></i>');
-
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.post(`${location}/${sourceName}/${treeNodesTarget}`, {
           can_sort: !$('td.sorter', tr).is(':empty')
         }).then(result => {
           if (result.length > 0) {
             let newRow;
-
             for (const row of result) {
               newRow = $(row);
               dtTable.row.add(newRow).draw();
               MyAMS.core.initContent(newRow).then();
             }
           }
-
           switcher.html('<i class="far fa-minus-square"></i>').addClass('expanded');
         });
       });
     }
   },
-
   /**
    * Open close all tree nodes
    */
   switchTree: evt => {
     const node = $(evt.currentTarget),
-          switcher = $('.switcher', node),
-          th = node.parents('th'),
-          table = th.parents('table').first(),
-          tableID = table.data('ams-tree-node-id'),
-          dtTable = table.DataTable();
+      switcher = $('.switcher', node),
+      th = node.parents('th'),
+      table = th.parents('table').first(),
+      tableID = table.data('ams-tree-node-id'),
+      dtTable = table.DataTable();
     node.tooltip('hide');
-
     if (switcher.hasClass('expanded')) {
       $('tr[data-ams-tree-node-parent-id]').filter(`tr[data-ams-tree-node-parent-id!="${tableID}"]`).each((idx, elt) => {
         dtTable.row(elt).remove().draw();
@@ -7967,10 +7288,9 @@ const tree = {
       });
     } else {
       const location = table.data('ams-location') || '',
-            target = table.data('ams-tree-nodes-target') || 'get-tree.json',
-            tr = $('tbody tr', table.first());
+        target = table.data('ams-tree-nodes-target') || 'get-tree.json',
+        tr = $('tbody tr', table.first());
       switcher.html('<i class="fas fa-spinner fa-spin"></i>');
-
       MyAMS.require('ajax').then(() => {
         MyAMS.ajax.post(`${location}/${target}`, {
           can_sort: !$('td.sorter', tr).is(':empty')
@@ -7988,7 +7308,6 @@ const tree = {
       });
     }
   },
-
   /**
    * Custom tree element delete callback
    *
@@ -7998,46 +7317,40 @@ const tree = {
   deleteElement: (form, options) => {
     console.debug(options);
     const nodeId = options.node_id;
-
     if (nodeId) {
       $(`tr[data-ams-tree-node-parent-id="${nodeId}"]`).each((idx, elt) => {
         const table = $(elt).parents('table'),
-              dtTable = table.DataTable();
+          dtTable = table.DataTable();
         dtTable.row(elt).remove().draw();
       });
     }
   },
-
   /**
    * Sort and re-parent tree elements
    */
   sortTree: (evt, details) => {
     const table = $(evt.target),
-          dtTable = table.DataTable(),
-          data = $(table).data();
+      dtTable = table.DataTable(),
+      data = $(table).data();
     let target = data.amsReorderUrl;
-
     if (target) {
       // Disable row click handler
       const row = $(data.amsReorderSource.node);
       row.data('ams-disabled-handlers', 'click');
-
       try {
         // Get root ID
-        const tableID = row.parents('table').first().data('ams-tree-node-id'); // Get moved row ID
-
+        const tableID = row.parents('table').first().data('ams-tree-node-id');
+        // Get moved row ID
         const rowID = row.data('ams-tree-node-id');
-        const rowParentID = row.data('ams-tree-node-parent-id'); // Get new parent ID
-
+        const rowParentID = row.data('ams-tree-node-parent-id');
+        // Get new parent ID
         const parent = row.prev('tr');
         let parentID, switcher, action;
-
         if (parent.exists()) {
           // Move below an existing row
-          parentID = parent.data('ams-tree-node-id'); // Check switcher state
-
+          parentID = parent.data('ams-tree-node-id');
+          // Check switcher state
           switcher = $('.switch', parent);
-
           if (switcher.hasClass('minus')) {
             // Opened folder: move as child
             if (rowParentID === parentID) {
@@ -8050,7 +7363,6 @@ const tree = {
           } else {
             // Closed folder or simple item: move as sibling
             parentID = parent.data('ams-tree-node-parent-id');
-
             if (rowParentID === parentID) {
               // Don't change parent
               action = 'reorder';
@@ -8063,7 +7375,6 @@ const tree = {
           // Move to site root
           parentID = tableID;
           switcher = null;
-
           if (rowParentID === parentID) {
             // Already child of site root
             action = 'reorder';
@@ -8071,22 +7382,18 @@ const tree = {
             // Move from inner folder to site root
             action = 'reparent';
           }
-        } // Call ordering target
-
-
+        }
+        // Call ordering target
         const localTarget = MyAMS.core.getFunctionByName(target);
-
         if (typeof localTarget === 'function') {
           localTarget.call(table, dnd_table, post_data);
         } else {
           if (!target.startsWith(window.location.protocol)) {
             const location = data.amsLocation;
-
             if (location) {
               target = `${location}/${target}`;
             }
           }
-
           const postData = {
             action: action,
             child: rowID,
@@ -8094,38 +7401,33 @@ const tree = {
             order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
             can_sort: !$('td.sorter', row).is(':empty')
           };
-
           MyAMS.require('ajax').then(() => {
             MyAMS.ajax.post(target, postData).then(result => {
               const removeRow = rowID => {
                 const row = $(`tr[data-ams-tree-node-id="${rowID}"]`);
                 dtTable.row(row).remove().draw();
               };
-
               const removeChildRows = rowID => {
                 const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`);
                 childs.each((idx, elt) => {
                   const childRow = $(elt),
-                        childID = childRow.attr('data-ams-tree-node-id');
+                    childID = childRow.attr('data-ams-tree-node-id');
                   removeChildRows(childID);
                   dtTable.row(childRow).remove().draw();
                 });
               };
-
               if (result.status) {
                 MyAMS.ajax.handleJSON(result);
               } else {
                 // Remove parent row if changed parent
                 if (postData.action === 'reparent') {
                   removeRow(parentID);
-                } // Remove moved row children
-
-
+                }
+                // Remove moved row children
                 removeChildRows(parentID);
                 removeChildRows(rowID);
                 dtTable.row(row).remove().draw();
                 let newRow, oldRow;
-
                 for (const resultRow of result) {
                   newRow = $(resultRow);
                   oldRow = $(`tr[id="${newRow.attr('id')}"]`);
@@ -8144,14 +7446,13 @@ const tree = {
         }, 50);
       }
     }
-
     return false;
   }
 };
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('tree');
@@ -8175,16 +7476,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "xmlrpc": function() { return /* binding */ xmlrpc; }
 /* harmony export */ });
 /* global MyAMS */
-
 /**
  * MyAMS XML-RPC protocol support
  */
+
 const $ = MyAMS.$;
 const xmlrpc = {};
+
 /**
  * Global module initialization
  */
-
 if (window.MyAMS) {
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('xmlrpc');
@@ -8202,7 +7503,7 @@ if (window.MyAMS) {
   \*******************************************/
 /***/ (function(module) {
 
-/*! JsRender v1.0.11: http://jsviews.com/#jsrender */
+/*! JsRender v1.0.12: http://jsviews.com/#jsrender */
 /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 /*
  * Best-of-breed templating in browser or on Node.js.
@@ -8242,7 +7543,7 @@ var setGlobals = $ === false; // Only set globals if script block in browser (no
 
 $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-var versionNumber = "v1.0.11",
+var versionNumber = "v1.0.12",
 	jsvStoreName, rTag, rTmplString, topView, $views, $expando,
 	_ocp = "_ocp",      // Observable contextual parameter
 
@@ -8281,6 +7582,7 @@ var versionNumber = "v1.0.11",
 		lt: "<"
 	},
 	HTML = "html",
+	STRING = "string",
 	OBJECT = "object",
 	tmplAttr = "data-jsv-tmpl",
 	jsvTmpl = "jsvTmpl",
@@ -8788,7 +8090,7 @@ function convertArgs(tagElse, bound) { // tag.cvtArgs() or tag.cvtArgs(tagElse?,
 	bindFrom = tag.bindFrom;
 	args = tagCtx.args;
 
-	if ((converter = tag.convert) && "" + converter === converter) {
+	if ((converter = tag.convert) && typeof converter === STRING) {
 		converter = converter === "true"
 			? undefined
 			: (tagCtx.view.getRsc("converters", converter) || error("Unknown converter: '" + converter + "'"));
@@ -8851,7 +8153,7 @@ function convertBoundArgs(tagElse) { // tag.bndArgs()
 function getResource(resourceType, itemName) {
 	var res, store,
 		view = this;
-	if ("" + itemName === itemName) {
+	if (typeof itemName === STRING) {
 		while ((res === undefined) && view) {
 			store = view.tmpl && view.tmpl[resourceType];
 			res = store && store[itemName];
@@ -9250,13 +8552,13 @@ function compileTag(name, tagDef, parentTmpl) {
 			depends: tagDef.depends,
 			render: tagDef
 		};
-	} else if ("" + tagDef === tagDef) {
+	} else if (typeof tagDef === STRING) {
 		tagDef = {template: tagDef};
 	}
 
 	if (baseTag = tagDef.baseTag) {
 		tagDef.flow = !!tagDef.flow; // Set flow property, so defaults to false even if baseTag has flow=true
-		baseTag = "" + baseTag === baseTag
+		baseTag = typeof baseTag === STRING
 			? (parentTmpl && parentTmpl.tags[baseTag] || $tags[baseTag])
 			: baseTag;
 		if (!baseTag) {
@@ -9273,7 +8575,7 @@ function compileTag(name, tagDef, parentTmpl) {
 
 	// Tag declared as object, used as the prototype for tag instantiation (control/presenter)
 	if ((tmpl = compiledDef.template) !== undefined) {
-		compiledDef.template = "" + tmpl === tmpl ? ($templates[tmpl] || $templates(tmpl)) : tmpl;
+		compiledDef.template = typeof tmpl === STRING ? ($templates[tmpl] || $templates(tmpl)) : tmpl;
 	}
 	(Tag.prototype = compiledDef).constructor = compiledDef._ctr = Tag;
 
@@ -9301,7 +8603,7 @@ function compileTmpl(name, tmpl, parentTmpl, options) {
 		// If value is of type string - treat as selector, or name of compiled template
 		// Return the template object, if already compiled, or the markup string
 		var currentName, tmpl;
-		if (("" + value === value) || value.nodeType > 0 && (elem = value)) {
+		if ((typeof value === STRING) || value.nodeType > 0 && (elem = value)) {
 			if (!elem) {
 				if (/^\.?\/[^\\:*?"<>]*$/.test(value)) {
 					// value="./some/file.html" (or "/some/file.html")
@@ -9465,7 +8767,7 @@ function compileViewModel(name, type) {
 		for (; j < getterCount; j++) {
 			prop = getters[j];
 			getterType = undefined;
-			if (prop + "" !== prop) {
+			if (typeof prop !== STRING) {
 				getterType = prop;
 				prop = getterType.getter;
 				parentRef = getterType.parentRef;
@@ -9478,7 +8780,7 @@ function compileViewModel(name, type) {
 	}
 
 	function map(data) {
-		data = data + "" === data
+		data = typeof data === STRING
 			? JSON.parse(data) // Accept JSON string
 			: data;            // or object/array
 		var l, prop, childOb, parentRef,
@@ -9531,7 +8833,7 @@ function compileViewModel(name, type) {
 	}
 
 	function merge(data, parent, parentRef) {
-		data = data + "" === data
+		data = typeof data === STRING
 			? JSON.parse(data) // Accept JSON string
 			: data;            // or object/array
 
@@ -9554,7 +8856,7 @@ function compileViewModel(name, type) {
 					mod = model[j];
 
 					if (id) {
-						assigned[j] = found = id + "" === id
+						assigned[j] = found = typeof id === STRING
 						? (ob[id] && (getterNames[id] ? mod[id]() : mod[id]) === ob[id])
 						: id(mod, ob);
 					}
@@ -9612,7 +8914,7 @@ function compileViewModel(name, type) {
 		for (; k < getterCount; k++) {
 			prop = getters[k];
 			getterType = undefined;
-			if (prop + "" !== prop) {
+			if (typeof prop !== STRING) {
 				getterType = prop;
 				prop = getterType.getter;
 			}
@@ -9753,7 +9055,7 @@ function registerStore(storeName, storeSettings) {
 			return item || $views;
 		}
 		// Adding a single unnamed item to the store
-		if (name && "" + name !== name) { // name must be a string
+		if (name &&  typeof name !== STRING) { // name must be a string
 			parentTmpl = item;
 			item = name;
 			name = undefined;
@@ -10285,7 +9587,7 @@ function tmplFn(markup, tmpl, isLinkExpr, convertBack, hasElse) {
 	pushprecedingContent(markup.length);
 
 	if (loc = astTop[astTop.length - 1]) {
-		blockTagCheck("" + loc !== loc && (+loc[10] === loc[10]) && loc[0]);
+		blockTagCheck(typeof loc !== STRING && (+loc[10] === loc[10]) && loc[0]);
 	}
 //			result = tmplFnsCache[markup] = buildCode(astTop, tmpl);
 //		}
@@ -10627,7 +9929,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 		tmplOptions = {},
 		l = ast.length;
 
-	if ("" + tmpl === tmpl) {
+	if (typeof tmpl === STRING) {
 		tmplName = isLinkExpr ? 'data-link="' + tmpl.replace(rNewLine, " ").slice(1, -1) + '"' : tmpl;
 		tmpl = 0;
 	} else {
@@ -10646,7 +9948,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 		node = ast[i];
 
 		// Add newline for each callout to t() c() etc. and each markup string
-		if ("" + node === node) {
+		if (typeof node === STRING) {
 			// a markup string to be inserted
 			code += '+"' + node + '"';
 		} else {
@@ -10866,11 +10168,11 @@ function getTargetSorted(value, tagCtx) {
 	if (!$isArray(value)) {
 		return value;
 	}
-	if (directSort || sort && "" + sort === sort) {
+	if (directSort || sort && typeof sort === STRING) {
 		// Temporary mapped array holds objects with index and sort-value
 		mapped = value.map(function(item, i) {
 			item = directSort ? item : getPathObject(item, sort);
-			return {i: i, v: "" + item === item ? item.toLowerCase() : item};
+			return {i: i, v: typeof item === STRING ? item.toLowerCase() : item};
 		});
 		// Sort mapped array
 		mapped.sort(function(a, b) {
@@ -10969,12 +10271,12 @@ function htmlEncode(text) {
 
 function dataEncode(text) {
 	// Encode just < > and & - intended for 'safe data' along with {{:}} rather than {{>}}
-  return "" + text === text ? text.replace(rDataEncode, getCharEntity) : text;
+  return typeof text === STRING ? text.replace(rDataEncode, getCharEntity) : text;
 }
 
 function dataUnencode(text) {
   // Unencode just < > and & - intended for 'safe data' along with {{:}} rather than {{>}}
-  return "" + text === text ? text.replace(rDataUnencode, getCharFromEntity) : text;
+  return  typeof text === STRING ? text.replace(rDataUnencode, getCharFromEntity) : text;
 }
 
 //========================== Initialize ==========================
@@ -11078,7 +10380,7 @@ if (!(jsr || $ && $.render)) {
 			: (
 				$subSettings._clFns && $subSettings._clFns(), // Clear linkExprStore (cached compiled expressions), since debugMode setting affects compilation for expressions
 				$subSettings.debugMode = debugMode,
-				$subSettings.onError = debugMode + "" === debugMode
+				$subSettings.onError = typeof debugMode === STRING
 					? function() { return debugMode; }
 					: $isFunction(debugMode)
 						? debugMode
@@ -11363,6 +10665,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"], {
   require: _ext_require__WEBPACK_IMPORTED_MODULE_1__["default"],
   ajax: _mod_ajax__WEBPACK_IMPORTED_MODULE_3__.ajax,
@@ -11388,11 +10691,11 @@ _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$.extend(_ext_base__WEBPACK_IM
   xmlrpc: _mod_xmlrpc__WEBPACK_IMPORTED_MODULE_21__.xmlrpc
 });
 const html = _ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$('html');
-
 if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
-/** Version: 1.13.1  */
+
+/** Version: 1.14.1  */
 }();
 /******/ })()
 ;

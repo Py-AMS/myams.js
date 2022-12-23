@@ -17,23 +17,21 @@
     value: true
   });
   _exports.stats = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS stats management
    */
+
   const $ = MyAMS.$;
   const stats = {
     logPageview: function () {},
     logEvent: function () {}
   };
+
   /**
    * Global module initialization
    */
-
   _exports.stats = stats;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('stats');

@@ -17,12 +17,11 @@
     value: true
   });
   _exports.helpers = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS generic helpers
    */
+
   const $ = MyAMS.$;
   const helpers = {
     /**
@@ -30,24 +29,20 @@
      */
     clearValue: evt => {
       const target = $(evt.currentTarget).data('target');
-
       if (target) {
         $(target).val(null);
       }
     },
-
     /**
      * Click handler used to clear datetime input
      */
     clearDatetimeValue: evt => {
       const target = $(evt.currentTarget).data('target'),
-            picker = $(target).data('datetimepicker');
-
+        picker = $(target).data('datetimepicker');
       if (picker) {
         picker.date(null);
       }
     },
-
     /**
      * Scroll anchor parent element to given anchor
      *
@@ -58,13 +53,12 @@
     scrollTo: function () {
       let parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
       let anchor = arguments.length > 1 ? arguments[1] : undefined;
-      let { ...props
+      let {
+        ...props
       } = arguments.length > 2 ? arguments[2] : undefined;
-
       if (typeof anchor === 'string') {
         anchor = $(anchor);
       }
-
       if (anchor.exists()) {
         MyAMS.require('ajax').then(() => {
           MyAMS.ajax.check($.fn.scrollTo, `${MyAMS.env.baseURL}../ext/jquery-scrollto${MyAMS.env.extext}.js`).then(() => {
@@ -73,42 +67,36 @@
         });
       }
     },
-
     /**
      * Store location hash when redirecting to log in form
      */
     setLoginHash: () => {
       const form = $('#login_form'),
-            hash = $(`input[name="login_form.widgets.hash"]`, form);
+        hash = $(`input[name="login_form.widgets.hash"]`, form);
       hash.val(window.location.hash);
     },
-
     /**
      * SEO input helper
      */
     setSEOStatus: evt => {
       const input = $(evt.target),
-            progress = input.siblings('.progress').children('.progress-bar'),
-            length = Math.min(input.val().length, 100);
+        progress = input.siblings('.progress').children('.progress-bar'),
+        length = Math.min(input.val().length, 100);
       let status = 'success';
-
       if (length < 20 || length > 80) {
         status = 'danger';
       } else if (length < 40 || length > 66) {
         status = 'warning';
       }
-
       progress.removeClassPrefix('bg-').addClass('bg-' + status).css('width', length + '%');
     },
-
     /**
      * Select2 change helper
      */
     select2ChangeHelper: evt => {
       const source = $(evt.currentTarget),
-            data = source.data(),
-            target = $(data.amsSelect2HelperTarget);
-
+        data = source.data(),
+        target = $(data.amsSelect2HelperTarget);
       switch (data.amsSelect2HelperType) {
         case 'html':
           target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
@@ -123,23 +111,18 @@
                 target.empty();
               }
             });
-
             callback(result);
           }).catch(() => {
             target.empty();
           });
           break;
-
         default:
           const callback = data.amsSelect2HelperCallback;
-
           if (callback) {
             MyAMS.core.executeFunctionByName(callback, source, data);
           }
-
       }
     },
-
     /**
      * Refresh a DOM element with content provided in
      * the <code>options</code> object.
@@ -162,7 +145,6 @@
         }, reject);
       });
     },
-
     /**
      * Refresh a form widget with content provided in
      * the <code>options</code> object
@@ -175,7 +157,7 @@
     refreshWidget: (form, options) => {
       return new Promise((resolve, reject) => {
         let widget = $(`[id="${options.widget_id}"]`),
-            group = widget.parents('.widget-group');
+          group = widget.parents('.widget-group');
         MyAMS.core.executeFunctionByName(MyAMS.config.clearContent, document, group).then(() => {
           group.replaceWith($(options.content));
           widget = $(`[id="${options.widget_id}"]`);
@@ -186,7 +168,6 @@
         }, reject);
       });
     },
-
     /**
      * Add new row to table
      *
@@ -197,10 +178,9 @@
     addTableRow: (form, options) => {
       return new Promise((resolve, reject) => {
         const selector = `table[id="${options.table_id}"]`,
-              table = $(selector),
-              dtTable = table.DataTable();
+          table = $(selector),
+          dtTable = table.DataTable();
         let newRow;
-
         if (options.data) {
           dtTable.rows.add(options.data).draw();
           newRow = $(`tr[id="${options.row_id}"]`, table);
@@ -214,7 +194,6 @@
         }
       });
     },
-
     /**
      * Refresh a table row with content provided in
      * the <code>options</code> object
@@ -227,20 +206,17 @@
     refreshTableRow: (form, options) => {
       return new Promise((resolve, reject) => {
         const selector = `tr[id="${options.row_id}"]`,
-              row = $(selector),
-              table = row.parents('table').first();
-
+          row = $(selector),
+          table = row.parents('table').first();
         if (options.data) {
           if ($.fn.DataTable) {
             const dtTable = table.DataTable();
-
             if (typeof options.data === 'string') {
               dtTable.row(selector).remove();
               dtTable.row.add($(options.data)).draw();
             } else {
               dtTable.row(selector).data(options.data).draw();
             }
-
             resolve(row);
           } else {
             reject('No DataTable plug-in available!');
@@ -254,7 +230,6 @@
         }
       });
     },
-
     /**
      * Refresh a single image with content provided in
      * the <code>options</code> object.
@@ -268,7 +243,6 @@
       const image = $(`[id="${options.image_id}"]`);
       image.attr('src', options.src);
     },
-
     /**
      * Move given element to the end of it's parent
      *
@@ -279,7 +253,6 @@
       const parent = element.parent();
       return element.detach().appendTo(parent);
     },
-
     /**
      * Add given element to the end of specified parent
      *
@@ -298,14 +271,11 @@
       element = $(element);
       parent = $(parent);
       const result = element.appendTo(parent);
-
       if (props.scrollTo) {
         MyAMS.helpers.scrollTo(props.scrollParent, element);
       }
-
       return result;
     },
-
     /**
      * Toggle dropdown associated with given event target
      *
@@ -315,12 +285,11 @@
       $(evt.target).closest('.dropdown-menu').dropdown('hide');
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.helpers = helpers;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('helpers');

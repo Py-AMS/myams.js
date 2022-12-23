@@ -17,20 +17,18 @@
     value: true
   });
   _exports.graph = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS graphs management
    */
+
   const $ = MyAMS.$;
   const graph = {};
+
   /**
    * Global module initialization
    */
-
   _exports.graph = graph;
-
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('graph');

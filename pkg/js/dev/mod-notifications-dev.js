@@ -17,23 +17,20 @@
     value: true
   });
   _exports.notifications = void 0;
-
   /* global MyAMS */
-
   /**
    * MyAMS notifications handlers
    */
-  const $ = MyAMS.$;
 
+  const $ = MyAMS.$;
   if (!$.templates) {
     const jsrender = require('jsrender');
-
     $.templates = jsrender.templates;
   }
+
   /**
    * Notifications list template string
    */
-
 
   const ITEM_TEMPLATE_STRING = `
 	<li class="p-1 my-1{{if status}} alert-{{:status}}{{/if}}">
@@ -76,7 +73,6 @@
     markup: LIST_TEMPLATE_STRING,
     allowCode: true
   });
-
   class NotificationsList {
     /**
      * List constructor
@@ -89,13 +85,12 @@
       this.values = values;
       this.options = options;
     }
+
     /**
      * Render list into given parent
      *
      * @param parent: JQUery parent object into which the list must be rendered
      */
-
-
     render(parent) {
       $(parent).html(LIST_TEMPLATE.render(this.values, {
         itemTemplate: ITEM_TEMPLATE,
@@ -104,9 +99,7 @@
         options: this.options
       }));
     }
-
   }
-
   const notifications = {
     /**
      * Check permission to display desktop notifications
@@ -118,10 +111,8 @@
         } catch (e) {
           return false;
         }
-
         return true;
       };
-
       return new Promise((resolve, reject) => {
         if (!('Notification' in window)) {
           console.debug("Notifications are not supported by this browser!");
@@ -148,7 +139,6 @@
     checkUserPermission: () => {
       MyAMS.notifications.checkPermission().then(() => {});
     },
-
     /**
      * Load user notifications
      *
@@ -157,9 +147,9 @@
      */
     getNotifications: (evt, options) => {
       const data = $.extend({}, options, evt.data),
-            target = $(evt.target),
-            current = $(evt.currentTarget),
-            remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
+        target = $(evt.target),
+        current = $(evt.currentTarget),
+        remote = current.data('ams-notifications-source') || current.parents('[data-ams-notifications-source]').data('ams-notifications-source');
       return new Promise((resolve, reject) => {
         MyAMS.require('ajax').then(() => {
           MyAMS.ajax.get(remote, current.data('ams-notifications-params') || '', current.data('ams-notifications-options') || {}).then(result => {
@@ -172,7 +162,6 @@
         }, reject);
       });
     },
-
     /**
      * Add new notification to notifications list
      *
@@ -181,17 +170,15 @@
      */
     addNotification: (message, showDesktop) => {
       const pane = $('ul', '#notifications-pane'),
-            notification = $(ITEM_TEMPLATE.render(message)),
-            badge = $('#notifications-count'),
-            count = parseInt(badge.text()) || 0;
+        notification = $(ITEM_TEMPLATE.render(message)),
+        badge = $('#notifications-count'),
+        count = parseInt(badge.text()) || 0;
       pane.prepend(notification);
       badge.text(count + 1);
-
       if (showDesktop) {
         notifications.showDesktopNotification(message);
       }
     },
-
     /**
      * Show new desktop notification
      *
@@ -202,14 +189,12 @@
         if (!status) {
           return;
         }
-
         const options = {
-          title: message.title,
-          body: message.message,
-          icon: message.source.avatar
-        },
-              notification = new Notification(options.title, options);
-
+            title: message.title,
+            body: message.message,
+            icon: message.source.avatar
+          },
+          notification = new Notification(options.title, options);
         if (message.url) {
           notification.onclick = () => {
             window.open(message.url);
@@ -218,12 +203,11 @@
       });
     }
   };
+
   /**
    * Global module initialization
    */
-
   _exports.notifications = notifications;
-
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('notifications');
   } else {
