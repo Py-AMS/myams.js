@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.14.2
+------
+ - correction in DataTables stateRestore plug-in loading
+ - added support for Python 3.11
+ 
 1.14.1
 ------
  - upgraded DataTables plug-in to release 1.13.1
