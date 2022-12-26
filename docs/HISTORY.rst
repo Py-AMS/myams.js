@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.15.0
+------
+ - upgraded FontAwesome to release 6.2.1
+ - updated Webpack configuration to manage fonts assets (and avoid browsers errors!)
+
 1.14.2
 ------
  - correction in DataTables stateRestore plug-in loading
