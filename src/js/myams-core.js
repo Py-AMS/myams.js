@@ -1,7 +1,7 @@
 /**
  * MyAMS core features
  *
- * This script is used to build MyAMS mini-core-package.
+ * This script is used to build MyAMS core-package.
  *
  * This package only includes MyAMS core features, but not CSS or external modules
  * which can be loaded using MyAMS.require function.
