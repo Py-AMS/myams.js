@@ -1,6 +1,6 @@
 {
   "name": "myams_js",
-  "version": "1.14.2",
+  "version": "1.15.0",
   "description": "MyAMS extension package for JQuery and Bootstrap based applications",
   "main": "myams.js",
   "directories": {
@@ -77,7 +77,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@fortawesome/fontawesome-free": "^5.15.4"
+    "@fortawesome/fontawesome-free": "^6.2.1"
   },
   "jest": {
     "testResultsProcessor": "jest-sonar-reporter"
