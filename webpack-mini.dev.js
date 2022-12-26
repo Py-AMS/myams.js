@@ -8,7 +8,8 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, 'pkg', 'js', 'dev'),
-		filename: '[name]-dev.js'
+		filename: '[name]-dev.js',
+		assetModuleFilename: '../../css/webfonts/[name][ext]'
 	},
 	externals: {
 		jquery: 'jquery',

@@ -8,7 +8,8 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, 'pkg', 'js', 'prod'),
-		filename: '[name].js'
+		filename: '[name].js',
+		assetModuleFilename: '../../css/webfonts/[name][ext]'
 	},
 	externals: {
 		jquery: 'jquery',
@@ -36,11 +37,11 @@ module.exports = {
 			},
 			{
 				test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-				use: [ 'url-loader' ]
+				type: 'asset/resource'
 			},
 			{
 				test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-				use: [ 'file-loader' ]
+				type: 'asset/resource'
 			}
 		]
 	}
