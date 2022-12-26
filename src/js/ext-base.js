@@ -704,7 +704,7 @@ function getEnv($) {
 			'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
 		src = script.attr('src'),
 		devmode = src ? src.indexOf('-dev.js') >= 0 : true,  // testing mode
-		bundle = src ? (src.indexOf('-core') < 0 && src.indexOf('-mini') < 0) : true;
+		bundle = src ? src.indexOf('-core') < 0 : true;  // MyAMS modules not included in 'core' package
 	return {
 		bundle: bundle,
 		devmode: devmode,
