@@ -681,7 +681,7 @@ function getEnv($) {
     src = script.attr('src'),
     devmode = src ? src.indexOf('-dev.js') >= 0 : true,
     // testing mode
-    bundle = src ? src.indexOf('-core') < 0 && src.indexOf('-mini') < 0 : true;
+    bundle = src ? src.indexOf('-core') < 0 : true; // MyAMS modules not included in 'core' package
   return {
     bundle: bundle,
     devmode: devmode,
@@ -10695,7 +10695,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 1.14.2  */
+/** Version: 1.15.0  */
 }();
 /******/ })()
 ;
