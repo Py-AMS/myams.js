@@ -23,7 +23,7 @@ DOCS = os.path.join(os.path.dirname(__file__),
 README = os.path.join(DOCS, 'README.rst')
 HISTORY = os.path.join(DOCS, 'HISTORY.rst')
 
-version = '1.15.0'
+version = '1.15.1'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
 data_dir = 'pkg'
@@ -62,6 +62,7 @@ setup(name='myams_js',
       },
       data_files=data_files,
       zip_safe=False,
+      python_requires='>=3.7',
       # uncomment this to be able to run tests with setup.py
       # test_suite="myams_js.tests.test_utilsdocs.test_suite",
       tests_require=tests_require,

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.1
+------
+ - updated DataTables DOM property when including buttons
+
 1.15.0
 ------
  - upgraded FontAwesome to release 6.2.1
