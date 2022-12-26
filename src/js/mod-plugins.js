@@ -557,7 +557,7 @@ export function datatables(element) {
 									let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
 									if (!dom) {
 										if (data.buttons) {
-											dom += "B";
+											dom += "<'row my-2 px-4 justify-content-end'B>";
 										}
 										if (data.searchBuilder) {
 											dom += "Q";
