@@ -109,15 +109,16 @@ export const helpers = {
 			const
 				source = $(evt.currentTarget),
 				data = source.data(),
-				target = $(data.amsSelect2HelperTarget);
+				target = $(data.amsSelect2HelperTarget),
+				params = {};
+			let callback;
 			switch (data.amsSelect2HelperType) {
 
 				case 'html':
 					target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
-					const params = {};
 					params[data.amsSelect2HelperArgument || 'value'] = source.val();
 					$.get(data.amsSelect2HelperUrl, params).then((result) => {
-						const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || ((result) => {
+						callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || ((result) => {
 							if (result) {
 								target.html(result);
 								MyAMS.core.initContent(target).then(() => {
@@ -136,7 +137,7 @@ export const helpers = {
 					break;
 
 				default:
-					const callback = data.amsSelect2HelperCallback;
+					callback = data.amsSelect2HelperCallback;
 					if (callback) {
 						MyAMS.core.executeFunctionByName(callback, source, data);
 						resolve();
