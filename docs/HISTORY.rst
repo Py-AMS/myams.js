@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.15.2
+------
+ - updated MyAMS theme getter
+ - updated promises handler in several plug-ins
+ - new unit tests on mod-helpers
+
 1.15.1
 ------
  - updated DataTables DOM property when including buttons

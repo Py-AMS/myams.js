@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.14.1
+Version: 1.15.1
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -12,6 +12,7 @@ Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Python
 Classifier: Framework :: Pyramid
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.7
 Provides-Extra: test
 License-File: LICENSE
 
@@ -59,6 +60,26 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+1.15.1
+------
+ - updated DataTables DOM property when including buttons
+
+1.15.0
+------
+ - upgraded FontAwesome to release 6.2.1
+ - updated Webpack configuration to manage fonts assets (and avoid browsers errors!)
+
+1.14.2
+------
+ - correction in DataTables stateRestore plug-in loading
+ - added support for Python 3.11
+ 
+1.14.1
+------
+ - upgraded DataTables plug-in to release 1.13.1
+ - updated dependencies
+ - small menu check update
 
 1.14.0
 ------

@@ -218,9 +218,8 @@
             MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
             menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
           });
-        }, reject).then(() => {
           resolve(menus);
-        });
+        }, reject);
       } else {
         resolve(null);
       }
@@ -734,10 +733,9 @@
                 }
                 input.trigger('after-init.ams.datetime', [input, plugin]);
               });
+              resolve(inputs);
             });
-          }, reject).then(() => {
-            resolve(inputs);
-          });
+          }, reject);
         }, reject);
       } else {
         resolve(null);
@@ -855,10 +853,9 @@
                 item.trigger('after-init.ams.resizable', [item, plugin]);
               }
             });
+            resolve(dragitems);
           });
-        }, reject).then(() => {
-          resolve(dragitems);
-        });
+        }, reject);
       } else {
         resolve(null);
       }
@@ -936,11 +933,10 @@
                   textarea.trigger('after-init.ams.editor', [textarea, editor]);
                 }, 200);
               });
+              resolve(editors);
             });
           });
-        }, reject).then(() => {
-          resolve(editors);
-        });
+        }, reject);
       } else {
         resolve(null);
       }
@@ -974,9 +970,8 @@
               bsCustomFileInput.init(inputSelector, formSelector);
               input.trigger('after-init.ams.fileinput', [input]);
             });
-          }, reject).then(() => {
             resolve(inputs);
-          });
+          }, reject);
         }, reject);
       } else {
         resolve(null);
@@ -1046,9 +1041,8 @@
                   image.trigger('after-init.ams.imgareaselect', [image, plugin]);
                 }, 200);
               });
-            }, reject).then(() => {
               resolve(images);
-            });
+            }, reject);
           }, reject);
         }, reject);
       } else {
@@ -1186,9 +1180,8 @@
                 MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
                 select.trigger('after-init.ams.select2', [select, plugin]);
               });
-            }, reject).then(() => {
               resolve(selects);
-            });
+            }, reject);
           }, reject);
         }, reject);
       } else {
@@ -1382,9 +1375,8 @@
                   editor.trigger('after-init.ams.tinymce', [editor, settings]);
                 }, 250);
               });
-            }, reject).then(() => {
               resolve(editors);
-            });
+            }, reject);
           }, reject);
         }, reject);
       } else {
@@ -1549,9 +1541,8 @@
               MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
               form.trigger('after-init.ams.validate', [form, plugin]);
             });
-          }, reject).then(() => {
             resolve(forms);
-          });
+          }, reject);
         }, reject);
       }
     });

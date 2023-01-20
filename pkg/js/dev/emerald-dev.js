@@ -550,7 +550,7 @@ function getScript(url) {
   return new Promise((resolve, reject) => {
     const defaults = {
       dataType: 'script',
-      url: getSource(url),
+      url: MyAMS.core.getSource(url),
       cache: MyAMS.env.devmode,
       async: true
     };
@@ -665,15 +665,17 @@ function switchIcon(element, fromClass, toClass) {
 }
 
 /**
- * MyAMS base environment
+ * MyAMS base environment getter
  *
- * @type {{
- *     bundle: boolean,
- *     devmode: boolean,
- *     devext: string,
- *     extext: string,
- *     theme: string,
- *     baseURL: string
+ * @type {Object}
+ *
+ * Returns an object with the following attributes matching MyAMS environment:
+ * - bundle: boolean; true if MyAMS is published using modules bundle
+ * - devmode: boolean; true if MyAMS is published in development mode
+ * - devext: string: extension used in development mode
+ * - extext: string: extension used for external extensions
+ * - theme: string: current MyAMS theme name
+ * - baseURL: string: base MyAMS URL
  * }}
  */
 function getEnv($) {
@@ -695,10 +697,8 @@ function getEnv($) {
  * MyAMS theme getter
  */
 function getTheme() {
-  let theme;
-  if (MyAMS.env.bundle) {
-    theme = MyAMS.theme;
-  } else {
+  let theme = MyAMS.theme;
+  if (!theme) {
     const css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
     theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
   }
@@ -722,23 +722,25 @@ function getDOM() {
 /**
  * MyAMS default configuration
  *
- * @type {Object}:
- *      modules: array of loaded extension modules
- *      ajaxNav: true if AJAX navigation is enabled
- *      enableFastclick: true is "smart-click" extension is to be activated on mobile devices
- *      menuSpeed: menu speed, in miliseconds
- *      initPage: dotted name of MyAMS global init function
- *      initContent: dotted name of MyAMS content init function
- *      alertContainerCLass: class of MyAMS alerts container
- *      safeMethods: HTTP methods which can be used without CSRF cookie verification
- *      csrfCookieName: CSRF cookie name
- *      csrfHeaderName: CSRF header name
- *      enableTooltips: global tooltips enable flag
- *      enableHtmlTooltips: allow HTML code in tooltips
- *      warnOnFormChange: flag to specify if form changes should be warned
- *      formChangeCallback: global form change callback
- *      isMobile: boolean, true if device is detected as mobile
- *      device: string: 'mobile' or 'desktop'
+ * @type {Object}
+ *
+ * Returns an object matching current MyAMS configuration:
+ * - modules: array of loaded extension modules
+ * - ajaxNav: true if AJAX navigation is enabled
+ * - enableFastclick: true is "smart-click" extension is to be activated on mobile devices
+ * - menuSpeed: menu speed, in miliseconds
+ * - initPage: dotted name of MyAMS global init function
+ * - initContent: dotted name of MyAMS content init function
+ * - alertContainerCLass: class of MyAMS alerts container
+ * - safeMethods: HTTP methods which can be used without CSRF cookie verification
+ * - csrfCookieName: CSRF cookie name
+ * - csrfHeaderName: CSRF header name
+ * - enableTooltips: global tooltips enable flag
+ * - enableHtmlTooltips: allow HTML code in tooltips
+ * - warnOnFormChange: flag to specify if form changes should be warned
+ * - formChangeCallback: global form change callback
+ * - isMobile: boolean, true if device is detected as mobile
+ * - device: string: 'mobile' or 'desktop'
  */
 const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()),
   config = {
@@ -3734,6 +3736,9 @@ const helpers = {
   },
   /**
    * Store location hash when redirecting to log in form
+   *
+   * This helper is used to store window location hash into form input, to redirect
+   * user correctly after login.
    */
   setLoginHash: () => {
     const form = $('#login_form'),
@@ -3742,6 +3747,9 @@ const helpers = {
   },
   /**
    * SEO input helper
+   *
+   * This helper is used to display a small coloured progress bar below a text input
+   * to display its SEO quality based on text length.
    */
   setSEOStatus: evt => {
     const input = $(evt.target),
@@ -3757,36 +3765,57 @@ const helpers = {
   },
   /**
    * Select2 change helper
+   *
+   * This helper is used to handle a change event on a Select2 input. Data attributes
+   * defined on Select2 input can be used to define behaviour of this helper:
+   *  - data-ams-select2-helper-type: can be set to "html" when HTML code is loaded via a
+   *    webservice call, and included into a *target* element
+   *  - data-ams-select2-helper-url: remote webservice URL
+   *  - data-ams-select2-helper-target: CSS selector of a DOM element which will receive
+   *    result of a webservice call
+   *  - data-ams-select2-helper-argument: name of the argument used to call webservice; if
+   *    not defined, the used name is 'value'; this argument is filled with the selected value
+   *    of the Select2 input
+   *  - data-ams-select2-helper-callback: name of a callback function which can be used to
+   *    handle webservice result; if no callback is defined, the webservice result will be
+   *    inserted directly into defined target
    */
   select2ChangeHelper: evt => {
-    const source = $(evt.currentTarget),
-      data = source.data(),
-      target = $(data.amsSelect2HelperTarget);
-    switch (data.amsSelect2HelperType) {
-      case 'html':
-        target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
-        const params = {};
-        params[data.amsSelect2HelperArgument || 'value'] = source.val();
-        $.get(data.amsSelect2HelperUrl, params).then(result => {
-          const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || (result => {
-            if (result) {
-              target.html(result);
-              MyAMS.core.initContent(target).then();
-            } else {
-              target.empty();
-            }
+    return new Promise((resolve, reject) => {
+      const source = $(evt.currentTarget),
+        data = source.data(),
+        target = $(data.amsSelect2HelperTarget);
+      switch (data.amsSelect2HelperType) {
+        case 'html':
+          target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
+          const params = {};
+          params[data.amsSelect2HelperArgument || 'value'] = source.val();
+          $.get(data.amsSelect2HelperUrl, params).then(result => {
+            const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || (result => {
+              if (result) {
+                target.html(result);
+                MyAMS.core.initContent(target).then(() => {
+                  resolve();
+                });
+              } else {
+                target.empty();
+                resolve();
+              }
+            });
+            callback(result);
+          }).catch(() => {
+            target.empty();
+            reject();
           });
-          callback(result);
-        }).catch(() => {
-          target.empty();
-        });
-        break;
-      default:
-        const callback = data.amsSelect2HelperCallback;
-        if (callback) {
-          MyAMS.core.executeFunctionByName(callback, source, data);
-        }
-    }
+          break;
+        default:
+          const callback = data.amsSelect2HelperCallback;
+          if (callback) {
+            MyAMS.core.executeFunctionByName(callback, source, data);
+            resolve();
+          }
+      }
+    });
   },
   /**
    * Refresh a DOM element with content provided in
@@ -5543,9 +5572,8 @@ function contextMenu(element) {
           MyAMS.core.executeFunctionByName(data.amsContextmenuAfterInitCallback || data.amsAfterInit, document, menu, plugin, settings);
           menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
         });
-      }, reject).then(() => {
         resolve(menus);
-      });
+      }, reject);
     } else {
       resolve(null);
     }
@@ -6059,10 +6087,9 @@ function datetime(element) {
               }
               input.trigger('after-init.ams.datetime', [input, plugin]);
             });
+            resolve(inputs);
           });
-        }, reject).then(() => {
-          resolve(inputs);
-        });
+        }, reject);
       }, reject);
     } else {
       resolve(null);
@@ -6180,10 +6207,9 @@ function dragdrop(element) {
               item.trigger('after-init.ams.resizable', [item, plugin]);
             }
           });
+          resolve(dragitems);
         });
-      }, reject).then(() => {
-        resolve(dragitems);
-      });
+      }, reject);
     } else {
       resolve(null);
     }
@@ -6261,11 +6287,10 @@ function editor(element) {
                 textarea.trigger('after-init.ams.editor', [textarea, editor]);
               }, 200);
             });
+            resolve(editors);
           });
         });
-      }, reject).then(() => {
-        resolve(editors);
-      });
+      }, reject);
     } else {
       resolve(null);
     }
@@ -6299,9 +6324,8 @@ function fileInput(element) {
             bsCustomFileInput.init(inputSelector, formSelector);
             input.trigger('after-init.ams.fileinput', [input]);
           });
-        }, reject).then(() => {
           resolve(inputs);
-        });
+        }, reject);
       }, reject);
     } else {
       resolve(null);
@@ -6371,9 +6395,8 @@ function imgAreaSelect(element) {
                 image.trigger('after-init.ams.imgareaselect', [image, plugin]);
               }, 200);
             });
-          }, reject).then(() => {
             resolve(images);
-          });
+          }, reject);
         }, reject);
       }, reject);
     } else {
@@ -6511,9 +6534,8 @@ function select2(element) {
               MyAMS.core.executeFunctionByName(data.amsSelect2AfterInitCallback || data.amsAfterInit, document, select, plugin, settings);
               select.trigger('after-init.ams.select2', [select, plugin]);
             });
-          }, reject).then(() => {
             resolve(selects);
-          });
+          }, reject);
         }, reject);
       }, reject);
     } else {
@@ -6707,9 +6729,8 @@ function tinymce(element) {
                 editor.trigger('after-init.ams.tinymce', [editor, settings]);
               }, 250);
             });
-          }, reject).then(() => {
             resolve(editors);
-          });
+          }, reject);
         }, reject);
       }, reject);
     } else {
@@ -6874,9 +6895,8 @@ function validate(element) {
             MyAMS.core.executeFunctionByName(data.amsValidateAfterInitCallback || data.amsAfterInit, document, form, plugin, settings);
             form.trigger('after-init.ams.validate', [form, plugin]);
           });
-        }, reject).then(() => {
           resolve(forms);
-        });
+        }, reject);
       }, reject);
     }
   });
@@ -32278,7 +32298,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_2__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_2__["default"].$);
 }
 
-/** Version: 1.15.1  */
+/** Version: 1.15.2  */
 }();
 /******/ })()
 ;
