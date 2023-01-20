@@ -183,8 +183,15 @@
           }
           // Call ordering target
           const localTarget = MyAMS.core.getFunctionByName(target);
+          const postData = {
+            action: action,
+            child: rowID,
+            parent: parentID,
+            order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
+            can_sort: !$('td.sorter', row).is(':empty')
+          };
           if (typeof localTarget === 'function') {
-            localTarget.call(table, dnd_table, post_data);
+            localTarget.call(table, dtTable, postData);
           } else {
             if (!target.startsWith(window.location.protocol)) {
               const location = data.amsLocation;
@@ -192,13 +199,6 @@
                 target = `${location}/${target}`;
               }
             }
-            const postData = {
-              action: action,
-              child: rowID,
-              parent: parentID,
-              order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
-              can_sort: !$('td.sorter', row).is(':empty')
-            };
             MyAMS.require('ajax').then(() => {
               MyAMS.ajax.post(target, postData).then(result => {
                 const removeRow = rowID => {

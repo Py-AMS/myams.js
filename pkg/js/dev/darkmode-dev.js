@@ -3784,14 +3784,15 @@ const helpers = {
     return new Promise((resolve, reject) => {
       const source = $(evt.currentTarget),
         data = source.data(),
-        target = $(data.amsSelect2HelperTarget);
+        target = $(data.amsSelect2HelperTarget),
+        params = {};
+      let callback;
       switch (data.amsSelect2HelperType) {
         case 'html':
           target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
-          const params = {};
           params[data.amsSelect2HelperArgument || 'value'] = source.val();
           $.get(data.amsSelect2HelperUrl, params).then(result => {
-            const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || (result => {
+            callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || (result => {
               if (result) {
                 target.html(result);
                 MyAMS.core.initContent(target).then(() => {
@@ -3809,7 +3810,7 @@ const helpers = {
           });
           break;
         default:
-          const callback = data.amsSelect2HelperCallback;
+          callback = data.amsSelect2HelperCallback;
           if (callback) {
             MyAMS.core.executeFunctionByName(callback, source, data);
             resolve();
@@ -7405,8 +7406,15 @@ const tree = {
         }
         // Call ordering target
         const localTarget = MyAMS.core.getFunctionByName(target);
+        const postData = {
+          action: action,
+          child: rowID,
+          parent: parentID,
+          order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
+          can_sort: !$('td.sorter', row).is(':empty')
+        };
         if (typeof localTarget === 'function') {
-          localTarget.call(table, dnd_table, post_data);
+          localTarget.call(table, dtTable, postData);
         } else {
           if (!target.startsWith(window.location.protocol)) {
             const location = data.amsLocation;
@@ -7414,13 +7422,6 @@ const tree = {
               target = `${location}/${target}`;
             }
           }
-          const postData = {
-            action: action,
-            child: rowID,
-            parent: parentID,
-            order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
-            can_sort: !$('td.sorter', row).is(':empty')
-          };
           MyAMS.require('ajax').then(() => {
             MyAMS.ajax.post(target, postData).then(result => {
               const removeRow = rowID => {
@@ -32298,7 +32299,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_2__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_2__["default"].$);
 }
 
-/** Version: 1.15.2  */
+/** Version: 1.15.3  */
 }();
 /******/ })()
 ;
