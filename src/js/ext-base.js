@@ -557,7 +557,7 @@ export function getScript(url, options={}) {
 	return new Promise((resolve, reject) => {
 		const defaults = {
 			dataType: 'script',
-			url: getSource(url),
+			url: MyAMS.core.getSource(url),
 			cache: MyAMS.env.devmode,
 			async: true
 		};
@@ -683,15 +683,17 @@ export function switchIcon(element, fromClass, toClass, prefix='fa') {
 
 
 /**
- * MyAMS base environment
+ * MyAMS base environment getter
  *
- * @type {{
- *     bundle: boolean,
- *     devmode: boolean,
- *     devext: string,
- *     extext: string,
- *     theme: string,
- *     baseURL: string
+ * @type {Object}
+ *
+ * Returns an object with the following attributes matching MyAMS environment:
+ * - bundle: boolean; true if MyAMS is published using modules bundle
+ * - devmode: boolean; true if MyAMS is published in development mode
+ * - devext: string: extension used in development mode
+ * - extext: string: extension used for external extensions
+ * - theme: string: current MyAMS theme name
+ * - baseURL: string: base MyAMS URL
  * }}
  */
 function getEnv($) {
@@ -719,10 +721,8 @@ function getEnv($) {
  * MyAMS theme getter
  */
 function getTheme() {
-	let theme;
-	if (MyAMS.env.bundle) {
-		theme = MyAMS.theme;
-	} else {
+	let theme = MyAMS.theme;
+	if (!theme) {
 		const css = $(
 			'link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]'
 		);
@@ -750,23 +750,25 @@ function getDOM() {
 /**
  * MyAMS default configuration
  *
- * @type {Object}:
- *      modules: array of loaded extension modules
- *      ajaxNav: true if AJAX navigation is enabled
- *      enableFastclick: true is "smart-click" extension is to be activated on mobile devices
- *      menuSpeed: menu speed, in miliseconds
- *      initPage: dotted name of MyAMS global init function
- *      initContent: dotted name of MyAMS content init function
- *      alertContainerCLass: class of MyAMS alerts container
- *      safeMethods: HTTP methods which can be used without CSRF cookie verification
- *      csrfCookieName: CSRF cookie name
- *      csrfHeaderName: CSRF header name
- *      enableTooltips: global tooltips enable flag
- *      enableHtmlTooltips: allow HTML code in tooltips
- *      warnOnFormChange: flag to specify if form changes should be warned
- *      formChangeCallback: global form change callback
- *      isMobile: boolean, true if device is detected as mobile
- *      device: string: 'mobile' or 'desktop'
+ * @type {Object}
+ *
+ * Returns an object matching current MyAMS configuration:
+ * - modules: array of loaded extension modules
+ * - ajaxNav: true if AJAX navigation is enabled
+ * - enableFastclick: true is "smart-click" extension is to be activated on mobile devices
+ * - menuSpeed: menu speed, in miliseconds
+ * - initPage: dotted name of MyAMS global init function
+ * - initContent: dotted name of MyAMS content init function
+ * - alertContainerCLass: class of MyAMS alerts container
+ * - safeMethods: HTTP methods which can be used without CSRF cookie verification
+ * - csrfCookieName: CSRF cookie name
+ * - csrfHeaderName: CSRF header name
+ * - enableTooltips: global tooltips enable flag
+ * - enableHtmlTooltips: allow HTML code in tooltips
+ * - warnOnFormChange: flag to specify if form changes should be warned
+ * - formChangeCallback: global form change callback
+ * - isMobile: boolean, true if device is detected as mobile
+ * - device: string: 'mobile' or 'desktop'
  */
 const
 	isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
