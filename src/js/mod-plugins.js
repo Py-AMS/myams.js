@@ -194,9 +194,8 @@ export function contextMenu(element) {
 						document, menu, plugin, settings);
 					menu.trigger('after-init.ams.contextmenu', [menu, plugin]);
 				});
-			}, reject).then(() => {
 				resolve(menus);
-			});
+			}, reject);
 		} else {
 			resolve(null);
 		}
@@ -744,10 +743,9 @@ export function datetime(element) {
 							}
 							input.trigger('after-init.ams.datetime', [input, plugin]);
 						});
+						resolve(inputs);
 					});
-				}, reject).then(() => {
-					resolve(inputs);
-				});
+				}, reject);
 			}, reject);
 		} else {
 			resolve(null);
@@ -880,10 +878,9 @@ export function dragdrop(element) {
 							item.trigger('after-init.ams.resizable', [item, plugin]);
 						}
 					});
+					resolve(dragitems);
 				});
-			}, reject).then(() => {
-				resolve(dragitems);
-			});
+			}, reject);
 		} else {
 			resolve(null);
 		}
@@ -970,11 +967,10 @@ export function editor(element) {
 								textarea.trigger('after-init.ams.editor', [textarea, editor]);
 							}, 200);
 						});
+						resolve(editors);
 					});
 				});
-			}, reject).then(() => {
-				resolve(editors);
-			})
+			}, reject);
 		} else {
 			resolve(null);
 		}
@@ -1009,9 +1005,8 @@ export function fileInput(element) {
 						bsCustomFileInput.init(inputSelector, formSelector);
 						input.trigger('after-init.ams.fileinput', [input]);
 					});
-				}, reject).then(() => {
 					resolve(inputs);
-				});
+				}, reject);
 			}, reject);
 		} else {
 			resolve(null);
@@ -1087,9 +1082,8 @@ export function imgAreaSelect(element) {
 								image.trigger('after-init.ams.imgareaselect', [image, plugin]);
 							}, 200);
 						});
-					}, reject).then(() => {
 						resolve(images);
-					})
+					}, reject);
 				}, reject);
 			}, reject);
 		} else {
@@ -1254,9 +1248,8 @@ export function select2(element) {
 								document, select, plugin, settings);
 							select.trigger('after-init.ams.select2', [select, plugin]);
 						});
-					}, reject).then(() => {
 						resolve(selects);
-					});
+					}, reject);
 				}, reject);
 			}, reject);
 		} else {
@@ -1479,9 +1472,8 @@ export function tinymce(element) {
 								editor.trigger('after-init.ams.tinymce', [editor, settings]);
 							}, 250);
 						});
-					}, reject).then(() => {
 						resolve(editors);
-					});
+					}, reject);
 				}, reject);
 			}, reject);
 		} else {
@@ -1665,9 +1657,8 @@ export function validate(element) {
 							data.amsAfterInit, document, form, plugin, settings);
 						form.trigger('after-init.ams.validate', [form, plugin]);
 					});
-				}, reject).then(() => {
 					resolve(forms);
-				});
+				}, reject);
 			}, reject);
 		}
 	});
