@@ -53,6 +53,9 @@ export const helpers = {
 
 	/**
 	 * Store location hash when redirecting to log in form
+	 *
+	 * This helper is used to store window location hash into form input, to redirect
+	 * user correctly after login.
 	 */
 	setLoginHash: () => {
 		const
@@ -63,6 +66,9 @@ export const helpers = {
 
 	/**
 	 * SEO input helper
+	 *
+	 * This helper is used to display a small coloured progress bar below a text input
+	 * to display its SEO quality based on text length.
 	 */
 	setSEOStatus: (evt) => {
 		const
@@ -82,41 +88,61 @@ export const helpers = {
 
 	/**
 	 * Select2 change helper
+	 *
+	 * This helper is used to handle a change event on a Select2 input. Data attributes
+	 * defined on Select2 input can be used to define behaviour of this helper:
+	 *  - data-ams-select2-helper-type: can be set to "html" when HTML code is loaded via a
+	 *    webservice call, and included into a *target* element
+	 *  - data-ams-select2-helper-url: remote webservice URL
+	 *  - data-ams-select2-helper-target: CSS selector of a DOM element which will receive
+	 *    result of a webservice call
+	 *  - data-ams-select2-helper-argument: name of the argument used to call webservice; if
+	 *    not defined, the used name is 'value'; this argument is filled with the selected value
+	 *    of the Select2 input
+	 *  - data-ams-select2-helper-callback: name of a callback function which can be used to
+	 *    handle webservice result; if no callback is defined, the webservice result will be
+	 *    inserted directly into defined target
 	 */
 	select2ChangeHelper: (evt) => {
-		const
-			source = $(evt.currentTarget),
-			data = source.data(),
-			target = $(data.amsSelect2HelperTarget);
+		return new Promise((resolve, reject) => {
 
-		switch (data.amsSelect2HelperType) {
+			const
+				source = $(evt.currentTarget),
+				data = source.data(),
+				target = $(data.amsSelect2HelperTarget);
+			switch (data.amsSelect2HelperType) {
 
-			case 'html':
-				target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
-				const params = {};
-				params[data.amsSelect2HelperArgument || 'value'] = source.val();
-				$.get(data.amsSelect2HelperUrl, params).then((result) => {
-					const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || ((result) => {
-						if (result) {
-							target.html(result);
-							MyAMS.core.initContent(target).then();
-						} else {
-							target.empty();
-						}
+				case 'html':
+					target.html('<div class="text-center"><i class="fas fa-2x fa-spinner fa-spin"></i></div>');
+					const params = {};
+					params[data.amsSelect2HelperArgument || 'value'] = source.val();
+					$.get(data.amsSelect2HelperUrl, params).then((result) => {
+						const callback = MyAMS.core.getFunctionByName(data.amsSelect2HelperCallback) || ((result) => {
+							if (result) {
+								target.html(result);
+								MyAMS.core.initContent(target).then(() => {
+									resolve();
+								});
+							} else {
+								target.empty();
+								resolve();
+							}
+						});
+						callback(result);
+					}).catch(() => {
+						target.empty();
+						reject();
 					});
-					callback(result);
-				})
-				.catch(() => {
-					target.empty();
-				});
-				break;
+					break;
 
-			default:
-				const callback = data.amsSelect2HelperCallback;
-				if (callback) {
-					MyAMS.core.executeFunctionByName(callback, source, data);
-				}
-		}
+				default:
+					const callback = data.amsSelect2HelperCallback;
+					if (callback) {
+						MyAMS.core.executeFunctionByName(callback, source, data);
+						resolve();
+					}
+			}
+		});
 	},
 
 	/**

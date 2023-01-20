@@ -613,5 +613,6 @@ test("Test MyAMS base structure", () => {
 	expect(MyAMS.config).toBeInstanceOf(Object);
 	expect(MyAMS.core).toBeInstanceOf(Object);
 	expect(MyAMS.core.getObject).toBeInstanceOf(Function);
+	expect(MyAMS.theme).toBe("unknown");
 
 });
