@@ -149,6 +149,9 @@ export function dynamicModalHiddenEventHandler(evt) {
 		MyAMS.config.clearContent, document, dialog).then(() => {
 		if (dialog.data('dynamic') === true) {
 			dialog.remove();
+			if (MyAMS.form) {
+				MyAMS.form.setFocus($('.modal-dialog').last());
+			}
 		}
 	});
 }
