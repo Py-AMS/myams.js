@@ -1,6 +1,16 @@
 Changelog
 =========
 
+1.15.4
+------
+ - updated default modals z-index
+ - set focus to last opened modal when another modal is hidden
+
+1.15.3
+------
+ - updated ESLint configuration
+ - corrected ESLint errors
+
 1.15.2
 ------
  - updated MyAMS theme getter
