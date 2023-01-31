@@ -11,6 +11,8 @@
 }
 
 .modal {
+  z-index: 10000;
+
   .py-1-modal,
   .pt-1-modal {
     padding-top: 0.25rem !important;
