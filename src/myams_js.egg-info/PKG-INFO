@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.15.3
+Version: 1.15.4
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,20 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+1.15.5
+------
+ - use timeout in file input plug-in to initialize these inputs correctly in modals
+
+1.15.4
+------
+ - updated default modals z-index
+ - set focus to last opened modal when another modal is hidden
+
+1.15.3
+------
+ - updated ESLint configuration
+ - corrected ESLint errors
 
 1.15.2
 ------
