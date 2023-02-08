@@ -989,23 +989,25 @@ export function fileInput(element) {
 			MyAMS.require('ajax').then(() => {
 				MyAMS.ajax.check(window.bsCustomFileInput,
 					`${MyAMS.env.baseURL}../ext/bs-custom-file-input${MyAMS.env.extext}.js`).then(() => {
-					inputs.each((idx, elt) => {
-						const
-							input = $(elt),
-							inputId = input.attr('id'),
-							inputSelector = inputId ? `#${inputId}` : input.attr('name'),
-							form = $(elt.form),
-							formId = form.attr('id'),
-							formSelector = formId ? `#${formId}` : form.attr('name'),
-							veto = {veto: false};
-						input.trigger('before-init.ams.fileinput', [input, veto]);
-						if (veto.veto) {
-							return;
-						}
-						bsCustomFileInput.init(inputSelector, formSelector);
-						input.trigger('after-init.ams.fileinput', [input]);
-					});
-					resolve(inputs);
+					setTimeout(() => {  // use timeout to handle file inputs in modals!
+						inputs.each((idx, elt) => {
+							const
+								input = $(elt),
+								inputId = input.attr('id'),
+								inputSelector = inputId ? `#${inputId}` : input.attr('name'),
+								form = $(elt.form),
+								formId = form.attr('id'),
+								formSelector = formId ? `#${formId}` : form.attr('name'),
+								veto = {veto: false};
+							input.trigger('before-init.ams.fileinput', [input, veto]);
+							if (veto.veto) {
+								return;
+							}
+							bsCustomFileInput.init(inputSelector, formSelector);
+							input.trigger('after-init.ams.fileinput', [input]);
+						});
+						resolve(inputs);
+					}, 250);
 				}, reject);
 			}, reject);
 		} else {
