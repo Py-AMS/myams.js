@@ -13,6 +13,7 @@ global.bsCustomFileInput = bsCustomFileInput;
 import MyAMS, { init } from "../ext-base";
 import { ajax } from "../mod-ajax";
 import { alert } from "../mod-alert";
+import { i18n } from "../mod-i18n";
 
 
 import { fileInput } from "../mod-plugins";
@@ -25,6 +26,10 @@ init($);
 if (!MyAMS.ajax) {
 	MyAMS.ajax = ajax;
 	MyAMS.config.modules.push('ajax');
+}
+if (!MyAMS.i18n) {
+	MyAMS.i18n = i18n;
+	MyAMS.config.modules.push('i18n');
 }
 if (!MyAMS.alert) {
 	MyAMS.alert = alert;
@@ -87,7 +92,7 @@ describe("MyAMS.plugins.fileinput unit tests", () => {
 	test("Test MyAMS.plugins fileInput plug-in", () => {
 
 		document.body.innerHTML = `<div>
-			<form>
+			<form novalidate>
 				<input class="custom-file-input" />
 			</form>
 		</div>`;
@@ -109,7 +114,7 @@ describe("MyAMS.plugins.fileinput unit tests", () => {
 	test("Test MyAMS.plugins fileInput plug-in with initialization veto", () => {
 
 		document.body.innerHTML = `<div>
-			<form>
+			<form novalidate>
 				<input class="custom-file-input" />
 			</form>
 		</div>`;
