@@ -68,6 +68,17 @@ export const clipboard = {
 		} else {
 			doCopy(text);
 		}
+	},
+
+	/**
+	 * Copy input value or text to system's clipboard
+	 */
+	copyText: (event) => {
+		const
+			source = $(event.currentTarget),
+			input = $(source.data('ams-clipboard-target')),
+			value = input.val() || input.text();
+		doCopy(value);
 	}
 };
 
