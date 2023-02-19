@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.15.4
+Version: 1.15.5
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -63,7 +63,7 @@ Changelog
 
 1.15.5
 ------
- - use timeout in file input plug-in to initialize these inputs correctly in modals
+ - use timeout in file input plug-in for correct initialization in modals
 
 1.15.4
 ------

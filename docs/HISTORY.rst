@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.6
+------
+ - updated clipboard module
+
 1.15.5
 ------
  - use timeout in file input plug-in for correct initialization in modals

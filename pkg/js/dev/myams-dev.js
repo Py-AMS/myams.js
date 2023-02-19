@@ -2233,6 +2233,15 @@ const clipboard = {
     } else {
       doCopy(text);
     }
+  },
+  /**
+   * Copy input value or text to system's clipboard
+   */
+  copyText: event => {
+    const source = $(event.currentTarget),
+      input = $(source.data('ams-clipboard-target')),
+      value = input.val() || input.text();
+    doCopy(value);
   }
 };
 
@@ -32305,7 +32314,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_2__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_2__["default"].$);
 }
 
-/** Version: 1.15.5  */
+/** Version: 1.15.6  */
 }();
 /******/ })()
 ;
