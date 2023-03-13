@@ -11,7 +11,7 @@ const $ = MyAMS.$;
 const ERRORS_TEMPLATE_STRING = `
 	<div class="alert alert-{{:status}}" role="alert">
 		<button type="button" class="close" data-dismiss="alert" 
-				aria-label="{{*: MyAMS.i18n.BTN_CLODE }}">
+				aria-label="{{*: MyAMS.i18n.BTN_CLOSE }}">
 			<i class="fa fa-times" aria-hidden="true"></i>	
 		</button>
 		{{if header}}
