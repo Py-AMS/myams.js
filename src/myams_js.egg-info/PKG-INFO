@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.15.5
+Version: 1.15.6
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,10 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+1.15.6
+------
+ - updated clipboard module
 
 1.15.5
 ------

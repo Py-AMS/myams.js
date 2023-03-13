@@ -2445,7 +2445,7 @@ const $ = MyAMS.$;
 const ERRORS_TEMPLATE_STRING = `
 	<div class="alert alert-{{:status}}" role="alert">
 		<button type="button" class="close" data-dismiss="alert" 
-				aria-label="{{*: MyAMS.i18n.BTN_CLODE }}">
+				aria-label="{{*: MyAMS.i18n.BTN_CLOSE }}">
 			<i class="fa fa-times" aria-hidden="true"></i>	
 		</button>
 		{{if header}}
@@ -2550,6 +2550,19 @@ const error = {
             if (input.exists()) {
               MyAMS.form.setInvalid(parent, input, widget.message);
             }
+            // open parent fieldsets switchers
+            const fieldsets = input.parents('fieldset.switched');
+            fieldsets.each((idx, elt) => {
+              $('legend.switcher', elt).click();
+            });
+            // open parent tab panels
+            const panels = input.parents('.tab-pane');
+            panels.each((idx, elt) => {
+              const panel = $(elt),
+                tabs = panel.parents('.tab-content').siblings('.nav-tabs');
+              $(`li:nth-child(${panel.index() + 1})`, tabs).addClass('is-invalid');
+              $('li.is-invalid:first a', tabs).click();
+            });
           }
           MyAMS.require('helpers').then(() => {
             let scrollBox = parent.parents('.modal-body');

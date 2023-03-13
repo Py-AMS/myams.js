@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.15.7
+------
+ - automatically switch fieldsets and tabs containing errors on form load (and not only on
+   JSON response on submit)
+ - upgraded FontAwesome to release 6.3.0
+
 1.15.6
 ------
  - updated clipboard module
