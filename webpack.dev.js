@@ -4,7 +4,9 @@ var path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: {
-		'myams': './src/js/myams.js'
+		'myams': './src/js/myams.js',
+		'emerald': './src/js/emerald.js',
+		'darkmode': './src/js/darkmode.js'
 	},
 	output: {
 		path: path.resolve(__dirname, 'pkg', 'js', 'dev'),

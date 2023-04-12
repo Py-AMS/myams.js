@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 1.15.6
+Version: 1.15.7
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,16 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+1.15.8
+------
+ - updated Webpack configuration
+
+1.15.7
+------
+ - automatically switch fieldsets and tabs containing errors on form load (and not only on
+   JSON response on submit)
+ - upgraded FontAwesome to release 6.3.0
 
 1.15.6
 ------

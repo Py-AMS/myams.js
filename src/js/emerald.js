@@ -46,7 +46,7 @@ import "./mod-plugins";
 
 
 import "@fortawesome/fontawesome-free/css/all.css";
-import "../../pkg/css/dev/emerald.css";
+import "../../pkg/css/prod/emerald.css";
 
 
 MyAMS.$.extend(MyAMS, {

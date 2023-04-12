@@ -46,7 +46,7 @@ import "./mod-plugins";
 
 
 import "@fortawesome/fontawesome-free/css/all.css";
-import "../../pkg/css/dev/darkmode.css";
+import "../../pkg/css/prod/darkmode.css";
 
 
 MyAMS.$.extend(MyAMS, {
