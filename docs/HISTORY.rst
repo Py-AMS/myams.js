@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.8
+------
+ - updated Webpack configuration
+
 1.15.7
 ------
  - automatically switch fieldsets and tabs containing errors on form load (and not only on
