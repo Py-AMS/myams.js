@@ -9,7 +9,7 @@ const $ = MyAMS.$;
 /**
  * Context menu handler
  */
-function _contextMenuHandler(menu) {
+function _contextMenuHandler(menu, source) {
 	if (menu.get(0).tagName !== 'A') {
 		menu = menu.parents('a').first();
 	}
@@ -25,7 +25,7 @@ function _contextMenuHandler(menu) {
 		}
 		const hrefGetter = MyAMS.core.getFunctionByName(href);
 		if (typeof hrefGetter === 'function') {
-			href = hrefGetter(menu);
+			href = hrefGetter(menu, source);
 		}
 		if (typeof href === 'undefined') {
 			return;
@@ -138,7 +138,7 @@ export const menu = {
 								clickEvt.stopPropagation();
 								clickEvt.preventDefault();
 								menu.dropdown('hide');
-								_contextMenuHandler($(clickEvt.target));
+								_contextMenuHandler($(clickEvt.target), source);
 							});
 						return false;
 					});
