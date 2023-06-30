@@ -233,6 +233,13 @@ $danger-light:        lighten($danger, 20%) !default;
 $dark-light:          lighten($dark, 20%) !default;
 
 
+// Fullcalendar styles
+$fc-enabled-text:            $body-bg !default;
+$fc-enabled-bg:              $primary !default;
+$fc-disabled-text:           $body !default;
+$fc-disabled-bg:             $secondary !default;
+
+
 $widths-px: (
   50, 100, 150, 200
 ) !default;
