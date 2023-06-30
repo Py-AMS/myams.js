@@ -61,6 +61,10 @@
   }
 
   // Labels
+  label {
+    user-select: none;
+  }
+
   .col-form-label {
     &.required {
       font-weight: bold;
@@ -174,6 +178,7 @@
     legend {
       font-size: 0.95rem;
       font-weight: normal;
+      user-select: none;
 
       &.switcher,
       &.checker {
