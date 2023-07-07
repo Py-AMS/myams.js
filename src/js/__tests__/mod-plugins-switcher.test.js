@@ -72,15 +72,15 @@ test("Test MyAMS.plugins basic switcher", () => {
 
 		expect(legend.data('after-init')).toBe(true);
 		expect(fieldset.hasClass('switched')).toBe(true);
-		expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect($('i.fa-chevron-right', legend).exists()).toBe(true);
 
 		legend.trigger('click');
 		expect(fieldset.hasClass('switched')).toBe(false);
-		expect($('i.fa-minus', legend).exists()).toBe(true);
+		expect($('i.fa-chevron-down', legend).exists()).toBe(true);
 
 		legend.trigger('click');
 		expect(fieldset.hasClass('switched')).toBe(true);
-		expect($('i.fa-minus', legend).exists()).toBe(false);
+		expect($('i.fa-chevron-down', legend).exists()).toBe(false);
 	});
 });
 
@@ -107,7 +107,7 @@ test("Test MyAMS.plugins basic switcher with global veto", () => {
 
 		expect(result.length).toBe(1);
 
-		expect($('i.fa-plus', legend).exists()).toBe(false);
+		expect($('i.fa-chevron-right', legend).exists()).toBe(false);
 	});
 });
 
@@ -135,7 +135,7 @@ test("Test MyAMS.plugins basic switcher with veto on click", () => {
 		expect(result.length).toBe(1);
 
 		expect(fieldset.hasClass('switched')).toBe(true);
-		expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect($('i.fa-chevron-right', legend).exists()).toBe(true);
 
 		legend.trigger('click');
 		expect(fieldset.hasClass('switched')).toBe(true);
@@ -163,11 +163,11 @@ test("Test MyAMS.plugins basic switcher with pre-switched state", () => {
 		expect(result.length).toBe(1);
 
 		expect(fieldset.hasClass('switched')).toBe(false);
-		expect($('i.fa-minus', legend).exists()).toBe(true);
+		expect($('i.fa-chevron-down', legend).exists()).toBe(true);
 
 		legend.trigger('click');
 		expect(fieldset.hasClass('switched')).toBe(true);
-		expect($('i.fa-plus', legend).exists()).toBe(true);
+		expect($('i.fa-chevron-right', legend).exists()).toBe(true);
 	});
 });
 
