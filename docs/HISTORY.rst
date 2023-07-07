@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.16.0
+------
+ - added FullCalendar support plug-in
+ - updated minified navigation bar styles
+ - small CSS updates
+
 1.15.8
 ------
  - updated Webpack configuration

@@ -16,6 +16,7 @@
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
+  _exports.calendar = calendar;
   _exports.checker = checker;
   _exports.contextMenu = contextMenu;
   _exports.datatables = datatables;
@@ -679,9 +680,56 @@
   }
 
   /**
+   * FullCalendar plugin
+   */
+  function calendar(element) {
+    return new Promise((resolve, reject) => {
+      const calendars = $('.calendar', element);
+      if (calendars.length > 0) {
+        MyAMS.ajax.check(window.FullCalendar, `${MyAMS.env.baseURL}../ext/fullcalendar-global${MyAMS.env.extext}.js`).then(firstLoad => {
+          calendars.each((idx, elt) => {
+            const element = $(elt),
+              data = element.data(),
+              defaultOptions = {
+                plugins: [],
+                initialView: 'dayGridMonth',
+                themeSystem: 'bootstrap',
+                locale: $('html').attr('lang'),
+                headerToolbar: {
+                  start: 'title',
+                  center: 'today',
+                  right: 'prev,next'
+                },
+                bootstrapFontAwesome: {
+                  prev: 'fa-chevron-left',
+                  next: 'fa-chevron-right'
+                },
+                firstDay: 1
+              };
+            let settings = $.extend({}, defaultOptions, data.calendarOptions || data.options);
+            settings = MyAMS.core.executeFunctionByName(data.amsCalendarInitCallback || data.amsInit, document, element, settings) || settings;
+            const veto = {
+              veto: false
+            };
+            element.trigger('before-init.ams.calendar', [element, settings, veto]);
+            if (veto.veto) {
+              return;
+            }
+            const calendar = new FullCalendar.Calendar(elt, settings);
+            element.trigger('after-init.ams.calendar', [element, calendar]);
+            calendar.render();
+          });
+          resolve(calendars);
+        }, reject);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
    * Bootstrap 4 Tempus/Dominus date/time picker
    */
-
   function datetime(element) {
     return new Promise((resolve, reject) => {
       const inputs = $('.datetime', element);
@@ -1234,8 +1282,8 @@
             fieldset = legend.parent('fieldset'),
             data = legend.data(),
             state = data.amsSwitcherState || data.amsState,
-            minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'minus',
-            plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'plus';
+            minusClass = data.amsSwitcherMinusClass || data.amsMinusClass || 'chevron-down',
+            plusClass = data.amsSwitcherPlusClass || data.amsPlusClass || 'chevron-right';
           if (!data.amsSwitcher) {
             const veto = {
               veto: false
@@ -1244,7 +1292,7 @@
             if (veto.veto) {
               return;
             }
-            $(`<i class="fa fa-${state === 'open' ? minusClass : plusClass} mr-2"></i>`).prependTo(legend);
+            $(`<i class="fa fa-fw fa-${state === 'open' ? minusClass : plusClass} mr-2"></i>`).prependTo(legend);
             legend.on('click', evt => {
               evt.preventDefault();
               const veto = {};
@@ -1557,6 +1605,7 @@
 
   if (window.MyAMS) {
     // register loaded plug-ins
+    MyAMS.registry.register(calendar, 'calendar');
     MyAMS.registry.register(checker, 'checker');
     MyAMS.registry.register(contextMenu, 'contextMenu');
     MyAMS.registry.register(datatables, 'datatables');
