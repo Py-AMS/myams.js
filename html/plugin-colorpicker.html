@@ -1,0 +1,150 @@
+<h1>MyAMS "colorpicker" plug-in</h1>
+
+<section>
+	<p>MyAMS "color" widgets relies on Bootstrap 4 "Colorpicker" plug-in
+	(see <a href="https://itsjavi.com/bootstrap-colorpicker/">here</a> for source and documentation).</p>
+
+	<div class="ams-form">
+		<fieldset class="border">
+			<legend>Empty color picker</legend>
+			<div class="form-group row">
+				<label for="colorpicker1"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Datetime input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group color">
+						<span class="input-group-prepend">
+							 <span class="input-group-text colorpicker-input-addon"><i></i></span>
+						</span>
+						<input type="text" class="form-control color-field"
+							   id="colorpicker1" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset class="border">
+			<legend>Color picker with value and hash prefix</legend>
+			<div class="form-group row">
+				<label for="colorpicker1"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Datetime input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group color"
+						 data-ams-use-hash-prefix="true">
+						<span class="input-group-prepend">
+							 <span class="input-group-text colorpicker-input-addon"><i></i></span>
+						</span>
+						<input type="text" class="form-control color-field"
+							   id="colorpicker1"
+							   value="#CE460F" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset class="border">
+			<legend>Color picker with custom format and transparency</legend>
+			<div class="form-group row">
+				<label for="colorpicker1"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Datetime input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group color"
+						 data-ams-format="rgb"
+						 data-ams-use-alpha="true">
+						<span class="input-group-prepend">
+							 <span class="input-group-text colorpicker-input-addon"><i></i></span>
+						</span>
+						<input type="text" class="form-control color-field"
+						       id="colorpicker1" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+</section>
+
+<section>
+	<h2>MyAMS <code>colorpicker</code> plug-in options</h2>
+	<p>This plug-in options are available as data attributes prefixed by
+	<code>data-ams-colorpicker-</code>, or just <code>data-ams-</code>:</p>
+	<table class="table table-sm">
+		<tr>
+			<th>Name</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>format</code></td>
+			<td>hex</td>
+			<td>Color format</td>
+		</tr>
+		<tr>
+			<td><code>useHashPrefix</code></td>
+			<td>false</td>
+			<td>Prefix hexadecimal color value with #</td>
+		</tr>
+		<tr>
+			<td><code>useAlpha</code></td>
+			<td>false</td>
+			<td>Use transparency in color value</td>
+		</tr>
+		<tr>
+			<td><code>change</code></td>
+			<td>null</td>
+			<td>Change event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerChange</code></td>
+			<td>null</td>
+			<td>Colorpicker change event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerCreate</code></td>
+			<td>null</td>
+			<td>Colorpicker create event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerDestroy</code></td>
+			<td>null</td>
+			<td>Colorpicker destroy event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerEnable</code></td>
+			<td>null</td>
+			<td>Colorpicker enable event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerDisable</code></td>
+			<td>null</td>
+			<td>Colorpicker disable event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerHide</code></td>
+			<td>null</td>
+			<td>Colorpicker hide event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerInvalid</code></td>
+			<td>null</td>
+			<td>Colorpicker invalid event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerShow</code></td>
+			<td>null</td>
+			<td>Colorpicker show event listener</td>
+		</tr>
+		<tr>
+			<td><code>pickerUpdate</code></td>
+			<td>null</td>
+			<td>Colorpicker update event listener</td>
+		</tr>
+		<tr>
+			<td><code>mousemove</code></td>
+			<td>null</td>
+			<td>Colorpicker mouse move event listener</td>
+		</tr>
+	</table>
+</section>
