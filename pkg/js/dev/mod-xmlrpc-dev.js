@@ -23,12 +23,11 @@
    */
 
   const $ = MyAMS.$;
-  const xmlrpc = {};
+  const xmlrpc = _exports.xmlrpc = {};
 
   /**
    * Global module initialization
    */
-  _exports.xmlrpc = xmlrpc;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('xmlrpc');

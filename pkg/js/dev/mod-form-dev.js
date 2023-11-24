@@ -52,7 +52,7 @@
   /**
    * MyAMS "form" module
    */
-  const form = {
+  const form = _exports.form = {
     init: () => {
       if (_initialized) {
         return;
@@ -427,7 +427,6 @@
    * @param form: submitted form
    * @param settings: computed form settings
    */
-  _exports.form = form;
   function showFormSubmitWarning(form /*, settings */) {
     return new Promise((resolve, reject) => {
       if (!form.data('ams-form-hide-submitted')) {

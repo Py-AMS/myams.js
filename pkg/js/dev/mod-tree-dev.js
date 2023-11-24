@@ -23,7 +23,7 @@
    */
 
   const $ = MyAMS.$;
-  const tree = {
+  const tree = _exports.tree = {
     /**
      * Open/close tree node inside a table
      */
@@ -251,7 +251,6 @@
   /**
    * Global module initialization
    */
-  _exports.tree = tree;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('tree');

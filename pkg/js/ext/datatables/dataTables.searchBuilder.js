@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.4.0
+/*! SearchBuilder 1.6.0
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window === 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -65,11 +72,12 @@ var DataTable = $.fn.dataTable;
      * The Criteria class is used within SearchBuilder to represent a search criteria
      */
     var Criteria = /** @class */ (function () {
-        function Criteria(table, opts, topGroup, index, depth, serverData) {
-            var _this = this;
+        function Criteria(table, opts, topGroup, index, depth, serverData, liveSearch) {
             if (index === void 0) { index = 0; }
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
+            if (liveSearch === void 0) { liveSearch = false; }
+            var _this = this;
             // Check that the required version of DataTables is included
             if (!dataTable$3 || !dataTable$3.versionCheck || !dataTable$3.versionCheck('1.10.0')) {
                 throw new Error('SearchPane requires DataTables 1.10 or newer');
@@ -89,6 +97,7 @@ var DataTable = $.fn.dataTable;
                 dt: table,
                 filled: false,
                 index: index,
+                liveSearch: liveSearch,
                 origData: undefined,
                 preventRedraw: false,
                 serverData: serverData,
@@ -180,6 +189,16 @@ var DataTable = $.fn.dataTable;
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
                 .replace(/&quot;/g, '"');
+        };
+        /**
+         * Redraw the DataTable with the current search parameters
+         */
+        Criteria.prototype.doSearch = function () {
+            // Only do the search if live search is disabled, otherwise the search
+            // is triggered by the button at the top level group.
+            if (this.c.liveSearch) {
+                this.s.dt.draw();
+            }
         };
         /**
          * Parses formatted numbers down to a form where they can be compared
@@ -350,7 +369,7 @@ var DataTable = $.fn.dataTable;
             }
             if (this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
                 for (var i = 0; i < this.s.value.length; i++) {
-                    this.s.value[i] = this.s.value[i].replace(/[^0-9.]/g, '');
+                    this.s.value[i] = this.s.value[i].replace(/[^0-9.\-]/g, '');
                 }
             }
             return {
@@ -404,7 +423,7 @@ var DataTable = $.fn.dataTable;
                         $$3(this).prop('selected', true);
                         data_1.removeClass(italic_1);
                         foundData = true;
-                        dataIdx = $$3(this).val();
+                        dataIdx = parseInt($$3(this).val(), 10);
                     }
                     else {
                         $$3(this).removeProp('selected');
@@ -486,7 +505,7 @@ var DataTable = $.fn.dataTable;
                         // remove it from the search and trigger a new search
                         if (_this.s.filled) {
                             _this.s.filled = false;
-                            _this.s.dt.draw();
+                            _this.doSearch();
                             _this.setListeners();
                         }
                         _this.s.dt.state.save();
@@ -527,13 +546,13 @@ var DataTable = $.fn.dataTable;
                             // it from the search and trigger a new search
                             if (_this.s.filled && val !== undefined && _this.dom.inputCont.has(val[0]).length !== 0) {
                                 _this.s.filled = false;
-                                _this.s.dt.draw();
+                                _this.doSearch();
                                 _this.setListeners();
                             }
                         }
                         if (_this.dom.value.length === 0 ||
                             _this.dom.value.length === 1 && _this.dom.value[0] === undefined) {
-                            _this.s.dt.draw();
+                            _this.doSearch();
                         }
                     }
                     else {
@@ -825,81 +844,33 @@ var DataTable = $.fn.dataTable;
             }
         };
         /**
-         * Populates the data select element
+         * Populates the data / column select element
          */
         Criteria.prototype._populateData = function () {
-            var _this = this;
+            var columns = this.s.dt.settings()[0].aoColumns;
+            var includeColumns = this.s.dt.columns(this.c.columns).indexes().toArray();
             this.dom.data.empty().append(this.dom.dataTitle);
-            // If there are no datas stored then we need to get them from the table
-            if (this.s.dataPoints.length === 0) {
-                this.s.dt.columns().every(function (index) {
-                    // Need to check that the column can be filtered on before adding it
-                    if (_this.c.columns === true ||
-                        _this.s.dt.columns(_this.c.columns).indexes().toArray().includes(index)) {
-                        var found = false;
-                        for (var _i = 0, _a = _this.s.dataPoints; _i < _a.length; _i++) {
-                            var val = _a[_i];
-                            if (val.index === index) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            var col = _this.s.dt.settings()[0].aoColumns[index];
-                            var opt = {
-                                index: index,
-                                origData: col.data,
-                                text: (col.searchBuilderTitle === undefined ?
-                                    col.sTitle :
-                                    col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '')
-                            };
-                            _this.s.dataPoints.push(opt);
-                            _this.dom.data.append($$3('<option>', {
-                                text: opt.text,
-                                value: opt.index
-                            })
-                                .addClass(_this.classes.option)
-                                .addClass(_this.classes.notItalic)
-                                .prop('origData', col.data)
-                                .prop('selected', _this.s.dataIdx === opt.index ? true : false));
-                            if (_this.s.dataIdx === opt.index) {
-                                _this.dom.dataTitle.removeProp('selected');
-                            }
-                        }
-                    }
-                });
-            }
-            // Otherwise we can just load them in
-            else {
-                var _loop_3 = function (data) {
-                    this_1.s.dt.columns().every(function (index) {
-                        var col = _this.s.dt.settings()[0].aoColumns[index];
-                        if ((col.searchBuilderTitle === undefined ?
-                            col.sTitle :
-                            col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '') === data.text) {
-                            data.index = index;
-                            data.origData = col.data;
-                        }
-                    });
-                    var newOpt = $$3('<option>', {
-                        text: data.text.replace(/(<([^>]+)>)/ig, ''),
-                        value: data.index
+            for (var index = 0; index < columns.length; index++) {
+                // Need to check that the column can be filtered on before adding it
+                if (this.c.columns === true || includeColumns.includes(index)) {
+                    var col = columns[index];
+                    var opt = {
+                        index: index,
+                        origData: col.data,
+                        text: (col.searchBuilderTitle || col.sTitle)
+                            .replace(/(<([^>]+)>)/ig, '')
+                    };
+                    this.dom.data.append($$3('<option>', {
+                        text: opt.text,
+                        value: opt.index
                     })
-                        .addClass(this_1.classes.option)
-                        .addClass(this_1.classes.notItalic)
-                        .prop('origData', data.origData);
-                    if (this_1.s.data === data.text) {
-                        this_1.s.dataIdx = data.index;
-                        this_1.dom.dataTitle.removeProp('selected');
-                        newOpt.prop('selected', true);
-                        this_1.dom.data.removeClass(this_1.classes.italic);
+                        .addClass(this.classes.option)
+                        .addClass(this.classes.notItalic)
+                        .prop('origData', col.data)
+                        .prop('selected', this.s.dataIdx === opt.index ? true : false));
+                    if (this.s.dataIdx === opt.index) {
+                        this.dom.dataTitle.removeProp('selected');
                     }
-                    this_1.dom.data.append(newOpt);
-                };
-                var this_1 = this;
-                for (var _i = 0, _a = this.s.dataPoints; _i < _a.length; _i++) {
-                    var data = _a[_i];
-                    _loop_3(data);
                 }
             }
         };
@@ -917,7 +888,7 @@ var DataTable = $.fn.dataTable;
             setTimeout(function () {
                 _this.dom.defaultValue.remove();
             }, 50);
-            var _loop_4 = function (val) {
+            var _loop_3 = function (val) {
                 // Timeout is annoying but because of IOS
                 setTimeout(function () {
                     if (val !== undefined) {
@@ -927,7 +898,7 @@ var DataTable = $.fn.dataTable;
             };
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
-                _loop_4(val);
+                _loop_3(val);
             }
             var children = this.dom.inputCont.children();
             if (children.length > 1) {
@@ -969,7 +940,7 @@ var DataTable = $.fn.dataTable;
                 // If using SSP we want to restrict the amount of server calls that take place
                 //  and this will already have taken place
                 if (!this.s.dt.page.info().serverSide) {
-                    this.s.dt.draw();
+                    this.doSearch();
                 }
                 this.setListeners();
             }
@@ -1305,13 +1276,15 @@ var DataTable = $.fn.dataTable;
         Criteria.initDate = function (that, fn, preDefined) {
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
+            var i18n = that.s.dt.i18n('datetime', {});
             // Declare date element using DataTables dateTime plugin
             var el = $$3('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .dtDateTime({
                 attachTo: 'input',
-                format: that.s.dateFormat ? that.s.dateFormat : undefined
+                format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                i18n: i18n
             })
                 .on('change.dtsb', that._throttle(function () {
                 return fn(that, this);
@@ -1340,11 +1313,13 @@ var DataTable = $.fn.dataTable;
             that.s.dt.one('draw.dtsb', function () {
                 that.s.topGroup.trigger('dtsb-redrawLogic');
             });
+            return [];
         };
         Criteria.init2Date = function (that, fn, preDefined) {
             var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
+            var i18n = that.s.dt.i18n('datetime', {});
             // Declare all of the date elements that are required using DataTables dateTime plugin
             var els = [
                 $$3('<input/>')
@@ -1352,7 +1327,8 @@ var DataTable = $.fn.dataTable;
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
                     attachTo: 'input',
-                    format: that.s.dateFormat ? that.s.dateFormat : undefined
+                    format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                    i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -1375,7 +1351,8 @@ var DataTable = $.fn.dataTable;
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
                     attachTo: 'input',
-                    format: that.s.dateFormat ? that.s.dateFormat : undefined
+                    format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                    i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -1485,7 +1462,7 @@ var DataTable = $.fn.dataTable;
                     !(that.s.dt.settings()[0].oInit.search !== undefined &&
                         that.s.dt.settings()[0].oInit.search["return"]) ||
                     code === 13) {
-                    that.s.dt.draw();
+                    that.doSearch();
                 }
                 return;
             }
@@ -1529,7 +1506,7 @@ var DataTable = $.fn.dataTable;
                     that.s.dt.settings()[0].oInit.search["return"]) ||
                 code === 13) {
                 // Trigger a search
-                that.s.dt.draw();
+                that.doSearch();
             }
             // Refocus the element and set the correct cursor position
             if (idx !== null) {
@@ -2457,6 +2434,7 @@ var DataTable = $.fn.dataTable;
                 logicOr: 'Or',
                 right: '>',
                 rightTitle: 'Indent criteria',
+                search: 'Search',
                 title: {
                     0: 'Custom Search Builder',
                     _: 'Custom Search Builder (%d)'
@@ -2530,7 +2508,12 @@ var DataTable = $.fn.dataTable;
                     .addClass(this.classes.button)
                     .attr('type', 'button'),
                 logicContainer: $$2('<div/>')
-                    .addClass(this.classes.logicContainer)
+                    .addClass(this.classes.logicContainer),
+                search: $$2('<button/>')
+                    .addClass(this.classes.search)
+                    .addClass(this.classes.button)
+                    .attr('type', 'button')
+                    .css('display', 'none')
             };
             // A reference to the top level group is maintained throughout any subgroups and criteria that may be created
             if (this.s.topGroup === undefined) {
@@ -2546,6 +2529,7 @@ var DataTable = $.fn.dataTable;
             // Turn off listeners
             this.dom.add.off('.dtsb');
             this.dom.logic.off('.dtsb');
+            this.dom.search.off('.dtsb');
             // Trigger event for groups at a higher level to pick up on
             this.dom.container
                 .trigger('dtsb-destroy')
@@ -2629,7 +2613,8 @@ var DataTable = $.fn.dataTable;
             this.dom.container.children().detach();
             this.dom.container
                 .append(this.dom.logicContainer)
-                .append(this.dom.add);
+                .append(this.dom.add)
+                .append(this.dom.search);
             // Sort the criteria by index so that they appear in the correct order
             this.s.criteria.sort(function (a, b) {
                 if (a.criteria.s.index < b.criteria.s.index) {
@@ -2716,10 +2701,14 @@ var DataTable = $.fn.dataTable;
                     // Set criteria left margin
                     this.dom.container.css('margin-left', 0);
                 }
+                this.dom.search.css('display', 'none');
                 return;
             }
             this.dom.clear.height('0px');
             this.dom.logicContainer.append(this.dom.clear);
+            if (!this.s.isChild) {
+                this.dom.search.css('display', 'inline-block');
+            }
             // Prepend logic button
             this.dom.container.prepend(this.dom.logicContainer);
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
@@ -2767,6 +2756,9 @@ var DataTable = $.fn.dataTable;
                 _this.s.dt.state.save();
                 return false;
             });
+            this.dom.search.on('click.dtsb', function () {
+                _this.s.dt.draw();
+            });
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var crit = _a[_i];
                 crit.criteria.setListeners();
@@ -2782,7 +2774,7 @@ var DataTable = $.fn.dataTable;
         Group.prototype.addCriteria = function (crit) {
             if (crit === void 0) { crit = null; }
             var index = crit === null ? this.s.criteria.length : crit.s.index;
-            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth, this.s.serverData);
+            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth, this.s.serverData, this.c.liveSearch);
             // If a Criteria has been passed in then set the values to continue that
             if (crit !== null) {
                 criteria.c = crit.c;
@@ -3107,6 +3099,7 @@ var DataTable = $.fn.dataTable;
         Group.prototype._setup = function () {
             this.setListeners();
             this.dom.add.html(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
+            this.dom.search.html(this.s.dt.i18n('searchBuilder.search', this.c.i18n.search));
             this.dom.logic.children().first().html(this.c.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
@@ -3120,7 +3113,9 @@ var DataTable = $.fn.dataTable;
             if (this.s.isChild) {
                 this.dom.container.append(this.dom.logicContainer);
             }
-            this.dom.container.append(this.dom.add);
+            this.dom.container
+                .append(this.dom.add)
+                .append(this.dom.search);
         };
         /**
          * Sets the listener for the logic button
@@ -3160,7 +3155,8 @@ var DataTable = $.fn.dataTable;
             group: 'dtsb-group',
             inputButton: 'dtsb-iptbtn',
             logic: 'dtsb-logic',
-            logicContainer: 'dtsb-logicContainer'
+            logicContainer: 'dtsb-logicContainer',
+            search: 'dtsb-search'
         };
         Group.defaults = {
             columns: true,
@@ -3179,6 +3175,7 @@ var DataTable = $.fn.dataTable;
             enterSearch: false,
             filterChanged: undefined,
             greyscale: false,
+            liveSearch: true,
             i18n: {
                 add: 'Add Condition',
                 button: {
@@ -3196,6 +3193,7 @@ var DataTable = $.fn.dataTable;
                 logicOr: 'Or',
                 right: '>',
                 rightTitle: 'Indent criteria',
+                search: 'Search',
                 title: {
                     0: 'Custom Search Builder',
                     _: 'Custom Search Builder (%d)'
@@ -3614,6 +3612,7 @@ var DataTable = $.fn.dataTable;
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
+                _this._checkClear();
             });
             this.s.dt.on('postEdit.dtsb postCreate.dtsb postRemove.dtsb', function () {
                 _this.s.topGroup.redrawContents();
@@ -3637,7 +3636,7 @@ var DataTable = $.fn.dataTable;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.4.0';
+        SearchBuilder.version = '1.6.0';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3663,6 +3662,7 @@ var DataTable = $.fn.dataTable;
             enterSearch: false,
             filterChanged: undefined,
             greyscale: false,
+            liveSearch: true,
             i18n: {
                 add: 'Add Condition',
                 button: {
@@ -3726,6 +3726,7 @@ var DataTable = $.fn.dataTable;
                 logicOr: 'Or',
                 right: '>',
                 rightTitle: 'Indent criteria',
+                search: 'Search',
                 title: {
                     0: 'Custom Search Builder',
                     _: 'Custom Search Builder (%d)'
@@ -3743,7 +3744,7 @@ var DataTable = $.fn.dataTable;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.4.0
+    /*! SearchBuilder 1.6.0
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);

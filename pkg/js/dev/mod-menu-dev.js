@@ -91,7 +91,7 @@
   /**
    * MyAMS "menu" module
    */
-  const menu = {
+  const menu = _exports.menu = {
     /**
      * Global module initialization.
      * This function extends jQuery with a "contextMenu()" function, which
@@ -185,7 +185,6 @@
   /**
    * Global module initialization
    */
-  _exports.menu = menu;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('menu');

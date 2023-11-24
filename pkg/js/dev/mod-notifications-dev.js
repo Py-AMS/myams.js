@@ -100,7 +100,7 @@
       }));
     }
   }
-  const notifications = {
+  const notifications = _exports.notifications = {
     /**
      * Check permission to display desktop notifications
      */
@@ -207,7 +207,6 @@
   /**
    * Global module initialization
    */
-  _exports.notifications = notifications;
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('notifications');
   } else {

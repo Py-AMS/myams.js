@@ -23,12 +23,11 @@
    */
 
   const $ = MyAMS.$;
-  const datatable = {};
+  const datatable = _exports.datatable = {};
 
   /**
    * Global module initialization
    */
-  _exports.datatable = datatable;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('datatable');

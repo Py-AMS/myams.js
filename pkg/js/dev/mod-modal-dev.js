@@ -163,7 +163,7 @@
   /**
    * Main modal module definition
    */
-  const modal = {
+  const modal = _exports.modal = {
     init: () => {
       if (_initialized) {
         return;
@@ -283,7 +283,6 @@
   /**
    * Global module initialization
    */
-  _exports.modal = modal;
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('modal');
   } else {

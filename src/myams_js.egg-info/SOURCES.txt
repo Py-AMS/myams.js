@@ -6,6 +6,8 @@ docs/README.rst
 pkg/css/dev/darkmode.css
 pkg/css/dev/emerald.css
 pkg/css/dev/myams.css
+pkg/css/ext/bootstrap-colorpicker.css
+pkg/css/ext/bootstrap-colorpicker.min.css
 pkg/css/ext/bootstrap-treeview.css
 pkg/css/ext/bootstrap-treeview.min.css
 pkg/css/ext/bootstrap.css
@@ -33,6 +35,8 @@ pkg/css/ext/datatables/colReorder.bootstrap4.min.css
 pkg/css/ext/datatables/dataTables.bootstrap4.css
 pkg/css/ext/datatables/dataTables.bootstrap4.min.css
 pkg/css/ext/datatables/dataTables.css
+pkg/css/ext/datatables/dataTables.dateTime.css
+pkg/css/ext/datatables/dataTables.dateTime.min.css
 pkg/css/ext/datatables/dataTables.min.css
 pkg/css/ext/datatables/fixedColumns.bootstrap4.css
 pkg/css/ext/datatables/fixedColumns.bootstrap4.min.css
@@ -2619,6 +2623,8 @@ pkg/js/dev/myams-dev.js.map
 pkg/js/dev/myams-mini-dev.js
 pkg/js/dev/myams-mini-dev.js.map
 pkg/js/dev/i18n/myams-fr.js
+pkg/js/ext/bootstrap-colorpicker.js
+pkg/js/ext/bootstrap-colorpicker.min.js
 pkg/js/ext/bootstrap-treeview.js
 pkg/js/ext/bootstrap-treeview.min.js
 pkg/js/ext/bootstrap.js
@@ -3490,6 +3496,8 @@ pkg/js/ext/ace/snippets/yaml.js
 pkg/js/ext/ace/snippets/yaml.min.js
 pkg/js/ext/ace/snippets/zeek.js
 pkg/js/ext/ace/snippets/zeek.min.js
+pkg/js/ext/datatables/autoFill.bootstrap4.js
+pkg/js/ext/datatables/autoFill.bootstrap4.min.js
 pkg/js/ext/datatables/buttons.bootstrap4.js
 pkg/js/ext/datatables/buttons.bootstrap4.min.js
 pkg/js/ext/datatables/buttons.colVis.js
@@ -3508,6 +3516,8 @@ pkg/js/ext/datatables/dataTables.buttons.js
 pkg/js/ext/datatables/dataTables.buttons.min.js
 pkg/js/ext/datatables/dataTables.colReorder.js
 pkg/js/ext/datatables/dataTables.colReorder.min.js
+pkg/js/ext/datatables/dataTables.dateTime.js
+pkg/js/ext/datatables/dataTables.dateTime.min.js
 pkg/js/ext/datatables/dataTables.fixedColumns.js
 pkg/js/ext/datatables/dataTables.fixedColumns.min.js
 pkg/js/ext/datatables/dataTables.fixedHeader.js
@@ -3536,8 +3546,6 @@ pkg/js/ext/datatables/fixedColumns.bootstrap4.js
 pkg/js/ext/datatables/fixedColumns.bootstrap4.min.js
 pkg/js/ext/datatables/fixedHeader.bootstrap4.js
 pkg/js/ext/datatables/fixedHeader.bootstrap4.min.js
-pkg/js/ext/datatables/jquery.dataTables.js
-pkg/js/ext/datatables/jquery.dataTables.min.js
 pkg/js/ext/datatables/jszip.js
 pkg/js/ext/datatables/jszip.min.js
 pkg/js/ext/datatables/keyTable.bootstrap4.js
@@ -3955,6 +3963,8 @@ pkg/js/ext/validate/i18n/messages_gl.js
 pkg/js/ext/validate/i18n/messages_gl.min.js
 pkg/js/ext/validate/i18n/messages_he.js
 pkg/js/ext/validate/i18n/messages_he.min.js
+pkg/js/ext/validate/i18n/messages_hi.js
+pkg/js/ext/validate/i18n/messages_hi.min.js
 pkg/js/ext/validate/i18n/messages_hr.js
 pkg/js/ext/validate/i18n/messages_hr.min.js
 pkg/js/ext/validate/i18n/messages_hu.js

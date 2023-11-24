@@ -8326,7 +8326,7 @@ button.modal .bg-dark-modal:focus {
       padding: 0.1rem !important; } }
 
 .modal-backdrop.show {
-  opacity: 0.2; }
+  opacity: 0.75; }
 
 .modal-body {
   padding: 0.5rem 1rem; }
@@ -10173,7 +10173,8 @@ table td.action, table td.reorder {
   --fc-enabled-text:     rgba(255, 255, 255, 0.7);
   --fc-enabled-bg:       #408b7a;
   --fc-disabled-text:    #212529;
-  --fc-disabled-bg:      #ced4da; }
+  --fc-disabled-bg:      #ced4da;
+  --fc-temporary-bg:     #73bead; }
 
 html {
   margin: 0;
@@ -10460,4 +10461,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 1.16.0  */
+/** Version: 2.0.0  */

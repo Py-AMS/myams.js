@@ -23,7 +23,7 @@
    */
 
   const $ = MyAMS.$;
-  const helpers = {
+  const helpers = _exports.helpers = {
     /**
      * Click handler used to clear input
      */
@@ -317,7 +317,6 @@
   /**
    * Global module initialization
    */
-  _exports.helpers = helpers;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('helpers');

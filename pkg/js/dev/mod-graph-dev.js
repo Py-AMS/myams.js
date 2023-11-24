@@ -23,12 +23,11 @@
    */
 
   const $ = MyAMS.$;
-  const graph = {};
+  const graph = _exports.graph = {};
 
   /**
    * Global module initialization
    */
-  _exports.graph = graph;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('graph');

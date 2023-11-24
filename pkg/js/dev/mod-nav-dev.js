@@ -276,7 +276,7 @@
       }
     });
   }
-  const nav = {
+  const nav = _exports.nav = {
     /**
      * initialize navigation through data attributes
      */
@@ -553,7 +553,6 @@
   /**
    * Global module initialization
    */
-  _exports.nav = nav;
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('nav');
   } else {

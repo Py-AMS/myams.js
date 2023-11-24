@@ -39,7 +39,7 @@
       }
     }
   }
-  const ajax = {
+  const ajax = _exports.ajax = {
     /**
      * Check for a given feature, and download script if necessary
      *
@@ -566,7 +566,6 @@
   /**
    * AJAX events callbacks
    */
-  _exports.ajax = ajax;
   if (typeof jest === 'undefined') {
     // don't check cookies extension in test mode!
     ajax.check(window.Cookies, `${MyAMS.env.baseURL}../ext/js-cookie${MyAMS.env.extext}.js`).then(() => {

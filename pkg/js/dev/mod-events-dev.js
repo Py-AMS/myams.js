@@ -24,7 +24,7 @@
 
   const $ = MyAMS.$;
   let _initialized = false;
-  const events = {
+  const events = _exports.events = {
     init: () => {
       if (_initialized) {
         return;
@@ -151,7 +151,6 @@
   /**
    * Global module initialization
    */
-  _exports.events = events;
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('events');
   } else {

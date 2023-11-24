@@ -25,7 +25,7 @@
 
   const $ = MyAMS.$;
   let _initialized = false;
-  const skin = {
+  const skin = _exports.skin = {
     /**
      * Main *skin* module initialization
      */
@@ -255,7 +255,6 @@
   /**
    * Global module initialization
    */
-  _exports.skin = skin;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('skin');

@@ -165,7 +165,7 @@
    * Main alert object
    */
 
-  const alert = {
+  const alert = _exports.alert = {
     /**
      * Display alert message into current document
      *
@@ -272,7 +272,6 @@
   /**
    * Global module initialization
    */
-  _exports.alert = alert;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('alert');

@@ -10,22 +10,22 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clearContent": function() { return /* binding */ clearContent; },
-/* harmony export */   "executeFunctionByName": function() { return /* binding */ executeFunctionByName; },
-/* harmony export */   "generateId": function() { return /* binding */ generateId; },
-/* harmony export */   "generateUUID": function() { return /* binding */ generateUUID; },
-/* harmony export */   "getCSS": function() { return /* binding */ getCSS; },
-/* harmony export */   "getFunctionByName": function() { return /* binding */ getFunctionByName; },
-/* harmony export */   "getModules": function() { return /* binding */ getModules; },
-/* harmony export */   "getObject": function() { return /* binding */ getObject; },
-/* harmony export */   "getQueryVar": function() { return /* binding */ getQueryVar; },
-/* harmony export */   "getScript": function() { return /* binding */ getScript; },
-/* harmony export */   "getSource": function() { return /* binding */ getSource; },
-/* harmony export */   "init": function() { return /* binding */ init; },
-/* harmony export */   "initContent": function() { return /* binding */ initContent; },
-/* harmony export */   "initData": function() { return /* binding */ initData; },
-/* harmony export */   "initPage": function() { return /* binding */ initPage; },
-/* harmony export */   "switchIcon": function() { return /* binding */ switchIcon; }
+/* harmony export */   clearContent: function() { return /* binding */ clearContent; },
+/* harmony export */   executeFunctionByName: function() { return /* binding */ executeFunctionByName; },
+/* harmony export */   generateId: function() { return /* binding */ generateId; },
+/* harmony export */   generateUUID: function() { return /* binding */ generateUUID; },
+/* harmony export */   getCSS: function() { return /* binding */ getCSS; },
+/* harmony export */   getFunctionByName: function() { return /* binding */ getFunctionByName; },
+/* harmony export */   getModules: function() { return /* binding */ getModules; },
+/* harmony export */   getObject: function() { return /* binding */ getObject; },
+/* harmony export */   getQueryVar: function() { return /* binding */ getQueryVar; },
+/* harmony export */   getScript: function() { return /* binding */ getScript; },
+/* harmony export */   getSource: function() { return /* binding */ getSource; },
+/* harmony export */   init: function() { return /* binding */ init; },
+/* harmony export */   initContent: function() { return /* binding */ initContent; },
+/* harmony export */   initData: function() { return /* binding */ initData; },
+/* harmony export */   initPage: function() { return /* binding */ initPage; },
+/* harmony export */   switchIcon: function() { return /* binding */ switchIcon; }
 /* harmony export */ });
 /* harmony import */ var _ext_registry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ext-registry */ "./src/js/ext-registry.js");
 /* global $, FontAwesome */
@@ -802,7 +802,7 @@ window.MyAMS = MyAMS;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "registry": function() { return /* binding */ registry; }
+/* harmony export */   registry: function() { return /* binding */ registry; }
 /* harmony export */ });
 /* global $, MyAMS */
 /**
@@ -1189,7 +1189,7 @@ function myams_require() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ajax": function() { return /* binding */ ajax; }
+/* harmony export */   ajax: function() { return /* binding */ ajax; }
 /* harmony export */ });
 /* global jQuery, MyAMS, Cookies */
 /**
@@ -1796,7 +1796,7 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "alert": function() { return /* binding */ alert; }
+/* harmony export */   alert: function() { return /* binding */ alert; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -2073,7 +2073,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "callbacks": function() { return /* binding */ callbacks; }
+/* harmony export */   callbacks: function() { return /* binding */ callbacks; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -2168,7 +2168,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clipboard": function() { return /* binding */ clipboard; }
+/* harmony export */   clipboard: function() { return /* binding */ clipboard; }
 /* harmony export */ });
 /* global MyAMS, clipboardData */
 /**
@@ -2268,7 +2268,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "container": function() { return /* binding */ container; }
+/* harmony export */   container: function() { return /* binding */ container; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -2398,7 +2398,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "datatable": function() { return /* binding */ datatable; }
+/* harmony export */   datatable: function() { return /* binding */ datatable; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -2431,7 +2431,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "error": function() { return /* binding */ error; }
+/* harmony export */   error: function() { return /* binding */ error; }
 /* harmony export */ });
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
 /* harmony import */ var jsrender__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsrender__WEBPACK_IMPORTED_MODULE_0__);
@@ -2620,7 +2620,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "events": function() { return /* binding */ events; }
+/* harmony export */   events: function() { return /* binding */ events; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -2774,27 +2774,27 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "checkFormValidators": function() { return /* binding */ checkFormValidators; },
-/* harmony export */   "form": function() { return /* binding */ form; },
-/* harmony export */   "formSubmitCallback": function() { return /* binding */ formSubmitCallback; },
-/* harmony export */   "getFormAction": function() { return /* binding */ getFormAction; },
-/* harmony export */   "getFormAjaxSettings": function() { return /* binding */ getFormAjaxSettings; },
-/* harmony export */   "getFormData": function() { return /* binding */ getFormData; },
-/* harmony export */   "getFormDownloadTarget": function() { return /* binding */ getFormDownloadTarget; },
-/* harmony export */   "getFormProgressSettings": function() { return /* binding */ getFormProgressSettings; },
-/* harmony export */   "getFormProgressState": function() { return /* binding */ getFormProgressState; },
-/* harmony export */   "getFormTarget": function() { return /* binding */ getFormTarget; },
-/* harmony export */   "getFormValidators": function() { return /* binding */ getFormValidators; },
-/* harmony export */   "initFormData": function() { return /* binding */ initFormData; },
-/* harmony export */   "initFormDownloadTarget": function() { return /* binding */ initFormDownloadTarget; },
-/* harmony export */   "initFormSubmitButton": function() { return /* binding */ initFormSubmitButton; },
-/* harmony export */   "initFormTarget": function() { return /* binding */ initFormTarget; },
-/* harmony export */   "resetFormAfterError": function() { return /* binding */ resetFormAfterError; },
-/* harmony export */   "resetFormAfterSubmit": function() { return /* binding */ resetFormAfterSubmit; },
-/* harmony export */   "resetFormDownloadTarget": function() { return /* binding */ resetFormDownloadTarget; },
-/* harmony export */   "resetFormSubmitButton": function() { return /* binding */ resetFormSubmitButton; },
-/* harmony export */   "showFormSubmitWarning": function() { return /* binding */ showFormSubmitWarning; },
-/* harmony export */   "submitForm": function() { return /* binding */ submitForm; }
+/* harmony export */   checkFormValidators: function() { return /* binding */ checkFormValidators; },
+/* harmony export */   form: function() { return /* binding */ form; },
+/* harmony export */   formSubmitCallback: function() { return /* binding */ formSubmitCallback; },
+/* harmony export */   getFormAction: function() { return /* binding */ getFormAction; },
+/* harmony export */   getFormAjaxSettings: function() { return /* binding */ getFormAjaxSettings; },
+/* harmony export */   getFormData: function() { return /* binding */ getFormData; },
+/* harmony export */   getFormDownloadTarget: function() { return /* binding */ getFormDownloadTarget; },
+/* harmony export */   getFormProgressSettings: function() { return /* binding */ getFormProgressSettings; },
+/* harmony export */   getFormProgressState: function() { return /* binding */ getFormProgressState; },
+/* harmony export */   getFormTarget: function() { return /* binding */ getFormTarget; },
+/* harmony export */   getFormValidators: function() { return /* binding */ getFormValidators; },
+/* harmony export */   initFormData: function() { return /* binding */ initFormData; },
+/* harmony export */   initFormDownloadTarget: function() { return /* binding */ initFormDownloadTarget; },
+/* harmony export */   initFormSubmitButton: function() { return /* binding */ initFormSubmitButton; },
+/* harmony export */   initFormTarget: function() { return /* binding */ initFormTarget; },
+/* harmony export */   resetFormAfterError: function() { return /* binding */ resetFormAfterError; },
+/* harmony export */   resetFormAfterSubmit: function() { return /* binding */ resetFormAfterSubmit; },
+/* harmony export */   resetFormDownloadTarget: function() { return /* binding */ resetFormDownloadTarget; },
+/* harmony export */   resetFormSubmitButton: function() { return /* binding */ resetFormSubmitButton; },
+/* harmony export */   showFormSubmitWarning: function() { return /* binding */ showFormSubmitWarning; },
+/* harmony export */   submitForm: function() { return /* binding */ submitForm; }
 /* harmony export */ });
 /* global MyAMS, tinyMCE */
 /**
@@ -3671,7 +3671,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "graph": function() { return /* binding */ graph; }
+/* harmony export */   graph: function() { return /* binding */ graph; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -3704,7 +3704,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "helpers": function() { return /* binding */ helpers; }
+/* harmony export */   helpers: function() { return /* binding */ helpers; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -4026,7 +4026,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "i18n": function() { return /* binding */ i18n; }
+/* harmony export */   i18n: function() { return /* binding */ i18n; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -4121,7 +4121,7 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "jsonrpc": function() { return /* binding */ jsonrpc; }
+/* harmony export */   jsonrpc: function() { return /* binding */ jsonrpc; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -4154,7 +4154,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "menu": function() { return /* binding */ menu; }
+/* harmony export */   menu: function() { return /* binding */ menu; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -4344,14 +4344,14 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "dynamicModalHiddenEventHandler": function() { return /* binding */ dynamicModalHiddenEventHandler; },
-/* harmony export */   "dynamicModalShowEventHandler": function() { return /* binding */ dynamicModalShowEventHandler; },
-/* harmony export */   "dynamicModalShownEventHandler": function() { return /* binding */ dynamicModalShownEventHandler; },
-/* harmony export */   "modal": function() { return /* binding */ modal; },
-/* harmony export */   "modalDismissEventHandler": function() { return /* binding */ modalDismissEventHandler; },
-/* harmony export */   "modalHiddenEventHandler": function() { return /* binding */ modalHiddenEventHandler; },
-/* harmony export */   "modalShownEventHandler": function() { return /* binding */ modalShownEventHandler; },
-/* harmony export */   "modalToggleEventHandler": function() { return /* binding */ modalToggleEventHandler; }
+/* harmony export */   dynamicModalHiddenEventHandler: function() { return /* binding */ dynamicModalHiddenEventHandler; },
+/* harmony export */   dynamicModalShowEventHandler: function() { return /* binding */ dynamicModalShowEventHandler; },
+/* harmony export */   dynamicModalShownEventHandler: function() { return /* binding */ dynamicModalShownEventHandler; },
+/* harmony export */   modal: function() { return /* binding */ modal; },
+/* harmony export */   modalDismissEventHandler: function() { return /* binding */ modalDismissEventHandler; },
+/* harmony export */   modalHiddenEventHandler: function() { return /* binding */ modalHiddenEventHandler; },
+/* harmony export */   modalShownEventHandler: function() { return /* binding */ modalShownEventHandler; },
+/* harmony export */   modalToggleEventHandler: function() { return /* binding */ modalToggleEventHandler; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -4630,9 +4630,9 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "NavigationMenu": function() { return /* binding */ NavigationMenu; },
-/* harmony export */   "linkClickHandler": function() { return /* binding */ linkClickHandler; },
-/* harmony export */   "nav": function() { return /* binding */ nav; }
+/* harmony export */   NavigationMenu: function() { return /* binding */ NavigationMenu; },
+/* harmony export */   linkClickHandler: function() { return /* binding */ linkClickHandler; },
+/* harmony export */   nav: function() { return /* binding */ nav; }
 /* harmony export */ });
 /* global MyAMS, FontAwesome, Hammer */
 /**
@@ -5185,7 +5185,7 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "notifications": function() { return /* binding */ notifications; }
+/* harmony export */   notifications: function() { return /* binding */ notifications; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -5395,21 +5395,22 @@ if (MyAMS.env.bundle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "calendar": function() { return /* binding */ calendar; },
-/* harmony export */   "checker": function() { return /* binding */ checker; },
-/* harmony export */   "contextMenu": function() { return /* binding */ contextMenu; },
-/* harmony export */   "datatables": function() { return /* binding */ datatables; },
-/* harmony export */   "datetime": function() { return /* binding */ datetime; },
-/* harmony export */   "dragdrop": function() { return /* binding */ dragdrop; },
-/* harmony export */   "editor": function() { return /* binding */ editor; },
-/* harmony export */   "fileInput": function() { return /* binding */ fileInput; },
-/* harmony export */   "imgAreaSelect": function() { return /* binding */ imgAreaSelect; },
-/* harmony export */   "select2": function() { return /* binding */ select2; },
-/* harmony export */   "svgPlugin": function() { return /* binding */ svgPlugin; },
-/* harmony export */   "switcher": function() { return /* binding */ switcher; },
-/* harmony export */   "tinymce": function() { return /* binding */ tinymce; },
-/* harmony export */   "treeview": function() { return /* binding */ treeview; },
-/* harmony export */   "validate": function() { return /* binding */ validate; }
+/* harmony export */   calendar: function() { return /* binding */ calendar; },
+/* harmony export */   checker: function() { return /* binding */ checker; },
+/* harmony export */   colorPicker: function() { return /* binding */ colorPicker; },
+/* harmony export */   contextMenu: function() { return /* binding */ contextMenu; },
+/* harmony export */   datatables: function() { return /* binding */ datatables; },
+/* harmony export */   datetime: function() { return /* binding */ datetime; },
+/* harmony export */   dragdrop: function() { return /* binding */ dragdrop; },
+/* harmony export */   editor: function() { return /* binding */ editor; },
+/* harmony export */   fileInput: function() { return /* binding */ fileInput; },
+/* harmony export */   imgAreaSelect: function() { return /* binding */ imgAreaSelect; },
+/* harmony export */   select2: function() { return /* binding */ select2; },
+/* harmony export */   svgPlugin: function() { return /* binding */ svgPlugin; },
+/* harmony export */   switcher: function() { return /* binding */ switcher; },
+/* harmony export */   tinymce: function() { return /* binding */ tinymce; },
+/* harmony export */   treeview: function() { return /* binding */ treeview; },
+/* harmony export */   validate: function() { return /* binding */ validate; }
 /* harmony export */ });
 /* global MyAMS, bsCustomFileInput */
 /**
@@ -5420,6 +5421,55 @@ const $ = MyAMS.$;
 if (!$.templates) {
   const jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
   $.templates = jsrender.templates;
+}
+
+/**
+ * FullCalendar plugin
+ */
+function calendar(element) {
+  return new Promise((resolve, reject) => {
+    const calendars = $('.calendar', element);
+    if (calendars.length > 0) {
+      MyAMS.ajax.check(window.FullCalendar, `${MyAMS.env.baseURL}../ext/fullcalendar-global${MyAMS.env.extext}.js`).then(firstLoad => {
+        calendars.each((idx, elt) => {
+          const element = $(elt),
+            data = element.data(),
+            defaultOptions = {
+              plugins: [],
+              initialView: 'dayGridMonth',
+              themeSystem: 'bootstrap',
+              locale: $('html').attr('lang'),
+              headerToolbar: {
+                start: 'title',
+                center: 'today',
+                right: 'prev,next'
+              },
+              bootstrapFontAwesome: {
+                prev: 'fa-chevron-left',
+                next: 'fa-chevron-right'
+              },
+              firstDay: 1,
+              weekNumberCalculation: 'ISO'
+            };
+          let settings = $.extend({}, defaultOptions, data.calendarOptions || data.options);
+          settings = MyAMS.core.executeFunctionByName(data.amsCalendarInitCallback || data.amsInit, document, element, settings) || settings;
+          const veto = {
+            veto: false
+          };
+          element.trigger('before-init.ams.calendar', [element, settings, veto]);
+          if (veto.veto) {
+            return;
+          }
+          const calendar = new FullCalendar.Calendar(elt, settings);
+          element.trigger('after-init.ams.calendar', [element, calendar]);
+          calendar.render();
+        });
+        resolve(calendars);
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
 }
 
 /**
@@ -5565,6 +5615,63 @@ function checker(element) {
         }
       });
       resolve(checkers);
+    } else {
+      resolve(null);
+    }
+  });
+}
+
+/**
+ * Colorpicker menu plug-in
+ */
+
+function colorPicker(element) {
+  return new Promise((resolve, reject) => {
+    const inputs = $('.color', element);
+    if (inputs.length > 0) {
+      MyAMS.require('ajax').then(() => {
+        MyAMS.ajax.check($.fn.colorpicker, `${MyAMS.env.baseURL}../ext/bootstrap-colorpicker${MyAMS.env.extext}.js`).then(firstLoad => {
+          const required = [];
+          if (firstLoad) {
+            required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/bootstrap-colorpicker${MyAMS.env.extext}.css`, 'colorpicker'));
+          }
+          $.when.apply($, required).then(() => {
+            inputs.each((idx, elt) => {
+              const input = $(elt),
+                data = input.data(),
+                dataOptions = {
+                  format: data.amsColorpickerFormat || data.amsFormat || 'hex',
+                  useHashPrefix: (data.amsColorpickerUseHashPrefix || data.amsUseHashPrefix || false) !== false,
+                  useAlpha: (data.amsColorpickerUseAlpha || data.amsUseAlpha || false) !== false,
+                  change: MyAMS.core.getFunctionByName(data.amsColorpickerChange || data.amsChange),
+                  colorpickerChange: MyAMS.core.getFunctionByName(data.amsColorpickerPickerChange || data.amsPickerChange),
+                  colorpickerCreate: MyAMS.core.getFunctionByName(data.amsColorpickerPickerCreate || data.amsPickerCreate),
+                  colorpickerDestroy: MyAMS.core.getFunctionByName(data.amsColorpickerPickerDestroy || data.amsPickerDestroy),
+                  colorpickerEnable: MyAMS.core.getFunctionByName(data.amsColorpickerPickerEnable || data.amsPickerEnable),
+                  colorpickerDisable: MyAMS.core.getFunctionByName(data.amsColorpickerPickerDisable || data.amsPickerDisable),
+                  colorpickerHide: MyAMS.core.getFunctionByName(data.amsColorpickerPickerHide || data.amsPickerHide),
+                  colorpickerInvalid: MyAMS.core.getFunctionByName(data.amsColorpickerPickerInvalid || data.amsPickerInvalid),
+                  colorpickerShow: MyAMS.core.getFunctionByName(data.amsColorpickerPickerShow || data.amsPickerShow),
+                  colorpickerUpdate: MyAMS.core.getFunctionByName(data.amsColorpickerPickerUpdate || data.amsPickerUpdate),
+                  mousemove: MyAMS.core.getFunctionByName(data.amsColorpickerMousemove || data.amsMousemove)
+                };
+              let settings = $.extend({}, dataOptions, data.amsColorpickerOptions || data.amsOptions);
+              settings = MyAMS.core.executeFunctionByName(data.amsColorpickerInitCallback || data.amsInit, document, input, settings) || settings;
+              const veto = {
+                veto: false
+              };
+              input.trigger('before-init.ams.colorpicker', [input, settings, veto]);
+              if (veto.veto) {
+                return;
+              }
+              const plugin = input.colorpicker(settings);
+              MyAMS.core.executeFunctionByName(data.amsColorpickerAfterInitCallback || data.amsAfterInit, document, input, plugin, settings);
+              input.trigger('after-init.ams.colorpicker', [input, plugin]);
+            });
+            resolve(inputs);
+          }, reject);
+        }, reject);
+      }, reject);
     } else {
       resolve(null);
     }
@@ -6052,54 +6159,6 @@ function datatables(element) {
             }, reject);
           }, reject);
         }, reject);
-      }, reject);
-    } else {
-      resolve(null);
-    }
-  });
-}
-
-/**
- * FullCalendar plugin
- */
-function calendar(element) {
-  return new Promise((resolve, reject) => {
-    const calendars = $('.calendar', element);
-    if (calendars.length > 0) {
-      MyAMS.ajax.check(window.FullCalendar, `${MyAMS.env.baseURL}../ext/fullcalendar-global${MyAMS.env.extext}.js`).then(firstLoad => {
-        calendars.each((idx, elt) => {
-          const element = $(elt),
-            data = element.data(),
-            defaultOptions = {
-              plugins: [],
-              initialView: 'dayGridMonth',
-              themeSystem: 'bootstrap',
-              locale: $('html').attr('lang'),
-              headerToolbar: {
-                start: 'title',
-                center: 'today',
-                right: 'prev,next'
-              },
-              bootstrapFontAwesome: {
-                prev: 'fa-chevron-left',
-                next: 'fa-chevron-right'
-              },
-              firstDay: 1
-            };
-          let settings = $.extend({}, defaultOptions, data.calendarOptions || data.options);
-          settings = MyAMS.core.executeFunctionByName(data.amsCalendarInitCallback || data.amsInit, document, element, settings) || settings;
-          const veto = {
-            veto: false
-          };
-          element.trigger('before-init.ams.calendar', [element, settings, veto]);
-          if (veto.veto) {
-            return;
-          }
-          const calendar = new FullCalendar.Calendar(elt, settings);
-          element.trigger('after-init.ams.calendar', [element, calendar]);
-          calendar.render();
-        });
-        resolve(calendars);
       }, reject);
     } else {
       resolve(null);
@@ -6767,6 +6826,9 @@ function tinymce(element) {
                   style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
                   block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
                   valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
+                  relative_urls: false,
+                  remove_script_host: false,
+                  convert_urls: false,
                   image_advtab: true,
                   image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) || data.amsTinymceImageList || data.amsImageList,
                   image_class_list: data.amsTinymceImageClassList || data.amsImageClassList,
@@ -6874,7 +6936,7 @@ function treeview(element) {
                   onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
                 };
               let settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
-              settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit, document, treeview, settings) || settings;
+              settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitCallback || data.amsInit, document, treeview, settings) || settings;
               const veto = {
                 veto: false
               };
@@ -6987,6 +7049,7 @@ if (window.MyAMS) {
   // register loaded plug-ins
   MyAMS.registry.register(calendar, 'calendar');
   MyAMS.registry.register(checker, 'checker');
+  MyAMS.registry.register(colorPicker, 'colorPicker');
   MyAMS.registry.register(contextMenu, 'contextMenu');
   MyAMS.registry.register(datatables, 'datatables');
   MyAMS.registry.register(datetime, 'datetime');
@@ -7019,7 +7082,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "skin": function() { return /* binding */ skin; }
+/* harmony export */   skin: function() { return /* binding */ skin; }
 /* harmony export */ });
 var _this = undefined;
 /* global MyAMS */
@@ -7279,7 +7342,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "stats": function() { return /* binding */ stats; }
+/* harmony export */   stats: function() { return /* binding */ stats; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -7315,7 +7378,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "tree": function() { return /* binding */ tree; }
+/* harmony export */   tree: function() { return /* binding */ tree; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -7571,7 +7634,7 @@ if (window.MyAMS) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "xmlrpc": function() { return /* binding */ xmlrpc; }
+/* harmony export */   xmlrpc: function() { return /* binding */ xmlrpc; }
 /* harmony export */ });
 /* global MyAMS */
 /**
@@ -7601,7 +7664,7 @@ if (window.MyAMS) {
   \*******************************************/
 /***/ (function(module) {
 
-/*! JsRender v1.0.12: http://jsviews.com/#jsrender */
+/*! JsRender v1.0.13: http://jsviews.com/#jsrender */
 /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 /*
  * Best-of-breed templating in browser or on Node.js.
@@ -7641,7 +7704,7 @@ var setGlobals = $ === false; // Only set globals if script block in browser (no
 
 $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-var versionNumber = "v1.0.12",
+var versionNumber = "v1.0.13",
 	jsvStoreName, rTag, rTmplString, topView, $views, $expando,
 	_ocp = "_ocp",      // Observable contextual parameter
 
@@ -8715,7 +8778,7 @@ function compileTmpl(name, tmpl, parentTmpl, options) {
 					}
 				} else if (value.charAt(0) === "#") {
 					elem = document.getElementById(value.slice(1));
-				} else if ($.fn && !$sub.rTmpl.test(value)) {
+				} if (!elem && $.fn && !$sub.rTmpl.test(value)) {
 					try {
 						elem = $(value, document)[0]; // if jQuery is loaded, test for selector returning elements, and get first element
 					} catch (e) {}
@@ -10793,7 +10856,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 1.16.0  */
+/** Version: 2.0.0  */
 }();
 /******/ })()
 ;

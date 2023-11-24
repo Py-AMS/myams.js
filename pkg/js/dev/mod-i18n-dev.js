@@ -24,7 +24,7 @@
 
   const $ = MyAMS.$;
   let _initialized = false;
-  const i18n = {
+  const i18n = _exports.i18n = {
     language: 'en',
     INFO: "Information",
     WARNING: "!! WARNING !!",
@@ -92,7 +92,6 @@
   /**
    * Global module initialization
    */
-  _exports.i18n = i18n;
   if (MyAMS.env.bundle) {
     MyAMS.config.modules.push('i18n');
   } else {

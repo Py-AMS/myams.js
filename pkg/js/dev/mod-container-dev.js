@@ -23,7 +23,7 @@
    */
 
   const $ = MyAMS.$;
-  const container = {
+  const container = _exports.container = {
     /**
      * Switch attribute of container element
      *
@@ -125,7 +125,6 @@
   /**
    * Global module initialization
    */
-  _exports.container = container;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('container');

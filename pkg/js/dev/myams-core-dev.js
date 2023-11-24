@@ -10,22 +10,22 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clearContent": function() { return /* binding */ clearContent; },
-/* harmony export */   "executeFunctionByName": function() { return /* binding */ executeFunctionByName; },
-/* harmony export */   "generateId": function() { return /* binding */ generateId; },
-/* harmony export */   "generateUUID": function() { return /* binding */ generateUUID; },
-/* harmony export */   "getCSS": function() { return /* binding */ getCSS; },
-/* harmony export */   "getFunctionByName": function() { return /* binding */ getFunctionByName; },
-/* harmony export */   "getModules": function() { return /* binding */ getModules; },
-/* harmony export */   "getObject": function() { return /* binding */ getObject; },
-/* harmony export */   "getQueryVar": function() { return /* binding */ getQueryVar; },
-/* harmony export */   "getScript": function() { return /* binding */ getScript; },
-/* harmony export */   "getSource": function() { return /* binding */ getSource; },
-/* harmony export */   "init": function() { return /* binding */ init; },
-/* harmony export */   "initContent": function() { return /* binding */ initContent; },
-/* harmony export */   "initData": function() { return /* binding */ initData; },
-/* harmony export */   "initPage": function() { return /* binding */ initPage; },
-/* harmony export */   "switchIcon": function() { return /* binding */ switchIcon; }
+/* harmony export */   clearContent: function() { return /* binding */ clearContent; },
+/* harmony export */   executeFunctionByName: function() { return /* binding */ executeFunctionByName; },
+/* harmony export */   generateId: function() { return /* binding */ generateId; },
+/* harmony export */   generateUUID: function() { return /* binding */ generateUUID; },
+/* harmony export */   getCSS: function() { return /* binding */ getCSS; },
+/* harmony export */   getFunctionByName: function() { return /* binding */ getFunctionByName; },
+/* harmony export */   getModules: function() { return /* binding */ getModules; },
+/* harmony export */   getObject: function() { return /* binding */ getObject; },
+/* harmony export */   getQueryVar: function() { return /* binding */ getQueryVar; },
+/* harmony export */   getScript: function() { return /* binding */ getScript; },
+/* harmony export */   getSource: function() { return /* binding */ getSource; },
+/* harmony export */   init: function() { return /* binding */ init; },
+/* harmony export */   initContent: function() { return /* binding */ initContent; },
+/* harmony export */   initData: function() { return /* binding */ initData; },
+/* harmony export */   initPage: function() { return /* binding */ initPage; },
+/* harmony export */   switchIcon: function() { return /* binding */ switchIcon; }
 /* harmony export */ });
 /* harmony import */ var _ext_registry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ext-registry */ "./src/js/ext-registry.js");
 /* global $, FontAwesome */
@@ -801,7 +801,7 @@ window.MyAMS = MyAMS;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "registry": function() { return /* binding */ registry; }
+/* harmony export */   registry: function() { return /* binding */ registry; }
 /* harmony export */ });
 /* global $, MyAMS */
 /**
@@ -1272,7 +1272,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 1.16.0  */
+/** Version: 2.0.0  */
 }();
 /******/ })()
 ;

@@ -63,7 +63,7 @@
       });
     }
   }
-  const clipboard = {
+  const clipboard = _exports.clipboard = {
     /**
      * Copy given text to system's clipboard
      *
@@ -95,7 +95,6 @@
   /**
    * Global module initialization
    */
-  _exports.clipboard = clipboard;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('clipboard');

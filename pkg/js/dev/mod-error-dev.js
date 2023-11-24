@@ -60,7 +60,7 @@
     markup: ERRORS_TEMPLATE_STRING,
     allowCode: true
   });
-  const error = {
+  const error = _exports.error = {
     /**
      * Show errors as alert in given parent
      *
@@ -181,7 +181,6 @@
   /**
    * Global module initialization
    */
-  _exports.error = error;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('error');

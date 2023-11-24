@@ -13,7 +13,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  /*! JsRender v1.0.12: http://jsviews.com/#jsrender */
+  /*! JsRender v1.0.13: http://jsviews.com/#jsrender */
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
   /*
    * Best-of-breed templating in browser or on Node.js.
@@ -59,7 +59,7 @@
 
     $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-    var versionNumber = "v1.0.12",
+    var versionNumber = "v1.0.13",
       jsvStoreName,
       rTag,
       rTmplString,
@@ -1184,7 +1184,8 @@
               }
             } else if (value.charAt(0) === "#") {
               elem = document.getElementById(value.slice(1));
-            } else if ($.fn && !$sub.rTmpl.test(value)) {
+            }
+            if (!elem && $.fn && !$sub.rTmpl.test(value)) {
               try {
                 elem = $(value, document)[0]; // if jQuery is loaded, test for selector returning elements, and get first element
               } catch (e) {}

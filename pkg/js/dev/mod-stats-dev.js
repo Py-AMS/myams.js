@@ -23,7 +23,7 @@
    */
 
   const $ = MyAMS.$;
-  const stats = {
+  const stats = _exports.stats = {
     logPageview: function () {},
     logEvent: function () {}
   };
@@ -31,7 +31,6 @@
   /**
    * Global module initialization
    */
-  _exports.stats = stats;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('stats');

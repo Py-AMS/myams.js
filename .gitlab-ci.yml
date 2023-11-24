@@ -74,8 +74,8 @@ coverage:
 build-3.7:
     stage: build
     script:
-        - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
-        - buildout setup setup.py clean --all sdist bdist_egg bdist_wheel
+        - pip install zc.buildout==3.0.1
+        - buildout setup setup.py clean --all sdist
     artifacts:
         paths:
             - ./dist
@@ -85,12 +85,11 @@ build-3.7:
 
 dist-3.7:
     stage: dist
-    image: python:3.7
     script:
         - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
         - buildout
         - ./bin/test
-        - buildout setup setup.py bdist_egg
+        - buildout setup setup.py sdist bdist_wheel
         - pip install twine
         - twine upload --skip-existing dist/*
     variables:
@@ -110,7 +109,7 @@ dist-3.8:
         - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
         - buildout
         - ./bin/test
-        - buildout setup setup.py bdist_egg
+        - buildout setup setup.py bdist_wheel
         - pip install twine
         - twine upload --skip-existing dist/*
     variables:
@@ -130,7 +129,7 @@ dist-3.9:
         - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
         - buildout
         - ./bin/test
-        - buildout setup setup.py bdist_egg
+        - buildout setup setup.py bdist_wheel
         - pip install twine
         - twine upload --skip-existing dist/*
     variables:
@@ -150,7 +149,7 @@ dist-3.10:
         - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
         - buildout
         - ./bin/test
-        - buildout setup setup.py bdist_egg
+        - buildout setup setup.py bdist_wheel
         - pip install twine
         - twine upload --skip-existing dist/*
     variables:
@@ -170,7 +169,7 @@ dist-3.11:
         - pip install pip==22.3.1 setuptools==65.6.3 zc.buildout==3.0.1 zc.recipe.egg==2.0.7
         - buildout
         - ./bin/test
-        - buildout setup setup.py bdist_egg
+        - buildout setup setup.py bdist_wheel
         - pip install twine
         - twine upload --skip-existing dist/*
     variables:

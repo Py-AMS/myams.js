@@ -24,7 +24,7 @@
 
   const $ = MyAMS.$;
   let _initialized = false;
-  const callbacks = {
+  const callbacks = _exports.callbacks = {
     init: () => {
       if (_initialized) {
         return;
@@ -90,7 +90,6 @@
   /**
    * Global module initialization
    */
-  _exports.callbacks = callbacks;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('callbacks');

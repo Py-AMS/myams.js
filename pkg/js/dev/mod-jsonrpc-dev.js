@@ -23,12 +23,11 @@
    */
 
   const $ = MyAMS.$;
-  const jsonrpc = {};
+  const jsonrpc = _exports.jsonrpc = {};
 
   /**
    * Global module initialization
    */
-  _exports.jsonrpc = jsonrpc;
   if (window.MyAMS) {
     if (MyAMS.env.bundle) {
       MyAMS.config.modules.push('jsonrpc');
