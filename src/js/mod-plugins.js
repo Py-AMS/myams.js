@@ -12,6 +12,58 @@ if (!$.templates) {
 
 
 /**
+ * FullCalendar plugin
+ */
+export function calendar(element) {
+	return new Promise((resolve, reject) => {
+		const calendars = $('.calendar', element);
+		if (calendars.length > 0) {
+			MyAMS.ajax.check(window.FullCalendar,
+				`${MyAMS.env.baseURL}../ext/fullcalendar-global${MyAMS.env.extext}.js`).then((firstLoad) => {
+				calendars.each((idx, elt) => {
+					const
+						element = $(elt),
+						data = element.data(),
+						defaultOptions = {
+							plugins: [],
+							initialView: 'dayGridMonth',
+							themeSystem: 'bootstrap',
+							locale: $('html').attr('lang'),
+							headerToolbar: {
+								start: 'title',
+								center: 'today',
+								right: 'prev,next'
+							},
+							bootstrapFontAwesome: {
+								prev: 'fa-chevron-left',
+								next: 'fa-chevron-right'
+							},
+							firstDay: 1,
+							weekNumberCalculation: 'ISO'
+						};
+					let settings = $.extend({}, defaultOptions, data.calendarOptions || data.options);
+					settings = MyAMS.core.executeFunctionByName(
+						data.amsCalendarInitCallback || data.amsInit,
+						document, element, settings) || settings;
+					const veto = {veto: false};
+					element.trigger('before-init.ams.calendar', [element, settings, veto]);
+					if (veto.veto) {
+						return;
+					}
+					const calendar = new FullCalendar.Calendar(elt, settings);
+					element.trigger('after-init.ams.calendar', [element, calendar]);
+					calendar.render();
+				});
+				resolve(calendars);
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
  * Fieldset checker plug-in
  *
  * A checker is like a simple switcher, but also provides a checkbox which is used
@@ -156,6 +208,67 @@ export function checker(element) {
 				}
 			});
 			resolve(checkers);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
+ * Colorpicker menu plug-in
+ */
+
+export function colorPicker(element) {
+	return new Promise((resolve, reject) => {
+		const inputs = $('.color', element);
+		if (inputs.length > 0) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check($.fn.colorpicker,
+					`${MyAMS.env.baseURL}../ext/bootstrap-colorpicker${MyAMS.env.extext}.js`).then((firstLoad) => {
+					const required = [];
+					if (firstLoad) {
+						required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/bootstrap-colorpicker${MyAMS.env.extext}.css`,
+							'colorpicker'));
+					}
+					$.when.apply($, required).then(() => {
+						inputs.each((idx, elt) => {
+							const
+								input = $(elt),
+								data = input.data(),
+								dataOptions = {
+									format: data.amsColorpickerFormat || data.amsFormat || 'hex',
+									useHashPrefix: (data.amsColorpickerUseHashPrefix || data.amsUseHashPrefix || false) !== false,
+									useAlpha: (data.amsColorpickerUseAlpha || data.amsUseAlpha || false) !== false,
+									change: MyAMS.core.getFunctionByName(data.amsColorpickerChange || data.amsChange),
+									colorpickerChange: MyAMS.core.getFunctionByName(data.amsColorpickerPickerChange || data.amsPickerChange),
+									colorpickerCreate: MyAMS.core.getFunctionByName(data.amsColorpickerPickerCreate || data.amsPickerCreate),
+									colorpickerDestroy: MyAMS.core.getFunctionByName(data.amsColorpickerPickerDestroy || data.amsPickerDestroy),
+									colorpickerEnable: MyAMS.core.getFunctionByName(data.amsColorpickerPickerEnable || data.amsPickerEnable),
+									colorpickerDisable: MyAMS.core.getFunctionByName(data.amsColorpickerPickerDisable || data.amsPickerDisable),
+									colorpickerHide: MyAMS.core.getFunctionByName(data.amsColorpickerPickerHide || data.amsPickerHide),
+									colorpickerInvalid: MyAMS.core.getFunctionByName(data.amsColorpickerPickerInvalid || data.amsPickerInvalid),
+									colorpickerShow: MyAMS.core.getFunctionByName(data.amsColorpickerPickerShow || data.amsPickerShow),
+									colorpickerUpdate: MyAMS.core.getFunctionByName(data.amsColorpickerPickerUpdate || data.amsPickerUpdate),
+									mousemove: MyAMS.core.getFunctionByName(data.amsColorpickerMousemove || data.amsMousemove),
+								};
+							let settings = $.extend({}, dataOptions, data.amsColorpickerOptions || data.amsOptions);
+							settings = MyAMS.core.executeFunctionByName(data.amsColorpickerInitCallback || data.amsInit,
+								document, input, settings) || settings;
+							const veto = {veto: false};
+							input.trigger('before-init.ams.colorpicker', [input, settings, veto]);
+							if (veto.veto) {
+								return;
+							}
+							const plugin = input.colorpicker(settings);
+							MyAMS.core.executeFunctionByName(data.amsColorpickerAfterInitCallback || data.amsAfterInit,
+								document, input, plugin, settings);
+							input.trigger('after-init.ams.colorpicker', [input, plugin]);
+						});
+						resolve(inputs);
+					}, reject);
+				}, reject);
+			}, reject);
 		} else {
 			resolve(null);
 		}
@@ -674,57 +787,6 @@ export function datatables(element) {
 						}, reject);
 					}, reject);
 				}, reject);
-			}, reject);
-		} else {
-			resolve(null);
-		}
-	});
-}
-
-
-/**
- * FullCalendar plugin
- */
-export function calendar(element) {
-	return new Promise((resolve, reject) => {
-		const calendars = $('.calendar', element);
-		if (calendars.length > 0) {
-			MyAMS.ajax.check(window.FullCalendar,
-				`${MyAMS.env.baseURL}../ext/fullcalendar-global${MyAMS.env.extext}.js`).then((firstLoad) => {
-				calendars.each((idx, elt) => {
-					const
-						element = $(elt),
-						data = element.data(),
-						defaultOptions = {
-							plugins: [],
-							initialView: 'dayGridMonth',
-							themeSystem: 'bootstrap',
-							locale: $('html').attr('lang'),
-							headerToolbar: {
-								start: 'title',
-								center: 'today',
-								right: 'prev,next'
-							},
-							bootstrapFontAwesome: {
-								prev: 'fa-chevron-left',
-								next: 'fa-chevron-right'
-							},
-							firstDay: 1
-						};
-					let settings = $.extend({}, defaultOptions, data.calendarOptions || data.options);
-					settings = MyAMS.core.executeFunctionByName(
-						data.amsCalendarInitCallback || data.amsInit,
-						document, element, settings) || settings;
-					const veto = {veto: false};
-					element.trigger('before-init.ams.calendar', [element, settings, veto]);
-					if (veto.veto) {
-						return;
-					}
-					const calendar = new FullCalendar.Calendar(elt, settings);
-					element.trigger('after-init.ams.calendar', [element, calendar]);
-					calendar.render();
-				});
-				resolve(calendars);
 			}, reject);
 		} else {
 			resolve(null);
@@ -1477,6 +1539,9 @@ export function tinymce(element) {
 									style_formats: data.amsTinymceStyleFormats || data.amsStyleFormats,
 									block_formats: data.amsTinymceBlockFormats || data.amsBlockFormats,
 									valid_classes: data.amsTinymceValidClasses || data.amsValidClasses,
+									relative_urls: false,
+									remove_script_host: false,
+									convert_urls: false,
 									image_advtab: true,
 									image_list: MyAMS.core.getFunctionByName(data.amsTinymceImageList || data.amsImageList) ||
 										data.amsTinymceImageList || data.amsImageList,
@@ -1596,7 +1661,7 @@ export function treeview(element) {
 									onSearchCleared: MyAMS.core.getFunctionByName(data.amsTreeviewSearchCleared)
 								};
 							let settings = $.extend({}, dataOptions, data.amsTreeviewOptions);
-							settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitcallback || data.amsInit,
+							settings = MyAMS.core.executeFunctionByName(data.amsTreeviewInitCallback || data.amsInit,
 								document, treeview, settings) || settings;
 							const veto = {veto: false};
 							treeview.trigger('before-init.ams.treeview', [treeview, settings, veto]);
@@ -1726,6 +1791,7 @@ if (window.MyAMS) {
 	// register loaded plug-ins
 	MyAMS.registry.register(calendar, 'calendar');
 	MyAMS.registry.register(checker, 'checker');
+	MyAMS.registry.register(colorPicker, 'colorPicker');
 	MyAMS.registry.register(contextMenu, 'contextMenu');
 	MyAMS.registry.register(datatables, 'datatables');
 	MyAMS.registry.register(datetime, 'datetime');
