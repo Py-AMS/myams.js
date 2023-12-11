@@ -152,8 +152,8 @@ export const tree = {
 					// Move below an existing row
 					parentID = parent.data('ams-tree-node-id');
 					// Check switcher state
-					switcher = $('.switch', parent);
-					if (switcher.hasClass('minus')) {
+					switcher = $(`.${data.amsTreeSwitcherClass || 'switcher'}`, parent);
+					if (switcher.hasClass(data.amsTreeSwitcherExpandedClass || 'expanded')) {
 						// Opened folder: move as child
 						if (rowParentID === parentID) {
 							// Don't change parent
@@ -191,7 +191,7 @@ export const tree = {
 					action: action,
 					child: rowID,
 					parent: parentID,
-					order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
+					order: JSON.stringify($('tr[data-ams-tree-node-id]', table).listattr('data-ams-tree-node-id')),
 					can_sort: !$('td.sorter', row).is(':empty')
 				};
 				if (typeof localTarget === 'function') {
@@ -207,12 +207,12 @@ export const tree = {
 						MyAMS.ajax.post(target, postData).then((result) => {
 
 							const removeRow = (rowID) => {
-								const row = $(`tr[data-ams-tree-node-id="${rowID}"]`);
+								const row = $(`tr[data-ams-tree-node-id="${rowID}"]`, table);
 								dtTable.row(row).remove().draw();
 							};
 
 							const removeChildRows = (rowID) => {
-								const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`);
+								const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`, table);
 								childs.each((idx, elt) => {
 									const
 										childRow = $(elt),
