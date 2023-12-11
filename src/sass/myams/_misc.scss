@@ -199,9 +199,13 @@ button.bg-primary {
  * Custom classes
  */
 
+a[href],
 .mouse-pointer,
 [data-ams-click-handler] {
-  cursor: pointer !important;
+  &,
+  >* {
+    cursor: pointer !important;
+  }
 }
 .mouse-move {
   cursor: move !important;
@@ -218,6 +222,12 @@ button.bg-primary {
   }
 }
 
+
+.ui-sortable {
+  >div {
+    cursor: move !important;
+  }
+}
 
 .ui-sortable-placeholder {
   min-height: 2em;
