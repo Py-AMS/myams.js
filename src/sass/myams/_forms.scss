@@ -232,6 +232,12 @@
     margin-top: 0.5rem;
   }
 
+  table .editor & {
+    >fieldset {
+      margin: 1em 0;
+    }
+  }
+
   // Footer
   footer,
   .footer {
@@ -247,6 +253,10 @@
 
     > * {
       margin: 0.25rem;
+    }
+
+    table .editor & {
+      background-color: transparent;
     }
 
     .btn {
