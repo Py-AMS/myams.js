@@ -42,6 +42,10 @@ section {
       > fieldset {
         margin: 1em;
 
+        .editor & {
+          margin: 0 0 1em;
+        }
+
         fieldset >& {
           margin: 0;
         }
