@@ -5402,6 +5402,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   datatables: function() { return /* binding */ datatables; },
 /* harmony export */   datetime: function() { return /* binding */ datetime; },
 /* harmony export */   dragdrop: function() { return /* binding */ dragdrop; },
+/* harmony export */   dropzone: function() { return /* binding */ dropzone; },
 /* harmony export */   editor: function() { return /* binding */ editor; },
 /* harmony export */   fileInput: function() { return /* binding */ fileInput; },
 /* harmony export */   imgAreaSelect: function() { return /* binding */ imgAreaSelect; },
@@ -6350,6 +6351,60 @@ function dragdrop(element) {
 }
 
 /**
+ * Dropzone drag&drop file input
+ */
+
+function dropzone(element) {
+  return new Promise((resolve, reject) => {
+    const inputs = $('.dropzone', element);
+    if (inputs.length > 0) {
+      MyAMS.require('ajax').then(() => {
+        MyAMS.ajax.check($.fn.dropzone, `${MyAMS.env.baseURL}../ext/dropzone.min.js`).then(firstLoad => {
+          const required = [];
+          if (firstLoad) {
+            required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/dropzone${MyAMS.env.extext}.css`, 'dropzone'));
+          }
+          $.when.apply($, required).then(() => {
+            inputs.each((idx, elt) => {
+              const input = $(elt),
+                data = input.data(),
+                defaultOptions = {
+                  paramName: data.amsDropzoneParamName || data.amsParamName || 'form.widgets.data',
+                  url: data.amsDropzoneUrl || data.amsUrl || 'upload-file.json',
+                  uploadMultiple: data.amsDropzoneUploadMultiple !== false && data.amsUploadMultiple !== false,
+                  maxFilesize: data.amsDropzoneMaxFilesize || data.amsMaxFilesize,
+                  thumbnailWidth: data.amsDropzoneThumbnailWidth || data.amsThumbnailWidth || 128,
+                  thumbnailHeight: data.amsDropzoneThumbnailHeight || data.amsThumbnailHeight || 128,
+                  thumbnailMethod: data.amsDropzoneTHumbnailMethod || data.amsThumbnailMethod || 'contain',
+                  clickable: data.amsDropzoneClickable != false && data.amsCLickable !== false,
+                  acceptedFiles: data.amsDropzoneAcceptedFiles || data.amsAcceptedFiles,
+                  success: MyAMS.core.getFunctionByName(data.amsDropzoneSuccess || data.amsSuccess) || function (file, result, evt) {
+                    MyAMS.ajax.handleJSON(result);
+                  }
+                };
+              let settings = $.extend({}, defaultOptions, data.amsDropzoneOptions || data.amsOptions);
+              settings = MyAMS.core.executeFunctionByName(data.amsDropzoneInitCallback || data.amsInit, document, input, settings) || settings;
+              const veto = {
+                veto: false
+              };
+              input.trigger('before-init.ams.dropzone', [input, settings, veto]);
+              if (veto.veto) {
+                return;
+              }
+              const plugin = input.dropzone(settings);
+              input.trigger('after-init.ams.dropzone', [input, plugin]);
+            });
+            resolve(inputs);
+          });
+        }, reject);
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
+}
+
+/**
  * ACE text editor
  */
 
@@ -7054,6 +7109,7 @@ if (window.MyAMS) {
   MyAMS.registry.register(datatables, 'datatables');
   MyAMS.registry.register(datetime, 'datetime');
   MyAMS.registry.register(dragdrop, 'dragdrop');
+  MyAMS.registry.register(dropzone, 'dropzone');
   MyAMS.registry.register(editor, 'editor');
   MyAMS.registry.register(fileInput, 'fileInput');
   MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
@@ -7511,8 +7567,8 @@ const tree = {
           // Move below an existing row
           parentID = parent.data('ams-tree-node-id');
           // Check switcher state
-          switcher = $('.switch', parent);
-          if (switcher.hasClass('minus')) {
+          switcher = $(`.${data.amsTreeSwitcherClass || 'switcher'}`, parent);
+          if (switcher.hasClass(data.amsTreeSwitcherExpandedClass || 'expanded')) {
             // Opened folder: move as child
             if (rowParentID === parentID) {
               // Don't change parent
@@ -7550,7 +7606,7 @@ const tree = {
           action: action,
           child: rowID,
           parent: parentID,
-          order: JSON.stringify($('tr[data-ams-tree-node-id]').listattr('data-ams-tree-node-id')),
+          order: JSON.stringify($('tr[data-ams-tree-node-id]', table).listattr('data-ams-tree-node-id')),
           can_sort: !$('td.sorter', row).is(':empty')
         };
         if (typeof localTarget === 'function') {
@@ -7565,11 +7621,11 @@ const tree = {
           MyAMS.require('ajax').then(() => {
             MyAMS.ajax.post(target, postData).then(result => {
               const removeRow = rowID => {
-                const row = $(`tr[data-ams-tree-node-id="${rowID}"]`);
+                const row = $(`tr[data-ams-tree-node-id="${rowID}"]`, table);
                 dtTable.row(row).remove().draw();
               };
               const removeChildRows = rowID => {
-                const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`);
+                const childs = $(`tr[data-ams-tree-node-parent-id="${rowID}"]`, table);
                 childs.each((idx, elt) => {
                   const childRow = $(elt),
                     childID = childRow.attr('data-ams-tree-node-id');
@@ -10856,7 +10912,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.0.0  */
+/** Version: 2.1.0  */
 }();
 /******/ })()
 ;

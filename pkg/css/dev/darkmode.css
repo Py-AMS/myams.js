@@ -8050,6 +8050,9 @@ a.text-dark:hover, a.text-dark:focus {
 /**
  * Custom transforms
  */
+.tiny {
+  font-size: 0.7em; }
+
 .scaled {
   transform: scale(1.25); }
 
@@ -8065,8 +8068,12 @@ button.bg-primary.text-white:active {
 /**
  * Custom classes
  */
+a[href],
+a[href] > *,
 .mouse-pointer,
-[data-ams-click-handler] {
+.mouse-pointer > *,
+[data-ams-click-handler],
+[data-ams-click-handler] > * {
   cursor: pointer !important; }
 
 .mouse-move {
@@ -8078,14 +8085,17 @@ button.bg-primary.text-white:active {
 .list-striped li:nth-child(2n+1) {
   background-color: rgba(47, 44, 49, 0.9); }
 
+.ui-sortable > div {
+  cursor: move !important; }
+
 .ui-sortable-placeholder {
   min-height: 2em;
-  background-color: #b7d7f1; }
+  background-color: white; }
   .visible-placeholder .ui-sortable-placeholder {
     visibility: visible !important; }
 
 .visible-helper .ui-sortable-helper {
-  background-color: #a2ccec; }
+  background-color: #f7fafd; }
 
 img {
   max-width: 100%;
@@ -8277,6 +8287,8 @@ button.modal .bg-dark-modal:focus {
 
 .modal {
   z-index: 10000; }
+  .modal .hidden-modal {
+    display: none !important; }
   .modal .py-1-modal,
   .modal .pt-1-modal {
     padding-top: 0.25rem !important; }
@@ -8497,6 +8509,8 @@ button.modal .bg-dark-modal:focus {
     background-color: transparent; }
   .ams-form fieldset + fieldset {
     margin-top: 0.5rem; }
+  table .editor .ams-form > fieldset {
+    margin: 1em 0; }
   .ams-form footer,
   .ams-form .footer {
     display: flex;
@@ -8511,6 +8525,9 @@ button.modal .bg-dark-modal:focus {
     .ams-form footer > *,
     .ams-form .footer > * {
       margin: 0.25rem; }
+    table .editor .ams-form footer, table .editor
+    .ams-form .footer {
+      background-color: transparent; }
     .ams-form footer .btn,
     .ams-form .footer .btn {
       position: relative; }
@@ -9378,6 +9395,8 @@ section table.datatable.table-bordered tr:last-child td {
 
 section.inner-table.border-0 > fieldset {
   margin: 1em; }
+  .editor section.inner-table.border-0 > fieldset {
+    margin: 0 0 1em; }
   fieldset > section.inner-table.border-0 > fieldset {
     margin: 0; }
 
@@ -10192,18 +10211,18 @@ table td.action, table td.reorder {
 :root {
   --body:                #f8ecf8;
   --body-bg:             rgba(37, 34, 38, 0.9);
-  --primary-light:       #e4b177;
-  --secondary-light:     #9e97a1;
-  --success-light:       #77e477;
-  --info-light:          #77b4e4;
-  --warning-light:       #ffe799;
-  --danger-light:        #e48077;
-  --dark-light:          #8b828e;
+  --primary-light:       #f5e2cc;
+  --secondary-light:     #d0cdd1;
+  --success-light:       #ccf5cc;
+  --info-light:          #cce3f5;
+  --warning-light:       white;
+  --danger-light:        #f5cfcc;
+  --dark-light:          #bdb8be;
   --fc-enabled-text:     rgba(37, 34, 38, 0.9);
   --fc-enabled-bg:       #cc8029;
   --fc-disabled-text:    #f8ecf8;
   --fc-disabled-bg:      #6b646e;
-  --fc-temporary-bg:     #e4b177; }
+  --fc-temporary-bg:     #f5e2cc; }
 
 html {
   margin: 0;
@@ -10317,6 +10336,8 @@ aside {
     border: 1px solid #575159;
     background-color: #252226;
     color: #9e939e; }
+    #content section section {
+      background-color: transparent; }
     #content section > h2 {
       font-size: 1.26rem; }
       #content section > h2 > svg.svg-inline--fa {
@@ -10596,4 +10617,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.0.0  */
+/** Version: 2.1.0  */

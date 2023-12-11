@@ -23,6 +23,7 @@
   _exports.datatables = datatables;
   _exports.datetime = datetime;
   _exports.dragdrop = dragdrop;
+  _exports.dropzone = dropzone;
   _exports.editor = editor;
   _exports.fileInput = fileInput;
   _exports.imgAreaSelect = imgAreaSelect;
@@ -970,6 +971,60 @@
   }
 
   /**
+   * Dropzone drag&drop file input
+   */
+
+  function dropzone(element) {
+    return new Promise((resolve, reject) => {
+      const inputs = $('.dropzone', element);
+      if (inputs.length > 0) {
+        MyAMS.require('ajax').then(() => {
+          MyAMS.ajax.check($.fn.dropzone, `${MyAMS.env.baseURL}../ext/dropzone.min.js`).then(firstLoad => {
+            const required = [];
+            if (firstLoad) {
+              required.push(MyAMS.core.getCSS(`${MyAMS.env.baseURL}../../css/ext/dropzone${MyAMS.env.extext}.css`, 'dropzone'));
+            }
+            $.when.apply($, required).then(() => {
+              inputs.each((idx, elt) => {
+                const input = $(elt),
+                  data = input.data(),
+                  defaultOptions = {
+                    paramName: data.amsDropzoneParamName || data.amsParamName || 'form.widgets.data',
+                    url: data.amsDropzoneUrl || data.amsUrl || 'upload-file.json',
+                    uploadMultiple: data.amsDropzoneUploadMultiple !== false && data.amsUploadMultiple !== false,
+                    maxFilesize: data.amsDropzoneMaxFilesize || data.amsMaxFilesize,
+                    thumbnailWidth: data.amsDropzoneThumbnailWidth || data.amsThumbnailWidth || 128,
+                    thumbnailHeight: data.amsDropzoneThumbnailHeight || data.amsThumbnailHeight || 128,
+                    thumbnailMethod: data.amsDropzoneTHumbnailMethod || data.amsThumbnailMethod || 'contain',
+                    clickable: data.amsDropzoneClickable != false && data.amsCLickable !== false,
+                    acceptedFiles: data.amsDropzoneAcceptedFiles || data.amsAcceptedFiles,
+                    success: MyAMS.core.getFunctionByName(data.amsDropzoneSuccess || data.amsSuccess) || function (file, result, evt) {
+                      MyAMS.ajax.handleJSON(result);
+                    }
+                  };
+                let settings = $.extend({}, defaultOptions, data.amsDropzoneOptions || data.amsOptions);
+                settings = MyAMS.core.executeFunctionByName(data.amsDropzoneInitCallback || data.amsInit, document, input, settings) || settings;
+                const veto = {
+                  veto: false
+                };
+                input.trigger('before-init.ams.dropzone', [input, settings, veto]);
+                if (veto.veto) {
+                  return;
+                }
+                const plugin = input.dropzone(settings);
+                input.trigger('after-init.ams.dropzone', [input, plugin]);
+              });
+              resolve(inputs);
+            });
+          }, reject);
+        }, reject);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
    * ACE text editor
    */
 
@@ -1674,6 +1729,7 @@
     MyAMS.registry.register(datatables, 'datatables');
     MyAMS.registry.register(datetime, 'datetime');
     MyAMS.registry.register(dragdrop, 'dragdrop');
+    MyAMS.registry.register(dropzone, 'dropzone');
     MyAMS.registry.register(editor, 'editor');
     MyAMS.registry.register(fileInput, 'fileInput');
     MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');

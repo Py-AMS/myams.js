@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.0
+-----
+ - added dropzone plug-in
+ - corrected tree sorting
+ - updated CSS styles
+
 2.0.1
 -----
  - updated Buildout configuration
