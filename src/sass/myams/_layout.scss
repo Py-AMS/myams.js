@@ -167,6 +167,10 @@ aside {
     background-color: $section-bg;
     color: $section;
 
+    section {
+      background-color: transparent;
+    }
+
     > h2 {
       font-size: $font-size-base * 1.4;
 
