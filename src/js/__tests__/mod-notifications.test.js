@@ -119,7 +119,8 @@ describe("Test MyAMS.notifications module", () => {
 						title: "Notification title",
 						message: "Notification message",
 						status: "success",
-						url: "#test.html"
+						url: "test.html",
+						modal: true
 					}
 				]
 			},
@@ -154,6 +155,7 @@ describe("Test MyAMS.notifications module", () => {
 			expect($('img.avatar', body).length).toBe(1);
 			expect($('img.avatar', body).attr('src')).toBe('resources/img/profile.png');
 			expect($('i.avatar', body).length).toBe(1);
+			expect($('a[data-toggle="modal"]', body).length).toBe(1);
 			$.ajax = oldAjax;
 			window.XMLHttpRequest = oldXHR;
 		});
@@ -188,7 +190,8 @@ describe("Test MyAMS.notifications module", () => {
 						title: "Notification title",
 						message: "Notification message",
 						status: "success",
-						url: "#test.html"
+						url: "test.html",
+						modal: true
 					}
 				]
 			},
@@ -223,6 +226,7 @@ describe("Test MyAMS.notifications module", () => {
 
 		return MyAMS.notifications.getNotifications(event).then(() => {
 			expect($('.timestamp', body).length).toBe(2);
+			expect($('a[data-toggle="modal"]', body).length).toBe(1);
 			$.ajax = oldAjax;
 			window.XMLHttpRequest = oldXHR;
 		});
