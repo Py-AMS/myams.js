@@ -12,6 +12,8 @@ pkg/css/ext/bootstrap-treeview.css
 pkg/css/ext/bootstrap-treeview.min.css
 pkg/css/ext/bootstrap.css
 pkg/css/ext/bootstrap.min.css
+pkg/css/ext/dropzone.css
+pkg/css/ext/dropzone.min.css
 pkg/css/ext/fontawesome-all.css
 pkg/css/ext/fontawesome-all.min.css
 pkg/css/ext/fontawesome.css
@@ -2631,6 +2633,7 @@ pkg/js/ext/bootstrap.js
 pkg/js/ext/bootstrap.min.js
 pkg/js/ext/bs-custom-file-input.js
 pkg/js/ext/bs-custom-file-input.min.js
+pkg/js/ext/dropzone.min.js
 pkg/js/ext/fontawesome.js
 pkg/js/ext/fontawesome.min.js
 pkg/js/ext/fullcalendar-global.js

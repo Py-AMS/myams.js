@@ -34,7 +34,7 @@
 
   const ITEM_TEMPLATE_STRING = `
 	<li class="p-1 my-1{{if status}} alert-{{:status}}{{/if}}">
-		<a class="d-flex flex-row"{{if url}} href="{{:url}}"{{/if}}>
+		<a class="d-flex flex-row"{{if url}} href="{{:url}}"{{/if}}{{if modal}} data-toggle="modal"{{/if}}>
 			{{if source.avatar}}
 			<img class="avatar mx-1 mt-1" src="{{:source.avatar}}"
 				 alt="{{:source.title}}" title="{{:source.title}}" />
@@ -89,7 +89,7 @@
     /**
      * Render list into given parent
      *
-     * @param parent: JQUery parent object into which the list must be rendered
+     * @param parent: JQuery parent object into which the list must be rendered
      */
     render(parent) {
       $(parent).html(LIST_TEMPLATE.render(this.values, {

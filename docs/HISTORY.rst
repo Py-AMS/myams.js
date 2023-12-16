@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.0
+-----
+ - added support for modal targets in notifications links
+ - added JSDom as default environment to Jest
+
 2.1.0
 -----
  - added dropzone plug-in

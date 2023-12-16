@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 2.0.1
+Version: 2.1.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,12 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.1.0
+-----
+ - added dropzone plug-in
+ - corrected tree sorting
+ - updated CSS styles
 
 2.0.1
 -----

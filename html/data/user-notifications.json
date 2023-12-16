@@ -12,7 +12,8 @@
 			"title": "Content published",
 			"message": "published new content",
 			"status": "success",
-			"url": "#layout.html"
+			"url": "test-modal.html",
+			"modal": true
 		},
 		{
 			"timestamp": "2023-04-08T16:26:28.646501+02:00",
