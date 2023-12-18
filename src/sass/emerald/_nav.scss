@@ -14,7 +14,13 @@
             border-top: 0;
           }
         }
-
+        &.active {
+          > a {
+            &:before {
+              line-height: 1.25rem;
+            }
+          }
+        }
         a {
           padding: 12px 10px 12px 12px;
         }
@@ -43,6 +49,13 @@
         > ul > li > ul > li > a {
           padding-top: 6px;
           padding-bottom: 6px;
+        }
+      }
+      ul {
+        li {
+          &::before {
+            top: 1rem;
+          }
         }
       }
     }

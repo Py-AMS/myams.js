@@ -198,9 +198,9 @@ $custom-file-text: (
 ) !default;
 
 $select2-multiple-sortable-width: calc(100% - 35px) !default;
-$select2-highlight: $white !default;
-$select2-selection-color: $white !default;
-
+$select2-highlight:               $white !default;
+$select2-selection-color:         $white !default;
+$select2-dropdown-bg:             $white !default;
 
 // Tables styles
 $table-sort:                lighten($aside-bg, 20%) !default;

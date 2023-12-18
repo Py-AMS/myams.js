@@ -46,7 +46,7 @@ section {
           margin: 0 0 1em;
         }
 
-        fieldset >& {
+        fieldset & {
           margin: 0;
         }
       }
@@ -61,6 +61,8 @@ table {
   }
   }
   th {
+    white-space: nowrap;
+
     &.reorder,
     &.action {
       width: 1.5em;

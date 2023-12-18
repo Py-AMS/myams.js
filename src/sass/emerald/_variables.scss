@@ -22,7 +22,7 @@ $primary:                   #408b7a !default;
 $success:                   #408b7a !default;
 
 
-$font-size-base:             0.9rem !default;
+$font-size-base:               1rem !default;
 
 
 $body:                   rgb(33, 37, 41) !default;
@@ -53,7 +53,7 @@ $nav-sub-menu-hover-bg:     #2f6458 !default;
 $nav-sub-menu-hover-border: rgba(231, 231, 231, 0.5) !default;
 $nav-sub-menu-hover-bold:   #d5d9e2 !default;
 $nav-sub2-menu:             #bfbfbf !default;
-$nav-sub2-menu-pipe:        rgba(122, 122, 122, .1) !default;
+$nav-sub2-menu-pipe:        rgba(172, 172, 172, .25) !default;
 $nav-sub2-menu-hover-bg:    #39423c !default;
 $nav-sub2-menu-em-bg:       #ed1c24 !default;
 $nav-sub2-menu-em-border:   rgba(255, 255, 255, .1) !default;
@@ -80,14 +80,15 @@ $ribbon-mobile-active-link:    #333 !default;
 $breadcrumb-divider-color:  #6d6c6c !default;
 $breadcrumb-active-color:   #ffffff !default;
 
-$content-padding:        1rem calc(2rem - 4px) 2rem 2rem !default;
+$content-padding:           1rem calc(2rem - 4px) 2rem 2rem !default;
 
-$fieldset-border-margin: 1rem !default;
+$fieldset-border-margin:    1rem !default;
+$legend-padding:            0.1rem 0.5rem !default;
 
 $select2-multiple-sortable-width: calc(100% - 32px) !default;
 
-$font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-$font-family-wide:          "Montserrat", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Afacad", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-wide:          "Afacad", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
 

@@ -244,6 +244,10 @@ a[href],
   }
 }
 
+.colorpicker-bs-popover {
+  z-index: 1999;
+}
+
 img {
   max-width: 100%;
   max-height: 100%;

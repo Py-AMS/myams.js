@@ -29,7 +29,7 @@ $dark:                      $gray-400 !default;
 
 
 
-$font-size-base:            0.9rem !default;
+$font-size-base:            1rem !default;
 
 
 $body:                      $black !default;
@@ -113,6 +113,7 @@ $form-legend-bg:          $gray-300 !default;
 $fieldset-bg:             $gray-200 !default;
 $fieldset-border:         $gray-300 !default;
 $fieldset-border-margin:  1rem !default;
+$legend-padding:          0.1rem 0.5rem !default;
 
 $input-placeholder-color: $gray-400 !default;
 $input-plaintext-color:   $gray-600 !default;
@@ -121,8 +122,8 @@ $select2-highlight:       $body !default;
 $select2-multiple-sortable-width: calc(100% - 32px) !default;
 $select2-selection-color: $body !default;
 
-$font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-$font-family-wide:          "Montserrat", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-sans-serif:    -apple-system, BlinkMacSystemFont, "Afacad", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-wide:          "Afacad", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
 $list-striped-bg:           lighten($body-bg, 4%) !default;

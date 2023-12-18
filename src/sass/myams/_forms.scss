@@ -21,6 +21,10 @@
   }
 }
 
+.custom-control-label {
+  line-height: 1.6;
+}
+
 .custom-select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -176,8 +180,8 @@
     }
 
     legend {
-      font-size: 0.95rem;
-      font-weight: normal;
+      font-size: 1rem;
+      font-weight: 500;
       user-select: none;
 
       &.switcher,

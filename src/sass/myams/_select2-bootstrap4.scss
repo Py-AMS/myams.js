@@ -130,7 +130,7 @@
 
     // dropdown
     .select2-dropdown {
-        background-color: $fieldset-bg;
+        background-color: $select2-dropdown-bg;
         border-color: $input-border-color;
 
         border-top: 1px solid $input-border-color;
@@ -167,7 +167,7 @@
 
     // for <optgroup>
     .select2-results__option[role=option] {
-        padding: 0.2rem 10px;
+        padding: 0.2rem 0.75rem;
     }
 
     // mouse hovered item

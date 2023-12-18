@@ -2,7 +2,7 @@
  * MyAMS main SCSS file
  */
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
@@ -15,9 +15,9 @@
 @import 'emerald/icons';
 @import 'myams/alerts';
 @import 'emerald/modals';
-@import 'myams/buttons';
+@import 'emerald/buttons';
 @import 'myams/caret';
-@import 'myams/forms';
+@import 'emerald/forms';
 @import 'myams/switcher';
 @import 'myams/select2';
 @import 'myams/tables';
@@ -29,7 +29,7 @@
 @import "emerald/nav";
 @import "myams/tabs";
 @import "myams/viewport";
-@import "myams/layout";
+@import "emerald/layout";
 
 @import "myams/scrollbars";
 
