@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.2.1
+-----
+ - updated fonts
+ - updated colorpicker z-index to display picker in modals
+ - updated Select2 styles
+ - other minor CSS updates
+
 2.2.0
 -----
  - added support for modal targets in notifications links

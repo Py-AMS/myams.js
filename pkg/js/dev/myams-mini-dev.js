@@ -10912,7 +10912,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.2.0  */
+/** Version: 2.2.1  */
 }();
 /******/ })()
 ;
