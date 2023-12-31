@@ -884,13 +884,23 @@ export function dragdrop(element) {
 						// draggable components
 						if (item.hasClass('draggable')) {
 							const dragOptions = {
+								axis: data.amsDraggableAxis || data.amsAxis,
 								cursor: data.amsDraggableCursor || 'move',
-								containment: data.amsDraggableContainment,
-								handle: data.amsDraggableHandle,
-								connectToSortable: data.amsDraggableConnectSortable,
+								containment: data.amsDraggableContainment || data.amsContainment,
+								delay: data.amsDraggableDelay || data.amsDelay,
+								handle: data.amsDraggableHandle || data.amsHandle,
+								connectToSortable: data.amsDraggableConnectSortable || data.amsConnectSortable,
+								revert: data.amsDraggableRevert || data.amsRevert,
+								revertDuration: data.amsDraggableRevertDuration || data.amsRevertDuration,
 								helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
-								start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
-								stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+								start: MyAMS.core.getFunctionByName(data.amsDraggableStart) || function(evt, ui) {
+									$(evt.currentTarget).data('is-dragging', true);
+								},
+								stop: MyAMS.core.getFunctionByName(data.amsDraggableStop) || function(evt, ui) {
+									setTimeout(() => {
+										$(evt.currentTarget).data('is-dragging', false);
+									}, 100);
+								}
 							};
 							let settings = $.extend({}, dragOptions,
 								data.amsDraggableOptions || data.amsOptions);
@@ -913,6 +923,7 @@ export function dragdrop(element) {
 						if (item.hasClass('droppable')) {
 							const dropOptions = {
 								accept: data.amsDroppableAccept || data.amsAccept,
+								classes: data.amsDroppableClasses,
 								drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
 							};
 							let settings = $.extend({}, dropOptions,
