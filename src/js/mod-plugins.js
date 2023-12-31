@@ -1267,6 +1267,51 @@ export function imgAreaSelect(element) {
 
 
 /**
+ * Inputmask plug-in integration
+ */
+export function inputMask(element) {
+	return new Promise((resolve, reject) => {
+		const inputs = $('input[data-input-mask]', element);
+		if (inputs.length > 0) {
+			MyAMS.require('ajax').then(() => {
+				MyAMS.ajax.check($.fn.inputmask,
+					`${MyAMS.env.baseURL}../ext/jquery-inputmask${MyAMS.env.extext}.js`).then(() => {
+					inputs.each((idx, elt) => {
+						const
+							input = $(elt),
+							data = input.data();
+						let options;
+						if (typeof(data.inputMask) === 'object') {
+							options = data.inputMask;
+						} else {
+							options = {
+								mask: data.inputMask.toString()
+							};
+						}
+						let settings = $.extend({}, options, data.amsInputMaskOptions || data.amsOptions);
+						settings = MyAMS.core.executeFunctionByName(data.amsInputmaskInitCallback || data.amsInit,
+							document, input, settings) || settings;
+						const veto = {veto: false};
+						input.trigger('before-init.ams.inputmask', [input, settings, veto]);
+						if (veto.veto) {
+							return;
+						}
+						const plugin = input.inputmask(settings);
+						MyAMS.core.executeFunctionByName(data.amsInputmaskAfterInitCallback || data.amsAfterInit,
+							document, input, plugin, settings);
+						input.trigger('after-init.ams.inputmask', [input, plugin]);
+					});
+					resolve(inputs);
+				}, reject);
+			}, reject);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+
+/**
  * Select2 plug-in integration
  */
 
@@ -1859,6 +1904,7 @@ if (window.MyAMS) {
 	MyAMS.registry.register(editor, 'editor');
 	MyAMS.registry.register(fileInput, 'fileInput');
 	MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
+	MyAMS.registry.register(inputMask, 'inputMask');
 	MyAMS.registry.register(select2, 'select2');
 	MyAMS.registry.register(svgPlugin, 'svg');
 	MyAMS.registry.register(switcher, 'switcher');
