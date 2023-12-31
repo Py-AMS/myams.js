@@ -23,24 +23,25 @@
             font-family: $font-family-sans-serif;
             color: $light;
             background-color: $primary;
-            border: 1px solid lighten($primary, 25%);
+            border: 1px solid $primary;
             border-radius: $btn-border-radius-sm;
             padding: 0;
             padding-left: 5px;
             cursor: pointer;
             float: left;
-            margin-top: 0.1em;
+            margin-top: 0.35em;
             margin-right: 5px;
-            margin-bottom: 0.1em;
+            margin-bottom: 0.35em;
             line-height: 1.5;
 
-            &:first-child {
-                margin-top: 0.2em;
-            }
-
             .select2.sortable + & {
+                margin-top: 0.15em;
+                margin-bottom: 0.1em;
                 cursor: move;
                 width: 100%;
+                &:first-child {
+                    margin-top: 0.2em;
+                }
             }
             .select2.sortable[data-allow-clear="true"] + & {
                 width: $select2-multiple-sortable-width;
@@ -77,6 +78,14 @@
             }
             &:hover::before {
                 background-color: darken($primary, 10%);
+            }
+
+            .select2[readonly] + & {
+                width: 0;
+
+                &::before {
+                    content: "";
+                }
             }
         }
     }
