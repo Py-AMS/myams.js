@@ -63,6 +63,73 @@ export const container = {
 	},
 
 	/**
+	 * Move element to it's grand-parent
+	 */
+	moveToGrandParent: (evt, ui) => {
+		return new Promise((resolve, reject) => {
+			const
+				source = $(ui.draggable),
+				target = $(evt.target),
+				table = $(evt.target).parents('table'),
+				location = table.data('ams-location');
+			MyAMS.require('ajax', 'error').then(() => {
+				MyAMS.ajax.post(`${location}/${target.data('ams-drop-action') || table.data('ams-drop-action')}`, {
+					source: source.data('ams-element-name')
+				}).then((result) => {
+					if (result.status === 'success') {
+						source.remove();
+						if (table.hasClass('datatable')) {
+							table.DataTable().row(source).remove().draw();
+						} else {
+							source.remove();
+						}
+						if (result.handle_json) {
+							MyAMS.ajax.handleJSON(result);
+						}
+					} else {
+						MyAMS.ajax.handleJSON(result);
+					}
+					resolve(result);
+				});
+			}, reject);
+		});
+	},
+
+	/**
+	 * Move element to new parent
+	 */
+	moveToNewParent: (evt, ui) => {
+		return new Promise((resolve, reject) => {
+			const
+				source = $(ui.draggable),
+				target = $(evt.target),
+				table = $(evt.target).parents('table'),
+				location = table.data('ams-location');
+			MyAMS.require('ajax', 'error').then(() => {
+				MyAMS.ajax.post(`${location}/${target.data('ams-drop-action') || table.data('ams-drop-action')}`, {
+					source: source.data('ams-element-name'),
+					parent: target.data('ams-element-name')
+				}).then((result) => {
+					if (result.status === 'success') {
+						source.remove();
+						if (table.hasClass('datatable')) {
+							table.DataTable().row(source).remove().draw();
+						} else {
+							source.remove();
+						}
+						if (result.handle_json) {
+							MyAMS.ajax.handleJSON(result);
+						}
+					} else {
+						MyAMS.ajax.handleJSON(result);
+					}
+					resolve(result);
+				});
+			}, reject);
+		});
+	},
+
+	/**
 	 * Delete element from container
 	 *
 	 * @param action
