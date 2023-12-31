@@ -1,0 +1,86 @@
+<h1>MyAMS "inputmask" plug-in</h1>
+
+<section>
+	<p>MyAMS "inputmask" plug-in relies on JQuery InputMask plug-in
+	(see <a href="https://robinherbots.github.io/Inputmask/">here</a> for source and documentation).</p>
+
+	<div class="ams-form">
+		<fieldset class="border">
+			<legend>Basic masks</legend>
+			<div class="form-group row">
+				<label for="maskinput1"
+					   class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Integer input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control text-field"
+							   id="maskinput1"
+							   data-input-mask='{"alias": "integer"}' />
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="maskinput2"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Decimal input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control text-field"
+						       id="maskinput2"
+						       data-input-mask='{"alias": "decimal"}'/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="maskinput3"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Email address input
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control text-field"
+						       id="maskinput3"
+						       data-input-mask='{"alias": "email"}'/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="maskinput4"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Mix of uppercase chars and numbers
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control text-field"
+						       id="maskinput4"
+						       data-input-mask='{"mask": "*{3}-9{3}-9{1,4}", "casing": "upper"}'/>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset class="border">
+			<legend>Advanced masks</legend>
+			<div class="form-group row">
+				<label for="maskinput11"
+				       class="col-sm-3 col-md-4 col-form-label text-sm-right">
+					Regular expression
+				</label>
+				<div class="col-sm-9 col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control text-field"
+						       id="maskinput11"
+						       data-input-mask='{"regex": "([A-Z0-9]{3})-[0-9]{3}-[0-9]{1,4}", "casing": "upper"}'/>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+</section>
+
+<section>
+	<h2>MyAMS <code>inputmask</code> plug-in options</h2>
+	<p>This plug-in options are available as data attributes prefixed by
+	<code>data-inputmask-</code>, as shown in plug-in documentation.
+</section>
