@@ -284,6 +284,23 @@ task('sass_darkmode_prod', function() {
 });
 
 
+task('sass_lightmode_dev', function() {
+	return src('src/sass/lightmode.scss')
+		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
+		.pipe(dest('pkg/css/dev'));
+});
+
+
+task('sass_lightmode_prod', function() {
+	return src('src/sass/lightmode.scss')
+		.pipe(sass().on('error', sass.logError))
+		.pipe(replace('$version$', package.version))
+		.pipe(clean())
+		.pipe(dest('pkg/css/prod'));
+});
+
+
 /**
  * Main tasks
  */
@@ -313,7 +330,8 @@ exports.default = function() {
 	watch('src/sass/**/*.scss',
 		parallel('sass_dev', 'sass_prod',
 				 'sass_emerald_dev', 'sass_emerald_prod',
-				 'sass_darkmode_dev', 'sass_darkmode_prod'));
+				 'sass_darkmode_dev', 'sass_darkmode_prod',
+				 'sass_lightmode_dev', 'sass_lightmode_prod'));
 	watch('src/js/i18n/*.js',
 		parallel('i18n_dev', 'i18n_prod'));
 	watch('src/js/mod-*.js',

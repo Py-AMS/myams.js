@@ -6,7 +6,8 @@ module.exports = {
 	entry: {
 		'myams': './src/js/myams.js',
 		'emerald': './src/js/emerald.js',
-		'darkmode': './src/js/darkmode.js'
+		'darkmode': './src/js/darkmode.js',
+		'lightmode': './src/js/lightmode.js'
 	},
 	output: {
 		path: path.resolve(__dirname, 'pkg', 'js', 'prod'),
