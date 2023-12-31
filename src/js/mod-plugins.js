@@ -1101,7 +1101,7 @@ export function editor(element) {
 								// initialize editor
 								const defaultOptions = {
 									mode: mode,
-									fontSize: 12,
+									fontSize: '12px',
 									tabSize: 4,
 									useSoftTabs: false,
 									showGutter: true,
