@@ -171,6 +171,12 @@
     &.border {
       border: 1px solid $fieldset-border;
       @include border-radius($border-radius);
+
+      >fieldset.border {
+        &:last-child {
+          margin-bottom: 0.35rem;
+        }
+      }
     }
 
     &.switched {
