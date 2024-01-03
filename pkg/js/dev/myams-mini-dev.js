@@ -2324,6 +2324,69 @@ const container = {
     };
   },
   /**
+   * Move element to it's grand-parent
+   */
+  moveToGrandParent: (evt, ui) => {
+    return new Promise((resolve, reject) => {
+      const source = $(ui.draggable),
+        target = $(evt.target),
+        table = $(evt.target).parents('table'),
+        location = table.data('ams-location');
+      MyAMS.require('ajax', 'error').then(() => {
+        MyAMS.ajax.post(`${location}/${target.data('ams-drop-action') || table.data('ams-drop-action')}`, {
+          source: source.data('ams-element-name')
+        }).then(result => {
+          if (result.status === 'success') {
+            source.remove();
+            if (table.hasClass('datatable')) {
+              table.DataTable().row(source).remove().draw();
+            } else {
+              source.remove();
+            }
+            if (result.handle_json) {
+              MyAMS.ajax.handleJSON(result);
+            }
+          } else {
+            MyAMS.ajax.handleJSON(result);
+          }
+          resolve(result);
+        });
+      }, reject);
+    });
+  },
+  /**
+   * Move element to new parent
+   */
+  moveToNewParent: (evt, ui) => {
+    return new Promise((resolve, reject) => {
+      const source = $(ui.draggable),
+        target = $(evt.target),
+        table = $(evt.target).parents('table'),
+        location = table.data('ams-location');
+      MyAMS.require('ajax', 'error').then(() => {
+        MyAMS.ajax.post(`${location}/${target.data('ams-drop-action') || table.data('ams-drop-action')}`, {
+          source: source.data('ams-element-name'),
+          parent: target.data('ams-element-name')
+        }).then(result => {
+          if (result.status === 'success') {
+            source.remove();
+            if (table.hasClass('datatable')) {
+              table.DataTable().row(source).remove().draw();
+            } else {
+              source.remove();
+            }
+            if (result.handle_json) {
+              MyAMS.ajax.handleJSON(result);
+            }
+          } else {
+            MyAMS.ajax.handleJSON(result);
+          }
+          resolve(result);
+        });
+      }, reject);
+    });
+  },
+  /**
    * Delete element from container
    *
    * @param action
@@ -2488,6 +2551,9 @@ const error = {
    */
   showErrors: (parent, errors) => {
     return new Promise((resolve, reject) => {
+      if (!parent) {
+        parent = $('#content >section:first-child >div:first-child');
+      }
       if (typeof errors === 'string') {
         // simple error message
         MyAMS.require('i18n', 'alert').then(() => {
@@ -4502,6 +4568,10 @@ const modal = {
       // Initialize modal dialogs links
       // Standard Bootstrap handlers are removed!!
       $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', evt => {
+        // disable click on dragging element
+        if ($(evt.currentTarget).data('is-dragging')) {
+          return;
+        }
         evt.stopPropagation();
         const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
@@ -4950,6 +5020,10 @@ const nav = {
 
       // Activate clicks
       $(document).on('click', 'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', evt => {
+        // disable click on dragging element
+        if ($(evt.currentTarget).data('is-dragging')) {
+          return;
+        }
         // check for specific click handler
         const handler = $(evt).data('ams-click-handler');
         if (handler) {
@@ -5406,6 +5480,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editor: function() { return /* binding */ editor; },
 /* harmony export */   fileInput: function() { return /* binding */ fileInput; },
 /* harmony export */   imgAreaSelect: function() { return /* binding */ imgAreaSelect; },
+/* harmony export */   inputMask: function() { return /* binding */ inputMask; },
 /* harmony export */   select2: function() { return /* binding */ select2; },
 /* harmony export */   svgPlugin: function() { return /* binding */ svgPlugin; },
 /* harmony export */   switcher: function() { return /* binding */ switcher; },
@@ -6247,13 +6322,23 @@ function dragdrop(element) {
             // draggable components
             if (item.hasClass('draggable')) {
               const dragOptions = {
+                axis: data.amsDraggableAxis || data.amsAxis,
                 cursor: data.amsDraggableCursor || 'move',
-                containment: data.amsDraggableContainment,
-                handle: data.amsDraggableHandle,
-                connectToSortable: data.amsDraggableConnectSortable,
+                containment: data.amsDraggableContainment || data.amsContainment,
+                delay: data.amsDraggableDelay || data.amsDelay,
+                handle: data.amsDraggableHandle || data.amsHandle,
+                connectToSortable: data.amsDraggableConnectSortable || data.amsConnectSortable,
+                revert: data.amsDraggableRevert || data.amsRevert,
+                revertDuration: data.amsDraggableRevertDuration || data.amsRevertDuration,
                 helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
-                start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
-                stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+                start: MyAMS.core.getFunctionByName(data.amsDraggableStart) || function (evt, ui) {
+                  $(evt.currentTarget).data('is-dragging', true);
+                },
+                stop: MyAMS.core.getFunctionByName(data.amsDraggableStop) || function (evt, ui) {
+                  setTimeout(() => {
+                    $(evt.currentTarget).data('is-dragging', false);
+                  }, 100);
+                }
               };
               let settings = $.extend({}, dragOptions, data.amsDraggableOptions || data.amsOptions);
               settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, item, settings) || settings;
@@ -6273,6 +6358,7 @@ function dragdrop(element) {
             if (item.hasClass('droppable')) {
               const dropOptions = {
                 accept: data.amsDroppableAccept || data.amsAccept,
+                classes: data.amsDroppableClasses,
                 drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
               };
               let settings = $.extend({}, dropOptions, data.amsDroppableOptions || data.amsOptions);
@@ -6439,7 +6525,7 @@ function editor(element) {
                 // initialize editor
                 const defaultOptions = {
                   mode: mode,
-                  fontSize: 12,
+                  fontSize: '12px',
                   tabSize: 4,
                   useSoftTabs: false,
                   showGutter: true,
@@ -6588,6 +6674,48 @@ function imgAreaSelect(element) {
             });
             resolve(images);
           }, reject);
+        }, reject);
+      }, reject);
+    } else {
+      resolve(null);
+    }
+  });
+}
+
+/**
+ * Inputmask plug-in integration
+ */
+function inputMask(element) {
+  return new Promise((resolve, reject) => {
+    const inputs = $('input[data-input-mask]', element);
+    if (inputs.length > 0) {
+      MyAMS.require('ajax').then(() => {
+        MyAMS.ajax.check($.fn.inputmask, `${MyAMS.env.baseURL}../ext/jquery-inputmask${MyAMS.env.extext}.js`).then(() => {
+          inputs.each((idx, elt) => {
+            const input = $(elt),
+              data = input.data();
+            let options;
+            if (typeof data.inputMask === 'object') {
+              options = data.inputMask;
+            } else {
+              options = {
+                mask: data.inputMask.toString()
+              };
+            }
+            let settings = $.extend({}, options, data.amsInputMaskOptions || data.amsOptions);
+            settings = MyAMS.core.executeFunctionByName(data.amsInputmaskInitCallback || data.amsInit, document, input, settings) || settings;
+            const veto = {
+              veto: false
+            };
+            input.trigger('before-init.ams.inputmask', [input, settings, veto]);
+            if (veto.veto) {
+              return;
+            }
+            const plugin = input.inputmask(settings);
+            MyAMS.core.executeFunctionByName(data.amsInputmaskAfterInitCallback || data.amsAfterInit, document, input, plugin, settings);
+            input.trigger('after-init.ams.inputmask', [input, plugin]);
+          });
+          resolve(inputs);
         }, reject);
       }, reject);
     } else {
@@ -7113,6 +7241,7 @@ if (window.MyAMS) {
   MyAMS.registry.register(editor, 'editor');
   MyAMS.registry.register(fileInput, 'fileInput');
   MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
+  MyAMS.registry.register(inputMask, 'inputMask');
   MyAMS.registry.register(select2, 'select2');
   MyAMS.registry.register(svgPlugin, 'svg');
   MyAMS.registry.register(switcher, 'switcher');
@@ -10912,7 +11041,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.2.1  */
+/** Version: 2.3.0  */
 }();
 /******/ })()
 ;

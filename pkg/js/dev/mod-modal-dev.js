@@ -173,6 +173,10 @@
         // Initialize modal dialogs links
         // Standard Bootstrap handlers are removed!!
         $(document).off('click', '[data-toggle="modal"]').on('click', '[data-toggle="modal"]', evt => {
+          // disable click on dragging element
+          if ($(evt.currentTarget).data('is-dragging')) {
+            return;
+          }
           evt.stopPropagation();
           const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
           MyAMS.core.executeFunctionByName(handler, document, evt);

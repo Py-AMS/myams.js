@@ -69,6 +69,9 @@
      */
     showErrors: (parent, errors) => {
       return new Promise((resolve, reject) => {
+        if (!parent) {
+          parent = $('#content >section:first-child >div:first-child');
+        }
         if (typeof errors === 'string') {
           // simple error message
           MyAMS.require('i18n', 'alert').then(() => {

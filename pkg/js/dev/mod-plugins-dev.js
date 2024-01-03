@@ -27,6 +27,7 @@
   _exports.editor = editor;
   _exports.fileInput = fileInput;
   _exports.imgAreaSelect = imgAreaSelect;
+  _exports.inputMask = inputMask;
   _exports.select2 = select2;
   _exports.svgPlugin = svgPlugin;
   _exports.switcher = switcher;
@@ -867,13 +868,23 @@
               // draggable components
               if (item.hasClass('draggable')) {
                 const dragOptions = {
+                  axis: data.amsDraggableAxis || data.amsAxis,
                   cursor: data.amsDraggableCursor || 'move',
-                  containment: data.amsDraggableContainment,
-                  handle: data.amsDraggableHandle,
-                  connectToSortable: data.amsDraggableConnectSortable,
+                  containment: data.amsDraggableContainment || data.amsContainment,
+                  delay: data.amsDraggableDelay || data.amsDelay,
+                  handle: data.amsDraggableHandle || data.amsHandle,
+                  connectToSortable: data.amsDraggableConnectSortable || data.amsConnectSortable,
+                  revert: data.amsDraggableRevert || data.amsRevert,
+                  revertDuration: data.amsDraggableRevertDuration || data.amsRevertDuration,
                   helper: MyAMS.core.getFunctionByName(data.amsDraggableHelper) || data.amsDraggableHelper,
-                  start: MyAMS.core.getFunctionByName(data.amsDraggableStart),
-                  stop: MyAMS.core.getFunctionByName(data.amsDraggableStop)
+                  start: MyAMS.core.getFunctionByName(data.amsDraggableStart) || function (evt, ui) {
+                    $(evt.currentTarget).data('is-dragging', true);
+                  },
+                  stop: MyAMS.core.getFunctionByName(data.amsDraggableStop) || function (evt, ui) {
+                    setTimeout(() => {
+                      $(evt.currentTarget).data('is-dragging', false);
+                    }, 100);
+                  }
                 };
                 let settings = $.extend({}, dragOptions, data.amsDraggableOptions || data.amsOptions);
                 settings = MyAMS.core.executeFunctionByName(data.amsDraggableInitCallback || data.amsInit, document, item, settings) || settings;
@@ -893,6 +904,7 @@
               if (item.hasClass('droppable')) {
                 const dropOptions = {
                   accept: data.amsDroppableAccept || data.amsAccept,
+                  classes: data.amsDroppableClasses,
                   drop: MyAMS.core.getFunctionByName(data.amsDroppableDrop)
                 };
                 let settings = $.extend({}, dropOptions, data.amsDroppableOptions || data.amsOptions);
@@ -1059,7 +1071,7 @@
                   // initialize editor
                   const defaultOptions = {
                     mode: mode,
-                    fontSize: 12,
+                    fontSize: '12px',
                     tabSize: 4,
                     useSoftTabs: false,
                     showGutter: true,
@@ -1208,6 +1220,48 @@
               });
               resolve(images);
             }, reject);
+          }, reject);
+        }, reject);
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
+   * Inputmask plug-in integration
+   */
+  function inputMask(element) {
+    return new Promise((resolve, reject) => {
+      const inputs = $('input[data-input-mask]', element);
+      if (inputs.length > 0) {
+        MyAMS.require('ajax').then(() => {
+          MyAMS.ajax.check($.fn.inputmask, `${MyAMS.env.baseURL}../ext/jquery-inputmask${MyAMS.env.extext}.js`).then(() => {
+            inputs.each((idx, elt) => {
+              const input = $(elt),
+                data = input.data();
+              let options;
+              if (typeof data.inputMask === 'object') {
+                options = data.inputMask;
+              } else {
+                options = {
+                  mask: data.inputMask.toString()
+                };
+              }
+              let settings = $.extend({}, options, data.amsInputMaskOptions || data.amsOptions);
+              settings = MyAMS.core.executeFunctionByName(data.amsInputmaskInitCallback || data.amsInit, document, input, settings) || settings;
+              const veto = {
+                veto: false
+              };
+              input.trigger('before-init.ams.inputmask', [input, settings, veto]);
+              if (veto.veto) {
+                return;
+              }
+              const plugin = input.inputmask(settings);
+              MyAMS.core.executeFunctionByName(data.amsInputmaskAfterInitCallback || data.amsAfterInit, document, input, plugin, settings);
+              input.trigger('after-init.ams.inputmask', [input, plugin]);
+            });
+            resolve(inputs);
           }, reject);
         }, reject);
       } else {
@@ -1733,6 +1787,7 @@
     MyAMS.registry.register(editor, 'editor');
     MyAMS.registry.register(fileInput, 'fileInput');
     MyAMS.registry.register(imgAreaSelect, 'imgAreaSelect');
+    MyAMS.registry.register(inputMask, 'inputMask');
     MyAMS.registry.register(select2, 'select2');
     MyAMS.registry.register(svgPlugin, 'svg');
     MyAMS.registry.register(switcher, 'switcher');

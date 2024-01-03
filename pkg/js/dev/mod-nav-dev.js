@@ -336,6 +336,10 @@
 
         // Activate clicks
         $(document).on('click', 'a[href!="#"]:not([data-toggle]), [data-ams-url]:not([data-toggle])', evt => {
+          // disable click on dragging element
+          if ($(evt.currentTarget).data('is-dragging')) {
+            return;
+          }
           // check for specific click handler
           const handler = $(evt).data('ams-click-handler');
           if (handler) {

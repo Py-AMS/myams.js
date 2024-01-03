@@ -8421,7 +8421,7 @@ button.modal .bg-dark-modal:focus {
     min-height: 3rem; }
     .ams-form textarea.monospace {
       font-family: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.9rem; }
+      font-size: 0.8rem; }
   .ams-form .tab-pane > .form-control {
     border: 0; }
   .ams-form .custom-file-label {
@@ -8462,6 +8462,8 @@ button.modal .bg-dark-modal:focus {
     .ams-form fieldset.border {
       border: 1px solid #dee2e6;
       border-radius: 0.25rem; }
+      .ams-form fieldset.border > fieldset.border:last-child {
+        margin-bottom: 0.35rem; }
     .ams-form fieldset.switched legend {
       margin-bottom: 0.2rem; }
     .ams-form fieldset legend {
@@ -8658,7 +8660,7 @@ button.modal .bg-dark-modal:focus {
       border: none;
       font-size: 100%;
       margin-top: 5px;
-      padding: 0; }
+      padding: 0 0 0 0.5rem; }
     .select2-container .select2-search--inline .select2-search__field::-webkit-search-cancel-button {
       -webkit-appearance: none; }
 
@@ -9159,21 +9161,23 @@ select[readonly].select2-hidden-accessible + .select2-container {
     font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     color: #f8f9fa;
     background-color: #3886c9;
-    border: 1px solid #9cc3e4;
+    border: 1px solid #3886c9;
     border-radius: 0.2rem;
     padding: 0;
     padding-left: 5px;
     cursor: pointer;
     float: left;
-    margin-top: 0.1em;
+    margin-top: 0.35em;
     margin-right: 5px;
-    margin-bottom: 0.1em;
+    margin-bottom: 0.35em;
     line-height: 1.5; }
-    .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice:first-child {
-      margin-top: 0.2em; }
     .select2.sortable + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+      margin-top: 0.15em;
+      margin-bottom: 0.1em;
       cursor: move;
       width: 100%; }
+      .select2.sortable + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice:first-child {
+        margin-top: 0.2em; }
     .select2.sortable[data-allow-clear="true"] + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
       width: calc(100% - 35px); }
   .select2.sortable[data-allow-clear="true"] + .select2-container--bootstrap4 .select2-selection--multiple .select2-search--inline {
@@ -9199,6 +9203,10 @@ select[readonly].select2-hidden-accessible + .select2-container {
       background-color: #88b7df; }
     .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove:hover::before {
       background-color: #2c6ba2; }
+    .select2[readonly] + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
+      width: 0; }
+      .select2[readonly] + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove::before {
+        content: ""; }
 
 select.select2[readonly] + .select2 input {
   background-color: transparent; }
@@ -9693,7 +9701,7 @@ table td.action, table td.reorder {
         left: 220px; } }
 
 #left-panel nav {
-  height: calc(100vh - 150px);
+  height: calc(100vh - 160px);
   margin-top: 40px;
   overflow-y: auto;
   font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
@@ -9744,6 +9752,8 @@ table td.action, table td.reorder {
         font-weight: 400;
         text-decoration: none !important;
         position: relative; }
+        #left-panel nav ul li a .badge {
+          color: #f9fdf2; }
       #left-panel nav ul li a:active {
         background: #606b62 !important; }
       #left-panel nav ul li a:focus {
@@ -9951,6 +9961,8 @@ table td.action, table td.reorder {
   font-size: 19px;
   cursor: pointer;
   transition: all .1s linear 0s; }
+  #minifyme .fa {
+    line-height: 1.3; }
 
 .minified #left-panel nav {
   overflow: visible; }
@@ -10194,9 +10206,9 @@ aside {
       .fixed-navigation #left-panel {
         position: absolute !important; } }
   #left-panel .version {
-    margin-top: 25px;
+    margin-top: 40px;
     font-size: 0.8rem;
-    line-height: 1.2;
+    line-height: 1.1;
     text-align: center;
     color: #6c757d; }
 
@@ -10420,4 +10432,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.2.1  */
+/** Version: 2.3.0 */

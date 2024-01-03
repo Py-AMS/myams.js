@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.3.0
+-----
+ - added LightMode skin
+ - added jQuery InputMask plug-in
+ - added helpers to disable click on dragged elements
+ - added helpers to help changing parent of an element
+ - added forms checks when displaying AJAX errors
+ - updated CSS styles
+
 2.2.1
 -----
  - updated fonts
