@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 2.1.0
+Version: 2.3.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -13,8 +13,13 @@ Classifier: Programming Language :: Python
 Classifier: Framework :: Pyramid
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.7
-Provides-Extra: test
 License-File: LICENSE
+Requires-Dist: setuptools
+Requires-Dist: fanstatic
+Requires-Dist: pyams_utils>=1.2.0
+Provides-Extra: test
+Requires-Dist: pyramid_zcml; extra == "test"
+Requires-Dist: zope.exceptions; extra == "test"
 
 ================
 MyAMS.js package
@@ -60,6 +65,27 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.3.0
+-----
+ - added LightMode skin
+ - added jQuery InputMask plug-in
+ - added helpers to disable click on dragged elements
+ - added helpers to help changing parent of an element
+ - added forms checks when displaying AJAX errors
+ - updated CSS styles
+
+2.2.1
+-----
+ - updated fonts
+ - updated colorpicker z-index to display picker in modals
+ - updated Select2 styles
+ - other minor CSS updates
+
+2.2.0
+-----
+ - added support for modal targets in notifications links
+ - added JSDom as default environment to Jest
 
 2.1.0
 -----

@@ -679,7 +679,7 @@ function switchIcon(element, fromClass, toClass) {
  * }}
  */
 function getEnv($) {
-  const script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
+  const script = $('script[src*="/myams.js"], script[src*="/myams-dev.js"], ' + 'script[src*="/emerald.js"], script[src*="/emerald-dev.js"], ' + 'script[src*="/darkmode.js"], script[src*="/darkmode-dev.js"], ' + 'script[src*="/lightmode.js"], script[src*="/lightmode-dev.js"], ' + 'script[src*="/myams-core.js"], script[src*="/myams-core-dev.js"], ' + 'script[src*="/myams-mini.js"], script[src*="/myams-mini-dev.js"]'),
     src = script.attr('src'),
     devmode = src ? src.indexOf('-dev.js') >= 0 : true,
     // testing mode
@@ -699,7 +699,7 @@ function getEnv($) {
 function getTheme() {
   let theme = MyAMS.theme;
   if (!theme) {
-    const css = $('link[href*="/myams.css"], link[href*="/emerald.css"], link[href*="/darkmode.css"]');
+    const css = $('link[href*="/myams.css"], ' + 'link[href*="/emerald.css"], ' + 'link[href*="/darkmode.css"], ' + 'link[href*="/lightmode.css"]');
     theme = css.length > 0 ? /.*\/([a-z]+).css/.exec(css.attr('href'))[1] : 'unknown';
   }
   return theme;

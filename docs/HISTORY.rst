@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.1
+-----
+ - added LightMode to MyAMS environment initializer
+
 2.3.0
 -----
  - added LightMode skin
