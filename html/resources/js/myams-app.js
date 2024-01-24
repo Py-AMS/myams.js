@@ -89,7 +89,7 @@ const app = {
 	datatables: {
 
 		initCallback: (table, settings) => {
-			settings.dom = `B${settings.dom}`;
+			settings.dom = `<'px-4 float-right'B>${settings.dom}`;
 			settings.buttons = ['copy', 'print'];
 		},
 

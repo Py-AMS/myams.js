@@ -290,12 +290,13 @@
 </pre>
 
 	<p>Alternatively, you can use default Datatables syntax and specify an array of required
-	buttons:</p>
+	buttons, here with a custom CSS class (default class is <code>btn btn-sm btn-secondary</code>):</p>
 	<section class="m-3">
 		<h3>Table title</h3>
 		<table id="myTable_4"
 			   class="table table-bordered table-striped table-sm datatable width-100"
-			   data-buttons='["copy", "csv", "print"]'>
+			   data-buttons='["copy", "csv", "print"]'
+			   data-ams-buttons-classname="btn btn-sm btn-primary">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -333,7 +334,8 @@
 		</table>
 	</section>
 <pre>	&lt;table class="table table-bordered table-striped table-sm datatable"
-	       data-buttons='["copy", "csv", "print"]'&gt;
+	       data-buttons='["copy", "csv", "print"]'
+	       data-ams-buttons-classname="btn btn-sm btn-primary"&gt;
 	  &lt;thead&gt;
 	    &lt;tr&gt;...&lt;/tr&gt;
 	  &lt;/thead&gt;
@@ -417,7 +419,7 @@
 <pre>	datatables: {
 
 		initCallback: (table, settings) => {
-			settings.dom = `B${settings.dom}`;
+			settings.dom = `<'px-4 float-right'B>${settings.dom}`;
 			settings.buttons = ['copy', 'print'];
 		},
 
