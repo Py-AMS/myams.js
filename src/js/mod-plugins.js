@@ -669,7 +669,7 @@ export function datatables(element) {
 									let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
 									if (!dom) {
 										if (data.buttons) {
-											dom += "<'row my-2 px-4 justify-content-end'B>";
+											dom += "<'row px-4 float-right'B>";
 										}
 										if (data.searchBuilder) {
 											dom += "Q";
@@ -765,6 +765,10 @@ export function datatables(element) {
 										return;
 									}
 									setTimeout(() => {
+										if ($.fn.dataTable.Buttons) {
+											$.fn.dataTable.Buttons.defaults.dom.button.className = data.amsDatatableButtonsClassname ||
+												data.amsButtonsClassname || 'btn btn-sm btn-secondary';
+										}
 										const plugin = table.DataTable(settings);
 										MyAMS.core.executeFunctionByName(
 											data.amsDatatableAfterInitCallback || data.amsAfterInit,
