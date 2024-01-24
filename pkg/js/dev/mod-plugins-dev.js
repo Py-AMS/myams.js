@@ -444,7 +444,7 @@
           resolve();
         }
         // extract reordered rows IDs
-        const rows = $('tbody tr', table),
+        const rows = $('>tbody >tr', table),
           getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
         if (typeof getter === 'function') {
           ids = $.makeArray(rows).map(getter);
@@ -674,7 +674,7 @@
                     let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
                     if (!dom) {
                       if (data.buttons) {
-                        dom += "<'row my-2 px-4 justify-content-end'B>";
+                        dom += "<'row px-4 float-right'B>";
                       }
                       if (data.searchBuilder) {
                         dom += "Q";
@@ -765,6 +765,9 @@
                       return;
                     }
                     setTimeout(() => {
+                      if ($.fn.dataTable.Buttons) {
+                        $.fn.dataTable.Buttons.defaults.dom.button.className = data.amsDatatableButtonsClassname || data.amsButtonsClassname || 'btn btn-sm btn-secondary';
+                      }
                       const plugin = table.DataTable(settings);
                       MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
                       table.trigger('after-init.ams.datatable', [table, plugin]);
@@ -1332,7 +1335,10 @@
                     processResults: MyAMS.core.getFunctionByName(data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults) || data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults,
                     transport: MyAMS.core.getFunctionByName(data.amsSelect2AjaxTransport || data.amsAjaxTransport) || data.amsSelect2AjaxTransport || data.amsAjaxTransport
                   };
-                  defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength || data.amsMinimumInputLength || data.minimumInputLength || 1;
+                  defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength || data.amsMinimumInputLength || data.minimumInputLength;
+                  if (defaultOptions.minimumInputLength === undefined) {
+                    defaultOptions.minimumInputLength = 1;
+                  }
                 }
                 if (select.hasClass('sortable')) {
                   // create hidden input for sortable selections

@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.4.0
+-----
+ - added container module helpers
+ - updated table reorder selector
+ - updated datatable buttons style
+ - updated TinyMCE editor styles
+ - small CSS updates
+
 2.3.1
 -----
  - added LightMode to MyAMS environment initializer

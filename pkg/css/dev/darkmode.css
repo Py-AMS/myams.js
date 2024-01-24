@@ -8573,12 +8573,12 @@ button.modal .bg-dark-modal:focus {
 
 .tox {
   font-size: 0.95em !important; }
-  .tox.tox-tinymce {
+  .tox * {
     font-family: -apple-system, BlinkMacSystemFont, "Afacad", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important; }
-    .form-widget > .tox.tox-tinymce {
-      border-radius: 0.25rem; }
-    .tab-content .tox.tox-tinymce {
-      border: 0; }
+  .form-widget > .tox.tox-tinymce {
+    border-radius: 0.25rem; }
+  .tab-content .tox.tox-tinymce {
+    border: 0; }
   .tox .tox-textfield:focus,
   .tox .tox-listbox:focus {
     border-color: var(--primary) !important;
@@ -9697,7 +9697,7 @@ table td.action, table td.reorder {
         text-decoration: none; }
 
 #user-menu img {
-  transform: translate(0, 0.6em) rotate(10deg);
+  transform: translate(0, 0.5em) rotate(10deg);
   max-width: 48px;
   max-height: 48px; }
 
@@ -10686,4 +10686,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.3.0 */
+/** Version: 2.3.1 */

@@ -2387,6 +2387,50 @@ const container = {
     });
   },
   /**
+   * Check a single table element
+   */
+  selectElement: evt => {
+    const input = $(evt.currentTarget);
+    setTimeout(function () {
+      input.prop('checked', !input.prop('checked')).change();
+    }, 50);
+    evt.stopPropagation();
+  },
+  /**
+   * Check all table elements
+   */
+  selectAllElements: evt => {
+    const source = $(evt.currentTarget),
+      table = $(source).parents('table');
+    $('input[type="checkbox"]', table).prop('checked', source.prop('checked'));
+  },
+  /**
+   * Get list of selected table elements and store them in provided input
+   */
+  getSelectedElements: form => {
+    const data = $(form).data(),
+      source = data.amsContainerSource,
+      table = $(`input[name="${source}"]`).first().parents('table'),
+      body = $('tbody', table),
+      selected = $(`input[name="${source}"]:checked`, body).listattr('value');
+    $(`input[name="${data.amsContainerTarget}"]`).val(selected.join(','));
+  },
+  /**
+   * Remove selected elements from table
+   */
+  removeSelectedElements: (form, options) => {
+    const source = options.source,
+      table = $(`input[name="${source}"]`).first().parents('table'),
+      body = $('tbody', table);
+    $(`input[name="${source}"]:checked`, body).parents('tr').each((idx, row) => {
+      if (table.hasClass('datatable')) {
+        table.DataTable().row(row).remove().draw();
+      } else {
+        $(row).remove();
+      }
+    });
+  },
+  /**
    * Delete element from container
    *
    * @param action
@@ -5898,7 +5942,7 @@ const _datatablesHelpers = {
         resolve();
       }
       // extract reordered rows IDs
-      const rows = $('tbody tr', table),
+      const rows = $('>tbody >tr', table),
         getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
       if (typeof getter === 'function') {
         ids = $.makeArray(rows).map(getter);
@@ -6128,7 +6172,7 @@ function datatables(element) {
                   let dom = data.amsDatatableDom || data.amsDom || data.dom || '';
                   if (!dom) {
                     if (data.buttons) {
-                      dom += "<'row my-2 px-4 justify-content-end'B>";
+                      dom += "<'row px-4 float-right'B>";
                     }
                     if (data.searchBuilder) {
                       dom += "Q";
@@ -6219,6 +6263,9 @@ function datatables(element) {
                     return;
                   }
                   setTimeout(() => {
+                    if ($.fn.dataTable.Buttons) {
+                      $.fn.dataTable.Buttons.defaults.dom.button.className = data.amsDatatableButtonsClassname || data.amsButtonsClassname || 'btn btn-sm btn-secondary';
+                    }
                     const plugin = table.DataTable(settings);
                     MyAMS.core.executeFunctionByName(data.amsDatatableAfterInitCallback || data.amsAfterInit, document, table, plugin, settings);
                     table.trigger('after-init.ams.datatable', [table, plugin]);
@@ -6786,7 +6833,10 @@ function select2(element) {
                   processResults: MyAMS.core.getFunctionByName(data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults) || data.amsSelect2AjaxProcessResults || data.amsAjaxProcessResults,
                   transport: MyAMS.core.getFunctionByName(data.amsSelect2AjaxTransport || data.amsAjaxTransport) || data.amsSelect2AjaxTransport || data.amsAjaxTransport
                 };
-                defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength || data.amsMinimumInputLength || data.minimumInputLength || 1;
+                defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength || data.amsMinimumInputLength || data.minimumInputLength;
+                if (defaultOptions.minimumInputLength === undefined) {
+                  defaultOptions.minimumInputLength = 1;
+                }
               }
               if (select.hasClass('sortable')) {
                 // create hidden input for sortable selections
@@ -11041,7 +11091,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.3.0  */
+/** Version: 2.3.1  */
 }();
 /******/ })()
 ;

@@ -134,6 +134,50 @@
       });
     },
     /**
+     * Check a single table element
+     */
+    selectElement: evt => {
+      const input = $(evt.currentTarget);
+      setTimeout(function () {
+        input.prop('checked', !input.prop('checked')).change();
+      }, 50);
+      evt.stopPropagation();
+    },
+    /**
+     * Check all table elements
+     */
+    selectAllElements: evt => {
+      const source = $(evt.currentTarget),
+        table = $(source).parents('table');
+      $('input[type="checkbox"]', table).prop('checked', source.prop('checked'));
+    },
+    /**
+     * Get list of selected table elements and store them in provided input
+     */
+    getSelectedElements: form => {
+      const data = $(form).data(),
+        source = data.amsContainerSource,
+        table = $(`input[name="${source}"]`).first().parents('table'),
+        body = $('tbody', table),
+        selected = $(`input[name="${source}"]:checked`, body).listattr('value');
+      $(`input[name="${data.amsContainerTarget}"]`).val(selected.join(','));
+    },
+    /**
+     * Remove selected elements from table
+     */
+    removeSelectedElements: (form, options) => {
+      const source = options.source,
+        table = $(`input[name="${source}"]`).first().parents('table'),
+        body = $('tbody', table);
+      $(`input[name="${source}"]:checked`, body).parents('tr').each((idx, row) => {
+        if (table.hasClass('datatable')) {
+          table.DataTable().row(row).remove().draw();
+        } else {
+          $(row).remove();
+        }
+      });
+    },
+    /**
      * Delete element from container
      *
      * @param action
