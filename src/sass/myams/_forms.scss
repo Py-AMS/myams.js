@@ -307,9 +307,11 @@
 .tox {
   font-size: 0.95em !important;
 
-  &.tox-tinymce {
+  * {
     font-family: $font-family-sans-serif !important;
+  }
 
+  &.tox-tinymce {
     .form-widget > & {
       border-radius: $border-radius;
     }
