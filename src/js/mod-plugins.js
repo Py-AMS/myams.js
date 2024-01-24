@@ -1409,7 +1409,10 @@ export function select2(element) {
 										data.amsSelect2AjaxTransport || data.amsAjaxTransport
 								};
 								defaultOptions.minimumInputLength = data.amsSelect2MinimumInputLength ||
-									data.amsMinimumInputLength || data.minimumInputLength || 1;
+									data.amsMinimumInputLength || data.minimumInputLength;
+								if (defaultOptions.minimumInputLength === undefined) {
+									defaultOptions.minimumInputLength = 1;
+								}
 							}
 							if (select.hasClass('sortable')) {
 								// create hidden input for sortable selections
