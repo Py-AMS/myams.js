@@ -433,7 +433,7 @@ const _datatablesHelpers = {
 			}
 			// extract reordered rows IDs
 			const
-				rows = $('tbody tr', table),
+				rows = $('>tbody >tr', table),
 				getter = MyAMS.core.getFunctionByName(data.amsReorderData) || 'data-ams-row-value';
 			if (typeof getter === 'function') {
 				ids = $.makeArray(rows).map(getter);
