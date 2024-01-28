@@ -14,6 +14,23 @@
 
 
 /**
+ * Border classes
+ */
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    @each $width in $borders-width {
+      .border#{$infix}-#{$width} {
+        border-width: #{$width}px;
+      };
+    }
+  }
+}
+
+
+/**
  * Mobile / desktop classes
  */
 

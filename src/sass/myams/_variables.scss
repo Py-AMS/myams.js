@@ -242,6 +242,10 @@ $fc-disabled-bg:             $secondary !default;
 $fc-temporary-bg:            $primary-light !default;
 
 
+$borders-width: (
+  0, 1, 2, 3, 4, 5
+) !default;
+
 $widths-px: (
   50, 100, 150, 200
 ) !default;
