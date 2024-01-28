@@ -372,6 +372,7 @@ export const nav = {
 			// Disable clicks on # hrefs
 			$(document).on('click', 'a[href="#"]', (evt) => {
 				evt.preventDefault();
+				evt.stopPropagation();
 			});
 
 			// Activate clicks
@@ -402,6 +403,7 @@ export const nav = {
 			// Blank target clicks
 			$(document).on('click', 'a[target="_blank"]', (evt) => {
 				evt.preventDefault();
+				evt.stopPropagation();
 				const target = $(evt.currentTarget);
 				window.open && window.open(target.attr('href'));
 				MyAMS.stats && MyAMS.stats.logEvent(
@@ -424,8 +426,8 @@ export const nav = {
 			// Disable clicks on disabled tabs
 			$(document).on("click", '.nav-tabs a[data-toggle=tab]', (evt) => {
 				if ($(evt.currentTarget).parent('li').hasClass("disabled")) {
-					evt.stopPropagation();
 					evt.preventDefault();
+					evt.stopPropagation();
 					return false;
 				}
 			});
