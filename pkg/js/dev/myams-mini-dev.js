@@ -5060,6 +5060,7 @@ const nav = {
       // Disable clicks on # hrefs
       $(document).on('click', 'a[href="#"]', evt => {
         evt.preventDefault();
+        evt.stopPropagation();
       });
 
       // Activate clicks
@@ -5089,6 +5090,7 @@ const nav = {
       // Blank target clicks
       $(document).on('click', 'a[target="_blank"]', evt => {
         evt.preventDefault();
+        evt.stopPropagation();
         const target = $(evt.currentTarget);
         window.open && window.open(target.attr('href'));
         MyAMS.stats && MyAMS.stats.logEvent(target.data('ams-stats-category') || 'Navigation', target.data('ams-stats-action') || 'External', target.data('ams-stats-label') || target.attr('href'));
@@ -5108,8 +5110,8 @@ const nav = {
       // Disable clicks on disabled tabs
       $(document).on("click", '.nav-tabs a[data-toggle=tab]', evt => {
         if ($(evt.currentTarget).parent('li').hasClass("disabled")) {
-          evt.stopPropagation();
           evt.preventDefault();
+          evt.stopPropagation();
           return false;
         }
       });
@@ -11091,7 +11093,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.3.1  */
+/** Version: 2.4.0  */
 }();
 /******/ })()
 ;

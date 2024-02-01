@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.1
+-----
+ - added border-style and border-width responsive classes
+ - stop events propagation on navigation links
+ - updated FullCalendar styles
+
 2.4.0
 -----
  - added container module helpers
