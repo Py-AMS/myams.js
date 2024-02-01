@@ -26,6 +26,12 @@
         border-width: #{$width}px;
       };
     }
+    .border#{$infix}-dashed {
+      border-style: dashed;
+    };
+    .border#{$infix}-dotted {
+      border-style: dotted;
+    };
   }
 }
 
