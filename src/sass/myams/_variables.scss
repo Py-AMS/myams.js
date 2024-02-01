@@ -235,11 +235,24 @@ $dark-light:          lighten($dark, 40%) !default;
 
 
 // Fullcalendar styles
-$fc-enabled-text:            $body-bg !default;
-$fc-enabled-bg:              $primary !default;
-$fc-disabled-text:           $body !default;
-$fc-disabled-bg:             $secondary !default;
-$fc-temporary-bg:            $primary-light !default;
+$fc-disabled-text:           #f3f3f3 !default;
+$fc-disabled-bg:             #CED4DA !default;
+$fc-disabled-border:         #CED4DA !default;
+$fc-temporary-text:          #CED4DA !default;
+$fc-temporary-bg:            #F8F9FA !default;
+$fc-temporary-border:        #676e75 !default;
+$fc-nobookable-text:         #EEEEEE !default;
+$fc-nobookable-bg:           #bfc5cb !default;
+$fc-nobookable-border:       #bfc5cb !default;
+$fc-enabled-text:            #226aa9 !default;
+$fc-enabled-bg:              #78a5d0 !default;
+$fc-enabled-border:          #205f96 !default;
+$fc-accepted-text:           #478E47 !default;
+$fc-accepted-bg:             #A2CBA2 !default;
+$fc-accepted-border:         #196e19 !default;
+$fc-warning-text:            #DC3545 !default;
+$fc-warning-bg:              #ecafb5 !default;
+$fc-warning-border:          #9b1320 !default;
 
 
 $borders-width: (

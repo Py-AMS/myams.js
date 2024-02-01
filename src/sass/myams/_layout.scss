@@ -26,11 +26,24 @@
   --warning-light:       #{$warning-light};
   --danger-light:        #{$danger-light};
   --dark-light:          #{$dark-light};
-  --fc-enabled-text:     #{$fc-enabled-text};
-  --fc-enabled-bg:       #{$fc-enabled-bg};
   --fc-disabled-text:    #{$fc-disabled-text};
   --fc-disabled-bg:      #{$fc-disabled-bg};
+  --fc-disabled-border:  #{$fc-disabled-border};
+  --fc-temporary-text:   #{$fc-temporary-text};
   --fc-temporary-bg:     #{$fc-temporary-bg};
+  --fc-temporary-border: #{$fc-temporary-border};
+  --fc-nobookable-text:  #{$fc-nobookable-text};
+  --fc-nobookable-bg:    #{$fc-nobookable-bg};
+  --fc-nobookable-border:#{$fc-nobookable-border};
+  --fc-enabled-text:     #{$fc-enabled-text};
+  --fc-enabled-bg:       #{$fc-enabled-bg};
+  --fc-enabled-border:   #{$fc-enabled-border};
+  --fc-accepted-text:    #{$fc-accepted-text};
+  --fc-accepted-bg:      #{$fc-accepted-bg};
+  --fc-accepted-border:  #{$fc-accepted-border};
+  --fc-warning-text:     #{$fc-warning-text};
+  --fc-warning-bg:       #{$fc-warning-bg};
+  --fc-warning-border:   #{$fc-warning-border};
 }
 
 
