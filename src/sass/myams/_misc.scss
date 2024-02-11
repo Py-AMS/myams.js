@@ -83,7 +83,7 @@
 
 
 /**
- * Responsive sizes
+ * Responsive sizes and positions
  */
 
 @each $breakpoint in map-keys($grid-breakpoints) {
@@ -163,6 +163,21 @@
     .min-height#{$infix}-700px     { min-height: 700px !important; }
     .mh#{$infix}-800px,
     .min-height#{$infix}-800px     { min-height: 800px !important; }
+
+    @each $size, $length in $spacers {
+      .t#{$infix}-#{$size} {
+        top: $length;
+      }
+      .b#{$infix}-#{$size} {
+        bottom: $length;
+      }
+      .l#{$infix}-#{$size} {
+        left: $length;
+      }
+      .r#{$infix}-#{$size} {
+        right: $length;
+      }
+    }
   }
 }
 
