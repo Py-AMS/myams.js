@@ -74,10 +74,10 @@
                 justify-content: center;
                 align-items: baseline;
                 color: $light;
-                background-color: lighten($primary, 20%);
+                background-color: darken($primary, 10%);
             }
             &:hover::before {
-                background-color: darken($primary, 10%);
+                background-color: lighten($primary, 20%);
             }
 
             .select2[readonly] + & {

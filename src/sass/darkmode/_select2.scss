@@ -14,6 +14,9 @@
 .select2-container--bootstrap4 {
   .select2-selection--multiple {
     .select2-selection__choice__remove {
+      &::before {
+        color: $select2-highlight;
+      }
       &:hover::before {
         color: $select2-highlight;
       }
@@ -28,6 +31,9 @@
     }
   }
   .select2-selection__clear {
+    &::before {
+      color: $select2-highlight;
+    }
     &:hover::before {
       color: $select2-highlight;
     }
