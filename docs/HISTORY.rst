@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.2
+-----
+ - updated Select2 styles
+ - added absolute positions classes
+
 2.4.1
 -----
  - added border-style and border-width responsive classes
