@@ -29,6 +29,11 @@
     }
   }
 
+  .fc-daygrid-event {
+    flex-direction: column;
+    white-space: normal;
+  }
+
   .fc-col-header-cell {
     white-space: normal;
   }

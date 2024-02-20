@@ -56,6 +56,10 @@
     &:last-child {
       margin-bottom: 0.25rem;
     }
+
+    & + fieldset {
+      margin-top: 1.5rem;
+    }
   }
 
   // Forms controls
