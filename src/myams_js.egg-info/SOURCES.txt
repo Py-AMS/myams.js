@@ -2551,6 +2551,10 @@ pkg/css/svgs/solid/y.svg
 pkg/css/svgs/solid/yen-sign.svg
 pkg/css/svgs/solid/yin-yang.svg
 pkg/css/svgs/solid/z.svg
+pkg/css/webfonts/Marianne-Light.woff
+pkg/css/webfonts/Marianne-Light.woff2
+pkg/css/webfonts/Marianne-Regular.woff
+pkg/css/webfonts/Marianne-Regular.woff2
 pkg/css/webfonts/fa-brands-400.svg
 pkg/css/webfonts/fa-brands-400.ttf
 pkg/css/webfonts/fa-brands-400.woff2

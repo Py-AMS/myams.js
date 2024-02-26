@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 2.3.1
+Version: 2.4.2
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,25 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.4.2
+-----
+ - updated Select2 styles
+ - added absolute positions classes
+
+2.4.1
+-----
+ - added border-style and border-width responsive classes
+ - stop events propagation on navigation links
+ - updated FullCalendar styles
+
+2.4.0
+-----
+ - added container module helpers
+ - updated table reorder selector
+ - updated datatable buttons style
+ - updated TinyMCE editor styles
+ - small CSS updates
 
 2.3.1
 -----

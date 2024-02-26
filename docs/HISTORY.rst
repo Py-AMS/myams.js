@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.3
+-----
+ - updated calendar and forms styles
+ - updated Emerald theme font and colors
+
 2.4.2
 -----
  - updated Select2 styles
