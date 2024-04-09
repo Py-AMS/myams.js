@@ -41,7 +41,11 @@
   min-height: 150px;
   border: 1px solid var(--primary);
   border-radius: 5px;
+  background-color: var(--primary-light);
   padding: 20px 20px;
+}
+.dropzone >* {
+  background-color: var(--secondary-light);
 }
 .dropzone.dz-clickable {
   cursor: pointer;

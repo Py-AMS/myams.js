@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.4
+-----
+ - updated Emerald theme fonts
+
 2.4.3
 -----
  - updated calendar and forms styles
@@ -117,7 +121,7 @@ Changelog
 ------
  - correction in DataTables stateRestore plug-in loading
  - added support for Python 3.11
- 
+
 1.14.1
 ------
  - upgraded DataTables plug-in to release 1.13.1

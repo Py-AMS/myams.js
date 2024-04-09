@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 2.4.2
+Version: 2.4.3
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,11 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.4.3
+-----
+ - updated calendar and forms styles
+ - updated Emerald theme font and colors
 
 2.4.2
 -----
