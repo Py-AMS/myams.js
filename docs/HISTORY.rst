@@ -1,9 +1,14 @@
 Changelog
 =========
 
+2.4.5
+-----
+ - fixed FullCalendar packaging issue
+
 2.4.4
 -----
  - updated Emerald theme fonts
+ - upgraded FullCalendar to release 6.1.11
 
 2.4.3
 -----
