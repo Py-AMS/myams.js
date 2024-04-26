@@ -39,6 +39,8 @@
   }
 
   .fc-event {
+    overflow: hidden;
+
     .action {
       position: absolute;
       right: 2px;
