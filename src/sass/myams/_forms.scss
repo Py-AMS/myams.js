@@ -68,6 +68,12 @@
     min-height: calc(1.5em + 0.75rem + 2px);
   }
 
+  &.review-main {
+    textarea {
+      max-height: 10vh;
+    }
+  }
+
   // Labels
   label {
     user-select: none;
