@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.6
+-----
+ - removed calendar events overflow
+ - updated content review form comments max height
+
 2.4.5
 -----
  - fixed FullCalendar packaging issue

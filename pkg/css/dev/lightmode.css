@@ -8800,6 +8800,8 @@ button.modal .bg-dark-modal:focus {
   .ams-form .form-control {
     height: auto;
     min-height: calc(1.5em + 0.75rem + 2px); }
+  .ams-form.review-main textarea {
+    max-height: 10vh; }
   .ams-form label {
     user-select: none; }
   .ams-form .col-form-label.required {
@@ -9894,10 +9896,12 @@ table td.action, table td.reorder {
     white-space: normal; }
   .calendar .fc-col-header-cell {
     white-space: normal; }
-  .calendar .fc-event .action {
-    position: absolute;
-    right: 2px;
-    bottom: 0; }
+  .calendar .fc-event {
+    overflow: hidden; }
+    .calendar .fc-event .action {
+      position: absolute;
+      right: 2px;
+      bottom: 0; }
 
 #header {
   position: relative;
@@ -10934,4 +10938,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.4.2 */
+/** Version: 2.4.5 */
