@@ -32,6 +32,8 @@
 }
 
 .tooltip {
+  line-height: $tooltip-line-height;
+
   .tooltip-inner {
     text-align: $tooltip-align;
   }
