@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.7
+-----
+ - disable modal click handler from datatable collapsing cell
+ - updated tooltips line height
+ - added custom CSS classes using viewport height
+
 2.4.6
 -----
  - removed calendar events overflow

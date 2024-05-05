@@ -4616,6 +4616,14 @@ const modal = {
         if ($(evt.currentTarget).data('is-dragging')) {
           return;
         }
+        // disable click on datatable expand control
+        const target = $(evt.target);
+        if (target.hasClass('dtr-control')) {
+          const table = target.parents('.datatable');
+          if (table.hasClass('collapsed')) {
+            return;
+          }
+        }
         evt.stopPropagation();
         const handler = $(evt.currentTarget).data('ams-modal-handler') || modalToggleEventHandler;
         MyAMS.core.executeFunctionByName(handler, document, evt);
@@ -11093,7 +11101,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.4.5  */
+/** Version: 2.4.6  */
 }();
 /******/ })()
 ;
