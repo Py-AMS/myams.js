@@ -146,6 +146,12 @@
     .height#{$infix}-700px        { height: 700px !important; }
     .h#{$infix}-800px,
     .height#{$infix}-800px        { height: 800px !important; }
+    .h#{$infix}-25vh,
+    .height#{$infix}-25vh         { height: 25vh !important; }
+    .h#{$infix}-50vh,
+    .height#{$infix}-50vh         { height: 50vh !important; }
+    .h#{$infix}-75vh,
+    .height#{$infix}-75vh         { height: 75vh !important; }
 
     .mh#{$infix}-100px,
     .min-height#{$infix}-100px     { min-height: 100px !important; }
@@ -163,6 +169,13 @@
     .min-height#{$infix}-700px     { min-height: 700px !important; }
     .mh#{$infix}-800px,
     .min-height#{$infix}-800px     { min-height: 800px !important; }
+    .mh#{$infix}-25vh,
+    .min-height#{$infix}-25vh      { min-height: 25vh !important; }
+    .mh#{$infix}-50vh,
+    .min-height#{$infix}-50vh      { min-height: 50vh !important; }
+    .mh#{$infix}-75vh,
+    .min-height#{$infix}-75vh      { min-height: 75vh !important; }
+
 
     @each $size, $length in $spacers {
       .t#{$infix}-#{$size} {
