@@ -9044,6 +9044,8 @@ button.modal .bg-dark-modal:focus {
     border-radius: 0.25rem; }
   .tab-content .tox.tox-tinymce {
     border: 0; }
+  .tox.tox-tinymce-aux {
+    z-index: 3000; }
   .tox .tox-textfield:focus,
   .tox .tox-listbox:focus {
     border-color: var(--primary) !important;
@@ -11177,4 +11179,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.4.6 */
+/** Version: 2.4.7 */
