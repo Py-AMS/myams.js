@@ -332,6 +332,9 @@
       border: 0;
     }
   }
+  &.tox-tinymce-aux {
+    z-index: 3000;
+  }
 
   .tox-textfield,
   .tox-listbox {
