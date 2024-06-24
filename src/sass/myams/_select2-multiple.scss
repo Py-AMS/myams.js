@@ -42,6 +42,15 @@
                 &:first-child {
                     margin-top: 0.2em;
                 }
+                &::before {
+                    display: inline-block;
+                    content: "\f338";
+                    font-family: "Font Awesome 6 Free";
+                    font-weight: 900;
+                    padding-right: 0.25em;
+                    line-height: 1.25;
+                    opacity: 0.5;
+                }
             }
             .select2.sortable[data-allow-clear="true"] + & {
                 width: $select2-multiple-sortable-width;

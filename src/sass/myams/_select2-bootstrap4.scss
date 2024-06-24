@@ -56,6 +56,7 @@
             border-radius: $input-border-radius 0 0 $input-border-radius;
         }
         .select2-selection__rendered {
+            position: relative;
             color: $input-color;
         }
         .select2-search__field {
@@ -196,12 +197,12 @@
 
     // all clear button
     .select2-selection__clear {
+        position: absolute;
+        right: 4px;
         width: 1.5em;
         height: 1.5em;
         line-height: 1.35em;
-        margin-top: 0.4em;
-        margin-right: 0.2em;
-        margin-bottom: 0.4em;
+        margin: 0.4em 0.2em;
         border-radius: 20%;
         text-align: center;
 
