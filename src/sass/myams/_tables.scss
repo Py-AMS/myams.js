@@ -40,7 +40,7 @@ section {
   &.inner-table {
     &.border-0 {
       > fieldset {
-        margin: 1em;
+        margin: 1em 0;
 
         .editor & {
           margin: 0 0 1em;
@@ -48,6 +48,18 @@ section {
 
         fieldset & {
           margin: 0;
+        }
+      }
+    }
+  }
+}
+
+form {
+  > section {
+    &.inner-table {
+      &.border-0 {
+        > fieldset {
+          margin: 1em;
         }
       }
     }
