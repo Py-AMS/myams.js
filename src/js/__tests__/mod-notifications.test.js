@@ -233,6 +233,66 @@ describe("Test MyAMS.notifications module", () => {
 	});
 
 
+	// Test MyAMS.notifications getNotificationsBadge function
+	test("Test MyAMS.notifications getNotificationsBadge", () => {
+
+		const
+			response = {
+				timestamp: 1587644933164,
+				notifications: [
+					{
+						timestamp: 1587644933164,
+						source: {
+							title: "MyAMS.js",
+							id: "user.id",
+							avatar: "resources/img/profile.png"
+						},
+						host: "localhost",
+						title: "Notification title",
+						message: "Notification message",
+						status: "success",
+						url: "#test.html"
+					},
+					{
+						timestamp: 1587644933164,
+						source: {
+							title: "MyAMS.js",
+							id: "unknown"
+						},
+						host: "localhost",
+						title: "Notification title",
+						message: "Notification message",
+						status: "success",
+						url: "test.html",
+						modal: true
+					}
+				]
+			},
+			oldAjax = $.ajax,
+			oldXHR = window.XMLHttpRequest;
+
+		window.XMLHttpRequest = jest.fn(() => {
+			return MockXHR(response);
+		});
+
+		$.ajax = jest.fn().mockImplementation(() => {
+			return Promise.resolve(response);
+		});
+		document.body.innerHTML = `
+		<div id="user-notifications"
+			 data-ams-notifications-source="data/notifications.json">
+			<span id="notifications-count"></span>
+		</div>`;
+
+		localStorage.setItem('notifications-timestamp', '2020-01-01T12:00');
+		return MyAMS.notifications.getNotificationsBadge().then(() => {
+			expect($('#notifications-count').text()).toBe('2');
+			$.ajax = oldAjax;
+			window.XMLHTTPRequest = oldXHR;
+		});
+	});
+
+
 	// Test MyAMS.notifications addNotification function
 	test("Test MyAMS.notifications addNotification", () => {
 

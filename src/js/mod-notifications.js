@@ -162,9 +162,35 @@ export const notifications = {
 					new NotificationsList(result, data).render(tab);
 					$('#notifications-count').text('');
 					notifications.checkUserPermission();
+					localStorage.setItem('notifications-timestamp', new Date().toISOString());
 					resolve();
 				}, reject);
 			}, reject);
+		});
+	},
+
+	/**
+	 * Load new notifications badge
+	 */
+	getNotificationsBadge: () => {
+		const
+			source = $('#user-notifications'),
+			remote = source.data('ams-notifications-source');
+		return new Promise((resolve, reject) => {
+			const lastRefreshStorage = localStorage.getItem('notifications-timestamp');
+			if (lastRefreshStorage === null) {
+				localStorage.setItem('notifications-timestamp', new Date().toISOString());
+			} else {
+				MyAMS.require('ajax').then(() => {
+					MyAMS.ajax.get(remote).then((result) => {
+						const
+							lastRefresh = new Date(Date.parse(lastRefreshStorage)),
+							newItems = (result.notifications || []).filter((item) => new Date(typeof(item.timestamp) === 'number' ? item.timestamp : Date.parse(item.timestamp)) > lastRefresh);
+						$('#notifications-count').text(newItems.length || '');
+						resolve();
+					}, reject);
+				}, reject);
+			}
 		});
 	},
 
