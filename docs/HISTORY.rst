@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.9
+-----
+ - updated inner form table styles
+ - updated Select2 styles
+ - updated MyAMS notifications module
+
 2.4.8
 -----
  - updated Z-index of TinyMCE editor menus to be used into modals
