@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.5.0
+-----
+ - added table refresh helper
+
 2.4.9
 -----
  - updated inner form table styles

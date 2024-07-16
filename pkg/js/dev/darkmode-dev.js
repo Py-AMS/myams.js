@@ -3996,11 +3996,40 @@ const helpers = {
     });
   },
   /**
+   * Refresh a whole table with content provided in
+   * the <code>options</code> object
+   *
+   * @param form: optional parent form
+   * @param options: updated table properties:
+   *    - table_id: ID of the refreshed table
+   *    - content: new table HTML content
+   */
+  refreshTable: (form, options) => {
+    return new Promise((resolve, reject) => {
+      const selector = `table[id="${options.table_id}"]`;
+      let table = $(selector),
+        wrapper;
+      if (table.hasClass('datatable')) {
+        wrapper = table.parents('.dataTables_wrapper').first();
+      } else {
+        wrapper = table;
+      }
+      table = $(options.content);
+      wrapper.replaceWith(table);
+      MyAMS.core.executeFunctionByName(MyAMS.config.initContent, document, table).then(() => {
+        resolve(table);
+      }, reject);
+    });
+  },
+  /**
    * Add new row to table
    *
    * @param form: optional parent form
    * @param options: added row properties:
-   *  - content: new row content
+   *    - table_id: updated table ID
+   *    - row_id: updated row ID
+   *    - data: updated row data
+   *    - content: updated row HTML content
    */
   addTableRow: (form, options) => {
     return new Promise((resolve, reject) => {
@@ -32394,7 +32423,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_2__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_2__["default"].$);
 }
 
-/** Version: 2.4.9  */
+/** Version: 2.5.0  */
 }();
 /******/ })()
 ;
