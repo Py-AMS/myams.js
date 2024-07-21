@@ -205,17 +205,20 @@ export const helpers = {
 	refreshTable: (form, options) => {
 		return new Promise((resolve, reject) => {
 			const selector = `table[id="${options.table_id}"]`;
-			let table = $(selector),
-				wrapper;
-			if (table.hasClass('datatable')) {
-				wrapper = table.parents('.dataTables_wrapper').first();
-			} else {
-				wrapper = table;
+			let table = $(selector);
+			if (!table.exists()) {
+				return;
 			}
-			table = $(options.content);
-			wrapper.replaceWith(table);
+			if (table.hasClass('datatable')) {
+				const dtTable = table.DataTable();
+				if (dtTable) {
+					dtTable.destroy();
+				}
+			}
+			table.replaceWith($(options.content));
+			table = $(selector);
 			MyAMS.core.executeFunctionByName(MyAMS.config.initContent,
-				document, table).then(() => {
+				document, table.parent()).then(() => {
 				resolve(table);
 			}, reject);
 		});
