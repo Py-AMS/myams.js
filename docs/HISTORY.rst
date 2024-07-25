@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.5.1
+-----
+ - updated table refresh helper
+ - added arrow marker to ordered select2 inputs
+
 2.5.0
 -----
  - added table refresh helper

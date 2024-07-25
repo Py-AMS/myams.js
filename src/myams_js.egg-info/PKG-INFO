@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: myams-js
-Version: 2.4.9
+Version: 2.5.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -60,6 +60,15 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.5.1
+-----
+ - updated table refresh helper
+ - added arrow marker to ordered select2 inputs
+
+2.5.0
+-----
+ - added table refresh helper
 
 2.4.9
 -----
