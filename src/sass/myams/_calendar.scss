@@ -31,7 +31,13 @@
 
   .fc-daygrid-event {
     flex-direction: column;
+    border: 1px solid $fc-daygrid-event-border;
+    padding: 0 0.25em;
     white-space: normal;
+
+    br {
+      display: none;
+    }
   }
 
   .fc-col-header-cell {

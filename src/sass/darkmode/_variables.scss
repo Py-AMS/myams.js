@@ -128,6 +128,8 @@ $font-family-monospace:     "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consol
 
 $list-striped-bg:           lighten($body-bg, 4%) !default;
 
+$fc-daygrid-event-border:   rgba(204, 128, 41, 0.25) !default;
+
 
 @import "../myams/variables";
 
