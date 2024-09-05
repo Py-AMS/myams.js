@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.6.0
+-----
+ - added TarteAuCitron cookies manager resources
+ - small updates in calendar styles
+
 2.5.1
 -----
  - updated table refresh helper
