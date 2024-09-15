@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.6.1
+-----
+ - added gradient style to calendar events
+
 2.6.0
 -----
  - added TarteAuCitron cookies manager resources
