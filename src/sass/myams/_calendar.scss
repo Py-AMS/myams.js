@@ -40,6 +40,11 @@
     }
   }
 
+  .fc-timegrid-event {
+    &.event-bg-gradient {
+      background-image: var(--fc-event-gradient);
+    }
+  }
   .fc-col-header-cell {
     white-space: normal;
   }

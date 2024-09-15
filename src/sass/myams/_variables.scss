@@ -256,7 +256,7 @@ $fc-warning-bg:              #ecafb5 !default;
 $fc-warning-border:          #9b1320 !default;
 
 $fc-daygrid-event-border:    rgba(0, 0, 0, 0.1) !default;
-
+$fc-event-gradient:          repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px) !default;
 
 $borders-width: (
   0, 1, 2, 3, 4, 5
