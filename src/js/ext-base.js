@@ -294,9 +294,11 @@ export function getModules(element) {
 		modules = modules.concat(mods.trim().split(/[\s,;]+/));
 	} else if (mods) {
 		for (const [name, props] of Object.entries(mods)) {
-			const entry = {};
-			entry[name] = props;
-			modules.push(entry);
+			if (modules.find((elt) => (elt === name) || elt[name]) === undefined) {
+				const entry = {};
+				entry[name] = props;
+				modules.push(entry);
+			}
 		}
 	}
 	$('[data-ams-modules]', element).each((idx, elt) => {
@@ -305,9 +307,11 @@ export function getModules(element) {
 			modules = modules.concat(mods.trim().split(/[\s,;]+/));
 		} else if (mods) {
 			for (const [name, props] of Object.entries(mods)) {
-				const entry = {};
-				entry[name] = props;
-				modules.push(entry);
+				if (modules.find((elt) => (elt === name) || elt[name]) === undefined) {
+					const entry = {};
+					entry[name] = props;
+					modules.push(entry);
+				}
 			}
 		}
 	});
