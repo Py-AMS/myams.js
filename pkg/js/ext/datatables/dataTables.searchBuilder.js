@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.6.0
+/*! SearchBuilder 1.8.1
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -43,7 +43,7 @@
 		// Browser
 		factory( jQuery, window, document );
 	}
-}(function( $, window, document, undefined ) {
+}(function( $, window, document ) {
 'use strict';
 var DataTable = $.fn.dataTable;
 
@@ -52,12 +52,20 @@ var DataTable = $.fn.dataTable;
     'use strict';
 
     var $$3;
-    var dataTable$3;
+    var dataTable$2;
+    /** Get a moment object. Attempt to get from DataTables for module loading first. */
     function moment() {
-        return window.moment;
+        var used = DataTable.use('moment');
+        return used
+            ? used
+            : window.moment;
     }
+    /** Get a luxon object. Attempt to get from DataTables for module loading first. */
     function luxon() {
-        return window.luxon;
+        var used = DataTable.use('luxon');
+        return used
+            ? used
+            : window.luxon;
     }
     /**
      * Sets the value of jQuery for use in the file
@@ -66,7 +74,7 @@ var DataTable = $.fn.dataTable;
      */
     function setJQuery$2(jq) {
         $$3 = jq;
-        dataTable$3 = jq.fn.dataTable;
+        dataTable$2 = jq.fn.dataTable;
     }
     /**
      * The Criteria class is used within SearchBuilder to represent a search criteria
@@ -78,10 +86,6 @@ var DataTable = $.fn.dataTable;
             if (serverData === void 0) { serverData = undefined; }
             if (liveSearch === void 0) { liveSearch = false; }
             var _this = this;
-            // Check that the required version of DataTables is included
-            if (!dataTable$3 || !dataTable$3.versionCheck || !dataTable$3.versionCheck('1.10.0')) {
-                throw new Error('SearchPane requires DataTables 1.10 or newer');
-            }
             this.classes = $$3.extend(true, {}, Criteria.classes);
             // Get options from user and any extra conditions/column types defined by plug-ins
             this.c = $$3.extend(true, {}, Criteria.defaults, $$3.fn.dataTable.ext.searchBuilder, opts);
@@ -170,7 +174,7 @@ var DataTable = $.fn.dataTable;
                     val.addClass(this.classes.greyscale);
                 }
             }
-            $$3(window).on('resize.dtsb', dataTable$3.util.throttle(function () {
+            $$3(window).on('resize.dtsb', dataTable$2.util.throttle(function () {
                 _this.s.topGroup.trigger('dtsb-redrawLogic');
             }));
             this._buildCriteria();
@@ -185,10 +189,10 @@ var DataTable = $.fn.dataTable;
         Criteria._escapeHTML = function (txt) {
             return txt
                 .toString()
-                .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"');
+                .replace(/&quot;/g, '"')
+                .replace(/&amp;/g, '&');
         };
         /**
          * Redraw the DataTable with the current search parameters
@@ -201,7 +205,9 @@ var DataTable = $.fn.dataTable;
             }
         };
         /**
-         * Parses formatted numbers down to a form where they can be compared
+         * Parses formatted numbers down to a form where they can be compared.
+         * Note that this does not account for different decimal characters. Use
+         * parseNumber instead on the instance.
          *
          * @param val the value to convert
          * @returns the converted value
@@ -223,11 +229,11 @@ var DataTable = $.fn.dataTable;
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
             if (this.dom.value[0] !== undefined) {
-                this.dom.value[0].trigger('dtsb-inserted');
+                $$3(this.dom.value[0]).trigger('dtsb-inserted');
             }
             for (var i = 1; i < this.dom.value.length; i++) {
                 this.dom.inputCont.append(this.dom.value[i]);
-                this.dom.value[i].trigger('dtsb-inserted');
+                $$3(this.dom.value[i]).trigger('dtsb-inserted');
             }
             // If this is a top level criteria then don't let it move left
             if (this.s.depth > 1) {
@@ -265,28 +271,29 @@ var DataTable = $.fn.dataTable;
          * @returns boolean Whether the criteria has passed
          */
         Criteria.prototype.search = function (rowData, rowIdx) {
+            var settings = this.s.dt.settings()[0];
             var condition = this.s.conditions[this.s.condition];
             if (this.s.condition !== undefined && condition !== undefined) {
                 var filter = rowData[this.s.dataIdx];
                 // This check is in place for if a custom decimal character is in place
-                if (this.s.type.includes('num') &&
-                    (this.s.dt.settings()[0].oLanguage.sDecimal !== '' ||
-                        this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
+                if (this.s.type &&
+                    this.s.type.includes('num') &&
+                    (settings.oLanguage.sDecimal !== '' ||
+                        settings.oLanguage.sThousands !== '')) {
                     var splitRD = [rowData[this.s.dataIdx]];
-                    if (this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
-                        splitRD = rowData[this.s.dataIdx].split(this.s.dt.settings()[0].oLanguage.sDecimal);
+                    if (settings.oLanguage.sDecimal !== '') {
+                        splitRD = rowData[this.s.dataIdx].split(settings.oLanguage.sDecimal);
                     }
-                    if (this.s.dt.settings()[0].oLanguage.sThousands !== '') {
+                    if (settings.oLanguage.sThousands !== '') {
                         for (var i = 0; i < splitRD.length; i++) {
-                            splitRD[i] = splitRD[i].replace(this.s.dt.settings()[0].oLanguage.sThousands, ',');
+                            splitRD[i] = splitRD[i].replace(settings.oLanguage.sThousands, ',');
                         }
                     }
                     filter = splitRD.join('.');
                 }
                 // If orthogonal data is in place we need to get it's values for searching
                 if (this.c.orthogonal.search !== 'filter') {
-                    var settings = this.s.dt.settings()[0];
-                    filter = settings.oApi._fnGetCellData(settings, rowIdx, this.s.dataIdx, typeof this.c.orthogonal === 'string' ?
+                    filter = settings.fastData(rowIdx, this.s.dataIdx, typeof this.c.orthogonal === 'string' ?
                         this.c.orthogonal :
                         this.c.orthogonal.search);
                 }
@@ -322,18 +329,20 @@ var DataTable = $.fn.dataTable;
          */
         Criteria.prototype.getDetails = function (deFormatDates) {
             if (deFormatDates === void 0) { deFormatDates = false; }
+            var i;
+            var settings = this.s.dt.settings()[0];
             // This check is in place for if a custom decimal character is in place
             if (this.s.type !== null &&
-                this.s.type.includes('num') &&
-                (this.s.dt.settings()[0].oLanguage.sDecimal !== '' || this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
-                for (var i = 0; i < this.s.value.length; i++) {
+                ["num", "num-fmt", "html-num", "html-num-fmt"].includes(this.s.type) &&
+                (settings.oLanguage.sDecimal !== '' || settings.oLanguage.sThousands !== '')) {
+                for (i = 0; i < this.s.value.length; i++) {
                     var splitRD = [this.s.value[i].toString()];
-                    if (this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
-                        splitRD = this.s.value[i].split(this.s.dt.settings()[0].oLanguage.sDecimal);
+                    if (settings.oLanguage.sDecimal !== '') {
+                        splitRD = this.s.value[i].split(settings.oLanguage.sDecimal);
                     }
-                    if (this.s.dt.settings()[0].oLanguage.sThousands !== '') {
+                    if (settings.oLanguage.sThousands !== '') {
                         for (var j = 0; j < splitRD.length; j++) {
-                            splitRD[j] = splitRD[j].replace(this.s.dt.settings()[0].oLanguage.sThousands, ',');
+                            splitRD[j] = splitRD[j].replace(settings.oLanguage.sThousands, ',');
                         }
                     }
                     this.s.value[i] = splitRD.join('.');
@@ -342,14 +351,14 @@ var DataTable = $.fn.dataTable;
             else if (this.s.type !== null && deFormatDates) {
                 if (this.s.type.includes('date') ||
                     this.s.type.includes('time')) {
-                    for (var i = 0; i < this.s.value.length; i++) {
+                    for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i].match(/^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$/g) === null) {
                             this.s.value[i] = '';
                         }
                     }
                 }
                 else if (this.s.type.includes('moment')) {
-                    for (var i = 0; i < this.s.value.length; i++) {
+                    for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
                             moment()(this.s.value[i], this.s.dateFormat, true).isValid()) {
@@ -358,7 +367,7 @@ var DataTable = $.fn.dataTable;
                     }
                 }
                 else if (this.s.type.includes('luxon')) {
-                    for (var i = 0; i < this.s.value.length; i++) {
+                    for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
                             luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
@@ -367,8 +376,8 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             }
-            if (this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
-                for (var i = 0; i < this.s.value.length; i++) {
+            if (this.s.type && this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
+                for (i = 0; i < this.s.value.length; i++) {
                     this.s.value[i] = this.s.value[i].replace(/[^0-9.\-]/g, '');
                 }
             }
@@ -387,6 +396,20 @@ var DataTable = $.fn.dataTable;
          */
         Criteria.prototype.getNode = function () {
             return this.dom.container;
+        };
+        /**
+         * Parses formatted numbers down to a form where they can be compared
+         *
+         * @param val the value to convert
+         * @returns the converted value
+         */
+        Criteria.prototype.parseNumber = function (val) {
+            var decimal = this.s.dt.i18n('decimal');
+            // Remove any periods and then replace the decimal with a period
+            if (decimal && decimal !== '.') {
+                val = val.replace(/\./g, '').replace(decimal, '.');
+            }
+            return +val.replace(/(?!^-)[^0-9.]/g, '');
         };
         /**
          * Populates the criteria data, condition and value(s) as far as has been selected
@@ -410,7 +433,7 @@ var DataTable = $.fn.dataTable;
         Criteria.prototype.rebuild = function (loadedCriteria) {
             // Check to see if the previously selected data exists, if so select it
             var foundData = false;
-            var dataIdx;
+            var dataIdx, i;
             this._populateData();
             // If a data selection has previously been made attempt to find and select it
             if (loadedCriteria.data !== undefined) {
@@ -442,8 +465,7 @@ var DataTable = $.fn.dataTable;
                 var condition = void 0;
                 // Check to see if the previously selected condition exists, if so select it
                 var options = this.dom.condition.children('option');
-                // eslint-disable-next-line @typescript-eslint/prefer-for-of
-                for (var i = 0; i < options.length; i++) {
+                for (i = 0; i < options.length; i++) {
                     var option = $$3(options[i]);
                     if (loadedCriteria.condition !== undefined &&
                         option.val() === loadedCriteria.condition &&
@@ -461,11 +483,10 @@ var DataTable = $.fn.dataTable;
                     this.dom.conditionTitle.removeProp('selected');
                     this.dom.conditionTitle.remove();
                     this.dom.condition.removeClass(this.classes.italic);
-                    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-                    for (var i = 0; i < options.length; i++) {
-                        var option = $$3(options[i]);
-                        if (option.val() !== this.s.condition) {
-                            option.removeProp('selected');
+                    for (i = 0; i < options.length; i++) {
+                        var opt = $$3(options[i]);
+                        if (opt.val() !== this.s.condition) {
+                            opt.removeProp('selected');
                         }
                     }
                     this._populateValue(loadedCriteria);
@@ -486,7 +507,6 @@ var DataTable = $.fn.dataTable;
                 _this.dom.dataTitle.removeProp('selected');
                 // Need to go over every option to identify the correct selection
                 var options = _this.dom.data.children('option.' + _this.classes.option);
-                // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < options.length; i++) {
                     var option = $$3(options[i]);
                     if (option.val() === _this.dom.data.val()) {
@@ -521,7 +541,6 @@ var DataTable = $.fn.dataTable;
                 _this.dom.conditionTitle.removeProp('selected');
                 // Need to go over every option to identify the correct selection
                 var options = _this.dom.condition.children('option.' + _this.classes.option);
-                // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < options.length; i++) {
                     var option = $$3(options[i]);
                     if (option.val() === _this.dom.condition.val()) {
@@ -610,20 +629,18 @@ var DataTable = $.fn.dataTable;
          * Clears the value elements
          */
         Criteria.prototype._clearValue = function () {
+            var val;
             if (this.s.condition !== undefined) {
                 if (this.dom.value.length > 0 && this.dom.value[0] !== undefined) {
-                    var _loop_1 = function (val) {
+                    // Remove all of the value elements
+                    for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
+                        val = _a[_i];
                         if (val !== undefined) {
                             // Timeout is annoying but because of IOS
                             setTimeout(function () {
                                 val.remove();
                             }, 50);
                         }
-                    };
-                    // Remove all of the value elements
-                    for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
-                        var val = _a[_i];
-                        _loop_1(val);
                     }
                 }
                 // Call the init function to get the value elements for this condition
@@ -633,27 +650,24 @@ var DataTable = $.fn.dataTable;
                         .empty()
                         .append(this.dom.value[0])
                         .insertAfter(this.dom.condition);
-                    this.dom.value[0].trigger('dtsb-inserted');
+                    $$3(this.dom.value[0]).trigger('dtsb-inserted');
                     // Insert all of the value elements
                     for (var i = 1; i < this.dom.value.length; i++) {
                         this.dom.inputCont.append(this.dom.value[i]);
-                        this.dom.value[i].trigger('dtsb-inserted');
+                        $$3(this.dom.value[i]).trigger('dtsb-inserted');
                     }
                 }
             }
             else {
-                var _loop_2 = function (val) {
+                // Remove all of the value elements
+                for (var _b = 0, _c = this.dom.value; _b < _c.length; _b++) {
+                    val = _c[_b];
                     if (val !== undefined) {
                         // Timeout is annoying but because of IOS
                         setTimeout(function () {
                             val.remove();
                         }, 50);
                     }
-                };
-                // Remove all of the value elements
-                for (var _b = 0, _c = this.dom.value; _b < _c.length; _b++) {
-                    var val = _c[_b];
-                    _loop_2(val);
                 }
                 // Append the default valueTitle to the default select element
                 this.dom.valueTitle
@@ -687,11 +701,13 @@ var DataTable = $.fn.dataTable;
         Criteria.prototype._populateCondition = function () {
             var conditionOpts = [];
             var conditionsLength = Object.keys(this.s.conditions).length;
-            var colInits = this.s.dt.settings()[0].aoColumns;
+            var dt = this.s.dt;
+            var colInits = dt.settings()[0].aoColumns;
             var column = +this.dom.data.children('option:selected').val();
+            var condition, condName;
             // If there are no conditions stored then we need to get them from the appropriate type
             if (conditionsLength === 0) {
-                this.s.type = this.s.dt.columns().type().toArray()[column];
+                this.s.type = dt.column(column).type();
                 if (colInits !== undefined) {
                     var colInit = colInits[column];
                     if (colInit.searchBuilderType !== undefined && colInit.searchBuilderType !== null) {
@@ -701,10 +717,13 @@ var DataTable = $.fn.dataTable;
                         this.s.type = colInit.sType;
                     }
                 }
-                // If the column type is still unknown, call a draw to try reading it again
+                // If the column type is still unknown use the internal API to detect type
                 if (this.s.type === null || this.s.type === undefined) {
-                    $$3.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
-                    this.s.type = this.s.dt.columns().type().toArray()[column];
+                    // This can only happen in DT1 - DT2 will do the invalidation of the type itself
+                    if ($$3.fn.dataTable.ext.oApi) {
+                        $$3.fn.dataTable.ext.oApi._fnColumnTypes(dt.settings()[0]);
+                    }
+                    this.s.type = dt.column(column).type();
                 }
                 // Enable the condition element
                 this.dom.condition
@@ -714,9 +733,9 @@ var DataTable = $.fn.dataTable;
                     .addClass(this.classes.italic);
                 this.dom.conditionTitle
                     .prop('selected', true);
-                var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
+                var decimal = dt.settings()[0].oLanguage.sDecimal;
                 // This check is in place for if a custom decimal character is in place
-                if (decimal !== '' && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
+                if (decimal !== '' && this.s.type && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
                     if (this.s.type.includes('num-fmt')) {
                         this.s.type = this.s.type.replace(decimal, '');
                     }
@@ -725,27 +744,36 @@ var DataTable = $.fn.dataTable;
                     }
                 }
                 // Select which conditions are going to be used based on the column type
-                var conditionObj = this.c.conditions[this.s.type] !== undefined ?
-                    this.c.conditions[this.s.type] :
-                    this.s.type.includes('moment') ?
-                        this.c.conditions.moment :
-                        this.s.type.includes('luxon') ?
-                            this.c.conditions.luxon :
-                            this.c.conditions.string;
-                // If it is a moment format then extract the date format
-                if (this.s.type.includes('moment')) {
+                var conditionObj = void 0;
+                if (this.c.conditions[this.s.type] !== undefined) {
+                    conditionObj = this.c.conditions[this.s.type];
+                }
+                else if (this.s.type && this.s.type.includes('datetime-')) {
+                    // Date / time data types in DataTables are driven by Luxon or
+                    // Moment.js.
+                    conditionObj = DataTable.use('moment')
+                        ? this.c.conditions.moment
+                        : this.c.conditions.luxon;
+                    this.s.dateFormat = this.s.type.replace(/datetime-/g, '');
+                }
+                else if (this.s.type && this.s.type.includes('moment')) {
+                    conditionObj = this.c.conditions.moment;
                     this.s.dateFormat = this.s.type.replace(/moment-/g, '');
                 }
-                else if (this.s.type.includes('luxon')) {
+                else if (this.s.type && this.s.type.includes('luxon')) {
+                    conditionObj = this.c.conditions.luxon;
                     this.s.dateFormat = this.s.type.replace(/luxon-/g, '');
+                }
+                else {
+                    conditionObj = this.c.conditions.string;
                 }
                 // Add all of the conditions to the select element
                 for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
-                    var condition = _a[_i];
+                    condition = _a[_i];
                     if (conditionObj[condition] !== null) {
                         // Serverside processing does not supply the options for the select elements
                         // Instead input elements need to be used for these instead
-                        if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
+                        if (dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
                             var col = colInits[column];
                             if (this.s.serverData && this.s.serverData[col.data]) {
                                 conditionObj[condition].init = Criteria.initSelectSSP;
@@ -759,9 +787,9 @@ var DataTable = $.fn.dataTable;
                             }
                         }
                         this.s.conditions[condition] = conditionObj[condition];
-                        var condName = conditionObj[condition].conditionName;
+                        condName = conditionObj[condition].conditionName;
                         if (typeof condName === 'function') {
-                            condName = condName(this.s.dt, this.c.i18n);
+                            condName = condName(dt, this.c.i18n);
                         }
                         conditionOpts.push($$3('<option>', {
                             text: condName,
@@ -776,18 +804,18 @@ var DataTable = $.fn.dataTable;
             else if (conditionsLength > 0) {
                 this.dom.condition.empty().removeAttr('disabled').addClass(this.classes.italic);
                 for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
-                    var condition = _c[_b];
-                    var condName = this.s.conditions[condition].conditionName;
-                    if (typeof condName === 'function') {
-                        condName = condName(this.s.dt, this.c.i18n);
+                    condition = _c[_b];
+                    var name_1 = this.s.conditions[condition].conditionName;
+                    if (typeof name_1 === 'function') {
+                        name_1 = name_1(dt, this.c.i18n);
                     }
                     var newOpt = $$3('<option>', {
-                        text: condName,
+                        text: name_1,
                         value: condition
                     })
                         .addClass(this.classes.option)
                         .addClass(this.classes.notItalic);
-                    if (this.s.condition !== undefined && this.s.condition === condName) {
+                    if (this.s.condition !== undefined && this.s.condition === name_1) {
                         newOpt.prop('selected', true);
                         this.dom.condition.removeClass(this.classes.italic);
                     }
@@ -819,10 +847,10 @@ var DataTable = $.fn.dataTable;
                         // Need to check against the stored conditions so we can match the token "cond" to the option
                         for (var _e = 0, _f = Object.keys(this.s.conditions); _e < _f.length; _e++) {
                             var cond = _f[_e];
-                            var condName = this.s.conditions[cond].conditionName;
+                            condName = this.s.conditions[cond].conditionName;
                             if (
                             // If the conditionName matches the text of the option
-                            (typeof condName === 'string' ? condName : condName(this.s.dt, this.c.i18n)) ===
+                            (typeof condName === 'string' ? condName : condName(dt, this.c.i18n)) ===
                                 conditionOpts[i].text() &&
                                 // and the tokens match
                                 cond === defaultCondition) {
@@ -882,13 +910,14 @@ var DataTable = $.fn.dataTable;
         Criteria.prototype._populateValue = function (loadedCriteria) {
             var _this = this;
             var prevFilled = this.s.filled;
+            var i;
             this.s.filled = false;
             // Remove any previous value elements
             // Timeout is annoying but because of IOS
             setTimeout(function () {
                 _this.dom.defaultValue.remove();
             }, 50);
-            var _loop_3 = function (val) {
+            var _loop_1 = function (val) {
                 // Timeout is annoying but because of IOS
                 setTimeout(function () {
                     if (val !== undefined) {
@@ -898,12 +927,11 @@ var DataTable = $.fn.dataTable;
             };
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
-                _loop_3(val);
+                _loop_1(val);
             }
             var children = this.dom.inputCont.children();
             if (children.length > 1) {
-                // eslint-disable-next-line @typescript-eslint/prefer-for-of
-                for (var i = 0; i < children.length; i++) {
+                for (i = 0; i < children.length; i++) {
                     $$3(children[i]).remove();
                 }
             }
@@ -923,12 +951,12 @@ var DataTable = $.fn.dataTable;
             this.dom.inputCont.empty();
             // Insert value elements and trigger the inserted event
             if (this.dom.value[0] !== undefined) {
-                this.dom.value[0]
+                $$3(this.dom.value[0])
                     .appendTo(this.dom.inputCont)
                     .trigger('dtsb-inserted');
             }
-            for (var i = 1; i < this.dom.value.length; i++) {
-                this.dom.value[i]
+            for (i = 1; i < this.dom.value.length; i++) {
+                $$3(this.dom.value[i])
                     .insertAfter(this.dom.value[i - 1])
                     .trigger('dtsb-inserted');
             }
@@ -991,7 +1019,7 @@ var DataTable = $.fn.dataTable;
             input: 'dtsb-input',
             inputCont: 'dtsb-inputCont',
             italic: 'dtsb-italic',
-            joiner: 'dtsp-joiner',
+            joiner: 'dtsb-joiner',
             left: 'dtsb-left',
             notItalic: 'dtsb-notItalic',
             option: 'dtsb-option',
@@ -1008,7 +1036,7 @@ var DataTable = $.fn.dataTable;
             if (array === void 0) { array = false; }
             var column = that.dom.data.children('option:selected').val();
             var indexArray = that.s.dt.rows().indexes().toArray();
-            var settings = that.s.dt.settings()[0];
+            var fastData = that.s.dt.settings()[0].fastData;
             that.dom.valueTitle.prop('selected', true);
             // Declare select element to be used with all of the default classes and listeners.
             var el = $$3('<select/>')
@@ -1030,7 +1058,7 @@ var DataTable = $.fn.dataTable;
             // Only add one option for each possible value
             for (var _i = 0, indexArray_1 = indexArray; _i < indexArray_1.length; _i++) {
                 var index = indexArray_1[_i];
-                var filter = settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+                var filter = fastData(index, column, typeof that.c.orthogonal === 'string' ?
                     that.c.orthogonal :
                     that.c.orthogonal.search);
                 var value = {
@@ -1038,7 +1066,7 @@ var DataTable = $.fn.dataTable;
                         filter.replace(/[\r\n\u2028]/g, ' ') : // Need to replace certain characters to match search values
                         filter,
                     index: index,
-                    text: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+                    text: fastData(index, column, typeof that.c.orthogonal === 'string' ?
                         that.c.orthogonal :
                         that.c.orthogonal.display)
                 };
@@ -1331,14 +1359,14 @@ var DataTable = $.fn.dataTable;
                     i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
-                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    DataTable.util.throttle(function () {
                         return fn(that, this);
                     }, searchDelay) :
                     function () {
                         fn(that, _this);
                     })
                     .on('input.dtsb keypress.dtsb', function (e) {
-                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    DataTable.util.throttle(function () {
                         var code = e.keyCode || e.which;
                         return fn(that, this, code);
                     }, searchDelay === null ? 0 : searchDelay);
@@ -1355,7 +1383,7 @@ var DataTable = $.fn.dataTable;
                     i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
-                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    DataTable.util.throttle(function () {
                         return fn(that, this);
                     }, searchDelay) :
                     function () {
@@ -1365,7 +1393,7 @@ var DataTable = $.fn.dataTable;
                     !(that.s.dt.settings()[0].oInit.search !== undefined &&
                         that.s.dt.settings()[0].oInit.search["return"]) &&
                     searchDelay !== null ?
-                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    DataTable.util.throttle(function () {
                         return fn(that, this);
                     }, searchDelay) :
                     function (e) {
@@ -1446,7 +1474,7 @@ var DataTable = $.fn.dataTable;
                     values.push(Criteria._escapeHTML(element.val()));
                 }
             }
-            return values;
+            return values.map(dataTable$2.util.diacritics);
         };
         /**
          * Function that is run on each element as a call back when a search should be triggered
@@ -1455,6 +1483,7 @@ var DataTable = $.fn.dataTable;
             // When the value is changed the criteria is now complete so can be included in searches
             // Get the condition from the map based on the key that has been selected for the condition
             var condition = that.s.conditions[that.s.condition];
+            var i;
             that.s.filled = condition.isInputValid(that.dom.value, that);
             that.s.value = condition.inputValue(that.dom.value, that);
             if (!that.s.filled) {
@@ -1469,31 +1498,16 @@ var DataTable = $.fn.dataTable;
             if (!Array.isArray(that.s.value)) {
                 that.s.value = [that.s.value];
             }
-            for (var i = 0; i < that.s.value.length; i++) {
+            for (i = 0; i < that.s.value.length; i++) {
                 // If the value is an array we need to sort it
                 if (Array.isArray(that.s.value[i])) {
                     that.s.value[i].sort();
-                }
-                // Otherwise replace the decimal place character for i18n
-                else if (that.s.type.includes('num') &&
-                    (that.s.dt.settings()[0].oLanguage.sDecimal !== '' ||
-                        that.s.dt.settings()[0].oLanguage.sThousands !== '')) {
-                    var splitRD = [that.s.value[i].toString()];
-                    if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
-                        splitRD = that.s.value[i].split(that.s.dt.settings()[0].oLanguage.sDecimal);
-                    }
-                    if (that.s.dt.settings()[0].oLanguage.sThousands !== '') {
-                        for (var j = 0; j < splitRD.length; j++) {
-                            splitRD[j] = splitRD[j].replace(that.s.dt.settings()[0].oLanguage.sThousands, ',');
-                        }
-                    }
-                    that.s.value[i] = splitRD.join('.');
                 }
             }
             // Take note of the cursor position so that we can refocus there later
             var idx = null;
             var cursorPos = null;
-            for (var i = 0; i < that.dom.value.length; i++) {
+            for (i = 0; i < that.dom.value.length; i++) {
                 if (el === that.dom.value[i][0]) {
                     idx = i;
                     if (el.selectionStart !== undefined) {
@@ -1520,7 +1534,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.dateConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -1534,7 +1547,6 @@ var DataTable = $.fn.dataTable;
                     return value === comparison[0];
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.not', i18n.conditions.date.not);
@@ -1588,7 +1600,6 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!between': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notBetween', i18n.conditions.date.notBetween);
@@ -1621,7 +1632,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
@@ -1641,7 +1651,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.momentDateConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -1655,7 +1664,6 @@ var DataTable = $.fn.dataTable;
                         moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.not', i18n.conditions.date.not);
@@ -1709,7 +1717,6 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!between': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notBetween', i18n.conditions.date.notBetween);
@@ -1744,7 +1751,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
@@ -1764,7 +1770,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.luxonDateConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -1778,7 +1783,6 @@ var DataTable = $.fn.dataTable;
                         === luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.not', i18n.conditions.date.not);
@@ -1834,7 +1838,6 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!between': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notBetween', i18n.conditions.date.notBetween);
@@ -1869,7 +1872,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
@@ -1889,7 +1891,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.numConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -1902,7 +1903,6 @@ var DataTable = $.fn.dataTable;
                     return +value === +comparison[0];
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
@@ -1947,7 +1947,6 @@ var DataTable = $.fn.dataTable;
                     return +value >= +comparison[0];
                 }
             },
-            // eslint-disable-next-line sort-keys
             '>': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
@@ -1975,7 +1974,6 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!between': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
@@ -2007,7 +2005,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
@@ -2027,7 +2024,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.numFmtConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -2036,11 +2032,10 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initSelect,
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) === Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) === criteria.parseNumber(comparison[0]);
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
@@ -2048,8 +2043,8 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initSelect,
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) !== Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) !== criteria.parseNumber(comparison[0]);
                 }
             },
             '<': {
@@ -2059,8 +2054,8 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initInput,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) < Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) < criteria.parseNumber(comparison[0]);
                 }
             },
             '<=': {
@@ -2070,8 +2065,8 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initInput,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) <= Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) <= criteria.parseNumber(comparison[0]);
                 }
             },
             '>=': {
@@ -2081,11 +2076,10 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initInput,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) >= Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) >= criteria.parseNumber(comparison[0]);
                 }
             },
-            // eslint-disable-next-line sort-keys
             '>': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
@@ -2093,8 +2087,8 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.initInput,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    return Criteria.parseNumFmt(value) > Criteria.parseNumFmt(comparison[0]);
+                search: function (value, comparison, criteria) {
+                    return criteria.parseNumber(value) > criteria.parseNumber(comparison[0]);
                 }
             },
             'between': {
@@ -2104,10 +2098,10 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.init2Input,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    var val = Criteria.parseNumFmt(value);
-                    var comp0 = Criteria.parseNumFmt(comparison[0]);
-                    var comp1 = Criteria.parseNumFmt(comparison[1]);
+                search: function (value, comparison, criteria) {
+                    var val = criteria.parseNumber(value);
+                    var comp0 = criteria.parseNumber(comparison[0]);
+                    var comp1 = criteria.parseNumber(comparison[1]);
                     if (+comp0 < +comp1) {
                         return +comp0 <= +val && +val <= +comp1;
                     }
@@ -2116,7 +2110,6 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!between': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
@@ -2124,10 +2117,10 @@ var DataTable = $.fn.dataTable;
                 init: Criteria.init2Input,
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
-                search: function (value, comparison) {
-                    var val = Criteria.parseNumFmt(value);
-                    var comp0 = Criteria.parseNumFmt(comparison[0]);
-                    var comp1 = Criteria.parseNumFmt(comparison[1]);
+                search: function (value, comparison, criteria) {
+                    var val = criteria.parseNumber(value);
+                    var comp0 = criteria.parseNumber(comparison[0]);
+                    var comp1 = criteria.parseNumber(comparison[1]);
                     if (+comp0 < +comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
@@ -2151,7 +2144,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
@@ -2171,7 +2163,6 @@ var DataTable = $.fn.dataTable;
         // The order of the conditions will make eslint sad :(
         // Has to be in this order so that they are displayed correctly in select elements
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.stringConditions = {
             '=': {
                 conditionName: function (dt, i18n) {
@@ -2184,7 +2175,6 @@ var DataTable = $.fn.dataTable;
                     return value === comparison[0];
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.not', i18n.conditions.string.not);
@@ -2207,7 +2197,6 @@ var DataTable = $.fn.dataTable;
                     return value.toLowerCase().indexOf(comparison[0].toLowerCase()) === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!starts': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.notStartsWith', i18n.conditions.string.notStartsWith);
@@ -2219,7 +2208,6 @@ var DataTable = $.fn.dataTable;
                     return value.toLowerCase().indexOf(comparison[0].toLowerCase()) !== 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             'contains': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.contains', i18n.conditions.string.contains);
@@ -2231,7 +2219,6 @@ var DataTable = $.fn.dataTable;
                     return value.toLowerCase().includes(comparison[0].toLowerCase());
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!contains': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.notContains', i18n.conditions.string.notContains);
@@ -2254,7 +2241,6 @@ var DataTable = $.fn.dataTable;
                     return value.toLowerCase().endsWith(comparison[0].toLowerCase());
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!ends': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.notEndsWith', i18n.conditions.string.notEndsWith);
@@ -2281,7 +2267,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.notEmpty', i18n.conditions.string.notEmpty);
@@ -2300,7 +2285,6 @@ var DataTable = $.fn.dataTable;
         };
         // The order of the conditions will make eslint sad :(
         // Also have to disable member ordering for this as the private methods used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.arrayConditions = {
             'contains': {
                 conditionName: function (dt, i18n) {
@@ -2324,7 +2308,6 @@ var DataTable = $.fn.dataTable;
                     return value.indexOf(comparison[0]) === -1;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.array.equals', i18n.conditions.array.equals);
@@ -2344,7 +2327,6 @@ var DataTable = $.fn.dataTable;
                     return false;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!=': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.array.not', i18n.conditions.array.not);
@@ -2379,7 +2361,6 @@ var DataTable = $.fn.dataTable;
                     return value === null || value === undefined || value.length === 0;
                 }
             },
-            // eslint-disable-next-line sort-keys
             '!null': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.array.notEmpty', i18n.conditions.array.notEmpty);
@@ -2398,7 +2379,6 @@ var DataTable = $.fn.dataTable;
         };
         // eslint will be sad because we have to disable member ordering for this as the
         // private static properties used are not yet declared otherwise
-        // eslint-disable-next-line @typescript-eslint/member-ordering
         Criteria.defaults = {
             columns: true,
             conditions: {
@@ -2442,6 +2422,7 @@ var DataTable = $.fn.dataTable;
                 value: 'Value',
                 valueJoiner: 'and'
             },
+            liveSearch: true,
             logic: 'AND',
             orthogonal: {
                 display: 'display',
@@ -2453,7 +2434,6 @@ var DataTable = $.fn.dataTable;
     }());
 
     var $$2;
-    var dataTable$2;
     /**
      * Sets the value of jQuery for use in the file
      *
@@ -2461,7 +2441,7 @@ var DataTable = $.fn.dataTable;
      */
     function setJQuery$1(jq) {
         $$2 = jq;
-        dataTable$2 = jq.fn.dataTable;
+        jq.fn.dataTable;
     }
     /**
      * The Group class is used within SearchBuilder to represent a group of criteria
@@ -2472,10 +2452,6 @@ var DataTable = $.fn.dataTable;
             if (isChild === void 0) { isChild = false; }
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
-            // Check that the required version of DataTables is included
-            if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
-                throw new Error('SearchBuilder requires DataTables 1.10 or newer');
-            }
             this.classes = $$2.extend(true, {}, Group.classes);
             // Get options from user
             this.c = $$2.extend(true, {}, Group.defaults, opts);
@@ -2540,7 +2516,6 @@ var DataTable = $.fn.dataTable;
          * Gets the details required to rebuild the group
          */
         // Eslint upset at empty object but needs to be done
-        // eslint-disable-next-line @typescript-eslint/ban-types
         Group.prototype.getDetails = function (deFormatDates) {
             if (deFormatDates === void 0) { deFormatDates = false; }
             if (this.s.criteria.length === 0) {
@@ -2571,6 +2546,7 @@ var DataTable = $.fn.dataTable;
          * @param loadedDetails the details required to rebuild the group
          */
         Group.prototype.rebuild = function (loadedDetails) {
+            var crit;
             // If no criteria are stored then just return
             if (loadedDetails.criteria === undefined ||
                 loadedDetails.criteria === null ||
@@ -2584,7 +2560,7 @@ var DataTable = $.fn.dataTable;
             // Add all of the criteria, be it a sub group or a criteria
             if (Array.isArray(loadedDetails.criteria)) {
                 for (var _i = 0, _a = loadedDetails.criteria; _i < _a.length; _i++) {
-                    var crit = _a[_i];
+                    crit = _a[_i];
                     if (crit.logic !== undefined) {
                         this._addPrevGroup(crit);
                     }
@@ -2595,7 +2571,7 @@ var DataTable = $.fn.dataTable;
             }
             // For all of the criteria children, update the arrows incase they require changing and set the listeners
             for (var _b = 0, _c = this.s.criteria; _b < _c.length; _b++) {
-                var crit = _c[_b];
+                crit = _c[_b];
                 if (crit.criteria instanceof Criteria) {
                     crit.criteria.updateArrows(this.s.criteria.length > 1);
                     this._setCriteriaListeners(crit.criteria);
@@ -2613,8 +2589,10 @@ var DataTable = $.fn.dataTable;
             this.dom.container.children().detach();
             this.dom.container
                 .append(this.dom.logicContainer)
-                .append(this.dom.add)
-                .append(this.dom.search);
+                .append(this.dom.add);
+            if (!this.c.liveSearch) {
+                this.dom.container.append(this.dom.search);
+            }
             // Sort the criteria by index so that they appear in the correct order
             this.s.criteria.sort(function (a, b) {
                 if (a.criteria.s.index < b.criteria.s.index) {
@@ -2756,7 +2734,9 @@ var DataTable = $.fn.dataTable;
                 _this.s.dt.state.save();
                 return false;
             });
-            this.dom.search.on('click.dtsb', function () {
+            this.dom.search
+                .off('click.dtsb')
+                .on('click.dtsb', function () {
                 _this.s.dt.draw();
             });
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
@@ -2955,6 +2935,7 @@ var DataTable = $.fn.dataTable;
          */
         Group.prototype._removeCriteria = function (criteria, group) {
             if (group === void 0) { group = false; }
+            var i;
             // If removing a criteria and there is only then then just destroy the group
             if (this.s.criteria.length <= 1 && this.s.isChild) {
                 this.destroy();
@@ -2962,7 +2943,7 @@ var DataTable = $.fn.dataTable;
             else {
                 // Otherwise splice the given criteria out and redo the indexes
                 var last = void 0;
-                for (var i = 0; i < this.s.criteria.length; i++) {
+                for (i = 0; i < this.s.criteria.length; i++) {
                     if (this.s.criteria[i].index === criteria.s.index &&
                         (!group || this.s.criteria[i].criteria instanceof Group)) {
                         last = i;
@@ -2972,7 +2953,7 @@ var DataTable = $.fn.dataTable;
                 if (last !== undefined) {
                     this.s.criteria.splice(last, 1);
                 }
-                for (var i = 0; i < this.s.criteria.length; i++) {
+                for (i = 0; i < this.s.criteria.length; i++) {
                     this.s.criteria[i].index = i;
                     this.s.criteria[i].criteria.s.index = i;
                 }
@@ -3113,9 +3094,10 @@ var DataTable = $.fn.dataTable;
             if (this.s.isChild) {
                 this.dom.container.append(this.dom.logicContainer);
             }
-            this.dom.container
-                .append(this.dom.add)
-                .append(this.dom.search);
+            this.dom.container.append(this.dom.add);
+            if (!this.c.liveSearch) {
+                this.dom.container.append(this.dom.search);
+            }
         };
         /**
          * Sets the listener for the logic button
@@ -3230,8 +3212,8 @@ var DataTable = $.fn.dataTable;
         function SearchBuilder(builderSettings, opts) {
             var _this = this;
             // Check that the required version of DataTables is included
-            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
-                throw new Error('SearchBuilder requires DataTables 1.10 or newer');
+            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('2')) {
+                throw new Error('SearchBuilder requires DataTables 2 or newer');
             }
             var table = new dataTable$1.Api(builderSettings);
             this.classes = $$1.extend(true, {}, SearchBuilder.classes);
@@ -3291,10 +3273,11 @@ var DataTable = $.fn.dataTable;
          * Gets the details required to rebuild the SearchBuilder as it currently is
          */
         // eslint upset at empty object but that is what it is
-        // eslint-disable-next-line @typescript-eslint/ban-types
         SearchBuilder.prototype.getDetails = function (deFormatDates) {
             if (deFormatDates === void 0) { deFormatDates = false; }
-            return this.s.topGroup.getDetails(deFormatDates);
+            return this.s.topGroup
+                ? this.s.topGroup.getDetails(deFormatDates)
+                : {};
         };
         /**
          * Getter for the node of the container for the searchBuilder
@@ -3361,16 +3344,19 @@ var DataTable = $.fn.dataTable;
         SearchBuilder.prototype._setUp = function (loadState) {
             var _this = this;
             if (loadState === void 0) { loadState = true; }
-            // Register an Api method for getting the column type
-            $$1.fn.DataTable.Api.registerPlural('columns().type()', 'column().type()', function () {
-                return this.iterator('column', function (settings, column) {
-                    return settings.aoColumns[column].sType;
-                }, 1);
-            });
+            // Register an Api method for getting the column type. DataTables 2 has
+            // this built in
+            if (typeof this.s.dt.column().type !== 'function') {
+                DataTable.Api.registerPlural('columns().types()', 'column().type()', function () {
+                    return this.iterator('column', function (settings, column) {
+                        return settings.aoColumns[column].sType;
+                    }, 1);
+                });
+            }
             // Check that DateTime is included, If not need to check if it could be used
             // eslint-disable-next-line no-extra-parens
             if (!dataTable$1.DateTime) {
-                var types = this.s.dt.columns().type().toArray();
+                var types = this.s.dt.columns().types().toArray();
                 if (types === undefined || types.includes(undefined) || types.includes(null)) {
                     types = [];
                     for (var _i = 0, _a = this.s.dt.settings()[0].aoColumns; _i < _a.length; _i++) {
@@ -3379,10 +3365,13 @@ var DataTable = $.fn.dataTable;
                     }
                 }
                 var columnIdxs = this.s.dt.columns().toArray();
-                // If the types are not yet set then draw to see if they can be retrieved then
+                // If the column type is still unknown use the internal API to detect type
                 if (types === undefined || types.includes(undefined) || types.includes(null)) {
-                    $$1.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
-                    types = this.s.dt.columns().type().toArray();
+                    // This can only happen in DT1 - DT2 will do the invalidation of the type itself
+                    if ($$1.fn.dataTable.ext.oApi) {
+                        $$1.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
+                    }
+                    types = this.s.dt.columns().types().toArray();
                 }
                 for (var i = 0; i < columnIdxs[0].length; i++) {
                     var column = columnIdxs[0][i];
@@ -3421,7 +3410,7 @@ var DataTable = $.fn.dataTable;
                     data.searchBuilder = _this._collapseArray(_this.getDetails(true));
                 }
             });
-            this.s.dt.on('column-reorder', function () {
+            this.s.dt.on('columns-reordered', function () {
                 _this.rebuild(_this.getDetails());
             });
             if (loadState) {
@@ -3636,7 +3625,7 @@ var DataTable = $.fn.dataTable;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.6.0';
+        SearchBuilder.version = '1.8.1';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3744,7 +3733,7 @@ var DataTable = $.fn.dataTable;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.6.0
+    /*! SearchBuilder 1.8.1
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);
@@ -3786,12 +3775,15 @@ var DataTable = $.fn.dataTable;
         },
         config: {},
         init: function (dt, node, config) {
-            var sb = new DataTable.SearchBuilder(dt, $.extend({
-                filterChanged: function (count, text) {
-                    dt.button(node).text(text);
-                }
-            }, config.config));
-            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
+            var that = this;
+            var sb = new DataTable.SearchBuilder(dt, config.config);
+            dt.on('draw', function () {
+                var count = sb.s.topGroup
+                    ? sb.s.topGroup.count()
+                    : 0;
+                that.text(dt.i18n('searchBuilder.button', sb.c.i18n.button, count));
+            });
+            that.text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
             config._searchBuilder = sb;
         },
         text: null
@@ -3855,8 +3847,8 @@ var DataTable = $.fn.dataTable;
         fnInit: _init
     });
     // DataTables 2 layout feature
-    if (DataTable.ext.features) {
-        DataTable.ext.features.register('searchBuilder', _init);
+    if (DataTable.feature) {
+        DataTable.feature.register('searchBuilder', _init);
     }
 
 })();

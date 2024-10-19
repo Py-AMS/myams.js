@@ -1,4 +1,4 @@
-/*! StateRestore 1.3.0
+/*! StateRestore 1.4.1
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -43,7 +43,7 @@
 		// Browser
 		factory( jQuery, window, document );
 	}
-}(function( $, window, document, undefined ) {
+}(function( $, window, document ) {
 'use strict';
 var DataTable = $.fn.dataTable;
 
@@ -98,7 +98,7 @@ var DataTable = $.fn.dataTable;
                 removeContents: $$2('<div class="' + this.classes.confirmationText + '"><span>' +
                     this.s.dt
                         .i18n('stateRestore.removeConfirm', this.c.i18n.removeConfirm)
-                        .replace(/%s/g, this.s.identifier) +
+                        .replace(/%s/g, StateRestore.entityEncode(this.s.identifier)) +
                     '</span></div>'),
                 removeError: $$2('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.removeError', this.c.i18n.removeError) +
@@ -110,7 +110,7 @@ var DataTable = $.fn.dataTable;
                     '<label class="' + this.classes.confirmationMessage + '">' +
                     this.s.dt
                         .i18n('stateRestore.renameLabel', this.c.i18n.renameLabel)
-                        .replace(/%s/g, this.s.identifier) +
+                        .replace(/%s/g, StateRestore.entityEncode(this.s.identifier)) +
                     '</label>' +
                     '</div>'),
                 renameInput: $$2('<input class="' + this.classes.input + '" type="text"></input>'),
@@ -279,7 +279,9 @@ var DataTable = $.fn.dataTable;
          * Removes all of the dom elements from the document
          */
         StateRestore.prototype.destroy = function () {
-            Object.values(this.dom).forEach(function (node) { return node.off().remove(); });
+            $$2.each(this.dom, function (name, el) {
+                el.off().remove();
+            });
         };
         /**
          * Loads the state referenced by the identifier from storage
@@ -296,8 +298,7 @@ var DataTable = $.fn.dataTable;
             settings.oLoadedState = $$2.extend(true, {}, loadedState);
             // Click on a background if there is one to shut the collection
             $$2('div.dt-button-background').click();
-            // Call the internal datatables function to implement the state on the table
-            $$2.fn.dataTable.ext.oApi._fnImplementState(settings, loadedState, function () {
+            var loaded = function () {
                 var correctPaging = function (e, preSettings) {
                     setTimeout(function () {
                         var currpage = preSettings._iDisplayStart / preSettings._iDisplayLength;
@@ -312,7 +313,16 @@ var DataTable = $.fn.dataTable;
                 };
                 _this.s.dt.one('preDraw', correctPaging);
                 _this.s.dt.draw(false);
-            });
+            };
+            // Call the internal datatables function to implement the state on the table
+            if (DataTable.versionCheck('2')) {
+                this.s.dt.state(loadedState);
+                loaded();
+            }
+            else {
+                // Legacy
+                DataTable.ext.oApi._fnImplementState(settings, loadedState, loaded);
+            }
             return loadedState;
         };
         /**
@@ -569,6 +579,22 @@ var DataTable = $.fn.dataTable;
             }
         };
         /**
+         * Encode HTML entities
+         *
+         * @param d String to encode
+         * @returns Encoded string
+         * @todo When DT1 support is dropped, switch to using `DataTable.util.escapeHtml`
+         */
+        StateRestore.entityEncode = function (d) {
+            return typeof d === 'string' ?
+                d
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;') :
+                d;
+        };
+        /**
          * Performs a deep compare of two state objects, returning true if they match
          *
          * @param state1 The first object to compare
@@ -579,22 +605,23 @@ var DataTable = $.fn.dataTable;
             // Put keys and states into arrays as this makes the later code easier to work
             var states = [state1, state2];
             var keys = [Object.keys(state1).sort(), Object.keys(state2).sort()];
+            var startIdx, i;
             // If scroller is included then we need to remove the start value
             //  as it can be different but yield the same results
             if (keys[0].includes('scroller')) {
-                var startIdx = keys[0].indexOf('start');
+                startIdx = keys[0].indexOf('start');
                 if (startIdx) {
                     keys[0].splice(startIdx, 1);
                 }
             }
             if (keys[1].includes('scroller')) {
-                var startIdx = keys[1].indexOf('start');
+                startIdx = keys[1].indexOf('start');
                 if (startIdx) {
                     keys[1].splice(startIdx, 1);
                 }
             }
             // We want to remove any private properties within the states
-            for (var i = 0; i < keys[0].length; i++) {
+            for (i = 0; i < keys[0].length; i++) {
                 if (keys[0][i].indexOf('_') === 0) {
                     keys[0].splice(i, 1);
                     i--;
@@ -611,7 +638,7 @@ var DataTable = $.fn.dataTable;
                     continue;
                 }
             }
-            for (var i = 0; i < keys[1].length; i++) {
+            for (i = 0; i < keys[1].length; i++) {
                 if (keys[1][i].indexOf('_') === 0) {
                     keys[1].splice(i, 1);
                     i--;
@@ -631,20 +658,20 @@ var DataTable = $.fn.dataTable;
                 return false;
             }
             // We are only going to compare the keys that are common between both states
-            for (var i = 0; i < keys[0].length; i++) {
+            for (i = 0; i < keys[0].length; i++) {
                 if (!keys[1].includes(keys[0][i])) {
                     keys[0].splice(i, 1);
                     i--;
                 }
             }
-            for (var i = 0; i < keys[1].length; i++) {
+            for (i = 0; i < keys[1].length; i++) {
                 if (!keys[0].includes(keys[1][i])) {
                     keys[1].splice(i, 1);
                     i--;
                 }
             }
             // Then each key and value has to be checked against each other
-            for (var i = 0; i < keys[0].length; i++) {
+            for (i = 0; i < keys[0].length; i++) {
                 // If the keys dont equal, or their corresponding types are different we can return false
                 if (keys[0][i] !== keys[1][i] || typeof states[0][keys[0][i]] !== typeof states[1][keys[1][i]]) {
                     return false;
@@ -727,23 +754,7 @@ var DataTable = $.fn.dataTable;
             });
             $$2(document).on('keyup', function (e) { return _this._keyupFunction(e); });
         };
-        /**
-         * Convert from camelCase notation to the internal Hungarian.
-         * We could use the Hungarian convert function here, but this is cleaner
-         *
-         * @param {object} obj Object to convert
-         * @returns {object} Inverted object
-         * @memberof DataTable#oApi
-         */
-        StateRestore.prototype._searchToHung = function (obj) {
-            return {
-                bCaseInsensitive: obj.caseInsensitive,
-                bRegex: obj.regex,
-                bSmart: obj.smart,
-                sSearch: obj.search
-            };
-        };
-        StateRestore.version = '1.3.0';
+        StateRestore.version = '1.4.1';
         StateRestore.classes = {
             background: 'dtsr-background',
             closeButton: 'dtsr-popover-close',
@@ -881,33 +892,33 @@ var DataTable = $.fn.dataTable;
             });
             this.dom = {
                 background: $$1('<div class="' + this.classes.background + '"/>'),
+                checkboxInputRow: $$1('<div class="' + this.classes.formRow + '">' +
+                    '<label class="' + this.classes.nameLabel + '">' +
+                    this.s.dt.i18n('stateRestore.creationModal.toggleLabel', this.c.i18n.creationModal.toggleLabel) +
+                    '</label>' +
+                    '<div class="dtsr-input"></div>' +
+                    '</div>'),
                 closeButton: $$1('<div class="' + this.classes.closeButton + '">x</div>'),
-                colReorderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                colReorderToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.colReorderToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.colReorder', this.c.i18n.creationModal.colReorder) +
-                    '</label>' +
                     '</div>'),
-                columnsSearchToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                columnsSearchToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.columnsSearchToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.columns.search', this.c.i18n.creationModal.columns.search) +
-                    '</label>' +
                     '</div>'),
-                columnsVisibleToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + ' ' + '">' +
+                columnsVisibleToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.columnsVisibleToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.columns.visible', this.c.i18n.creationModal.columns.visible) +
-                    '</label>' +
                     '</div>'),
                 confirmation: $$1('<div class="' + this.classes.confirmation + '"/>'),
                 confirmationTitleRow: $$1('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
@@ -930,38 +941,34 @@ var DataTable = $.fn.dataTable;
                 emptyError: $$1('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.emptyError', this.c.i18n.emptyError) +
                     '</span>'),
-                lengthToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                lengthToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.lengthToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.length', this.c.i18n.creationModal.length) +
-                    '</label>' +
                     '</div>'),
                 nameInputRow: $$1('<div class="' + this.classes.formRow + '">' +
                     '<label class="' + this.classes.nameLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.name', this.c.i18n.creationModal.name) +
                     '</label>' +
+                    '<div class="dtsr-input">' +
                     '<input class="' + this.classes.nameInput + '" type="text">' +
+                    '</div>' +
                     '</div>'),
-                orderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                orderToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.orderToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.order', this.c.i18n.creationModal.order) +
-                    '</label>' +
                     '</div>'),
-                pagingToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                pagingToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.pagingToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.paging', this.c.i18n.creationModal.paging) +
-                    '</label>' +
                     '</div>'),
                 removeContents: $$1('<div class="' + this.classes.confirmationText + '"><span></span></div>'),
                 removeTitle: $$1('<div class="' + this.classes.creationText + '">' +
@@ -969,54 +976,41 @@ var DataTable = $.fn.dataTable;
                     this.s.dt.i18n('stateRestore.removeTitle', this.c.i18n.removeTitle) +
                     '</h2>' +
                     '</div>'),
-                scrollerToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                scrollerToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.scrollerToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.scroller', this.c.i18n.creationModal.scroller) +
-                    '</label>' +
                     '</div>'),
-                searchBuilderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchBuilderToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchBuilderToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.searchBuilder', this.c.i18n.creationModal.searchBuilder) +
-                    '</label>' +
                     '</div>'),
-                searchPanesToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchPanesToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchPanesToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.searchPanes', this.c.i18n.creationModal.searchPanes) +
-                    '</label>' +
                     '</div>'),
-                searchToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.search', this.c.i18n.creationModal.search) +
-                    '</label>' +
                     '</div>'),
-                selectToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                selectToggle: $$1('<div class="' + this.classes.checkLabel + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.selectToggle + ' ' +
                     this.classes.checkBox +
                     '" checked>' +
-                    '<label class="' + this.classes.checkLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.select', this.c.i18n.creationModal.select) +
-                    '</label>' +
-                    '</div>'),
-                toggleLabel: $$1('<label class="' + this.classes.nameLabel + ' ' + this.classes.toggleLabel + '">' +
-                    this.s.dt.i18n('stateRestore.creationModal.toggleLabel', this.c.i18n.creationModal.toggleLabel) +
-                    '</label>')
+                    '</div>')
             };
             table.settings()[0]._stateRestore = this;
             this._searchForStates();
@@ -1099,7 +1093,15 @@ var DataTable = $.fn.dataTable;
                     // We don't want to extend, but instead AND all properties of the saveState option
                     for (var _i = 0, _a = Object.keys(toggles.saveState); _i < _a.length; _i++) {
                         var key = _a[_i];
-                        if (!toggles.saveState[key]) {
+                        if (typeof toggles.saveState[key] === 'object') {
+                            for (var _b = 0, _c = Object.keys(toggles.saveState[key]); _b < _c.length; _b++) {
+                                var nestedKey = _c[_b];
+                                if (!toggles.saveState[key][nestedKey]) {
+                                    opts[key][nestedKey] = false;
+                                }
+                            }
+                        }
+                        else if (!toggles.saveState[key]) {
                             opts[key] = false;
                         }
                     }
@@ -1162,9 +1164,8 @@ var DataTable = $.fn.dataTable;
                 var state = _a[_i];
                 state.destroy();
             }
-            Object.values(this.dom).forEach(function (node) {
-                node.off();
-                node.remove();
+            $$1.each(this.dom, function (name, el) {
+                el.off().remove();
             });
             this.s.states = [];
             this.s.dt.off('.dtsr');
@@ -1179,15 +1180,14 @@ var DataTable = $.fn.dataTable;
             // Make sure that the state is up to date
             this.s.dt.state.save();
             var currState = this.s.dt.state();
+            var button;
             // Make all of the buttons inactive so that only any that match will be marked as active
-            var buttons = $$1('button.' + $$1.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
-            // Some of the styling libraries use a tags instead of buttons
-            if (buttons.length === 0) {
-                buttons = $$1('a.' + $$1.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
-            }
+            var buttons = this.s.dt.buttons().nodes();
             for (var _i = 0, buttons_1 = buttons; _i < buttons_1.length; _i++) {
-                var button = buttons_1[_i];
-                this.s.dt.button($$1(button).parent()[0]).active(false);
+                button = buttons_1[_i];
+                if ($$1(button).hasClass('dtsr-state') || $$1(button).children().hasClass('dtsr-state')) {
+                    this.s.dt.button(button).active(false);
+                }
             }
             var results = [];
             // Go through all of the states comparing if their state is the same to the current one
@@ -1200,9 +1200,10 @@ var DataTable = $.fn.dataTable;
                     });
                     // If so, find the corresponding button and mark it as active
                     for (var _c = 0, buttons_2 = buttons; _c < buttons_2.length; _c++) {
-                        var button = buttons_2[_c];
-                        if ($$1(button).text() === state.s.identifier) {
-                            this.s.dt.button($$1(button).parent()[0]).active(true);
+                        button = buttons_2[_c];
+                        var btn = this.s.dt.button(button);
+                        if (btn.text() === state.s.identifier) {
+                            btn.active(true);
                             break;
                         }
                     }
@@ -1299,12 +1300,13 @@ var DataTable = $.fn.dataTable;
         StateRestoreCollection.prototype._collectionRebuild = function () {
             var button = this.s.dt.button('SaveStateRestore:name');
             var stateButtons = [];
+            var i;
             // Need to get the original configuration object, so we can rebuild it
             // It might be nested, so need to traverse down the tree
             if (button[0]) {
                 var idxs = button.index().split('-');
                 stateButtons = button[0].inst.c.buttons;
-                for (var i = 0; i < idxs.length; i++) {
+                for (i = 0; i < idxs.length; i++) {
                     if (stateButtons[idxs[i]].buttons) {
                         stateButtons = stateButtons[idxs[i]].buttons;
                     }
@@ -1315,7 +1317,7 @@ var DataTable = $.fn.dataTable;
                 }
             }
             // remove any states from the previous rebuild - if they are still there they will be added later
-            for (var i = 0; i < stateButtons.length; i++) {
+            for (i = 0; i < stateButtons.length; i++) {
                 if (stateButtons[i].extend === 'stateRestore') {
                     stateButtons.splice(i, 1);
                     i--;
@@ -1354,7 +1356,7 @@ var DataTable = $.fn.dataTable;
                 // Construct the split property of each button
                 for (var _i = 0, _a = this.s.states; _i < _a.length; _i++) {
                     var state = _a[_i];
-                    var split = Object.assign([], this.c.splitSecondaries);
+                    var split = this.c.splitSecondaries.slice();
                     if (split.includes('updateState') && (!this.c.save || !state.c.save)) {
                         split.splice(split.indexOf('updateState'), 1);
                     }
@@ -1365,10 +1367,6 @@ var DataTable = $.fn.dataTable;
                     if (split.includes('removeState') && (!this.c.remove || !state.c.remove)) {
                         split.splice(split.indexOf('removeState'), 1);
                     }
-                    if (split.length > 0 &&
-                        !split.includes('<h3>' + state.s.identifier + '</h3>')) {
-                        split.unshift('<h3>' + state.s.identifier + '</h3>');
-                    }
                     stateButtons.push({
                         _stateRestore: state,
                         attr: {
@@ -1378,7 +1376,8 @@ var DataTable = $.fn.dataTable;
                             split: split
                         },
                         extend: 'stateRestore',
-                        text: state.s.identifier
+                        text: StateRestore.entityEncode(state.s.identifier),
+                        popoverTitle: StateRestore.entityEncode(state.s.identifier)
                     });
                 }
             }
@@ -1407,9 +1406,10 @@ var DataTable = $.fn.dataTable;
             var _this = this;
             this.dom.creation.empty();
             this.dom.creationForm.empty();
-            this.dom.nameInputRow.children('input').val(identifier);
+            this.dom.nameInputRow.find('input').val(identifier);
             this.dom.creationForm.append(this.dom.nameInputRow);
             var tableConfig = this.s.dt.settings()[0].oInit;
+            var toggle;
             var togglesToInsert = [];
             var toggleDefined = options !== undefined && options.toggle !== undefined;
             // Order toggle - check toggle and saving enabled
@@ -1526,8 +1526,8 @@ var DataTable = $.fn.dataTable;
             }
             // Make sure that the toggles are displayed alphabetically
             togglesToInsert.sort(function (a, b) {
-                var aVal = a.children('label.dtsr-check-label')[0].innerHTML;
-                var bVal = b.children('label.dtsr-check-label')[0].innerHTML;
+                var aVal = a.text();
+                var bVal = b.text();
                 if (aVal < bVal) {
                     return -1;
                 }
@@ -1539,12 +1539,18 @@ var DataTable = $.fn.dataTable;
                 }
             });
             // Append all of the toggles that are to be inserted
+            var checkboxesEl = this.dom.checkboxInputRow
+                .appendTo(this.dom.creationForm)
+                .find('div.dtsr-input')
+                .empty();
+            // let checkboxes = $('<div class="'+this.classes.formRow+' '+this.classes.checkRow+'"></div>')
+            // 	.appendTo(this.dom.creationForm);
             for (var _i = 0, togglesToInsert_1 = togglesToInsert; _i < togglesToInsert_1.length; _i++) {
-                var toggle = togglesToInsert_1[_i];
-                this.dom.creationForm.append(toggle);
+                toggle = togglesToInsert_1[_i];
+                checkboxesEl.append(toggle);
             }
             // Insert the toggle label next to the first check box
-            $$1(this.dom.creationForm.children('div.' + this.classes.checkRow)[0]).prepend(this.dom.toggleLabel);
+            // $(this.dom.creationForm.children('div.'+this.classes.checkRow)[0]).prepend(this.dom.toggleLabel);
             // Insert the creation modal and the background
             this.dom.background.appendTo(this.dom.dtContainer);
             this.dom.creation
@@ -1553,15 +1559,12 @@ var DataTable = $.fn.dataTable;
                 .append(this.dom.createButtonRow)
                 .appendTo(this.dom.dtContainer);
             $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
-            var _loop_2 = function (toggle) {
+            // Allow the label to be clicked to toggle the checkbox
+            for (var _a = 0, togglesToInsert_2 = togglesToInsert; _a < togglesToInsert_2.length; _a++) {
+                toggle = togglesToInsert_2[_a];
                 $$1(toggle.children('label:last-child')).on('click', function () {
                     toggle.children('input').prop('checked', !toggle.children('input').prop('checked'));
                 });
-            };
-            // Allow the label to be clicked to toggle the checkbox
-            for (var _a = 0, togglesToInsert_2 = togglesToInsert; _a < togglesToInsert_2.length; _a++) {
-                var toggle = togglesToInsert_2[_a];
-                _loop_2(toggle);
             }
             var creationButton = $$1('button.' + this.classes.creationButton.replace(/ /g, '.'));
             var inputs = this.dom.creationForm.find('input');
@@ -1589,19 +1592,19 @@ var DataTable = $.fn.dataTable;
             creationButton.on('click', function () {
                 // Get the values of the checkBoxes
                 var saveState = {
-                    colReorder: _this.dom.colReorderToggle.children('input').is(':checked'),
+                    colReorder: _this.dom.colReorderToggle.find('input').is(':checked'),
                     columns: {
-                        search: _this.dom.columnsSearchToggle.children('input').is(':checked'),
-                        visible: _this.dom.columnsVisibleToggle.children('input').is(':checked')
+                        search: _this.dom.columnsSearchToggle.find('input').is(':checked'),
+                        visible: _this.dom.columnsVisibleToggle.find('input').is(':checked')
                     },
-                    length: _this.dom.lengthToggle.children('input').is(':checked'),
-                    order: _this.dom.orderToggle.children('input').is(':checked'),
-                    paging: _this.dom.pagingToggle.children('input').is(':checked'),
-                    scroller: _this.dom.scrollerToggle.children('input').is(':checked'),
-                    search: _this.dom.searchToggle.children('input').is(':checked'),
-                    searchBuilder: _this.dom.searchBuilderToggle.children('input').is(':checked'),
-                    searchPanes: _this.dom.searchPanesToggle.children('input').is(':checked'),
-                    select: _this.dom.selectToggle.children('input').is(':checked')
+                    length: _this.dom.lengthToggle.find('input').is(':checked'),
+                    order: _this.dom.orderToggle.find('input').is(':checked'),
+                    paging: _this.dom.pagingToggle.find('input').is(':checked'),
+                    scroller: _this.dom.scrollerToggle.find('input').is(':checked'),
+                    search: _this.dom.searchToggle.find('input').is(':checked'),
+                    searchBuilder: _this.dom.searchBuilderToggle.find('input').is(':checked'),
+                    searchPanes: _this.dom.searchPanesToggle.find('input').is(':checked'),
+                    select: _this.dom.selectToggle.find('input').is(':checked')
                 };
                 // Call the buttons functionality passing in the identifier and what should be saved
                 var success = buttonAction($$1('input.' + _this.classes.nameInput.replace(/ /g, '.')).val(), { saveState: saveState });
@@ -1722,10 +1725,10 @@ var DataTable = $.fn.dataTable;
         StateRestoreCollection.prototype._searchForStates = function () {
             var _this = this;
             var keys = Object.keys(localStorage);
-            var _loop_3 = function (key) {
+            var _loop_2 = function (key) {
                 // eslint-disable-next-line no-useless-escape
-                if (key.match(new RegExp('^DataTables_stateRestore_.*_' + location.pathname.replace(/\//g, '/') + '$')) ||
-                    key.match(new RegExp('^DataTables_stateRestore_.*_' + location.pathname.replace(/\//g, '/') +
+                if (key.match(new RegExp('^DataTables_stateRestore_.*_' + location.pathname + '$')) ||
+                    key.match(new RegExp('^DataTables_stateRestore_.*_' + location.pathname +
                         '_' + this_2.s.dt.table().node().id + '$'))) {
                     var loadedState_1 = JSON.parse(localStorage.getItem(key));
                     if (loadedState_1.stateRestore.isPreDefined ||
@@ -1750,7 +1753,7 @@ var DataTable = $.fn.dataTable;
             var this_2 = this;
             for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
                 var key = keys_1[_i];
-                _loop_3(key);
+                _loop_2(key);
             }
         };
         StateRestoreCollection.version = '1.0.0';
@@ -1817,7 +1820,7 @@ var DataTable = $.fn.dataTable;
                     searchPanes: 'SearchPanes',
                     select: 'Select',
                     title: 'Create New State',
-                    toggleLabel: 'Includes:'
+                    toggleLabel: 'Include:'
                 },
                 duplicateError: 'A state with this name already exists.',
                 emptyError: 'Name cannot be empty.',
@@ -1875,7 +1878,7 @@ var DataTable = $.fn.dataTable;
         return StateRestoreCollection;
     }());
 
-    /*! StateRestore 1.3.0
+    /*! StateRestore 1.4.1
      * © SpryMedia Ltd - datatables.net/license
      */
     setJQuery$1($);
@@ -2016,6 +2019,7 @@ var DataTable = $.fn.dataTable;
             config._stateRestore.load();
             node.blur();
         },
+        className: 'dtsr-state',
         config: {
             split: ['updateState', 'renameState', 'removeState']
         },
@@ -2090,8 +2094,8 @@ var DataTable = $.fn.dataTable;
                 var splitString = defaultString.split('%d');
                 replaceRegex = [];
                 for (var _i = 0, splitString_1 = splitString; _i < splitString_1.length; _i++) {
-                    var split = splitString_1[_i];
-                    replaceRegex.push(new RegExp(split));
+                    var parts = splitString_1[_i];
+                    replaceRegex.push(new RegExp(parts));
                 }
             }
             var getId = function (identifier) {
@@ -2148,11 +2152,10 @@ var DataTable = $.fn.dataTable;
             }
             if (stateRestoreOpts._createInSaved) {
                 stateButtons.push('createState');
-                stateButtons.push('');
             }
             for (var _a = 0, states_3 = states; _a < states_3.length; _a++) {
                 var state = states_3[_a];
-                var split = Object.assign([], stateRestoreOpts.splitSecondaries);
+                var split = stateRestoreOpts.splitSecondaries.slice();
                 if (split.includes('updateState') && !stateRestoreOpts.save) {
                     split.splice(split.indexOf('updateState'), 1);
                 }
@@ -2163,10 +2166,6 @@ var DataTable = $.fn.dataTable;
                 if (split.includes('removeState') && !stateRestoreOpts.remove) {
                     split.splice(split.indexOf('removeState'), 1);
                 }
-                if (split.length > 0 &&
-                    !split.includes('<h3>' + state.s.identifier + '</h3>')) {
-                    split.unshift('<h3>' + state.s.identifier + '</h3>');
-                }
                 stateButtons.push({
                     _stateRestore: state,
                     attr: {
@@ -2176,7 +2175,8 @@ var DataTable = $.fn.dataTable;
                         split: split
                     },
                     extend: 'stateRestore',
-                    text: state.s.identifier
+                    text: StateRestore.entityEncode(state.s.identifier),
+                    popoverTitle: StateRestore.entityEncode(state.s.identifier)
                 });
             }
             dt.button('SaveStateRestore:name').collectionRebuild(stateButtons);
@@ -2267,12 +2267,13 @@ var DataTable = $.fn.dataTable;
         var states = dt.stateRestore.states();
         var button = dt.button('SaveStateRestore:name');
         var stateButtons = [];
+        var i;
         // Need to get the original configuration object, so we can rebuild it
         // It might be nested, so need to traverse down the tree
         if (button[0]) {
             var idxs = button.index().split('-');
             stateButtons = button[0].inst.c.buttons;
-            for (var i = 0; i < idxs.length; i++) {
+            for (i = 0; i < idxs.length; i++) {
                 if (stateButtons[idxs[i]].buttons) {
                     stateButtons = stateButtons[idxs[i]].buttons;
                 }
@@ -2284,7 +2285,7 @@ var DataTable = $.fn.dataTable;
         }
         var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
         // remove any states from the previous rebuild - if they are still there they will be added later
-        for (var i = 0; i < stateButtons.length; i++) {
+        for (i = 0; i < stateButtons.length; i++) {
             if (stateButtons[i].extend === 'stateRestore') {
                 stateButtons.splice(i, 1);
                 i--;
@@ -2301,7 +2302,7 @@ var DataTable = $.fn.dataTable;
         else {
             for (var _i = 0, states_5 = states; _i < states_5.length; _i++) {
                 var state = states_5[_i];
-                var split = Object.assign([], stateRestoreOpts.splitSecondaries);
+                var split = stateRestoreOpts.splitSecondaries.slice();
                 if (split.includes('updateState') && !stateRestoreOpts.save) {
                     split.splice(split.indexOf('updateState'), 1);
                 }
@@ -2312,10 +2313,6 @@ var DataTable = $.fn.dataTable;
                 if (split.includes('removeState') && !stateRestoreOpts.remove) {
                     split.splice(split.indexOf('removeState'), 1);
                 }
-                if (split.length > 0 &&
-                    !split.includes('<h3>' + state.s.identifier + '</h3>')) {
-                    split.unshift('<h3>' + state.s.identifier + '</h3>');
-                }
                 stateButtons.push({
                     _stateRestore: state,
                     attr: {
@@ -2325,7 +2322,8 @@ var DataTable = $.fn.dataTable;
                         split: split
                     },
                     extend: 'stateRestore',
-                    text: state.s.identifier
+                    text: StateRestore.entityEncode(state.s.identifier),
+                    popoverTitle: StateRestore.entityEncode(state.s.identifier)
                 });
             }
         }

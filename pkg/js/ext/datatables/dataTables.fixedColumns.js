@@ -611,7 +611,7 @@ var DataTable = $.fn.dataTable;
         }
     });
 
-})();
+}());
 
 
 return DataTable;

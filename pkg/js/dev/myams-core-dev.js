@@ -299,9 +299,11 @@ function getModules(element) {
     modules = modules.concat(mods.trim().split(/[\s,;]+/));
   } else if (mods) {
     for (const [name, props] of Object.entries(mods)) {
-      const entry = {};
-      entry[name] = props;
-      modules.push(entry);
+      if (modules.find(elt => elt === name || elt[name]) === undefined) {
+        const entry = {};
+        entry[name] = props;
+        modules.push(entry);
+      }
     }
   }
   $('[data-ams-modules]', element).each((idx, elt) => {
@@ -310,9 +312,11 @@ function getModules(element) {
       modules = modules.concat(mods.trim().split(/[\s,;]+/));
     } else if (mods) {
       for (const [name, props] of Object.entries(mods)) {
-        const entry = {};
-        entry[name] = props;
-        modules.push(entry);
+        if (modules.find(elt => elt === name || elt[name]) === undefined) {
+          const entry = {};
+          entry[name] = props;
+          modules.push(entry);
+        }
       }
     }
   });
@@ -1272,7 +1276,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.6.0  */
+/** Version: 2.6.1  */
 }();
 /******/ })()
 ;

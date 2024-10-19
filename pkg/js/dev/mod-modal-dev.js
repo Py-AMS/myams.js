@@ -71,7 +71,7 @@
       zIndex = zIndexModal + 100 * visibleModalsCount;
     dialog.css('z-index', zIndex);
     setTimeout(() => {
-      $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
+      $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack').insertBefore(dialog);
     }, 0);
     // Check form contents before closing modals
     $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', evt => {

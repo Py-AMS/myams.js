@@ -2291,7 +2291,6 @@
 
       /* eslint-enable */
     })();
-
     var dir = function (elem, dir, until) {
       var matched = [],
         truncate = until !== undefined;

@@ -384,7 +384,6 @@
           } else {
             x = 10000000; // = l'an 1000 ...
           }
-
           return x;
         },
         "date-euro-asc": (a, b) => {
@@ -405,7 +404,6 @@
           } else {
             x = 100000000000; // = l'an 1000 ...
           }
-
           return x;
         },
         "datetime-euro-asc": (a, b) => {
@@ -509,7 +507,7 @@
     return new Promise((resolve, reject) => {
       const tables = $('.datatable', element);
       if (tables.length > 0) {
-        MyAMS.ajax.check($.fn.dataTable, `${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then(firstLoad => {
+        MyAMS.ajax.check($.fn.dataTable, `${MyAMS.env.baseURL}../ext/datatables/jquery.dataTables${MyAMS.env.extext}.js`).then(firstLoad => {
           const required = [];
           if (firstLoad) {
             required.push(MyAMS.core.getScript(`${baseJS}dataTables.bootstrap4${MyAMS.env.extext}.js`));
@@ -1179,7 +1177,6 @@
                 if (image.data('imgAreaSelect')) {
                   return; // already initialized
                 }
-
                 const data = image.data(),
                   parentSelector = data.amsImgareaselectParent || data.amsParent,
                   parent = parentSelector ? image.parents(parentSelector) : 'body',
@@ -1306,7 +1303,6 @@
                 if (data.select2) {
                   return; // already initialized
                 }
-
                 const defaultOptions = {
                   theme: data.amsSelect2Theme || data.amsTheme || 'bootstrap4',
                   language: data.amsSelect2Language || data.amsLanguage || MyAMS.i18n.language,

@@ -155,11 +155,17 @@
         } else {
           addr = MyAMS.ajax.getAddr() + url;
         }
+        let postData;
+        if (data && options && options.contentType && options.contentType.startsWith('application/json')) {
+          postData = JSON.stringify(data);
+        } else {
+          postData = $.param(data || null);
+        }
         const defaults = {
           url: addr,
           type: 'post',
           cache: false,
-          data: $.param(data || null),
+          data: postData,
           dataType: 'json',
           beforeSend: checkCsrfHeader
         };

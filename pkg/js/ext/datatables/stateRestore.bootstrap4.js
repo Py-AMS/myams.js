@@ -47,13 +47,13 @@
 		// Browser
 		factory( jQuery, window, document );
 	}
-}(function( $, window, document, undefined ) {
+}(function( $, window, document ) {
 'use strict';
 var DataTable = $.fn.dataTable;
 
 
 $.extend(true, DataTable.StateRestoreCollection.classes, {
-    checkBox: 'dtsr-check-box form-check-input',
+    checkBox: 'dtsr-check-box',
     creationButton: 'dtsr-creation-button btn btn-secondary',
     creationForm: 'dtsr-creation-form modal-body',
     creationText: 'dtsr-creation-text modal-header',

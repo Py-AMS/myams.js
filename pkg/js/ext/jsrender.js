@@ -13,14 +13,14 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  /*! JsRender v1.0.13: http://jsviews.com/#jsrender */
+  /*! JsRender v1.0.15: http://jsviews.com/#jsrender */
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
   /*
    * Best-of-breed templating in browser or on Node.js.
    * Does not require jQuery, or HTML DOM
    * Integrates with JsViews (http://jsviews.com/#jsviews)
    *
-   * Copyright 2021, Boris Moore
+   * Copyright 2024, Boris Moore
    * Released under the MIT License.
    */
 
@@ -59,7 +59,7 @@
 
     $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-    var versionNumber = "v1.0.13",
+    var versionNumber = "v1.0.15",
       jsvStoreName,
       rTag,
       rTmplString,
@@ -205,7 +205,6 @@
       },
       map: dataMap // If jsObservable loaded first, use that definition of dataMap
     };
-
     function getDerivedMethod(baseMethod, method) {
       return function () {
         var ret,
@@ -228,7 +227,6 @@
         method);
         method._d = (baseMethod && baseMethod._d || 0) + 1; // Add flag for derived method (incremented for derived of derived...)
       }
-
       return method;
     }
     function tagHandlersFromProps(tag, tagCtx) {
@@ -243,7 +241,6 @@
         }
       }
     }
-
     function retVal(val) {
       return val;
     }
@@ -306,7 +303,6 @@
       if (!/^(\W|_){5}$/.test(openChars + closeChars + linkChar)) {
         error("Invalid delimiters"); // Must be non-word characters, and openChars and closeChars must each be length 2
       }
-
       delimOpenChar0 = openChars[0];
       delimOpenChar1 = openChars[1];
       delimCloseChar0 = closeChars[0];
@@ -425,7 +421,6 @@
       if (ltOb) {
         ltOb.lt = ltOb.lt || i < l; // If i < l there was an object in the path not yet available
       }
-
       return ob === undefined ? fn ? noop : "" : fn ? function () {
         return ob.apply(prevOb, arguments);
       } : ob;
@@ -462,14 +457,13 @@
           if (!res || !res._cxp) {
             // Not a contextual parameter
             // Set storeView to tag (if this is a tag.ctxPrm() call) or to root view ("data" view of linked template)
-            storeView = storeView.tagCtx || $isFunction(res) ? storeView // Is a tag, not a view, or is a computed contextual parameter, so scope to the callView, no the 'scope view'
+            storeView = storeView.tagCtx || $isFunction(res) ? storeView // Is a tag, not a view, or is a computed contextual parameter, so scope to the callView, not the 'scope view'
             : (storeView = storeView.scope || storeView, !storeView.isTop && storeView.ctx.tag // If this view is in a tag, set storeView to the tag
             || storeView);
             if (res !== undefined && storeView.tagCtx) {
               // If storeView is a tag, but the contextual parameter has been set at at higher level (e.g. helpers)...
               storeView = storeView.tagCtx.view.scope; // then move storeView to the outer level (scope of tag container view)
             }
-
             store = storeView._ocps;
             res = store && store.hasOwnProperty(key) && store[key] || res;
             if (!(res && res._cxp) && (get || isUpdate)) {
@@ -521,7 +515,6 @@
           };
           $extend(wrapped, res); // Attach same expandos (if any) to the wrapped function
         }
-
         return wrapped || res;
       }
     }
@@ -569,7 +562,6 @@
               unlinked: true,
               lt: tagCtx.lt // If a late path @some.path has not returned @some object, mark tag as late
             },
-
             inline: !linkCtx,
             tagName: ":",
             convert: converter,
@@ -586,7 +578,6 @@
               bindTo.unshift(argsLen); // Bind to all the arguments - generate bindTo array: [0,1,2...]
             }
           }
-
           if (linkCtx) {
             linkCtx.tag = tag;
             tag.linkCtx = linkCtx;
@@ -635,7 +626,6 @@
         // If there is a converter, use a copy of the tagCtx.args array for rendering, and replace the args[0] in
         args = args.slice(); // the copied array with the converted value. But we do not modify the value of tag.tagCtx.args[0] (the original args array)
       }
-
       if (bindFrom) {
         // Get the values of the boundArgs
         boundArgs = [];
@@ -648,13 +638,11 @@
           args = boundArgs; // Call to bndArgs() - returns the boundArgs
         }
       }
-
       if (converter) {
         converter = converter.apply(tag, boundArgs || args);
         if (converter === undefined) {
           return args; // Returning undefined from a converter is equivalent to not having a converter.
         }
-
         bindFrom = bindFrom || [0];
         l = bindFrom.length;
         if (!$isArray(converter) || converter.arg0 !== false && (l === 1 || converter.length !== l || converter.arg0)) {
@@ -717,7 +705,6 @@
             }
           }
         }
-
         return bindArray || [0];
       }
       parentView = parentView || topView;
@@ -771,7 +758,6 @@
       if (onError === undefined && boundTag && (boundTag._lr = tagDef.lateRender && boundTag._lr !== false || boundTag._lr)) {
         onError = ""; // If lateRender, set temporary onError, to skip initial rendering (and render just "")
       }
-
       if (onError !== undefined) {
         ret += onError;
         tagCtxs = onError = [{
@@ -794,7 +780,6 @@
           if (content && parentTmpl.tmpls) {
             tagCtx.tmpl = tagCtx.content = parentTmpl.tmpls[content - 1]; // Set the tmpl property to the content of the block tag
           }
-
           tagCtx.index = i;
           tagCtx.ctxPrm = contextParameter;
           tagCtx.render = renderContent;
@@ -803,7 +788,6 @@
           tagCtx.view = parentView;
           tagCtx.ctx = extendCtx(extendCtx(tagCtx.ctx, tagDef && tagDef.ctx), ctx); // Clone and extend parentView.ctx
         }
-
         if (tmpl = tagCtx.props.tmpl) {
           // If the tmpl property is overridden, set the value (when initializing, or, in case of binding: ^tmpl=..., when updating)
           tagCtx.tmpl = parentView._getTmpl(tmpl);
@@ -841,7 +825,6 @@
         if (tagDataMap && tagCtxs) {
           tagCtx.map = tagCtxs[i].map; // Copy over the compiled map instance from the previous tagCtxs to the refreshed ones
         }
-
         if (!tag.flow) {
           tagCtxCtx = tagCtx.ctx = tagCtx.ctx || {};
 
@@ -851,7 +834,6 @@
             tags[parentTag.tagName] = parentTag;
             //TODO better perf for childTags: parentTag.tags.push(tag);
           }
-
           tags[tag.tagName] = tagCtxCtx.tag = tag;
           tagCtxCtx.tagCtx = tagCtx;
         }
@@ -947,7 +929,6 @@
               if (thisMap && thisMap.src) {
                 thisMap.unmap(); // only called if observable map - not when only used in JsRender, e.g. by {{props}}
               }
-
               mapDef.map(args[0], tagCtx, thisMap, !tag._.bnd);
               thisMap = tagCtx.map;
             }
@@ -974,7 +955,6 @@
           if (!args.length) {
             args = [parentView]; // no arguments - (e.g. {{else}}) get data context from view.
           }
-
           if (itemRet === undefined) {
             contentCtx = args[0]; // Default data context for wrapped block content is the first argument
             if (tag.contentCtx) {
@@ -985,10 +965,8 @@
           }
           ret = ret ? ret + (itemRet || "") : itemRet !== undefined ? "" + itemRet : undefined; // If no return value from render, and no template/content tagCtx.render(...), return undefined
         }
-
         tag.rendering = tag.rendering.rndr; // Remove tag.rendering object (if this is outermost render call. (In case of nested calls)
       }
-
       tag.tagCtx = tagCtxs[0];
       tag.ctx = tag.tagCtx.ctx;
       if (tag._.noVws && tag.inline) {
@@ -1034,7 +1012,6 @@
           _ct: $subSettings._cchCt
         }; // Used for caching results of computed properties and helpers (view.getCache)
       }
-
       if (!parentView || parentView.type === "top") {
         (self.ctx = context || {}).root = self.data;
       }
@@ -1064,7 +1041,6 @@
         self.root = self; // view whose parent is top view
       }
     }
-
     View.prototype = {
       get: getView,
       getIndex: getIndex,
@@ -1210,7 +1186,6 @@
                   value = $.data(elem)[jsvTmpl]; // Get cached compiled template
                 }
               }
-
               if (!currentName || !value) {
                 // Not yet compiled, or cached version lost
                 name = name || ($.fn ? jsvTmpl : value);
@@ -1231,7 +1206,6 @@
           value = undefined;
           // If value is not a string. HTML element, or compiled template, return undefined
         }
-
         return value;
       }
       var elem,
@@ -1452,7 +1426,6 @@
             model[getter](ob); // Update non-typed property
           }
         });
-
         for (prop in data) {
           if (prop !== $expando && !getterNames[prop]) {
             model[prop] = data[prop];
@@ -1509,7 +1482,6 @@
             if (!arguments.length) {
               return this[privField]; // If there is no argument, use as a getter
             }
-
             if ($observable) {
               $observable(this).setProperty(getter, val);
             } else {
@@ -1635,7 +1607,6 @@
             item = compile.call(thisStore, name, item, parentTmpl, 0) || {};
             item._is = storeName; // Only do this for compiled objects (tags, templates...)
           }
-
           if (name) {
             thisStore[name] = item;
           }
@@ -1721,7 +1692,6 @@
       } else if (typeof context !== OBJECT) {
         context = undefined; // context must be a boolean (noIteration) or a plain object
       }
-
       if (tag = this.tag) {
         // This is a call from renderTag or tagCtx.render(...)
         tagCtx = this;
@@ -1738,7 +1708,6 @@
         if (!parentView && data && data._is === "view") {
           view = data; // When passing in a view to render or link (and not passing in a parent view) use the passed-in view as parentView
         }
-
         if (view && data === view) {
           // Inherit the data from the parent view.
           data = view.data;
@@ -1748,7 +1717,6 @@
         if (isTopRenderCall) {
           (context = context || {}).root = data; // Provide ~root as shortcut to top-level data.
         }
-
         if (!isRenderCall || $subSettingsAdvanced.useViews || tmpl.useViews || view && view !== topView) {
           result = renderWithViews(tmpl, data, context, noIteration, view, key, onRender, tag);
         } else {
@@ -1824,7 +1792,6 @@
         } else {
           contentTmpl = view.content; // Nested views inherit same wrapped #content property
         }
-
         if (tagCtx.props.link === false) {
           // link=false setting on block tag
           // We will override inherited value of link by the explicit setting link=false taken from props
@@ -1916,10 +1883,8 @@
       if ($subSettings.onError && (fallback = $subSettings.onError.call(view.data, e, fallback && message, view)) !== undefined) {
         message = fallback; // There is a settings.debugMode(handler) onError override. Call it, and use return value (if any) to replace message
       }
-
       return view && !view._lc ? $converters.html(message) : message; // For data-link=\"{... onError=...}"... See onDataLinkedTagChange
     }
-
     function error(message) {
       throw new $sub.Err(message);
     }
@@ -2032,7 +1997,6 @@
               if (key === "this:") {
                 keyValue = "undefined"; // this=some.path is always a to parameter (one-way), so don't need to compile/evaluate some.path initialization
               }
-
               if (param) {
                 isLateOb = isLateOb || param[0] === "@";
               }
@@ -2054,7 +2018,6 @@
                 if (keyToken === "lateRender") {
                   late = param !== "false"; // Render after first pass
                 }
-
                 props += key + keyValue + ",";
                 paramsProps += key + "'" + param + "',";
                 hasHandlers = hasHandlers || rHasHandlers.test(keyToken);
@@ -2065,7 +2028,6 @@
           if (pathBindings && pathBindings[0]) {
             pathBindings.pop(); // Remove the binding that was prepared for next arg. (There is always an extra one ready).
           }
-
           newNode = [tagName, converter || !!convertBack || hasHandlers || "", block && [], parsedParam(paramsArgs || (tagName === ":" ? "'#data'," : ""), paramsProps, paramsCtxProps),
           // {{:}} equivalent to {{:#data}}
           parsedParam(args || (tagName === ":" ? "data," : ""), props, ctxProps), onError, useTrigger, late, isLateOb, pathBindings || 0];
@@ -2132,7 +2094,6 @@
         while (i--) {
           bindings.unshift(astTop[i][9]); // With data-link expressions, pathBindings array for tagCtx[i] is astTop[i][9]
         }
-
         setPaths(result, bindings);
       } else {
         result = buildCode(astTop, tmpl);
@@ -2155,7 +2116,6 @@
         }
       }
     }
-
     function parsedParam(args, props, ctx) {
       return [args.slice(0, -1), props.slice(0, -1), ctx.slice(0, -1)];
     }
@@ -2216,7 +2176,6 @@
         if (bound && !eq) {
           path = bound + path; // e.g. some.fn(...)^some.path - so here path is "^some.path"
         }
-
         operator = operator || "";
         lftPrn2 = lftPrn2 || "";
         lftPrn = lftPrn || lftPrn0 || lftPrn2;
@@ -2263,7 +2222,6 @@
                   path: binds.pop()
                 }); // Insert exprOb object, to be used during binding to return the computed object
               }
-
               if (theOb && theOb.sb === newOb) {
                 compiledPath[fnDp] = compiledPath[fnDp - 1].slice(theOb._cpPthSt) + compiledPath[fnDp];
                 compiledPath[fnDp - 1] = compiledPath[fnDp - 1].slice(0, theOb._cpPthSt);
@@ -2412,7 +2370,6 @@
       }
       return !prnDp && result || syntaxError(params); // Syntax error if unbalanced parens in params expression
     }
-
     function buildCode(ast, tmpl, isLinkExpr) {
       // Build the template function code from the AST nodes, and set as property on the passed-in template object
       // Used for compiling templates, and also by JsViews to build functions for data link expressions
@@ -2509,7 +2466,6 @@
                 tmplBindingKey = tmplBindings.push(1); // Add placeholder in tmplBindings for compiled function
               }
             }
-
             useViews = useViews || params[1] || params[2] || pathBindings || /view.(?!index)/.test(params[0]);
             // useViews is for perf optimization. For render() we only use views if necessary - for the more advanced scenarios.
             // We use views if there are props, contextual properties or args with #... (other than #index) - but you can force
@@ -2584,7 +2540,6 @@
                 if (isLinkExpr) {
                   return code; // For a data-link expression we return the compiled tagCtxs function
                 }
-
                 boundOnErrStart = tagRender + tmplBindingKey + ",undefined,";
                 boundOnErrEnd = ")";
               }
@@ -2656,10 +2611,8 @@
           map.propsArr = map.options && propsArr; // If bound {^{props}} and not isRenderCall, store propsArr on map (map.options is defined only for bound, && !isRenderCall)
         }
       }
-
       return getTargetSorted(propsArr, tagCtx); // Obtains map.tgt, by filtering, sorting and splicing the full propsArr
     }
-
     function getTargetSorted(value, tagCtx) {
       // getTgt
       var mapped,
@@ -2696,7 +2649,6 @@
       } else if ((sort || reverse < 0) && !tag.dataMap) {
         value = value.slice(); // Clone array first if not already a new array
       }
-
       if ($isFunction(sort)) {
         value = value.sort(function () {
           // Wrap the sort function to provide tagCtx as 'this' pointer
@@ -2954,7 +2906,6 @@
               }
               // If nothing was rendered we will look at the next {{else}}. Otherwise, we are done.
             }
-
             return result;
           },
           setDataMap: function (tagCtxs) {
@@ -2995,7 +2946,6 @@
         },
         dbg: $helpers.dbg = $converters.dbg = dbgBreak // Register {{dbg/}}, {{dbg:...}} and ~dbg() to throw and catch, as breakpoints for debugging.
       });
-
       $converters({
         html: htmlEncode,
         attr: htmlEncode,

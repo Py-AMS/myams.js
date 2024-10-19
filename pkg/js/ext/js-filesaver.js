@@ -158,7 +158,6 @@
           if (popup) popup.location.href = url;else location = url;
           popup = null; // reverse-tabnabbing #460
         };
-
         reader.readAsDataURL(blob);
       } else {
         var URL = _global.URL || _global.webkitURL;
@@ -171,7 +170,6 @@
         }, 4E4); // 40s
       }
     };
-
     _global.saveAs = saveAs.saveAs = saveAs;
     if (typeof module !== 'undefined') {
       module.exports = saveAs;

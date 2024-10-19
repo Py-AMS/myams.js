@@ -299,9 +299,11 @@ function getModules(element) {
     modules = modules.concat(mods.trim().split(/[\s,;]+/));
   } else if (mods) {
     for (const [name, props] of Object.entries(mods)) {
-      const entry = {};
-      entry[name] = props;
-      modules.push(entry);
+      if (modules.find(elt => elt === name || elt[name]) === undefined) {
+        const entry = {};
+        entry[name] = props;
+        modules.push(entry);
+      }
     }
   }
   $('[data-ams-modules]', element).each((idx, elt) => {
@@ -310,9 +312,11 @@ function getModules(element) {
       modules = modules.concat(mods.trim().split(/[\s,;]+/));
     } else if (mods) {
       for (const [name, props] of Object.entries(mods)) {
-        const entry = {};
-        entry[name] = props;
-        modules.push(entry);
+        if (modules.find(elt => elt === name || elt[name]) === undefined) {
+          const entry = {};
+          entry[name] = props;
+          modules.push(entry);
+        }
       }
     }
   });
@@ -1329,11 +1333,17 @@ const ajax = {
       } else {
         addr = MyAMS.ajax.getAddr() + url;
       }
+      let postData;
+      if (data && options && options.contentType && options.contentType.startsWith('application/json')) {
+        postData = JSON.stringify(data);
+      } else {
+        postData = $.param(data || null);
+      }
       const defaults = {
         url: addr,
         type: 'post',
         cache: false,
-        data: $.param(data || null),
+        data: postData,
         dataType: 'json',
         beforeSend: checkCsrfHeader
       };
@@ -3597,29 +3607,25 @@ function getFormProgressState(form, settings, postData, progress, target) {
   function _getProgressState() {
     const data = {};
     data[progress.fieldname] = postData[progress.fieldname];
-    MyAMS.ajax.post(progress.handler, data).then(MyAMS.core.getFunctionByName(progress.callback || function (result, status) {
+    MyAMS.ajax.post(progress.handler, data).then(MyAMS.core.getFunctionByName(progress.callback || function (result) {
       if ($.isArray(result)) {
-        status = result[1];
         result = result[0];
       }
-      if (status === 'success') {
-        if (result.status === 'running') {
-          if (result.message) {
-            target.text(result.message);
+      if (result.status === 'running') {
+        const progressTarget = $(progress.target);
+        if (result.message) {
+          progressTarget.text(result.message);
+        } else {
+          let text = result.progress || progressTarget.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
+          if (result.current) {
+            text += `: ${result.current} / ${result.length || 100}`;
           } else {
-            let text = result.progress || target.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
-            if (result.current) {
-              text += `: ${result.current} / ${result.length || 100}`;
-            } else {
-              text += '...';
-            }
-            target.text(text);
+            text += '...';
           }
-          timeout = setTimeout(_getProgressState, progress.interval);
-        } else if (result.status === 'finished') {
-          _clearProgressState();
+          progressTarget.text(text);
         }
-      } else {
+        timeout = setTimeout(_getProgressState, progress.interval);
+      } else if (result.status === 'finished') {
         _clearProgressState();
       }
     }), _clearProgressState);
@@ -4542,7 +4548,7 @@ function modalShownEventHandler(evt) {
     zIndex = zIndexModal + 100 * visibleModalsCount;
   dialog.css('z-index', zIndex);
   setTimeout(() => {
-    $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack');
+    $('.modal-backdrop').not('.modal-stack').first().css('z-index', zIndex - 10).addClass('modal-stack').insertBefore(dialog);
   }, 0);
   // Check form contents before closing modals
   $(dialog).off('click', '[data-dismiss="modal"]').on('click', '[data-dismiss="modal"]', evt => {
@@ -5947,7 +5953,6 @@ const _datatablesHelpers = {
         } else {
           x = 10000000; // = l'an 1000 ...
         }
-
         return x;
       },
       "date-euro-asc": (a, b) => {
@@ -5968,7 +5973,6 @@ const _datatablesHelpers = {
         } else {
           x = 100000000000; // = l'an 1000 ...
         }
-
         return x;
       },
       "datetime-euro-asc": (a, b) => {
@@ -6072,7 +6076,7 @@ function datatables(element) {
   return new Promise((resolve, reject) => {
     const tables = $('.datatable', element);
     if (tables.length > 0) {
-      MyAMS.ajax.check($.fn.dataTable, `${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then(firstLoad => {
+      MyAMS.ajax.check($.fn.dataTable, `${MyAMS.env.baseURL}../ext/datatables/jquery.dataTables${MyAMS.env.extext}.js`).then(firstLoad => {
         const required = [];
         if (firstLoad) {
           required.push(MyAMS.core.getScript(`${baseJS}dataTables.bootstrap4${MyAMS.env.extext}.js`));
@@ -6742,7 +6746,6 @@ function imgAreaSelect(element) {
               if (image.data('imgAreaSelect')) {
                 return; // already initialized
               }
-
               const data = image.data(),
                 parentSelector = data.amsImgareaselectParent || data.amsParent,
                 parent = parentSelector ? image.parents(parentSelector) : 'body',
@@ -6869,7 +6872,6 @@ function select2(element) {
               if (data.select2) {
                 return; // already initialized
               }
-
               const defaultOptions = {
                 theme: data.amsSelect2Theme || data.amsTheme || 'bootstrap4',
                 language: data.amsSelect2Language || data.amsLanguage || MyAMS.i18n.language,
@@ -7964,14 +7966,14 @@ if (window.MyAMS) {
   \*******************************************/
 /***/ (function(module) {
 
-/*! JsRender v1.0.13: http://jsviews.com/#jsrender */
+/*! JsRender v1.0.15: http://jsviews.com/#jsrender */
 /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
 /*
  * Best-of-breed templating in browser or on Node.js.
  * Does not require jQuery, or HTML DOM
  * Integrates with JsViews (http://jsviews.com/#jsviews)
  *
- * Copyright 2021, Boris Moore
+ * Copyright 2024, Boris Moore
  * Released under the MIT License.
  */
 
@@ -8004,7 +8006,7 @@ var setGlobals = $ === false; // Only set globals if script block in browser (no
 
 $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-var versionNumber = "v1.0.13",
+var versionNumber = "v1.0.15",
 	jsvStoreName, rTag, rTmplString, topView, $views, $expando,
 	_ocp = "_ocp",      // Observable contextual parameter
 
@@ -8392,7 +8394,7 @@ function contextParameter(key, value, get) {
 				// Not a contextual parameter
 				// Set storeView to tag (if this is a tag.ctxPrm() call) or to root view ("data" view of linked template)
 				storeView = storeView.tagCtx || $isFunction(res)
-					? storeView // Is a tag, not a view, or is a computed contextual parameter, so scope to the callView, no the 'scope view'
+					? storeView // Is a tag, not a view, or is a computed contextual parameter, so scope to the callView, not the 'scope view'
 					: (storeView = storeView.scope || storeView,
 						!storeView.isTop && storeView.ctx.tag // If this view is in a tag, set storeView to the tag
 							|| storeView);
@@ -11156,7 +11158,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.6.0  */
+/** Version: 2.6.1  */
 }();
 /******/ })()
 ;
