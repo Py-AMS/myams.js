@@ -502,7 +502,7 @@ export function datatables(element) {
 		const tables = $('.datatable', element);
 		if (tables.length > 0) {
 			MyAMS.ajax.check($.fn.dataTable,
-				`${MyAMS.env.baseURL}../ext/datatables/dataTables${MyAMS.env.extext}.js`).then((firstLoad) => {
+				`${MyAMS.env.baseURL}../ext/datatables/jquery.dataTables${MyAMS.env.extext}.js`).then((firstLoad) => {
 				const required = [];
 				if (firstLoad) {
 					required.push(MyAMS.core.getScript(`${baseJS}dataTables.bootstrap4${MyAMS.env.extext}.js`));
