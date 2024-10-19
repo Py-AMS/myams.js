@@ -749,29 +749,25 @@ export function getFormProgressState(form, settings, postData, progress, target)
 		const data = {};
 		data[progress.fieldname] = postData[progress.fieldname];
 		MyAMS.ajax.post(progress.handler, data)
-			.then(MyAMS.core.getFunctionByName(progress.callback || function(result, status) {
+			.then(MyAMS.core.getFunctionByName(progress.callback || function (result) {
 				if ($.isArray(result)) {
-					status = result[1];
 					result = result[0];
 				}
-				if (status === 'success') {
-					if (result.status === 'running') {
-						if (result.message) {
-							target.text(result.message);
+				if (result.status === 'running') {
+					const progressTarget = $(progress.target);
+					if (result.message) {
+						progressTarget.text(result.message);
+					} else {
+						let text = result.progress || progressTarget.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
+						if (result.current) {
+							text += `: ${result.current} / ${result.length || 100}`;
 						} else {
-							let text = result.progress || target.data('ams-progress-text') || MyAMS.i18n.PROGRESS;
-							if (result.current) {
-								text += `: ${result.current} / ${result.length || 100}`;
-							} else {
-								text += '...';
-							}
-							target.text(text);
+							text += '...';
 						}
-						timeout = setTimeout(_getProgressState, progress.interval);
-					} else if (result.status === 'finished') {
-						_clearProgressState();
+						progressTarget.text(text);
 					}
-				} else {
+					timeout = setTimeout(_getProgressState, progress.interval);
+				} else if (result.status === 'finished') {
 					_clearProgressState();
 				}
 			}), _clearProgressState);
