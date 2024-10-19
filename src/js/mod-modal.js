@@ -58,7 +58,8 @@ export function modalShownEventHandler(evt) {
 		$('.modal-backdrop').not('.modal-stack')
 			.first()
 			.css('z-index', zIndex - 10)
-			.addClass('modal-stack');
+			.addClass('modal-stack')
+			.insertBefore(dialog);
 	}, 0);
 	// Check form contents before closing modals
 	$(dialog).off('click', '[data-dismiss="modal"]')
