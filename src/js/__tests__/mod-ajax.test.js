@@ -288,6 +288,24 @@ describe("MyAMS.ajax unit tests", () => {
 		});
 	});
 
+	test("Test MyAMS.ajax post function with params and options with content-type", () => {
+
+		const
+			url = 'http://example.com/url',
+			oldAjax = $.ajax;
+		$.ajax = jest.fn().mockImplementation((settings) => {
+			return Promise.resolve({settings: settings, status: 'success'});
+		});
+		return ajax.post(url, {fieldName: 'value'}, {dataType: 'text', contentType: 'application/json'}).then((result) => {
+			expect(result.settings.type).toBe('post');
+			expect(result.settings.url).toBe(url);
+			expect(result.settings.data).toBe('{"fieldName":"value"}');
+			expect(result.settings.dataType).toBe('text');
+			expect(result.status).toBe('success');
+			$.ajax = oldAjax;
+		});
+	});
+
 
 	// Test MyAMS.ajax getResponse function
 	test("Test MyAMS.ajax getResponse function with JSON result", () => {
