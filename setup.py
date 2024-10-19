@@ -23,7 +23,7 @@ DOCS = os.path.join(os.path.dirname(__file__),
 README = os.path.join(DOCS, 'README.rst')
 HISTORY = os.path.join(DOCS, 'HISTORY.rst')
 
-version = '2.6.1'
+version = '2.7.0'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
 data_dir = 'pkg'
@@ -71,7 +71,7 @@ setup(name='myams_js',
           'setuptools',
           # -*- Extra requirements: -*-
           'fanstatic',
-          'pyams_utils >= 1.2.0'
+          'pyams_utils >= 2.0.0'
       ],
       entry_points={
           'fanstatic.libraries': [

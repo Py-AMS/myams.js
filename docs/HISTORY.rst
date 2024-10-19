@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.7.0
+-----
+ - updated build packages and dependencies (JQuery-UI, JQuery-validation, Datatables, JSRender...)
+ - avoid duplicated modules names on dynamic import
+ - added support for "application/json" content-type on AJAX requests
+ - updated form submit progress getter
+ - updated modal backdrop DOM position to handle static modals correctly
+
 2.6.1
 -----
  - added gradient style to calendar events
