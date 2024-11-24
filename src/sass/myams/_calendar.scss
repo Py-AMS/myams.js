@@ -13,6 +13,40 @@
   }
 }
 
+.calendar-wrapper {
+  .calendar-parent {
+    &:not(.col) {
+      > div {
+        display: none;
+      }
+    }
+  }
+  &.transposed {
+    .calendar-parent {
+      &.border {
+        margin: calc(1rem - 1px) 14px 0 !important;
+        width: calc(100% - 30px) !important;
+      }
+    }
+  }
+  &:not(.transposed) {
+    .calendar-parent {
+      &:not(.col) {
+        width: 40px;
+
+        > h3 {
+          position: absolute;
+          transform: rotate(90deg);
+          top: 0;
+          left: 0.25em;
+          width: 30px;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
 .calendar {
   font-size: 85%;
 
