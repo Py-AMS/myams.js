@@ -3535,10 +3535,8 @@ pkg/js/ext/datatables/dataTables.fixedColumns.js
 pkg/js/ext/datatables/dataTables.fixedColumns.min.js
 pkg/js/ext/datatables/dataTables.fixedHeader.js
 pkg/js/ext/datatables/dataTables.fixedHeader.min.js
-pkg/js/ext/datatables/dataTables.js
 pkg/js/ext/datatables/dataTables.keyTable.js
 pkg/js/ext/datatables/dataTables.keyTable.min.js
-pkg/js/ext/datatables/dataTables.min.js
 pkg/js/ext/datatables/dataTables.responsive.js
 pkg/js/ext/datatables/dataTables.responsive.min.js
 pkg/js/ext/datatables/dataTables.rowGroup.js
@@ -3559,6 +3557,8 @@ pkg/js/ext/datatables/fixedColumns.bootstrap4.js
 pkg/js/ext/datatables/fixedColumns.bootstrap4.min.js
 pkg/js/ext/datatables/fixedHeader.bootstrap4.js
 pkg/js/ext/datatables/fixedHeader.bootstrap4.min.js
+pkg/js/ext/datatables/jquery.dataTables.js
+pkg/js/ext/datatables/jquery.dataTables.min.js
 pkg/js/ext/datatables/jszip.js
 pkg/js/ext/datatables/jszip.min.js
 pkg/js/ext/datatables/keyTable.bootstrap4.js

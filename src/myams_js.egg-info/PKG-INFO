@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
-Name: myams-js
-Version: 2.5.1
+Name: myams_js
+Version: 2.7.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -13,8 +13,13 @@ Classifier: Programming Language :: Python
 Classifier: Framework :: Pyramid
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.7
-Provides-Extra: test
 License-File: LICENSE
+Requires-Dist: setuptools
+Requires-Dist: fanstatic
+Requires-Dist: pyams_utils>=2.0.0
+Provides-Extra: test
+Requires-Dist: pyramid_zcml; extra == "test"
+Requires-Dist: zope.exceptions; extra == "test"
 
 ================
 MyAMS.js package
@@ -61,9 +66,21 @@ is relying on MyAMS.js.
 Changelog
 =========
 
+2.7.0
+-----
+ - updated build packages and dependencies (JQuery-UI, JQuery-validation, Datatables, JSRender...)
+ - avoid duplicated modules names on dynamic import
+ - added support for "application/json" content-type on AJAX requests
+ - updated form submit progress getter
+ - updated modal backdrop DOM position to handle static modals correctly
+
+2.6.1
+-----
+ - added gradient style to calendar events
+
 2.6.0
 -----
- - added TarteAuCitron cookies manager
+ - added TarteAuCitron cookies manager resources
  - small updates in calendar styles
 
 2.5.1

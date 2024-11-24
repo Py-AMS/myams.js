@@ -6115,31 +6115,73 @@ function datatables(element) {
                 loaded.buttons = true;
               }
               if ($.isArray(data.buttons)) {
-                if (data.buttons.indexOf('print') >= 0) {
-                  if (!loaded.buttons_print && !$.fn.dataTable.ext.buttons.print) {
-                    depends.push(`${baseJS}buttons.print${MyAMS.env.extext}.js`);
-                    loaded.buttons_print = true;
+                const buttonDefs = [];
+                for (const button of data.buttons) {
+                  switch (button) {
+                    case 'copy':
+                      buttonDefs.push({
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                          columns: ":not(.no-export):visible"
+                        }
+                      });
+                      break;
+                    case 'csv':
+                      buttonDefs.push({
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                          columns: ":not(.no-export):visible"
+                        }
+                      });
+                      break;
+                    case 'excel':
+                      if (!loaded.buttons_excel && !$.fn.dataTable.ext.buttons.excelHtml5) {
+                        bases.push(`${baseJS}jszip${MyAMS.env.extext}.js`);
+                        loaded.buttons_excel = true;
+                      }
+                      buttonDefs.push({
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                          columns: ":not(.no-export):visible"
+                        }
+                      });
+                      break;
+                    case 'pdf':
+                      if (!loaded.buttons_pdf && !window.pdfMake) {
+                        bases.push(`${baseJS}pdfmake${MyAMS.env.extext}.js`);
+                        extensions.push(`${baseJS}vfs_fonts${MyAMS.env.extext}.js`);
+                        loaded.buttons_pdf = true;
+                      }
+                      buttonDefs.push({
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                          columns: ":not(.no-export):visible"
+                        }
+                      });
+                      break;
+                    case 'print':
+                      if (!loaded.buttons_print && !$.fn.dataTable.ext.buttons.print) {
+                        depends.push(`${baseJS}buttons.print${MyAMS.env.extext}.js`);
+                        loaded.buttons_print = true;
+                      }
+                      buttonDefs.push({
+                        extend: 'print',
+                        exportOptions: {
+                          columns: ":not(.no-export):visible"
+                        }
+                      });
+                      break;
+                    case 'colvis':
+                      if (!loaded.buttons_colvis && !$.fn.dataTable.ext.buttons.colvis) {
+                        depends.push(`${baseJS}buttons.colVis${MyAMS.env.extext}.js`);
+                        loaded.buttons_colvis = true;
+                      }
+                      buttonDefs.push({
+                        extend: 'colvis'
+                      });
                   }
                 }
-                if (data.buttons.indexOf('excel') >= 0) {
-                  if (!loaded.buttons_excel && !$.fn.dataTable.ext.buttons.excelHtml5) {
-                    bases.push(`${baseJS}jszip${MyAMS.env.extext}.js`);
-                    loaded.buttons_excel = true;
-                  }
-                }
-                if (data.buttons.indexOf('pdf') >= 0) {
-                  if (!loaded.buttons_pdf && !window.pdfMake) {
-                    bases.push(`${baseJS}pdfmake${MyAMS.env.extext}.js`);
-                    extensions.push(`${baseJS}vfs_fonts${MyAMS.env.extext}.js`);
-                    loaded.buttons_pdf = true;
-                  }
-                }
-                if (data.buttons.indexOf('colvis') >= 0) {
-                  if (!loaded.buttons_colvis && !$.fn.dataTable.ext.buttons.colvis) {
-                    depends.push(`${baseJS}buttons.colVis${MyAMS.env.extext}.js`);
-                    loaded.buttons_colvis = true;
-                  }
-                }
+                data.buttons = buttonDefs;
               }
             }
             if (data.colReorder && !loaded.colReorder && !$.fn.dataTable.ColReorder) {
@@ -11158,7 +11200,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.7.0  */
+/** Version: 2.8.0  */
 }();
 /******/ })()
 ;

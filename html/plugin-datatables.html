@@ -290,7 +290,9 @@
 </pre>
 
 	<p>Alternatively, you can use default Datatables syntax and specify an array of required
-	buttons, here with a custom CSS class (default class is <code>btn btn-sm btn-secondary</code>):</p>
+	buttons, here with a custom CSS class (default class is <code>btn btn-sm btn-secondary</code>).
+	You can also exclude columns from clipboard copy, CSV/Excel export or print by just adding a
+	<code>no-export</code> class to the column header:</p>
 	<section class="m-3">
 		<h3>Table title</h3>
 		<table id="myTable_4"
@@ -302,7 +304,7 @@
 					<th>Name</th>
 					<th>Value</th>
 					<th>Address</th>
-					<th>Email</th>
+					<th class="no-export">Email</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -337,7 +339,12 @@
 	       data-buttons='["copy", "csv", "print"]'
 	       data-ams-buttons-classname="btn btn-sm btn-primary"&gt;
 	  &lt;thead&gt;
-	    &lt;tr&gt;...&lt;/tr&gt;
+	    &lt;tr&gt;
+	      <th>Name</th>
+	      <th>Value</th>
+	      <th>Address</th>
+	      <th class="no-export">Email</th>
+	    &lt;/tr&gt;
 	  &lt;/thead&gt;
 	  ...
 	&lt;/table&gt;

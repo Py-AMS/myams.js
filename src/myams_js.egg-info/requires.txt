@@ -1,6 +1,6 @@
 setuptools
 fanstatic
-pyams_utils>=1.2.0
+pyams_utils>=2.0.0
 
 [test]
 pyramid_zcml

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.8.0
+-----
+ - added support for Python 3.12
+ - updated Datatables plugin integration to support columns excluded from export, print or clipboard copy
+
 2.7.0
 -----
  - updated build packages and dependencies (JQuery-UI, JQuery-validation, Datatables, JSRender...)
