@@ -4096,6 +4096,27 @@ const helpers = {
     });
   },
   /**
+   * Delete a table row with given ID
+   *
+   * @param form: optional parent form
+   * @param options: removed row properties:
+   *   - row_id: ID of the deleted row
+   */
+  deleteTableRow: (form, options) => {
+    return new Promise((resolve, reject) => {
+      const selector = `tr[id="${options.row_id}"]`,
+        row = $(selector),
+        table = row.parents('table').first();
+      if ($.fn.DataTable) {
+        const dtTable = table.DataTable();
+        dtTable.row(selector).remove();
+        dtTable.draw();
+      } else {
+        row.remove();
+      }
+    });
+  },
+  /**
    * Refresh a single image with content provided in
    * the <code>options</code> object.
    *
@@ -11200,7 +11221,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.8.0  */
+/** Version: 2.9.0  */
 }();
 /******/ })()
 ;

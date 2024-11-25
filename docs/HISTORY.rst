@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.9.0
+-----
+ - added helper to delete table row
+ - added styles to handle "hidden" calendars
+
 2.8.0
 -----
  - added support for Python 3.12
