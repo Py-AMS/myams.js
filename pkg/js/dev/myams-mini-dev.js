@@ -555,7 +555,7 @@ function getScript(url) {
     const defaults = {
       dataType: 'script',
       url: MyAMS.core.getSource(url),
-      cache: MyAMS.env.devmode,
+      cache: !MyAMS.env.devmode,
       async: true
     };
     const settings = $.extend({}, defaults, options);
@@ -11221,7 +11221,7 @@ if (html.data('ams-init') !== false) {
   (0,_ext_base__WEBPACK_IMPORTED_MODULE_0__.init)(_ext_base__WEBPACK_IMPORTED_MODULE_0__["default"].$);
 }
 
-/** Version: 2.9.0  */
+/** Version: 2.9.1  */
 }();
 /******/ })()
 ;

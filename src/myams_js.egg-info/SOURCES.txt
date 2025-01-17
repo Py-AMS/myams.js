@@ -4285,6 +4285,7 @@ src/sass/myams/_calendar.scss
 src/sass/myams/_caret.scss
 src/sass/myams/_forms.scss
 src/sass/myams/_functions.scss
+src/sass/myams/_gis.scss
 src/sass/myams/_icons.scss
 src/sass/myams/_layout.scss
 src/sass/myams/_misc.scss

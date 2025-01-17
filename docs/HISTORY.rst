@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.1
+-----
+ - disable cache in dynamic script loader in development mode
+
 2.9.0
 -----
  - added helper to delete table row
