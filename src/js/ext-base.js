@@ -562,7 +562,7 @@ export function getScript(url, options={}) {
 		const defaults = {
 			dataType: 'script',
 			url: MyAMS.core.getSource(url),
-			cache: MyAMS.env.devmode,
+			cache: !MyAMS.env.devmode,
 			async: true
 		};
 		const settings = $.extend({}, defaults, options);
