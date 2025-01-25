@@ -1,4 +1,49 @@
 
+.calendar-legend {
+  ul {
+    display: flex;
+    flex-direction: column;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      font-weight: normal;
+
+      &.calendar-marker {
+        &::before {
+          content: " ";
+          display: block;
+          border: 1px solid var(--body);
+          background-color: var(--fc-enabled-bg);
+          width: 1.5em;
+          height: 1.5em;
+          margin-right: 0.25em;
+        }
+        &.session-temporary::before {
+          border-width: 3px;
+          border-style: dashed;
+          background-color: var(--body-bg);
+        }
+        &.session-public::before {
+          background-image: repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px);
+        }
+        &.session-nobookable::before {
+          border-color: var(--fc-nobookable-border);
+          background-color: var(--fc-nobookable-bg);
+        }
+        &.session-full::before {
+          background-color: var(--fc-warning-bg);
+          border-color: var(--fc-warning-border);
+        }
+        &.session-confirmed::before {
+          background-color: var(--fc-accepted-bg);
+          border-color: var(--fc-accepted-border);
+        }
+      }
+    }
+  }
+}
+
 .calendar-wrapper {
   display: flex;
   flex-direction: row;
