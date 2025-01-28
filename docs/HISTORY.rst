@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.2
+-----
+ - small updates used to display calendar legend
+
 2.9.1
 -----
  - disable cache in dynamic script loader in development mode
