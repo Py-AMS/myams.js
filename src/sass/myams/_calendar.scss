@@ -33,6 +33,7 @@
         }
         &.session-external-bookable::before {
           border-width: 3px;
+          background-color: var(--body-bg);
         }
         &.session-full::before {
           background-color: var(--fc-warning-bg);
