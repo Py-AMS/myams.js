@@ -27,9 +27,13 @@
         &.session-public::before {
           background-image: repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px);
         }
-        &.session-not-internal-bookable::before {
+        &.session-not-bookable::before {
           border-color: var(--fc-nobookable-border);
           background-color: var(--fc-nobookable-bg);
+        }
+        &.session-internal-bookable::before {
+          border-color: var(--fc-enabled-border);
+          background-color: var(--fc-enabled-bg);
         }
         &.session-external-bookable::before {
           border-width: 3px;
