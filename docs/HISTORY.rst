@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.3
+-----
+ - updated calendar legend colors
+
 2.9.2
 -----
  - small updates used to display calendar legend

@@ -1,6 +1,6 @@
 {
   "name": "myams_js",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "MyAMS extension package for JQuery and Bootstrap based applications",
   "main": "myams.js",
   "directories": {
