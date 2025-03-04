@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.4
+-----
+ - updated Gitlab-CI for Python 3.12
+
 2.9.3
 -----
  - updated calendar legend colors
