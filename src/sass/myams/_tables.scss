@@ -68,8 +68,8 @@ form {
 
 table {
   tr {
-    &[data-ams-url] {
-      cursor: pointer;
+    &[data-ams-url] * {
+      cursor: pointer!important;
   }
   }
   th {
@@ -90,6 +90,12 @@ table {
       &:hover {
         color: $primary;
       }
+    }
+  }
+  &.dataTable {
+    &.my-0 {
+      margin-top: 0!important;
+      margin-bottom: 0!important;
     }
   }
 }

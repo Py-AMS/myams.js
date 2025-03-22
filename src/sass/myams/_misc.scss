@@ -207,6 +207,7 @@
 /**
  * Opacity classes
  */
+
 .opacity-75 {
   opacity: 0.75;
 }
@@ -223,6 +224,7 @@
 /**
  * Custom transforms
  */
+
 .tiny {
   font-size: 0.7em;
 }
@@ -234,6 +236,7 @@
 /**
  * Custom links styles
  */
+
 a.bg-primary,
 button.bg-primary {
   &.text-white {
@@ -311,5 +314,11 @@ img {
   svg {
     width: 100% !important;
     height: 100% !important;
+  }
+}
+
+.dropzone {
+  &.dz-drag-hover {
+    background-color: darken($primary-light, 10%) !important;
   }
 }
