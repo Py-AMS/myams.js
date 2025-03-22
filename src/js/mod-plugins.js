@@ -1086,7 +1086,7 @@ export function dropzone(element) {
 									maxFilesize: data.amsDropzoneMaxFilesize || data.amsMaxFilesize,
 									thumbnailWidth: data.amsDropzoneThumbnailWidth || data.amsThumbnailWidth || 128,
 									thumbnailHeight: data.amsDropzoneThumbnailHeight || data.amsThumbnailHeight || 128,
-									thumbnailMethod: data.amsDropzoneTHumbnailMethod || data.amsThumbnailMethod || 'contain',
+									thumbnailMethod: data.amsDropzoneThumbnailMethod || data.amsThumbnailMethod || 'contain',
 									clickable: data.amsDropzoneClickable != false && data.amsCLickable !== false,
 									acceptedFiles: data.amsDropzoneAcceptedFiles || data.amsAcceptedFiles,
 									success: MyAMS.core.getFunctionByName(data.amsDropzoneSuccess || data.amsSuccess) || function (file, result, evt) {
