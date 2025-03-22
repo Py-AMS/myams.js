@@ -1083,6 +1083,7 @@ export function dropzone(element) {
 									paramName: data.amsDropzoneParamName || data.amsParamName || 'form.widgets.data',
 									url: data.amsDropzoneUrl || data.amsUrl || 'upload-file.json',
 									uploadMultiple: data.amsDropzoneUploadMultiple !== false && data.amsUploadMultiple !== false,
+									parallelUploads: data.amsDropzoneParallelUploads || data.amsParallelUploads || 10,
 									maxFilesize: data.amsDropzoneMaxFilesize || data.amsMaxFilesize,
 									thumbnailWidth: data.amsDropzoneThumbnailWidth || data.amsThumbnailWidth || 128,
 									thumbnailHeight: data.amsDropzoneThumbnailHeight || data.amsThumbnailHeight || 128,
