@@ -37,6 +37,11 @@
             }
         }
 
+        .select2-selection__clear {
+            right: 1.35em;
+            margin: 0.2em;
+        }
+
         // each selected item in input box
         .select2-selection__choice {
             font-family: $font-family-sans-serif;
