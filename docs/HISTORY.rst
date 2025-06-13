@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.9.5
+-----
+ - added helpers to hide or remove DOM elements
+ - added support for parallel uploads count option in Dropzone plugin
+ - small CSS updates
+
 2.9.4
 -----
  - updated Gitlab-CI for Python 3.12

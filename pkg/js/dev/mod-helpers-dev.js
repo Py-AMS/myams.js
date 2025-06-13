@@ -174,6 +174,26 @@
       });
     },
     /**
+     * Hide DOM element
+     *
+     * @param form: optional parent element
+     * @param options: element properties:
+     *   - selector: JQuery object selector
+     */
+    hideElement: (form, options) => {
+      $(options.selector, form).hide();
+    },
+    /**
+     * Remove DOM element
+     *
+     * @param form: optional parent element
+     * @param options: element properties:
+     *   - selector: JQuery object selector
+     */
+    removeElement: (form, options) => {
+      $(options.selector, form).remove();
+    },
+    /**
      * Refresh a form widget with content provided in
      * the <code>options</code> object
      *

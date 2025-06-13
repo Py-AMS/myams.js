@@ -8558,6 +8558,9 @@ img {
     width: 100% !important;
     height: 100% !important; }
 
+.dropzone.dz-drag-hover {
+  background-color: #b0cfea !important; }
+
 .thumbnail {
   min-width: 128px; }
 
@@ -8887,8 +8890,6 @@ button.modal .bg-dark-modal:focus {
     .ams-form textarea.monospace {
       font-family: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.8rem; }
-  .ams-form .tab-pane > .form-control {
-    border: 0; }
   .ams-form .custom-file-label {
     white-space: nowrap;
     overflow: hidden; }
@@ -9639,6 +9640,9 @@ select[readonly].select2-hidden-accessible + .select2-container {
         border-color: #343a40 transparent transparent transparent;
         border-style: solid;
         border-width: 5px 4px 0 4px; }
+  .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__clear {
+    right: 1.35em;
+    margin: 0.2em; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
     font-family: -apple-system, BlinkMacSystemFont, "Roboto Condensed", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     color: #f8f9fa;
@@ -9873,8 +9877,8 @@ section.inner-table.border-0 > fieldset {
 form > section.inner-table.border-0 > fieldset {
   margin: 1em; }
 
-table tr[data-ams-url] {
-  cursor: pointer; }
+table tr[data-ams-url] * {
+  cursor: pointer !important; }
 
 table th {
   white-space: nowrap; }
@@ -9887,6 +9891,10 @@ table td.action, table td.reorder {
   color: #88b7df; }
   table td.action:hover, table td.reorder:hover {
     color: #3886c9; }
+
+table.dataTable.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important; }
 
 .tree {
   min-height: 20px; }
@@ -11010,4 +11018,4 @@ nav::-webkit-scrollbar-thumb:hover {
   background-color: rgba(101, 111, 105, 0.5);
   background-image: linear-gradient(0.5turn, rgba(74, 83, 77, 0.9), rgba(101, 111, 105, 0.5), rgba(74, 83, 77, 0.9)); }
 
-/** Version: 2.9.2 */
+/** Version: 2.9.3 */
