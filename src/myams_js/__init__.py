@@ -15,20 +15,16 @@
 MyAMS.js extension framework
 """
 
-import os
+from importlib import resources
 
-from fanstatic import Library, Resource, Group
-from pkg_resources import Requirement, resource_filename
+from fanstatic import Group, Library, Resource
 
 from pyams_utils.fanstatic import ResourceWithData
-
 
 __docformat__ = 'restructuredtext'
 
 
-pkg_dir = resource_filename(Requirement.parse('myams_js'), 'pkg')
-if not os.path.exists(pkg_dir):
-    pkg_dir = '../../pkg'  # fallback for source installation
+pkg_dir = str(resources.files('myams_js') / 'static')
 
 library = Library('myams', pkg_dir)
 

@@ -4,10 +4,10 @@ var path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: {
-		'myams-mini': './src/js/myams-mini.js'
+		'myams-mini': './pkg/js/myams-mini.js'
 	},
 	output: {
-		path: path.resolve(__dirname, 'pkg', 'js', 'dev'),
+		path: path.resolve(__dirname, 'src', 'myams_js', 'static', 'js', 'dev'),
 		filename: '[name]-dev.js',
 		assetModuleFilename: '../../css/webfonts/[name][ext]'
 	},

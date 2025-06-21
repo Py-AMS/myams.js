@@ -4,13 +4,13 @@ var path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: {
-		'myams': './src/js/myams.js',
-		'emerald': './src/js/emerald.js',
-		'darkmode': './src/js/darkmode.js',
-		'lightmode': './src/js/lightmode.js'
+		'myams': './pkg/js/myams.js',
+		'emerald': './pkg/js/emerald.js',
+		'darkmode': './pkg/js/darkmode.js',
+		'lightmode': './pkg/js/lightmode.js'
 	},
 	output: {
-		path: path.resolve(__dirname, 'pkg', 'js', 'dev'),
+		path: path.resolve(__dirname, 'src', 'myams_js', 'static', 'js', 'dev'),
 		filename: '[name]-dev.js',
 		assetModuleFilename: '../../css/webfonts/[name][ext]'
 	},

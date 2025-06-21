@@ -17,7 +17,7 @@ sass.compiler = require('node-sass');
 
 
 task('ext', function() {
-	return src('src/js/ext/*.js')
+	return src('pkg/js/ext/*.js')
 		.pipe(babel({
 			presets: [
 				'@babel/env'
@@ -26,7 +26,7 @@ task('ext', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
-		.pipe(dest('pkg/js/ext'));
+		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
@@ -40,7 +40,7 @@ task('jquery', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
-		.pipe(dest('pkg/js/ext'));
+		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
@@ -57,13 +57,13 @@ task('bootstrap', function() {
 		.pipe(rename(function(path) {
 			path.basename = 'bootstrap';
 		}))
-		.pipe(dest('pkg/js/ext'));
+		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
 task('bootstrap_css', function() {
 	return src('node_modules/bootstrap/dist/css/bootstrap.css')
-		.pipe(dest('pkg/css/ext'));
+		.pipe(dest('src/myams_js/static/css/ext'));
 });
 
 
@@ -80,7 +80,7 @@ task('fontawesome', function() {
 		.pipe(rename(function(path) {
 			path.basename = 'fontawesome';
 		}))
-		.pipe(dest('pkg/js/ext'));
+		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
@@ -89,7 +89,7 @@ task('fontawesome_css', function() {
 		.pipe(rename(function(path) {
 			path.basename = 'fontawesome-all';
 		}))
-		.pipe(dest('pkg/css/ext'));
+		.pipe(dest('src/myams_js/static/css/ext'));
 });
 
 
@@ -103,7 +103,7 @@ task('jsrender', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
-		.pipe(dest('pkg/js/ext'));
+		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
@@ -114,20 +114,20 @@ task('jsrender', function() {
  */
 
 task('i18n_dev', function() {
-	return src('src/js/i18n/*.js')
-		.pipe(dest('pkg/js/dev/i18n'));
+	return src('pkg/js/i18n/*.js')
+		.pipe(dest('src/myams_js/static/js/dev/i18n'));
 });
 
 
 task('i18n_prod', function() {
-	return src('src/js/i18n/*.js')
+	return src('pkg/js/i18n/*.js')
 		.pipe(uglify())
-		.pipe(dest('pkg/js/prod/i18n'));
+		.pipe(dest('src/myams_js/static/js/prod/i18n'));
 });
 
 
 task('mods_dev', function() {
-	return src('src/js/mod-*.js')
+	return src('pkg/js/mod-*.js')
 		.pipe(sourcemaps.init())
 		.pipe(babel({
 			presets: [
@@ -141,12 +141,12 @@ task('mods_dev', function() {
 			path.basename += '-dev';
 		}))
 		.pipe(sourcemaps.write('.'))
-		.pipe(dest('pkg/js/dev'));
+		.pipe(dest('src/myams_js/static/js/dev'));
 });
 
 
 task('mods_prod', function() {
-	return src('src/js/mod-*.js')
+	return src('pkg/js/mod-*.js')
 		.pipe(babel({
 			presets: [
 				'@babel/env'
@@ -156,7 +156,7 @@ task('mods_prod', function() {
 			]
 		}))
 		.pipe(uglify())
-		.pipe(dest('pkg/js/prod'));
+		.pipe(dest('src/myams_js/static/js/prod'));
 });
 
 
@@ -168,19 +168,19 @@ task('mods_prod', function() {
 
 task('full_dev', function() {
 	const config = require('./webpack.dev.js');
-	return src('src/js/myams.js')
+	return src('pkg/js/myams.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/dev'));
+		.pipe(dest('src/myams_js/static/js/dev'));
 });
 
 
 task('full_prod', function() {
 	const config = require('./webpack.prod.js');
-	return src('src/js/myams.js')
+	return src('pkg/js/myams.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/prod'));
+		.pipe(dest('src/myams_js/static/js/prod'));
 });
 
 
@@ -191,19 +191,19 @@ task('full_prod', function() {
 
 task('mini_dev', function() {
 	const config = require('./webpack-mini.dev.js');
-	return src('src/js/myams-mini.js')
+	return src('pkg/js/myams-mini.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/dev'));
+		.pipe(dest('src/myams_js/static/js/dev'));
 });
 
 
 task('mini_prod', function() {
 	const config = require('./webpack-mini.prod.js');
-	return src('src/js/myams-mini.js')
+	return src('pkg/js/myams-mini.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/prod'));
+		.pipe(dest('src/myams_js/static/js/prod'));
 });
 
 
@@ -214,19 +214,19 @@ task('mini_prod', function() {
 
 task('core_dev', function() {
 	const config = require('./webpack-core.dev.js');
-	return src('src/js/myams-core.js')
+	return src('pkg/js/myams-core.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/dev'));
+		.pipe(dest('src/myams_js/static/js/dev'));
 });
 
 
 task('core_prod', function() {
 	const config = require('./webpack-core.prod.js');
-	return src('src/js/myams-core.js')
+	return src('pkg/js/myams-core.js')
 		.pipe(stream(config), webpack)
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/js/prod'));
+		.pipe(dest('src/myams_js/static/js/prod'));
 });
 
 
@@ -235,69 +235,69 @@ task('core_prod', function() {
  */
 
 task('sass_dev', function() {
-	return src('src/sass/myams.scss')
+	return src('pkg/sass/myams.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/css/dev'));
+		.pipe(dest('src/myams_js/static/css/dev'));
 });
 
 task('sass_prod', function() {
-	return src('src/sass/myams.scss')
+	return src('pkg/sass/myams.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
 		.pipe(clean())
-		.pipe(dest('pkg/css/prod'));
+		.pipe(dest('src/myams_js/static/css/prod'));
 });
 
 
 task('sass_emerald_dev', function() {
-	return src('src/sass/emerald.scss')
+	return src('pkg/sass/emerald.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/css/dev'));
+		.pipe(dest('src/myams_js/static/css/dev'));
 });
 
 
 task('sass_emerald_prod', function() {
-	return src('src/sass/emerald.scss')
+	return src('pkg/sass/emerald.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
 		.pipe(clean())
-		.pipe(dest('pkg/css/prod'));
+		.pipe(dest('src/myams_js/static/css/prod'));
 });
 
 
 task('sass_darkmode_dev', function() {
-	return src('src/sass/darkmode.scss')
+	return src('pkg/sass/darkmode.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/css/dev'));
+		.pipe(dest('src/myams_js/static/css/dev'));
 });
 
 
 task('sass_darkmode_prod', function() {
-	return src('src/sass/darkmode.scss')
+	return src('pkg/sass/darkmode.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
 		.pipe(clean())
-		.pipe(dest('pkg/css/prod'));
+		.pipe(dest('src/myams_js/static/css/prod'));
 });
 
 
 task('sass_lightmode_dev', function() {
-	return src('src/sass/lightmode.scss')
+	return src('pkg/sass/lightmode.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
-		.pipe(dest('pkg/css/dev'));
+		.pipe(dest('src/myams_js/static/css/dev'));
 });
 
 
 task('sass_lightmode_prod', function() {
-	return src('src/sass/lightmode.scss')
+	return src('pkg/sass/lightmode.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(replace('$version$', package.version))
 		.pipe(clean())
-		.pipe(dest('pkg/css/prod'));
+		.pipe(dest('src/myams_js/static/css/prod'));
 });
 
 
@@ -327,16 +327,16 @@ exports.core_prod = task('core_prod');
 
 
 exports.default = function() {
-	watch('src/sass/**/*.scss',
+	watch('pkg/sass/**/*.scss',
 		parallel('sass_dev', 'sass_prod',
 				 'sass_emerald_dev', 'sass_emerald_prod',
 				 'sass_darkmode_dev', 'sass_darkmode_prod',
 				 'sass_lightmode_dev', 'sass_lightmode_prod'));
-	watch('src/js/i18n/*.js',
+	watch('pkg/js/i18n/*.js',
 		parallel('i18n_dev', 'i18n_prod'));
-	watch('src/js/mod-*.js',
+	watch('pkg/js/mod-*.js',
 		parallel('mods_dev', 'mods_prod'));
-	watch(['pkg/css/prod/*.css', 'src/js/*.js'],
+	watch(['src/myams_js/static/css/prod/*.css', 'pkg/js/*.js'],
 		parallel('full_dev', 'full_prod',
 				 'mini_dev', 'mini_prod',
 				 'core_dev', 'core_prod'));

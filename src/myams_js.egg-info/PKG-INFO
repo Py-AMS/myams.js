@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: myams_js
-Version: 2.9.0
+Version: 2.9.5
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -20,6 +20,18 @@ Requires-Dist: pyams_utils>=2.0.0
 Provides-Extra: test
 Requires-Dist: pyramid_zcml; extra == "test"
 Requires-Dist: zope.exceptions; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 ================
 MyAMS.js package
@@ -65,6 +77,28 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.9.5
+-----
+ - added helpers to hide or remove DOM elements
+ - added support for parallel uploads count option in Dropzone plugin
+ - small CSS updates
+
+2.9.4
+-----
+ - updated Gitlab-CI for Python 3.12
+
+2.9.3
+-----
+ - updated calendar legend colors
+
+2.9.2
+-----
+ - small updates used to display calendar legend
+
+2.9.1
+-----
+ - disable cache in dynamic script loader in development mode
 
 2.9.0
 -----

@@ -4,10 +4,10 @@ var path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: {
-		'myams-core': './src/js/myams-core.js'
+		'myams-core': './pkg/js/myams-core.js'
 	},
 	output: {
-		path: path.resolve(__dirname, 'pkg', 'js', 'dev'),
+		path: path.resolve(__dirname, 'src', 'myams_js', 'static', 'js', 'dev'),
 		filename: '[name]-dev.js',
 		assetModuleFilename: '../../css/webfonts/[name][ext]'
 	},
