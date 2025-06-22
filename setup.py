@@ -66,6 +66,7 @@ setup(name='myams_js',
           'setuptools',
           # -*- Extra requirements: -*-
           'fanstatic',
+          "importlib_resources; python_version < '3.9'",
           'pyams_utils >= 2.0.0'
       ],
       entry_points={

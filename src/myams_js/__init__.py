@@ -15,7 +15,10 @@
 MyAMS.js extension framework
 """
 
-from importlib import resources
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 from fanstatic import Group, Library, Resource
 
@@ -24,7 +27,7 @@ from pyams_utils.fanstatic import ResourceWithData
 __docformat__ = 'restructuredtext'
 
 
-pkg_dir = str(resources.files('myams_js') / 'static')
+pkg_dir = str(files('myams_js') / 'static')
 
 library = Library('myams', pkg_dir)
 
