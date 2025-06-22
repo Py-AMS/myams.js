@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.9.7
+-----
+ - updated importlib.resources dependency
+
+2.9.6
+-----
+ - updated packaging
+
 2.9.5
 -----
  - added helpers to hide or remove DOM elements

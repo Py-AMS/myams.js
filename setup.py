@@ -14,7 +14,7 @@
 This module contains MyAMS.js package
 """
 import os
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 
 DOCS = os.path.join(os.path.dirname(__file__),
@@ -23,7 +23,7 @@ DOCS = os.path.join(os.path.dirname(__file__),
 README = os.path.join(DOCS, 'README.rst')
 HISTORY = os.path.join(DOCS, 'HISTORY.rst')
 
-version = '2.9.6'
+version = '2.9.7'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
 tests_require = [
@@ -47,13 +47,15 @@ setup(name='myams_js',
       author_email='tflorac@ulthar.net',
       url='https://pyams.readthedocs.io',
       license='ZPL',
-      packages=find_packages('src'),
+      packages=find_namespace_packages('src'),
       package_dir={'': 'src'},
       namespace_packages=[],
       package_data={
-          '': ['*.zcml', '*.txt', '*.pt', '*.pot', '*.po', '*.mo',
-               '*.png', '*.gif', '*.jpeg', '*.jpg', '*.css', '*.js',
-               '*.ttf', '*.eot', '*.woff', '*.woff2', '*.svg']
+          'myams_js.static': [
+              '*.zcml', '*.txt', '*.pt', '*.pot', '*.po', '*.mo',
+              '*.png', '*.gif', '*.jpeg', '*.jpg', '*.css', '*.js',
+              '*.ttf', '*.eot', '*.woff', '*.woff2', '*.svg'
+          ]
       },
       include_package_data=True,
       zip_safe=False,
