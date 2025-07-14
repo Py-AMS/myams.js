@@ -8559,6 +8559,12 @@ a[href] > *,
 .colorpicker-bs-popover {
   z-index: 1999; }
 
+blockquote {
+  margin: 0 0 0.75rem 0.5rem; }
+
+code {
+  white-space: pre-wrap; }
+
 img {
   max-width: 100%;
   max-height: 100%; }

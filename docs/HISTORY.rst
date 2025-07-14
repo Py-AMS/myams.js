@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.8
+-----
+ - small CSS updates
+
 2.9.7
 -----
  - updated importlib.resources dependency
