@@ -60,6 +60,7 @@
   overflow-y: hidden;
 
   .calendar-parent {
+    flex: 1 1 33%;
     &:not(.col) {
       > div {
         display: none;
@@ -72,6 +73,7 @@
     overflow-y: auto;
 
     .calendar-parent {
+      flex: 1 1 0;
       &.border {
         margin: calc(1rem - 1px) 14px 0 !important;
         width: calc(100% - 30px) !important;
