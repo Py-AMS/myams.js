@@ -10061,15 +10061,19 @@ table.dataTable.my-0 {
   min-height: calc(100vh - 270px);
   overflow-x: auto;
   overflow-y: hidden; }
-  .calendar-wrapper .calendar-parent:not(.col) > div {
-    display: none; }
+  .calendar-wrapper .calendar-parent {
+    flex: 1 1 33%; }
+    .calendar-wrapper .calendar-parent:not(.col) > div {
+      display: none; }
   .calendar-wrapper.transposed {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto; }
-    .calendar-wrapper.transposed .calendar-parent.border {
-      margin: calc(1rem - 1px) 14px 0 !important;
-      width: calc(100% - 30px) !important; }
+    .calendar-wrapper.transposed .calendar-parent {
+      flex: 1 1 0; }
+      .calendar-wrapper.transposed .calendar-parent.border {
+        margin: calc(1rem - 1px) 14px 0 !important;
+        width: calc(100% - 30px) !important; }
   .calendar-wrapper:not(.transposed) .calendar-parent:not(.col) {
     width: 40px; }
     .calendar-wrapper:not(.transposed) .calendar-parent:not(.col) > h3 {

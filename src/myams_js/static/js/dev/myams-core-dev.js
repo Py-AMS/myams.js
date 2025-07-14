@@ -123,10 +123,7 @@ function init($) {
      * @param extensions: list of extensions object
      * @returns {*}: modified source object
      */
-    extendPrefix: function (source, prefix, getter) {
-      for (var _len = arguments.length, extensions = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-        extensions[_key - 3] = arguments[_key];
-      }
+    extendPrefix: function (source, prefix, getter, ...extensions) {
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (key.startsWith(prefix)) {
@@ -144,10 +141,7 @@ function init($) {
      * @param extensions: list of extensions object
      * @returns {*}: modified source object
      */
-    extendOnly: function (source, getter) {
-      for (var _len2 = arguments.length, extensions = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-        extensions[_key2 - 2] = arguments[_key2];
-      }
+    extendOnly: function (source, getter, ...extensions) {
       for (const extension of extensions) {
         for (const [key, value] of Object.entries(extension)) {
           if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -377,8 +371,7 @@ function initData(element) {
  *
  * @param element: source element to initialize
  */
-function initContent() {
-  let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+function initContent(element = null) {
   if (element === null) {
     element = $('body');
   }
@@ -549,8 +542,7 @@ function getSource(url) {
  * @param url: script URL
  * @param options: a set of options to be added to AJAX call
  */
-function getScript(url) {
-  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+function getScript(url, options = {}) {
   return new Promise((resolve, reject) => {
     const defaults = {
       dataType: 'script',
@@ -650,8 +642,7 @@ function generateUUID() {
  * @param toClass: new CSS class (without "fa-" prefix)
  * @param prefix: icon prefix (defaults to "fa")
  */
-function switchIcon(element, fromClass, toClass) {
-  let prefix = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa';
+function switchIcon(element, fromClass, toClass, prefix = 'fa') {
   if (typeof element === 'string') {
     element = $(element);
   }
@@ -827,9 +818,7 @@ __webpack_require__.r(__webpack_exports__);
  * Base plug-in class
  */
 class Plugin {
-  constructor(name) {
-    let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    let loaded = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  constructor(name, props = {}, loaded = false) {
     // plug-in name
     this.name = name;
     // plug-in source URL
@@ -1016,8 +1005,7 @@ class PluginsRegistry {
    * @param element: source element
    * @param names: array list of plug-ins to activate, or all registered plug-ins if null
    */
-  run(element) {
-    let names = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  run(element, names = null) {
     // check for disabled plug-ins
     const disabled = new Set();
     $('[data-ams-plugins-disabled]', element).each((idx, elt) => {
@@ -1056,8 +1044,7 @@ const registry = {
    *
    * @param element: source element to initialize from
    */
-  initElement: function () {
-    let element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
+  initElement: function (element = '#content') {
     // populate data attributes
     MyAMS.core.executeFunctionByName(MyAMS.config.initData, window, element);
     // load plug-ins from given DOM element
@@ -1079,8 +1066,7 @@ const registry = {
    * @param element: DOM element
    * @param names: names of plug-in to run on given element; all if null
    */
-  run: function (element) {
-    let names = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  run: function (element, names = null) {
     return plugins.run(element, names);
   }
 };
@@ -1134,10 +1120,7 @@ function getModule(module, name) {
  * @param modules: single module name, or array of modules names
  * @returns Promise
  */
-function myams_require() {
-  for (var _len = arguments.length, modules = new Array(_len), _key = 0; _key < _len; _key++) {
-    modules[_key] = arguments[_key];
-  }
+function myams_require(...modules) {
   return new Promise((resolve, reject) => {
     const names = [],
       deferred = [],

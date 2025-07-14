@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.9.9
+-----
+ - small CSS updates on calendars
+
 2.9.8
 -----
  - small CSS updates
