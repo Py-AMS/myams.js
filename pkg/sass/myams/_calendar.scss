@@ -142,5 +142,24 @@
       right: 2px;
       bottom: 0;
     }
+
+    &.fc-bg-event {
+      padding: 0.1em 0.25em;
+
+      * {
+        opacity: 1;
+      }
+    }
+  }
+
+  .fc-daygrid {
+    .fc-event {
+      &.fc-bg-event {
+        * {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+    }
   }
 }
