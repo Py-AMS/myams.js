@@ -208,16 +208,24 @@
  * Opacity classes
  */
 
-.opacity-75 {
-  opacity: 0.75;
+@each $opacity in $opacity-pc {
+  .opacity-#{$opacity} {
+    opacity: #{$opacity / 100};
+  }
+  .opacity-#{$opacity}-imp {
+    opacity: #{$opacity / 100} !important;
+  }
 }
 
-.opacity-50 {
-  opacity: 0.5;
-}
 
-.opacity-25 {
-  opacity: 0.25;
+/**
+ * ZIndex classes
+ */
+
+@each $index in $zindex {
+  .zindex-#{$index} {
+    z-index: #{$index};
+  }
 }
 
 
