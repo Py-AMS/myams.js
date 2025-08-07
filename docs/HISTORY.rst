@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.10.0
+------
+ - updated dependencies: JsRender, FontAwesome, FullCalendar...
+ - updated Gulp script
+
 2.9.10
 ------
  - small CSS updates on calendars
