@@ -17,7 +17,6 @@
     value: true
   });
   _exports.skin = void 0;
-  var _this = void 0;
   /* global MyAMS */
   /**
    * MyAMS generic skin features
@@ -154,8 +153,7 @@
      * @param options: additional options to AJAX call
      * @returns {Promise<string>}
      */
-    loadURL: function (url, target) {
-      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    loadURL: (url, target, options = {}) => {
       return new Promise((resolve, reject) => {
         if (url.startsWith('#')) {
           url = url.substr(1);
@@ -174,7 +172,7 @@
             beforeSend: () => {
               target.html(`<h1 class="loading"><i class="fa fa-cog fa-spin"></i> ${MyAMS.i18n.LOADING}</h1>`);
               if (options && options.preLoadCallback) {
-                MyAMS.core.executeFunctionByName(options.preLoadCallback, _this, options.preLoadCallbackOptions);
+                MyAMS.core.executeFunctionByName(options.preLoadCallback, void 0, options.preLoadCallbackOptions);
               }
               if (target.attr('id') === 'content') {
                 MyAMS.require('nav').then(() => {
@@ -228,7 +226,7 @@
                       MyAMS.core.executeFunctionByName(target.data('ams-init-content') || MyAMS.config.initContent, window, target).then(() => {
                         MyAMS.form && MyAMS.form.setFocus(target);
                         if (options && options.afterLoadCallback) {
-                          MyAMS.core.executeFunctionByName(options.afterLoadCallback, _this, options.afterLoadCallbackOptions).then(() => {
+                          MyAMS.core.executeFunctionByName(options.afterLoadCallback, void 0, options.afterLoadCallbackOptions).then(() => {
                             target.trigger('after-load.ams.content');
                             resolve(result, status, xhr);
                           }, reject);

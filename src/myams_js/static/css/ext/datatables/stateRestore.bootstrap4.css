@@ -12,21 +12,6 @@ div.dtsr-creation {
   box-sizing: border-box;
   padding: 2em;
 }
-div.dtsr-confirmation button,
-div.dtsr-creation button {
-  display: inline-block;
-  margin: 1em;
-  padding: 0.5em 1em;
-  border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-  background-color: #f6f6f6;
-  text-align: left;
-  cursor: pointer;
-}
-div.dtsr-confirmation button:hover,
-div.dtsr-creation button:hover {
-  background-color: #ebebeb;
-}
 div.dtsr-confirmation div.dtsr-creation-text,
 div.dtsr-confirmation div.dtsr-confirmation-title-row,
 div.dtsr-creation div.dtsr-creation-text,
@@ -37,6 +22,7 @@ div.dtsr-confirmation div.dtsr-creation-text h2,
 div.dtsr-confirmation div.dtsr-confirmation-title-row h2,
 div.dtsr-creation div.dtsr-creation-text h2,
 div.dtsr-creation div.dtsr-confirmation-title-row h2 {
+  padding-left: 0;
   border-bottom: 0px;
   margin-top: 0px;
   padding-top: 0px;
@@ -86,34 +72,36 @@ div.dtsr-creation div.dtsr-creation-form div.dtsr-name-row {
 }
 div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row,
 div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row {
+  display: flex;
   margin: 0.5em 0;
 }
 div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row:first-child,
 div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row:first-child {
-  margin-top: 0;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row:last-child,
 div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row:last-child {
   margin-bottom: 0;
 }
-div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row label.dtsr-name-label,
-div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row label.dtsr-name-label {
+div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row label,
+div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row label {
   width: 25%;
-  display: inline-block;
+  padding-right: 1em;
   text-align: right;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-top: 2px;
 }
-div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row input.dtsr-name-input,
-div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row input.dtsr-name-input {
-  width: 66.6%;
-  display: inline-block;
+div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input,
+div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input {
+  width: 75%;
 }
-div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row input.dtsr-check-box,
-div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row input.dtsr-check-box {
-  margin-left: 25%;
-  margin-right: 14px;
-  display: inline-block;
+div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input div.dtsr-check-label,
+div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input div.dtsr-check-label {
+  margin-bottom: 0.5em;
+}
+div.dtsr-confirmation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input div.dtsr-check-label input,
+div.dtsr-creation div.dtsr-creation-form div.dtsr-form-row div.dtsr-input div.dtsr-check-label input {
+  margin-right: 0.5em;
 }
 div.dtsr-confirmation div.dtsr-confirmation-text,
 div.dtsr-creation div.dtsr-confirmation-text {
@@ -129,12 +117,6 @@ div.dtsr-creation div.dtsr-confirmation-text label.dtsr-name-label {
 div.dtsr-confirmation div.dtsr-confirmation-text input.dtsr-name-input,
 div.dtsr-creation div.dtsr-confirmation-text input.dtsr-name-input {
   width: 66.6%;
-  display: inline-block;
-}
-div.dtsr-confirmation div.dtsr-confirmation-text input.dtsr-check-box,
-div.dtsr-creation div.dtsr-confirmation-text input.dtsr-check-box {
-  margin-left: 33.3%;
-  margin-right: 14px;
   display: inline-block;
 }
 div.dtsr-confirmation div.dtsr-modal-foot,
@@ -222,35 +204,6 @@ html[data-bs-theme=dark] div.dtsr-creation button:hover {
   background-color: rgb(64, 69, 73);
 }
 
-div.dt-button-collection h3 {
-  margin-top: 8px;
-  font-size: 1.5rem;
-}
-div.dt-button-collection div.dropdown-menu {
-  padding-top: 0px;
-  padding-bottom: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-div.dt-button-collection div.dropdown-menu div.dt-btn-split-wrapper {
-  margin-top: 4px;
-}
-
-div.dt-button-split-left div.dropdown-menu {
-  padding-right: 4px;
-  padding-left: 4px;
-  padding-bottom: 4px;
-}
-div.dt-button-split-left div.dropdown-menu button.dt-btn-split-drop-button {
-  color: rgb(255, 255, 255);
-  border-radius: 4px;
-  background-color: rgb(107, 117, 125);
-  margin-top: 4px;
-}
-div.dt-button-split-left div.dropdown-menu button.dt-btn-split-drop-button:hover {
-  background-color: rgb(90, 98, 104);
-}
-
 input.dtsr-input {
   display: inline-block;
   width: auto;
@@ -268,12 +221,6 @@ div.dtsr-creation-form div.dtsr-form-row input.dtsr-name-input {
   width: 66.6%;
   display: inline-block;
 }
-div.dtsr-creation-form div.dtsr-form-row input.dtsr-check-box {
-  margin-left: 33.3%;
-  margin-right: 14px;
-  display: inline-block;
-  position: relative;
-}
 
 div.dtsr-confirmation-text {
   margin-top: 1.5em;
@@ -288,10 +235,4 @@ div.dtsr-confirmation-text label.dtsr-name-label {
 div.dtsr-confirmation-text input.dtsr-name-input {
   width: 66.6%;
   display: inline-block;
-}
-div.dtsr-confirmation-text input.dtsr-check-box {
-  margin-left: 33.3%;
-  margin-right: 14px;
-  display: inline-block;
-  position: relative;
 }

@@ -176,8 +176,7 @@
      *  - subtitle: message sub-title
      *  - message: main alert message
      */
-    alert: function () {
-      let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    alert: (props = {}) => {
       let status = props.status || 'info';
       if (status === 'error') {
         status = 'danger';
@@ -203,8 +202,7 @@
      *  - hideTimestamp: boolean value to specify if timestamp must be hidden
      *  - timeout: timeout in ms; default to 5000, set to 0 to disable auto-hide
      */
-    messageBox: function () {
-      let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    messageBox: (props = {}) => {
       let status = props.status || 'info';
       if (status === 'error') {
         status = 'danger';
@@ -223,8 +221,7 @@
      *
      * @param props
      */
-    smallBox: function () {
-      let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    smallBox: (props = {}) => {
       let status = props.status || 'info';
       if (status === 'error') {
         status = 'danger';
@@ -244,8 +241,7 @@
      * @param props
      * @returns {Promise<unknown>}
      */
-    bigBox: function () {
-      let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    bigBox: (props = {}) => {
       return new Promise((resolve, reject) => {
         let status = props.status || 'info';
         if (status === 'error') {

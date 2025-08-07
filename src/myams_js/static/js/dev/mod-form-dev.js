@@ -329,8 +329,7 @@
      * @param handler: AJAX submit target
      * @param options: submit options
      */
-    submit: function (form, handler) {
-      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    submit: (form, handler, options = {}) => {
       // check arguments
       form = $(form);
       if (!form.exists()) {
@@ -503,12 +502,9 @@
           checks.push(MyAMS.core.executeFunctionByName(validator, document, form, context));
         }
       }
-      $.when.apply($, checks).then(function () {
+      $.when.apply($, checks).then((...results) => {
         let status = 'success',
           output = [];
-        for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
-          results[_key] = arguments[_key];
-        }
         for (const result of results) {
           if (result !== true) {
             status = 'error';

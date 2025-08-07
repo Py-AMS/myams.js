@@ -13,14 +13,14 @@
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  /*! JsRender v1.0.15: http://jsviews.com/#jsrender */
+  /*! JsRender v1.0.16: http://jsviews.com/#jsrender */
   /*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
   /*
    * Best-of-breed templating in browser or on Node.js.
    * Does not require jQuery, or HTML DOM
    * Integrates with JsViews (http://jsviews.com/#jsviews)
    *
-   * Copyright 2024, Boris Moore
+   * Copyright 2025, Boris Moore
    * Released under the MIT License.
    */
 
@@ -59,7 +59,7 @@
 
     $ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
 
-    var versionNumber = "v1.0.15",
+    var versionNumber = "v1.0.16",
       jsvStoreName,
       rTag,
       rTmplString,
@@ -68,9 +68,10 @@
       $expando,
       _ocp = "_ocp",
       // Observable contextual parameter
-
-      $isFunction,
-      $isArray,
+      $isFunction = function (ob) {
+        return typeof ob === "function";
+      },
+      $isArray = Array.isArray,
       $templates,
       $converters,
       $helpers,
@@ -264,7 +265,10 @@
     function $extend(target, source) {
       if (target) {
         for (var name in source) {
-          target[name] = source[name];
+          if (name !== "__proto__") {
+            // Prevent prototype pollution attacks
+            target[name] = source[name];
+          }
         }
         return target;
       }
@@ -296,7 +300,7 @@
       if (!openChars) {
         return $subSettings.delimiters;
       }
-      if ($isArray(openChars)) {
+      if (Array.isArray(openChars)) {
         return $viewsDelimiters.apply($views, openChars);
       }
       linkChar = link ? link[0] : linkChar;
@@ -416,6 +420,9 @@
         for (; ob && i < l; i++) {
           prevOb = ob;
           ob = tokens[i] ? ob[tokens[i]] : ob;
+          if ($isFunction(ob)) {
+            ob = ob.call(prevOb);
+          }
         }
       }
       if (ltOb) {
@@ -1341,6 +1348,9 @@
             if (viewModel) {
               // Iterate to build getters arg array (value, or mapped value)
               ob = viewModel.map(ob);
+            } else if (typeof ob === STRING && (ob[0] === "{" && ob[ob.length - 1] === "}" || ob[0] === "[" && ob[ob.length - 1] === "]")) {
+              // If it is a string with the start/end char: {/}, or [/], then assume it is a JSON expression
+              ob = JSON.parse(ob);
             }
             arr.push(ob);
           });
@@ -1423,6 +1433,10 @@
           if (viewModel) {
             model[getter]().merge(ob, model, parentRef); // Update typed property
           } else if (model[getter]() !== ob) {
+            if (typeof ob === STRING && (ob[0] === "{" && ob[ob.length - 1] === "}" || ob[0] === "[" && ob[ob.length - 1] === "]")) {
+              // If it is a string with the start/end char: {/}, or [/], then assume it is a JSON expression
+              ob = JSON.parse(ob);
+            }
             model[getter](ob); // Update non-typed property
           }
         });
@@ -2073,7 +2087,7 @@
       //		result = markup;
       if (isLinkExpr) {
         if (convertBack !== undefined) {
-          markup = markup.slice(0, -convertBack.length - 2) + delimCloseChar0;
+          markup = markup.slice(0, -convertBack.length - 2) + delimCloseChar0; // "{:myExpr:myCvt}" => "{:myExpr}"
         }
         markup = delimOpenChar0 + markup + delimCloseChar1;
       }
@@ -2217,6 +2231,9 @@
                   path: theOb.sb,
                   bnd: theOb.bnd
                 };
+                if (!newOb.path && theOb.path) {
+                  theOb.bnd = true;
+                }
               } else {
                 binds.push(newOb = {
                   path: binds.pop()
@@ -2777,7 +2794,9 @@
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // jQuery is not loaded.
 
-        $ = {};
+        $ = {
+          jsrender: versionNumber
+        };
         if (setGlobals) {
           global.jsrender = $; // We are loading jsrender.js from a script element, not AMD or CommonJS, so set global
         }
@@ -2786,14 +2805,6 @@
         // Use jsrender-node.js instead...
         $.renderFile = $.__express = $.compile = function () {
           throw "Node.js: use npm jsrender, or jsrender-node.js";
-        };
-
-        //END BROWSER-SPECIFIC CODE
-        $.isFunction = function (ob) {
-          return typeof ob === "function";
-        };
-        $.isArray = Array.isArray || function (obj) {
-          return {}.toString.call(obj) === "[object Array]";
         };
         $sub._jq = function (jq) {
           // private method to move from JsRender APIs from jsrender namespace to jQuery namespace
@@ -2805,11 +2816,11 @@
             $expando = $.expando;
           }
         };
-        $.jsrender = versionNumber;
       }
+      //END OF BROWSER-SPECIFIC CODE
+
       $subSettings = $sub.settings;
       $subSettings.allowCode = false;
-      $isFunction = $.isFunction;
       $.render = $render;
       $.views = $views;
       $.templates = $templates = $views.templates;
@@ -2961,7 +2972,6 @@
     }
     //========================== Define default delimiters ==========================
     $subSettings = $sub.settings;
-    $isArray = ($ || jsr).isArray;
     $viewsSettings.delimiters("{{", "}}", "^");
     if (jsrToJq) {
       // Moving from jsrender namespace to jQuery namepace - copy over the stored items (templates, converters, helpers...)

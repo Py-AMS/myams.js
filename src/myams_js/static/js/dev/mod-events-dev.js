@@ -48,10 +48,7 @@
           const selector = source.data('ams-events-handlers-context'),
             context = selector ? source.parents(selector) : source;
           for (const [event, handler] of Object.entries(handlers)) {
-            context.on(event, function (event) {
-              for (var _len = arguments.length, options = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                options[_key - 1] = arguments[_key];
-              }
+            context.on(event, (event, ...options) => {
               if (options.length > 0) {
                 MyAMS.core.executeFunctionByName(handler, document, event, ...options);
               } else {

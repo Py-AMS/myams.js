@@ -80,8 +80,7 @@
      * @param values: notifications data (may be loaded from JSON)
      * @param options: list rendering options
      */
-    constructor(values) {
-      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    constructor(values, options = {}) {
       this.values = values;
       this.options = options;
     }

@@ -70,8 +70,7 @@
     /**
      * MyAMS i18n package
      */
-    init: function () {
-      let force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    init: (force = false) => {
       return new Promise((resolve, reject) => {
         if (_initialized && !force) {
           resolve();

@@ -483,10 +483,7 @@
                 });
                 const callback = data.amsReorderCallback;
                 if (callback) {
-                  MyAMS.core.executeFunctionByName(callback, document, table, result, status, xhr).then(function () {
-                    for (var _len = arguments.length, results = new Array(_len), _key = 0; _key < _len; _key++) {
-                      results[_key] = arguments[_key];
-                    }
+                  MyAMS.core.executeFunctionByName(callback, document, table, result, status, xhr).then((...results) => {
                     resolve.apply(table, ...results);
                   });
                 } else {

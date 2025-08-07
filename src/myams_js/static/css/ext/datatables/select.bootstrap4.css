@@ -60,7 +60,7 @@ html[data-bs-theme=dark] table.dataTable > tbody > tr > th.select-checkbox:befor
 
 @media screen and (max-width: 640px) {
   div.dataTables_wrapper span.select-info,
-  div.dataTables_wrapper span.select-item {
+div.dataTables_wrapper span.select-item {
     margin-left: 0;
     display: block;
   }

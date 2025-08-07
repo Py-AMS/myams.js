@@ -1,7 +1,7 @@
 div.dt-autofill-handle {
   position: absolute;
-  height: 8px;
-  width: 8px;
+  height: 10px;
+  width: 10px;
   z-index: 10;
   box-sizing: border-box;
   background: #0275d8;
@@ -72,8 +72,10 @@ div.dt-autofill-list > div.dt-autofill-list-items > button:last-child {
   margin-bottom: 0;
 }
 div.dt-autofill-list > div.dt-autofill-list-items > button input[type=number] {
+  display: inline-block;
+  box-sizing: border-box;
   padding: 6px;
-  width: 30px;
+  width: 70px;
   margin: -2px 0;
 }
 div.dt-autofill-list > div.dt-autofill-list-items > button span {

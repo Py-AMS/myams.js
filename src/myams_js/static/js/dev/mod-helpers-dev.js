@@ -50,12 +50,9 @@
      * @param parent: scroll parent
      * @param props: scroll properties
      */
-    scrollTo: function () {
-      let parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#content';
-      let anchor = arguments.length > 1 ? arguments[1] : undefined;
-      let {
-        ...props
-      } = arguments.length > 2 ? arguments[2] : undefined;
+    scrollTo: (parent = '#content', anchor, {
+      ...props
+    }) => {
       if (typeof anchor === 'string') {
         anchor = $(anchor);
       }
@@ -363,12 +360,11 @@
      * @param props: additional props
      * @returns {*}
      */
-    addElementToParent: (source, _ref) => {
-      let {
-        element,
-        parent,
-        ...props
-      } = _ref;
+    addElementToParent: (source, {
+      element,
+      parent,
+      ...props
+    }) => {
       element = $(element);
       parent = $(parent);
       const result = element.appendTo(parent);

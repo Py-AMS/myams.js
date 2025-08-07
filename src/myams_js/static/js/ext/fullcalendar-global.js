@@ -1,7 +1,7 @@
 /*!
-FullCalendar Standard Bundle v6.1.11
+FullCalendar Standard Bundle v6.1.18
 Docs & License: https://fullcalendar.io/docs/initialize-globals
-(c) 2023 Adam Shaw
+(c) 2024 Adam Shaw
 */
 var FullCalendar = (function (exports) {
     'use strict';
@@ -973,10 +973,10 @@ var FullCalendar = (function (exports) {
 
     const EXTENDED_SETTINGS_AND_SEVERITIES = {
         week: 3,
-        separator: 0,
-        omitZeroMinute: 0,
-        meridiem: 0,
-        omitCommas: 0,
+        separator: 9,
+        omitZeroMinute: 9,
+        meridiem: 9,
+        omitCommas: 9,
     };
     const STANDARD_DATE_PROP_SEVERITIES = {
         timeZoneName: 7,
@@ -998,22 +998,25 @@ var FullCalendar = (function (exports) {
         constructor(formatSettings) {
             let standardDateProps = {};
             let extendedSettings = {};
-            let severity = 0;
+            let smallestUnitNum = 9; // the smallest unit in the formatter (9 is a sentinel, beyond max)
             for (let name in formatSettings) {
                 if (name in EXTENDED_SETTINGS_AND_SEVERITIES) {
                     extendedSettings[name] = formatSettings[name];
-                    severity = Math.max(EXTENDED_SETTINGS_AND_SEVERITIES[name], severity);
+                    const severity = EXTENDED_SETTINGS_AND_SEVERITIES[name];
+                    if (severity < 9) {
+                        smallestUnitNum = Math.min(EXTENDED_SETTINGS_AND_SEVERITIES[name], smallestUnitNum);
+                    }
                 }
                 else {
                     standardDateProps[name] = formatSettings[name];
                     if (name in STANDARD_DATE_PROP_SEVERITIES) { // TODO: what about hour12? no severity
-                        severity = Math.max(STANDARD_DATE_PROP_SEVERITIES[name], severity);
+                        smallestUnitNum = Math.min(STANDARD_DATE_PROP_SEVERITIES[name], smallestUnitNum);
                     }
                 }
             }
             this.standardDateProps = standardDateProps;
             this.extendedSettings = extendedSettings;
-            this.severity = severity;
+            this.smallestUnitNum = smallestUnitNum;
             this.buildFormattingFunc = memoize(buildFormattingFunc);
         }
         format(date, context) {
@@ -1048,8 +1051,8 @@ var FullCalendar = (function (exports) {
             }
             return full0 + separator + full1;
         }
-        getLargestUnit() {
-            switch (this.severity) {
+        getSmallestUnit() {
+            switch (this.smallestUnitNum) {
                 case 7:
                 case 6:
                 case 5:
@@ -1762,6 +1765,25 @@ var FullCalendar = (function (exports) {
         if (oldProps === newProps) {
             return true;
         }
+        // if (debug) {
+        //   for (let key in newProps) {
+        //     if (key in oldProps && isObjValsEqual(oldProps[key], newProps[key], equalityFuncs[key])) {
+        //       // equal
+        //     } else {
+        //       if (debug) {
+        //         console.log('prop difference', key, oldProps[key], newProps[key])
+        //       }
+        //     }
+        //   }
+        //   // check for props that were omitted in the new
+        //   for (let key in oldProps) {
+        //     if (!(key in newProps)) {
+        //       if (debug) {
+        //         console.log('prop absent', key)
+        //       }
+        //     }
+        //   }
+        // }
         for (let key in newProps) {
             if (key in oldProps && isObjValsEqual(oldProps[key], newProps[key], equalityFuncs[key])) ;
             else {
@@ -2321,9 +2343,10 @@ var FullCalendar = (function (exports) {
     }
 
     const ViewContextType = createContext({}); // for Components
-    function buildViewContext(viewSpec, viewApi, viewOptions, dateProfileGenerator, dateEnv, theme, pluginHooks, dispatch, getCurrentData, emitter, calendarApi, registerInteractiveComponent, unregisterInteractiveComponent) {
+    function buildViewContext(viewSpec, viewApi, viewOptions, dateProfileGenerator, dateEnv, nowManager, theme, pluginHooks, dispatch, getCurrentData, emitter, calendarApi, registerInteractiveComponent, unregisterInteractiveComponent) {
         return {
             dateEnv,
+            nowManager,
             options: viewOptions,
             pluginHooks,
             emitter,
@@ -2351,13 +2374,14 @@ var FullCalendar = (function (exports) {
 
     /* eslint max-classes-per-file: off */
     class PureComponent extends x$1 {
+        // debug: boolean
         shouldComponentUpdate(nextProps, nextState) {
-            if (this.debug) {
-                // eslint-disable-next-line no-console
-                console.log(getUnequalProps(nextProps, this.props), getUnequalProps(nextState, this.state));
-            }
-            return !compareObjs(this.props, nextProps, this.propEquality) ||
-                !compareObjs(this.state, nextState, this.stateEquality);
+            const shouldUpdate = !compareObjs(this.props, nextProps, this.propEquality /*, this.debug */) ||
+                !compareObjs(this.state, nextState, this.stateEquality /*, this.debug */);
+            // if (this.debug && shouldUpdate) {
+            //   console.log('shouldUpdate!')
+            // }
+            return shouldUpdate;
         }
         // HACK for freakin' React StrictMode
         safeSetState(newState) {
@@ -2597,10 +2621,10 @@ var FullCalendar = (function (exports) {
             let { props, context } = this;
             let { options } = context;
             let renderProps = { view: context.viewApi };
-            return (y(ContentContainer, Object.assign({}, props, { elTag: props.elTag || 'div', elClasses: [
+            return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag || 'div', elAttrs: props.elAttrs, elClasses: [
                     ...buildViewClassNames(props.viewSpec),
                     ...(props.elClasses || []),
-                ], renderProps: renderProps, classNameGenerator: options.viewClassNames, generatorName: undefined, didMount: options.viewDidMount, willUnmount: options.viewWillUnmount }), () => props.children));
+                ], elStyle: props.elStyle, renderProps: renderProps, classNameGenerator: options.viewClassNames, generatorName: undefined, didMount: options.viewDidMount, willUnmount: options.viewWillUnmount }, () => props.children));
         }
     }
     function buildViewClassNames(viewSpec) {
@@ -2756,36 +2780,9 @@ var FullCalendar = (function (exports) {
         return diffDayAndTime(date0, date1); // returns a duration
     }
 
-    function reduceCurrentDate(currentDate, action) {
-        switch (action.type) {
-            case 'CHANGE_DATE':
-                return action.dateMarker;
-            default:
-                return currentDate;
-        }
-    }
-    function getInitialDate(options, dateEnv) {
-        let initialDateInput = options.initialDate;
-        // compute the initial ambig-timezone date
-        if (initialDateInput != null) {
-            return dateEnv.createMarker(initialDateInput);
-        }
-        return getNow(options.now, dateEnv); // getNow already returns unzoned
-    }
-    function getNow(nowInput, dateEnv) {
-        if (typeof nowInput === 'function') {
-            nowInput = nowInput();
-        }
-        if (nowInput == null) {
-            return dateEnv.createNowMarker();
-        }
-        return dateEnv.createMarker(nowInput);
-    }
-
     class DateProfileGenerator {
         constructor(props) {
             this.props = props;
-            this.nowDate = getNow(props.nowInput, props.dateEnv);
             this.initHiddenDays();
         }
         /* Date Range Computation
@@ -2870,7 +2867,7 @@ var FullCalendar = (function (exports) {
         buildValidRange() {
             let input = this.props.validRangeInput;
             let simpleInput = typeof input === 'function'
-                ? input.call(this.props.calendarApi, this.nowDate)
+                ? input.call(this.props.calendarApi, this.props.dateEnv.toDate(this.props.nowManager.getDateMarker()))
                 : input;
             return this.refineRange(simpleInput) ||
                 { start: null, end: null }; // completely open-ended
@@ -4762,6 +4759,85 @@ var FullCalendar = (function (exports) {
     // global state
     const interactionSettingsStore = {};
 
+    class NowTimer extends x$1 {
+        constructor(props, context) {
+            super(props, context);
+            this.handleRefresh = () => {
+                let timing = this.computeTiming();
+                if (timing.state.nowDate.valueOf() !== this.state.nowDate.valueOf()) {
+                    this.setState(timing.state);
+                }
+                this.clearTimeout();
+                this.setTimeout(timing.waitMs);
+            };
+            this.handleVisibilityChange = () => {
+                if (!document.hidden) {
+                    this.handleRefresh();
+                }
+            };
+            this.state = this.computeTiming().state;
+        }
+        render() {
+            let { props, state } = this;
+            return props.children(state.nowDate, state.todayRange);
+        }
+        componentDidMount() {
+            this.setTimeout();
+            this.context.nowManager.addResetListener(this.handleRefresh);
+            // fired tab becomes visible after being hidden
+            document.addEventListener('visibilitychange', this.handleVisibilityChange);
+        }
+        componentDidUpdate(prevProps) {
+            if (prevProps.unit !== this.props.unit) {
+                this.clearTimeout();
+                this.setTimeout();
+            }
+        }
+        componentWillUnmount() {
+            this.clearTimeout();
+            this.context.nowManager.removeResetListener(this.handleRefresh);
+            document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+        }
+        computeTiming() {
+            let { props, context } = this;
+            let unroundedNow = context.nowManager.getDateMarker();
+            let currentUnitStart = context.dateEnv.startOf(unroundedNow, props.unit);
+            let nextUnitStart = context.dateEnv.add(currentUnitStart, createDuration(1, props.unit));
+            let waitMs = nextUnitStart.valueOf() - unroundedNow.valueOf();
+            // there is a max setTimeout ms value (https://stackoverflow.com/a/3468650/96342)
+            // ensure no longer than a day
+            waitMs = Math.min(1000 * 60 * 60 * 24, waitMs);
+            return {
+                state: { nowDate: currentUnitStart, todayRange: buildDayRange(currentUnitStart) },
+                waitMs,
+            };
+        }
+        setTimeout(waitMs = this.computeTiming().waitMs) {
+            // NOTE: timeout could take longer than expected if tab sleeps,
+            // which is why we listen to 'visibilitychange'
+            this.timeoutId = setTimeout(() => {
+                // NOTE: timeout could also return *earlier* than expected, and we need to wait 2 ms more
+                // This is why use use same waitMs from computeTiming, so we don't skip an interval while
+                // .setState() is executing
+                const timing = this.computeTiming();
+                this.setState(timing.state, () => {
+                    this.setTimeout(timing.waitMs);
+                });
+            }, waitMs);
+        }
+        clearTimeout() {
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId);
+            }
+        }
+    }
+    NowTimer.contextType = ViewContextType;
+    function buildDayRange(date) {
+        let start = startOfDay(date);
+        let end = addDays(start, 1);
+        return { start, end };
+    }
+
     class CalendarImpl {
         getCurrentData() {
             return this.currentDataManager.getCurrentData();
@@ -4917,7 +4993,7 @@ var FullCalendar = (function (exports) {
             this.unselect();
             this.dispatch({
                 type: 'CHANGE_DATE',
-                dateMarker: getNow(state.calendarOptions.now, state.dateEnv),
+                dateMarker: state.nowManager.getDateMarker(),
             });
         }
         gotoDate(zonedDateInput) {
@@ -5318,7 +5394,7 @@ var FullCalendar = (function (exports) {
     function getDateMeta(date, todayRange, nowDate, dateProfile) {
         return {
             dow: date.getUTCDay(),
-            isDisabled: Boolean(dateProfile && !rangeContainsMarker(dateProfile.activeRange, date)),
+            isDisabled: Boolean(dateProfile && (!dateProfile.activeRange || !rangeContainsMarker(dateProfile.activeRange, date))),
             isOther: Boolean(dateProfile && !rangeContainsMarker(dateProfile.currentRange, date)),
             isToday: Boolean(todayRange && rangeContainsMarker(todayRange, date)),
             isPast: Boolean(nowDate ? (date < nowDate) : todayRange ? (date < todayRange.start) : false),
@@ -5504,10 +5580,10 @@ var FullCalendar = (function (exports) {
     function computeRect(el) {
         let rect = el.getBoundingClientRect();
         return {
-            left: rect.left + window.pageXOffset,
-            top: rect.top + window.pageYOffset,
-            right: rect.right + window.pageXOffset,
-            bottom: rect.bottom + window.pageYOffset,
+            left: rect.left + window.scrollX,
+            top: rect.top + window.scrollY,
+            right: rect.right + window.scrollX,
+            bottom: rect.bottom + window.scrollY,
         };
     }
     function computeClippedClientRect(el) {
@@ -5698,16 +5774,16 @@ var FullCalendar = (function (exports) {
     }
     class WindowScrollController extends ScrollController {
         getScrollTop() {
-            return window.pageYOffset;
+            return window.scrollY;
         }
         getScrollLeft() {
-            return window.pageXOffset;
+            return window.scrollX;
         }
         setScrollTop(n) {
-            window.scroll(window.pageXOffset, n);
+            window.scroll(window.scrollX, n);
         }
         setScrollLeft(n) {
-            window.scroll(n, window.pageYOffset);
+            window.scroll(n, window.scrollY);
         }
         getScrollWidth() {
             return document.documentElement.scrollWidth;
@@ -6083,7 +6159,13 @@ var FullCalendar = (function (exports) {
             let navLinkAttrs = (!dayMeta.isDisabled && props.colCnt > 1)
                 ? buildNavLinkAttrs(this.context, date)
                 : {};
-            let renderProps = Object.assign(Object.assign(Object.assign({ date: dateEnv.toDate(date), view: viewApi }, props.extraRenderProps), { text }), dayMeta);
+            let publicDate = dateEnv.toDate(date);
+            // workaround for Luxon (and maybe moment) returning prior-days when start-of-day
+            // in DST gap: https://github.com/fullcalendar/fullcalendar/issues/7633
+            if (dateEnv.namedTimeZoneImpl) {
+                publicDate = addMs(publicDate, 3600000); // add an hour
+            }
+            let renderProps = Object.assign(Object.assign(Object.assign({ date: publicDate, view: viewApi }, props.extraRenderProps), { text }), dayMeta);
             return (y(ContentContainer, { elTag: "th", elClasses: classNames, elAttrs: Object.assign({ role: 'columnheader', colSpan: props.colSpan, 'data-date': !dayMeta.isDisabled ? formatDayString(date) : undefined }, props.extraDataAttrs), renderProps: renderProps, generatorName: "dayHeaderContent", customGenerator: options.dayHeaderContent, defaultGenerator: renderInner$1, classNameGenerator: options.dayHeaderClassNames, didMount: options.dayHeaderDidMount, willUnmount: options.dayHeaderWillUnmount }, (InnerContainer) => (y("div", { className: "fc-scrollgrid-sync-inner" }, !dayMeta.isDisabled && (y(InnerContainer, { elTag: "a", elAttrs: navLinkAttrs, elClasses: [
                     'fc-col-header-cell-cushion',
                     props.isSticky && 'fc-sticky',
@@ -6120,65 +6202,6 @@ var FullCalendar = (function (exports) {
                         'aria-label': dateEnv.format(date, WEEKDAY_FORMAT),
                     } })))));
         }
-    }
-
-    class NowTimer extends x$1 {
-        constructor(props, context) {
-            super(props, context);
-            this.initialNowDate = getNow(context.options.now, context.dateEnv);
-            this.initialNowQueriedMs = new Date().valueOf();
-            this.state = this.computeTiming().currentState;
-        }
-        render() {
-            let { props, state } = this;
-            return props.children(state.nowDate, state.todayRange);
-        }
-        componentDidMount() {
-            this.setTimeout();
-        }
-        componentDidUpdate(prevProps) {
-            if (prevProps.unit !== this.props.unit) {
-                this.clearTimeout();
-                this.setTimeout();
-            }
-        }
-        componentWillUnmount() {
-            this.clearTimeout();
-        }
-        computeTiming() {
-            let { props, context } = this;
-            let unroundedNow = addMs(this.initialNowDate, new Date().valueOf() - this.initialNowQueriedMs);
-            let currentUnitStart = context.dateEnv.startOf(unroundedNow, props.unit);
-            let nextUnitStart = context.dateEnv.add(currentUnitStart, createDuration(1, props.unit));
-            let waitMs = nextUnitStart.valueOf() - unroundedNow.valueOf();
-            // there is a max setTimeout ms value (https://stackoverflow.com/a/3468650/96342)
-            // ensure no longer than a day
-            waitMs = Math.min(1000 * 60 * 60 * 24, waitMs);
-            return {
-                currentState: { nowDate: currentUnitStart, todayRange: buildDayRange(currentUnitStart) },
-                nextState: { nowDate: nextUnitStart, todayRange: buildDayRange(nextUnitStart) },
-                waitMs,
-            };
-        }
-        setTimeout() {
-            let { nextState, waitMs } = this.computeTiming();
-            this.timeoutId = setTimeout(() => {
-                this.setState(nextState, () => {
-                    this.setTimeout();
-                });
-            }, waitMs);
-        }
-        clearTimeout() {
-            if (this.timeoutId) {
-                clearTimeout(this.timeoutId);
-            }
-        }
-    }
-    NowTimer.contextType = ViewContextType;
-    function buildDayRange(date) {
-        let start = startOfDay(date);
-        let end = addDays(start, 1);
-        return { start, end };
     }
 
     class DayHeader extends BaseComponent {
@@ -7056,8 +7079,11 @@ var FullCalendar = (function (exports) {
     class EventContainer extends BaseComponent {
         constructor() {
             super(...arguments);
+            // memo
+            this.buildPublicEvent = memoize((context, eventDef, eventInstance) => new EventImpl(context, eventDef, eventInstance));
             this.handleEl = (el) => {
                 this.el = el;
+                setRef(this.props.elRef, el);
                 if (el) {
                     setElSeg(el, this.props.seg);
                 }
@@ -7070,7 +7096,7 @@ var FullCalendar = (function (exports) {
             const { eventRange } = seg;
             const { ui } = eventRange;
             const renderProps = {
-                event: new EventImpl(context, eventRange.def, eventRange.instance),
+                event: this.buildPublicEvent(context, eventRange.def, eventRange.instance),
                 view: context.viewApi,
                 timeText: props.timeText,
                 textColor: ui.textColor,
@@ -7089,11 +7115,11 @@ var FullCalendar = (function (exports) {
                 isDragging: Boolean(props.isDragging),
                 isResizing: Boolean(props.isResizing),
             };
-            return (y(ContentContainer, Object.assign({}, props /* contains children */, { elRef: this.handleEl, elClasses: [
+            return (y(ContentContainer, { elRef: this.handleEl, elTag: props.elTag, elAttrs: props.elAttrs, elClasses: [
                     ...getEventClassNames(renderProps),
                     ...seg.eventRange.ui.classNames,
                     ...(props.elClasses || []),
-                ], renderProps: renderProps, generatorName: "eventContent", customGenerator: options.eventContent, defaultGenerator: props.defaultGenerator, classNameGenerator: options.eventClassNames, didMount: options.eventDidMount, willUnmount: options.eventWillUnmount })));
+                ], elStyle: props.elStyle, renderProps: renderProps, generatorName: "eventContent", customGenerator: options.eventContent, defaultGenerator: props.defaultGenerator, classNameGenerator: options.eventClassNames, didMount: options.eventDidMount, willUnmount: options.eventWillUnmount }, props.children));
         }
         componentDidUpdate(prevProps) {
             if (this.el && this.props.seg !== prevProps.seg) {
@@ -7120,6 +7146,9 @@ var FullCalendar = (function (exports) {
                 Boolean(eventContentArg.isEndResizable) && (y("div", { className: "fc-event-resizer fc-event-resizer-end" }))))));
         }
     }
+    StandardEvent.addPropsEquality({
+        seg: isPropsEqual,
+    });
     function renderInnerContent$1$1(innerProps) {
         return (y("div", { className: "fc-event-main-frame" },
             innerProps.timeText && (y("div", { className: "fc-event-time" }, innerProps.timeText)),
@@ -7134,7 +7163,7 @@ var FullCalendar = (function (exports) {
             date: context.dateEnv.toDate(props.date),
             view: context.viewApi,
         };
-        return (y(ContentContainer, Object.assign({}, props /* includes children */, { elTag: props.elTag || 'div', renderProps: renderProps, generatorName: "nowIndicatorContent", customGenerator: options.nowIndicatorContent, classNameGenerator: options.nowIndicatorClassNames, didMount: options.nowIndicatorDidMount, willUnmount: options.nowIndicatorWillUnmount })));
+        return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag || 'div', elAttrs: props.elAttrs, elClasses: props.elClasses, elStyle: props.elStyle, renderProps: renderProps, generatorName: "nowIndicatorContent", customGenerator: options.nowIndicatorContent, classNameGenerator: options.nowIndicatorClassNames, didMount: options.nowIndicatorDidMount, willUnmount: options.nowIndicatorWillUnmount }, props.children));
     }));
 
     const DAY_NUM_FORMAT = createFormatter({ day: 'numeric' });
@@ -7157,12 +7186,12 @@ var FullCalendar = (function (exports) {
                 dateEnv: context.dateEnv,
                 monthStartFormat: options.monthStartFormat,
             });
-            return (y(ContentContainer, Object.assign({}, props /* includes children */, { elClasses: [
+            return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag, elAttrs: Object.assign(Object.assign({}, props.elAttrs), (renderProps.isDisabled ? {} : { 'data-date': formatDayString(props.date) })), elClasses: [
                     ...getDayClassNames(renderProps, context.theme),
                     ...(props.elClasses || []),
-                ], elAttrs: Object.assign(Object.assign({}, props.elAttrs), (renderProps.isDisabled ? {} : { 'data-date': formatDayString(props.date) })), renderProps: renderProps, generatorName: "dayCellContent", customGenerator: options.dayCellContent, defaultGenerator: props.defaultGenerator, classNameGenerator:
+                ], elStyle: props.elStyle, renderProps: renderProps, generatorName: "dayCellContent", customGenerator: options.dayCellContent, defaultGenerator: props.defaultGenerator, classNameGenerator: 
                 // don't use custom classNames if disabled
-                renderProps.isDisabled ? undefined : options.dayCellClassNames, didMount: options.dayCellDidMount, willUnmount: options.dayCellWillUnmount })));
+                renderProps.isDisabled ? undefined : options.dayCellClassNames, didMount: options.dayCellDidMount, willUnmount: options.dayCellWillUnmount }, props.children));
         }
     }
     function hasCustomDayCellContent(options) {
@@ -7199,7 +7228,7 @@ var FullCalendar = (function (exports) {
         let text = dateEnv.format(date, format);
         let renderProps = { num, text, date };
         return (y(ContentContainer // why isn't WeekNumberContentArg being auto-detected?
-        , Object.assign({}, props /* includes children */, { renderProps: renderProps, generatorName: "weekNumberContent", customGenerator: options.weekNumberContent, defaultGenerator: renderInner, classNameGenerator: options.weekNumberClassNames, didMount: options.weekNumberDidMount, willUnmount: options.weekNumberWillUnmount })));
+        , { elRef: props.elRef, elTag: props.elTag, elAttrs: props.elAttrs, elClasses: props.elClasses, elStyle: props.elStyle, renderProps: renderProps, generatorName: "weekNumberContent", customGenerator: options.weekNumberContent, defaultGenerator: renderInner, classNameGenerator: options.weekNumberClassNames, didMount: options.weekNumberDidMount, willUnmount: options.weekNumberWillUnmount }, props.children));
     }));
     function renderInner(innerProps) {
         return innerProps.text;
@@ -7732,7 +7761,7 @@ var FullCalendar = (function (exports) {
         moreLinkText: 'more',
         noEventsText: 'No events to display',
     };
-    const RAW_EN_LOCALE = Object.assign(Object.assign({}, MINIMAL_RAW_EN_LOCALE), {
+    const RAW_EN_LOCALE = Object.assign(Object.assign({}, MINIMAL_RAW_EN_LOCALE), { 
         // Includes things we don't want other locales to inherit,
         // things that derive from other translatable strings.
         buttonHints: {
@@ -8156,6 +8185,25 @@ var FullCalendar = (function (exports) {
                 viewType = action.viewType;
         }
         return viewType;
+    }
+
+    function reduceCurrentDate(currentDate, action) {
+        switch (action.type) {
+            case 'CHANGE_DATE':
+                return action.dateMarker;
+            default:
+                return currentDate;
+        }
+    }
+    // should be initialized once and stay constant
+    // this will change too
+    function getInitialDate(options, dateEnv, nowManager) {
+        let initialDateInput = options.initialDate;
+        // compute the initial ambig-timezone date
+        if (initialDateInput != null) {
+            return dateEnv.createMarker(initialDateInput);
+        }
+        return nowManager.getDateMarker();
     }
 
     function reduceDynamicOptionOverrides(dynamicOptionOverrides, action) {
@@ -8667,6 +8715,7 @@ var FullCalendar = (function (exports) {
                     endTime: refined.endTime || null,
                     startRecur: refined.startRecur ? dateEnv.createMarker(refined.startRecur) : null,
                     endRecur: refined.endRecur ? dateEnv.createMarker(refined.endRecur) : null,
+                    dateEnv,
                 };
                 let duration;
                 if (refined.duration) {
@@ -8686,7 +8735,7 @@ var FullCalendar = (function (exports) {
         expand(typeData, framingRange, dateEnv) {
             let clippedFramingRange = intersectRanges(framingRange, { start: typeData.startRecur, end: typeData.endRecur });
             if (clippedFramingRange) {
-                return expandRanges(typeData.daysOfWeek, typeData.startTime, clippedFramingRange, dateEnv);
+                return expandRanges(typeData.daysOfWeek, typeData.startTime, typeData.dateEnv, dateEnv, clippedFramingRange);
             }
             return [];
         },
@@ -8696,7 +8745,7 @@ var FullCalendar = (function (exports) {
         recurringTypes: [recurring],
         eventRefiners: SIMPLE_RECURRING_REFINERS,
     });
-    function expandRanges(daysOfWeek, startTime, framingRange, dateEnv) {
+    function expandRanges(daysOfWeek, startTime, eventDateEnv, calendarDateEnv, framingRange) {
         let dowHash = daysOfWeek ? arrayToHash(daysOfWeek) : null;
         let dayMarker = startOfDay(framingRange.start);
         let endMarker = framingRange.end;
@@ -8706,12 +8755,12 @@ var FullCalendar = (function (exports) {
             // if everyday, or this particular day-of-week
             if (!dowHash || dowHash[dayMarker.getUTCDay()]) {
                 if (startTime) {
-                    instanceStart = dateEnv.add(dayMarker, startTime);
+                    instanceStart = calendarDateEnv.add(dayMarker, startTime);
                 }
                 else {
                     instanceStart = dayMarker;
                 }
-                instanceStarts.push(instanceStart);
+                instanceStarts.push(calendarDateEnv.createMarker(eventDateEnv.toDate(instanceStart)));
             }
             dayMarker = addDays(dayMarker, 1);
         }
@@ -8876,6 +8925,49 @@ var FullCalendar = (function (exports) {
         return { year: 'numeric', month: 'long', day: 'numeric' };
     }
 
+    /*
+    TODO: test switching timezones when NO timezone plugin
+    */
+    class CalendarNowManager {
+        constructor() {
+            this.resetListeners = new Set();
+        }
+        handleInput(dateEnv, // will change if timezone setup changed
+        nowInput) {
+            const oldDateEnv = this.dateEnv;
+            if (dateEnv !== oldDateEnv) {
+                if (typeof nowInput === 'function') {
+                    this.nowFn = nowInput;
+                }
+                else if (!oldDateEnv) { // first time?
+                    this.nowAnchorDate = dateEnv.toDate(nowInput
+                        ? dateEnv.createMarker(nowInput)
+                        : dateEnv.createNowMarker());
+                    this.nowAnchorQueried = Date.now();
+                }
+                this.dateEnv = dateEnv;
+                // not first time? fire reset handlers
+                if (oldDateEnv) {
+                    for (const resetListener of this.resetListeners.values()) {
+                        resetListener();
+                    }
+                }
+            }
+        }
+        getDateMarker() {
+            return this.nowAnchorDate
+                ? this.dateEnv.timestampToMarker(this.nowAnchorDate.valueOf() +
+                    (Date.now() - this.nowAnchorQueried))
+                : this.dateEnv.createMarker(this.nowFn());
+        }
+        addResetListener(handler) {
+            this.resetListeners.add(handler);
+        }
+        removeResetListener(handler) {
+            this.resetListeners.delete(handler);
+        }
+    }
+
     // in future refactor, do the redux-style function(state=initial) for initial-state
     // also, whatever is happening in constructor, have it happen in action queue too
     class CalendarDataManager {
@@ -8895,6 +8987,7 @@ var FullCalendar = (function (exports) {
             this.buildEventUiBases = memoize(buildEventUiBases);
             this.parseContextBusinessHours = memoizeObjArg(parseContextBusinessHours);
             this.buildTitle = memoize(buildTitle);
+            this.nowManager = new CalendarNowManager();
             this.emitter = new Emitter();
             this.actionRunner = new TaskRunner(this._handleAction.bind(this), this.updateData.bind(this));
             this.currentCalendarOptionsInput = {};
@@ -8910,6 +9003,7 @@ var FullCalendar = (function (exports) {
             };
             this.props = props;
             this.actionRunner.pause();
+            this.nowManager = new CalendarNowManager();
             let dynamicOptionOverrides = {};
             let optionsData = this.computeOptionsData(props.optionOverrides, dynamicOptionOverrides, props.calendarApi);
             let currentViewType = optionsData.calendarOptions.initialView || optionsData.pluginHooks.initialView;
@@ -8919,12 +9013,8 @@ var FullCalendar = (function (exports) {
             props.calendarApi.currentDataManager = this;
             this.emitter.setThisContext(props.calendarApi);
             this.emitter.setOptions(currentViewData.options);
-            let currentDate = getInitialDate(optionsData.calendarOptions, optionsData.dateEnv);
-            let dateProfile = currentViewData.dateProfileGenerator.build(currentDate);
-            if (!rangeContainsMarker(dateProfile.activeRange, currentDate)) {
-                currentDate = dateProfile.currentRange.start;
-            }
             let calendarContext = {
+                nowManager: this.nowManager,
                 dateEnv: optionsData.dateEnv,
                 options: optionsData.calendarOptions,
                 pluginHooks: optionsData.pluginHooks,
@@ -8933,6 +9023,11 @@ var FullCalendar = (function (exports) {
                 emitter: this.emitter,
                 getCurrentData: this.getCurrentData,
             };
+            let currentDate = getInitialDate(optionsData.calendarOptions, optionsData.dateEnv, this.nowManager);
+            let dateProfile = currentViewData.dateProfileGenerator.build(currentDate);
+            if (!rangeContainsMarker(dateProfile.activeRange, currentDate)) {
+                currentDate = dateProfile.currentRange.start;
+            }
             // needs to be after setThisContext
             for (let callback of optionsData.pluginHooks.contextInit) {
                 callback(calendarContext);
@@ -8993,6 +9088,7 @@ var FullCalendar = (function (exports) {
             emitter.setThisContext(props.calendarApi);
             emitter.setOptions(currentViewData.options);
             let calendarContext = {
+                nowManager: this.nowManager,
                 dateEnv: optionsData.dateEnv,
                 options: optionsData.calendarOptions,
                 pluginHooks: optionsData.pluginHooks,
@@ -9060,7 +9156,7 @@ var FullCalendar = (function (exports) {
             let oldData = this.data;
             let optionsData = this.computeOptionsData(props.optionOverrides, state.dynamicOptionOverrides, props.calendarApi);
             let currentViewData = this.computeCurrentViewData(state.currentViewType, optionsData, props.optionOverrides, state.dynamicOptionOverrides);
-            let data = this.data = Object.assign(Object.assign(Object.assign({ viewTitle: this.buildTitle(state.dateProfile, currentViewData.options, optionsData.dateEnv), calendarApi: props.calendarApi, dispatch: this.dispatch, emitter: this.emitter, getCurrentData: this.getCurrentData }, optionsData), currentViewData), state);
+            let data = this.data = Object.assign(Object.assign(Object.assign({ nowManager: this.nowManager, viewTitle: this.buildTitle(state.dateProfile, currentViewData.options, optionsData.dateEnv), calendarApi: props.calendarApi, dispatch: this.dispatch, emitter: this.emitter, getCurrentData: this.getCurrentData }, optionsData), currentViewData), state);
             let changeHandlers = optionsData.pluginHooks.optionChangeHandlers;
             let oldCalendarOptions = oldData && oldData.calendarOptions;
             let newCalendarOptions = optionsData.calendarOptions;
@@ -9168,8 +9264,10 @@ var FullCalendar = (function (exports) {
             }
             let { refinedOptions, extra } = this.processRawViewOptions(viewSpec, optionsData.pluginHooks, optionsData.localeDefaults, optionOverrides, dynamicOptionOverrides);
             warnUnknownOptions(extra);
+            this.nowManager.handleInput(optionsData.dateEnv, refinedOptions.now);
             let dateProfileGenerator = this.buildDateProfileGenerator({
                 dateProfileGeneratorClass: viewSpec.optionDefaults.dateProfileGeneratorClass,
+                nowManager: this.nowManager,
                 duration: viewSpec.duration,
                 durationUnit: viewSpec.durationUnit,
                 usesMinMaxTime: viewSpec.optionDefaults.usesMinMaxTime,
@@ -9183,7 +9281,6 @@ var FullCalendar = (function (exports) {
                 dateIncrement: refinedOptions.dateIncrement,
                 hiddenDays: refinedOptions.hiddenDays,
                 weekends: refinedOptions.weekends,
-                nowInput: refinedOptions.now,
                 validRangeInput: refinedOptions.validRange,
                 visibleRangeInput: refinedOptions.visibleRange,
                 fixedWeekCount: refinedOptions.fixedWeekCount,
@@ -9587,8 +9684,6 @@ var FullCalendar = (function (exports) {
         render() {
             let { props } = this;
             let { toolbarConfig, options } = props;
-            let toolbarProps = this.buildToolbarProps(props.viewSpec, props.dateProfile, props.dateProfileGenerator, props.currentDate, getNow(props.options.now, props.dateEnv), // TODO: use NowTimer????
-            props.viewTitle);
             let viewVGrow = false;
             let viewHeight = '';
             let viewAspectRatio;
@@ -9604,16 +9699,20 @@ var FullCalendar = (function (exports) {
             else {
                 viewAspectRatio = Math.max(options.aspectRatio, 0.5); // prevent from getting too tall
             }
-            let viewContext = this.buildViewContext(props.viewSpec, props.viewApi, props.options, props.dateProfileGenerator, props.dateEnv, props.theme, props.pluginHooks, props.dispatch, props.getCurrentData, props.emitter, props.calendarApi, this.registerInteractiveComponent, this.unregisterInteractiveComponent);
+            let viewContext = this.buildViewContext(props.viewSpec, props.viewApi, props.options, props.dateProfileGenerator, props.dateEnv, props.nowManager, props.theme, props.pluginHooks, props.dispatch, props.getCurrentData, props.emitter, props.calendarApi, this.registerInteractiveComponent, this.unregisterInteractiveComponent);
             let viewLabelId = (toolbarConfig.header && toolbarConfig.header.hasTitle)
                 ? this.state.viewLabelId
                 : undefined;
             return (y(ViewContextType.Provider, { value: viewContext },
-                toolbarConfig.header && (y(Toolbar, Object.assign({ ref: this.headerRef, extraClassName: "fc-header-toolbar", model: toolbarConfig.header, titleId: viewLabelId }, toolbarProps))),
-                y(ViewHarness, { liquid: viewVGrow, height: viewHeight, aspectRatio: viewAspectRatio, labeledById: viewLabelId },
-                    this.renderView(props),
-                    this.buildAppendContent()),
-                toolbarConfig.footer && (y(Toolbar, Object.assign({ ref: this.footerRef, extraClassName: "fc-footer-toolbar", model: toolbarConfig.footer, titleId: "" }, toolbarProps)))));
+                y(NowTimer, { unit: "day" }, (nowDate) => {
+                    let toolbarProps = this.buildToolbarProps(props.viewSpec, props.dateProfile, props.dateProfileGenerator, props.currentDate, nowDate, props.viewTitle);
+                    return (y(_, null,
+                        toolbarConfig.header && (y(Toolbar, Object.assign({ ref: this.headerRef, extraClassName: "fc-header-toolbar", model: toolbarConfig.header, titleId: viewLabelId }, toolbarProps))),
+                        y(ViewHarness, { liquid: viewVGrow, height: viewHeight, aspectRatio: viewAspectRatio, labeledById: viewLabelId },
+                            this.renderView(props),
+                            this.buildAppendContent()),
+                        toolbarConfig.footer && (y(Toolbar, Object.assign({ ref: this.footerRef, extraClassName: "fc-footer-toolbar", model: toolbarConfig.footer, titleId: "" }, toolbarProps)))));
+                })));
         }
         componentDidMount() {
             let { props } = this;
@@ -9835,7 +9934,7 @@ var FullCalendar = (function (exports) {
         return sliceEventStore(props.eventStore, props.eventUiBases, props.dateProfile.activeRange, allDay ? props.nextDayThreshold : null).fg;
     }
 
-    const version = '6.1.11';
+    const version = '6.1.18';
 
     config.touchMouseIgnoreWait = 500;
     let ignoreMouseDepth = 0;
@@ -9937,8 +10036,8 @@ var FullCalendar = (function (exports) {
             };
             this.handleScroll = (ev) => {
                 if (!this.shouldIgnoreMove) {
-                    let pageX = (window.pageXOffset - this.prevScrollX) + this.prevPageX;
-                    let pageY = (window.pageYOffset - this.prevScrollY) + this.prevPageY;
+                    let pageX = (window.scrollX - this.prevScrollX) + this.prevPageX;
+                    let pageY = (window.scrollY - this.prevScrollY) + this.prevPageY;
                     this.emitter.trigger('pointermove', {
                         origEvent: ev,
                         isTouch: this.isTouchDragging,
@@ -10007,8 +10106,8 @@ var FullCalendar = (function (exports) {
             if (this.shouldWatchScroll) {
                 this.prevPageX = ev.pageX;
                 this.prevPageY = ev.pageY;
-                this.prevScrollX = window.pageXOffset;
-                this.prevScrollY = window.pageYOffset;
+                this.prevScrollX = window.scrollX;
+                this.prevScrollY = window.scrollY;
             }
         }
         destroyScrollWatch() {
@@ -10127,15 +10226,15 @@ var FullCalendar = (function (exports) {
         start(sourceEl, pageX, pageY) {
             this.sourceEl = sourceEl;
             this.sourceElRect = this.sourceEl.getBoundingClientRect();
-            this.origScreenX = pageX - window.pageXOffset;
-            this.origScreenY = pageY - window.pageYOffset;
+            this.origScreenX = pageX - window.scrollX;
+            this.origScreenY = pageY - window.scrollY;
             this.deltaX = 0;
             this.deltaY = 0;
             this.updateElPosition();
         }
         handleMove(pageX, pageY) {
-            this.deltaX = (pageX - window.pageXOffset) - this.origScreenX;
-            this.deltaY = (pageY - window.pageYOffset) - this.origScreenY;
+            this.deltaX = (pageX - window.scrollX) - this.origScreenX;
+            this.deltaY = (pageY - window.scrollY) - this.origScreenY;
             this.updateElPosition();
         }
         // can be called before start
@@ -10213,6 +10312,7 @@ var FullCalendar = (function (exports) {
                 // would use preventSelection(), but that prevents selectstart, causing problems.
                 mirrorEl.style.userSelect = 'none';
                 mirrorEl.style.webkitUserSelect = 'none';
+                mirrorEl.style.pointerEvents = 'none';
                 mirrorEl.classList.add('fc-event-dragging');
                 applyStyle(mirrorEl, {
                     position: 'fixed',
@@ -10368,7 +10468,7 @@ var FullCalendar = (function (exports) {
             this.everMovedRight = false;
             this.animate = () => {
                 if (this.isAnimating) { // wasn't cancelled between animation calls
-                    let edge = this.computeBestEdge(this.pointerScreenX + window.pageXOffset, this.pointerScreenY + window.pageYOffset);
+                    let edge = this.computeBestEdge(this.pointerScreenX + window.scrollX, this.pointerScreenY + window.scrollY);
                     if (edge) {
                         let now = getTime();
                         this.handleSide(edge, (now - this.msSinceRequest) / 1000);
@@ -10394,8 +10494,8 @@ var FullCalendar = (function (exports) {
         }
         handleMove(pageX, pageY) {
             if (this.isEnabled) {
-                let pointerScreenX = pageX - window.pageXOffset;
-                let pointerScreenY = pageY - window.pageYOffset;
+                let pointerScreenX = pageX - window.scrollX;
+                let pointerScreenY = pageY - window.scrollY;
                 let yDelta = this.pointerScreenY === null ? 0 : pointerScreenY - this.pointerScreenY;
                 let xDelta = this.pointerScreenX === null ? 0 : pointerScreenX - this.pointerScreenX;
                 if (yDelta < 0) {
@@ -10475,6 +10575,10 @@ var FullCalendar = (function (exports) {
                         (!bestSide || bestSide.distance > bottomDist)) {
                         bestSide = { scrollCache, name: 'bottom', distance: bottomDist };
                     }
+                    /*
+                    TODO: fix broken RTL scrolling. canScrollLeft always returning false
+                    https://github.com/fullcalendar/fullcalendar/issues/4837
+                    */
                     if (leftDist <= edgeThreshold && this.everMovedLeft && scrollCache.canScrollLeft() &&
                         (!bestSide || bestSide.distance > leftDist)) {
                         bestSide = { scrollCache, name: 'left', distance: leftDist };
@@ -10502,6 +10606,10 @@ var FullCalendar = (function (exports) {
                     els.push(query);
                 }
                 else {
+                    /*
+                    TODO: in the future, always have auto-scroll happen on element where current Hit came from
+                    Ticket: https://github.com/fullcalendar/fullcalendar/issues/4593
+                    */
                     els.push(...Array.prototype.slice.call(scrollStartEl.getRootNode().querySelectorAll(query)));
                 }
             }
@@ -10676,6 +10784,7 @@ var FullCalendar = (function (exports) {
     */
     class OffsetTracker {
         constructor(el) {
+            this.el = el;
             this.origRect = computeRect(el);
             // will work fine for divs that have overflow:hidden
             this.scrollCaches = getClippingParents(el).map((scrollEl) => new ElementScrollGeomCache(scrollEl, true));
@@ -10735,6 +10844,7 @@ var FullCalendar = (function (exports) {
             // options that can be set by caller
             this.useSubjectCenter = false;
             this.requireInitial = true; // if doesn't start out on a hit, won't emit any events
+            this.disablePointCheck = false;
             this.initialHit = null;
             this.movingHit = null;
             this.finalHit = null; // won't ever be populated if shouldIgnoreMove
@@ -10851,6 +10961,13 @@ var FullCalendar = (function (exports) {
                         if (hit && (
                         // make sure the hit is within activeRange, meaning it's not a dead cell
                         rangeContainsRange(hit.dateProfile.activeRange, hit.dateSpan.range)) &&
+                            // Ensure the component we are querying for the hit is accessibly my the pointer
+                            // Prevents obscured calendars (ex: under a modal dialog) from accepting hit
+                            // https://github.com/fullcalendar/fullcalendar/issues/5026
+                            (this.disablePointCheck ||
+                                offsetTracker.el.contains(offsetTracker.el.getRootNode().elementFromPoint(
+                                // add-back origins to get coordinate relative to top-left of window viewport
+                                positionLeft + originLeft - window.scrollX, positionTop + originTop - window.scrollY))) &&
                             (!bestHit || hit.layer > bestHit.layer)) {
                             hit.componentId = id;
                             hit.context = component.context;
@@ -11131,7 +11248,7 @@ var FullCalendar = (function (exports) {
                     let receivingOptions = receivingContext.options;
                     if (initialContext === receivingContext ||
                         (receivingOptions.editable && receivingOptions.droppable)) {
-                        mutation = computeEventMutation(initialHit, hit, receivingContext.getCurrentData().pluginHooks.eventDragMutationMassagers);
+                        mutation = computeEventMutation(initialHit, hit, this.eventRange.instance.range.start, receivingContext.getCurrentData().pluginHooks.eventDragMutationMassagers);
                         if (mutation) {
                             mutatedRelevantEvents = applyMutationToEventStore(relevantEvents, receivingContext.getCurrentData().eventUiBases, mutation, receivingContext);
                             interaction.mutatedEvents = mutatedRelevantEvents;
@@ -11338,7 +11455,7 @@ var FullCalendar = (function (exports) {
     // TODO: test this in IE11
     // QUESTION: why do we need it on the resizable???
     EventDragging.SELECTOR = '.fc-event-draggable, .fc-event-resizable';
-    function computeEventMutation(hit0, hit1, massagers) {
+    function computeEventMutation(hit0, hit1, eventInstanceStart, massagers) {
         let dateSpan0 = hit0.dateSpan;
         let dateSpan1 = hit1.dateSpan;
         let date0 = dateSpan0.range.start;
@@ -11350,7 +11467,12 @@ var FullCalendar = (function (exports) {
             if (dateSpan1.allDay) {
                 // means date1 is already start-of-day,
                 // but date0 needs to be converted
-                date0 = startOfDay(date0);
+                date0 = startOfDay(eventInstanceStart);
+            }
+            else {
+                // Moving from allDate->timed
+                // Doesn't matter where on the event the drag began, mutate the event's start-date to date1
+                date0 = eventInstanceStart;
             }
         }
         let delta = diffDates(date0, date1, hit0.context.dateEnv, hit0.componentId === hit1.componentId ?
@@ -11917,7 +12039,10 @@ var FullCalendar = (function (exports) {
             if (typeof settings.mirrorSelector === 'string') {
                 dragging.mirrorSelector = settings.mirrorSelector;
             }
-            new ExternalElementDragging(dragging, settings.eventData); // eslint-disable-line no-new
+            let externalDragging = new ExternalElementDragging(dragging, settings.eventData);
+            // The hit-detection system requires that the dnd-mirror-element be pointer-events:none,
+            // but this can't be guaranteed for third-party draggables, so disable
+            externalDragging.hitDragging.disablePointCheck = true;
         }
         destroy() {
             this.dragging.destroy();
@@ -12649,7 +12774,7 @@ var FullCalendar = (function (exports) {
         constructor() {
             super(...arguments);
             this.splitBusinessHourSegs = memoize(splitSegsByRow);
-            this.splitBgEventSegs = memoize(splitSegsByRow);
+            this.splitBgEventSegs = memoize(splitAllDaySegsByRow);
             this.splitFgEventSegs = memoize(splitSegsByRow);
             this.splitDateSelectionSegs = memoize(splitSegsByRow);
             this.splitEventDrag = memoize(splitInteractionByRow);
@@ -12673,7 +12798,7 @@ var FullCalendar = (function (exports) {
             return (y(NowTimer, { unit: "day" }, (nowDate, todayRange) => (y(_, null, props.cells.map((cells, row) => (y(TableRow, { ref: this.rowRefs.createRef(row), key: cells.length
                     ? cells[0].date.toISOString() /* best? or put key on cell? or use diff formatter? */
                     : row // in case there are no cells (like when resource view is loading)
-                , showDayNumbers: rowCnt > 1, showWeekNumbers: props.showWeekNumbers, todayRange: todayRange, dateProfile: props.dateProfile, cells: cells, renderIntro: props.renderRowIntro, businessHourSegs: businessHourSegsByRow[row], eventSelection: props.eventSelection, bgEventSegs: bgEventSegsByRow[row].filter(isSegAllDay) /* hack */, fgEventSegs: fgEventSegsByRow[row], dateSelectionSegs: dateSelectionSegsByRow[row], eventDrag: eventDragByRow[row], eventResize: eventResizeByRow[row], dayMaxEvents: props.dayMaxEvents, dayMaxEventRows: props.dayMaxEventRows, clientWidth: props.clientWidth, clientHeight: props.clientHeight, cellMinHeight: cellMinHeight, forPrint: props.forPrint })))))));
+                , showDayNumbers: rowCnt > 1, showWeekNumbers: props.showWeekNumbers, todayRange: todayRange, dateProfile: props.dateProfile, cells: cells, renderIntro: props.renderRowIntro, businessHourSegs: businessHourSegsByRow[row], eventSelection: props.eventSelection, bgEventSegs: bgEventSegsByRow[row], fgEventSegs: fgEventSegsByRow[row], dateSelectionSegs: dateSelectionSegsByRow[row], eventDrag: eventDragByRow[row], eventResize: eventResizeByRow[row], dayMaxEvents: props.dayMaxEvents, dayMaxEventRows: props.dayMaxEventRows, clientWidth: props.clientWidth, clientHeight: props.clientHeight, cellMinHeight: cellMinHeight, forPrint: props.forPrint })))))));
         }
         componentDidMount() {
             this.registerInteractiveComponent();
@@ -12741,6 +12866,9 @@ var FullCalendar = (function (exports) {
             let end = addDays(start, 1);
             return { start, end };
         }
+    }
+    function splitAllDaySegsByRow(segs, rowCnt) {
+        return splitSegsByRow(segs.filter(isSegAllDay), rowCnt);
     }
     function isSegAllDay(seg) {
         return seg.eventRange.def.allDay;
@@ -13726,7 +13854,7 @@ var FullCalendar = (function (exports) {
             }
             return segs.map((seg, i) => (y(NowIndicatorContainer
             // key doesn't matter. will only ever be one
-            , {
+            , { 
                 // key doesn't matter. will only ever be one
                 key: i, elClasses: ['fc-timegrid-now-indicator-line'], elStyle: {
                     top: slatCoords.computeDateTop(seg.start, date),
@@ -14079,7 +14207,7 @@ var FullCalendar = (function (exports) {
         return new DayTableModel(daySeries, false);
     }
 
-    var css_248z$2 = ".fc-v-event{background-color:var(--fc-event-bg-color);border:1px solid var(--fc-event-border-color);display:block}.fc-v-event .fc-event-main{color:var(--fc-event-text-color);height:100%}.fc-v-event .fc-event-main-frame{display:flex;flex-direction:column;height:100%}.fc-v-event .fc-event-time{flex-grow:0;flex-shrink:0;max-height:100%;overflow:hidden}.fc-v-event .fc-event-title-container{flex-grow:1;flex-shrink:1;min-height:0}.fc-v-event .fc-event-title{bottom:0;max-height:100%;overflow:hidden;top:0}.fc-v-event:not(.fc-event-start){border-top-left-radius:0;border-top-right-radius:0;border-top-width:0}.fc-v-event:not(.fc-event-end){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-width:0}.fc-v-event.fc-event-selected:before{left:-10px;right:-10px}.fc-v-event .fc-event-resizer-start{cursor:n-resize}.fc-v-event .fc-event-resizer-end{cursor:s-resize}.fc-v-event:not(.fc-event-selected) .fc-event-resizer{height:var(--fc-event-resizer-thickness);left:0;right:0}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-start{top:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer{left:50%;margin-left:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-start{top:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc .fc-timegrid .fc-daygrid-body{z-index:2}.fc .fc-timegrid-divider{padding:0 0 2px}.fc .fc-timegrid-body{min-height:100%;position:relative;z-index:1}.fc .fc-timegrid-axis-chunk{position:relative}.fc .fc-timegrid-axis-chunk>table,.fc .fc-timegrid-slots{position:relative;z-index:1}.fc .fc-timegrid-slot{border-bottom:0;height:1.5em}.fc .fc-timegrid-slot:empty:before{content:\"\\00a0\"}.fc .fc-timegrid-slot-minor{border-top-style:dotted}.fc .fc-timegrid-slot-label-cushion{display:inline-block;white-space:nowrap}.fc .fc-timegrid-slot-label{vertical-align:middle}.fc .fc-timegrid-axis-cushion,.fc .fc-timegrid-slot-label-cushion{padding:0 4px}.fc .fc-timegrid-axis-frame-liquid{height:100%}.fc .fc-timegrid-axis-frame{align-items:center;display:flex;justify-content:flex-end;overflow:hidden}.fc .fc-timegrid-axis-cushion{flex-shrink:0;max-width:60px}.fc-direction-ltr .fc-timegrid-slot-label-frame{text-align:right}.fc-direction-rtl .fc-timegrid-slot-label-frame{text-align:left}.fc-liquid-hack .fc-timegrid-axis-frame-liquid{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col.fc-day-today{background-color:var(--fc-today-bg-color)}.fc .fc-timegrid-col-frame{min-height:100%;position:relative}.fc-media-screen.fc-liquid-hack .fc-timegrid-col-frame{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols{bottom:0;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols>table{height:100%}.fc-media-screen .fc-timegrid-col-bg,.fc-media-screen .fc-timegrid-col-events,.fc-media-screen .fc-timegrid-now-indicator-container{left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col-bg{z-index:2}.fc .fc-timegrid-col-bg .fc-non-business{z-index:1}.fc .fc-timegrid-col-bg .fc-bg-event{z-index:2}.fc .fc-timegrid-col-bg .fc-highlight{z-index:3}.fc .fc-timegrid-bg-harness{left:0;position:absolute;right:0}.fc .fc-timegrid-col-events{z-index:3}.fc .fc-timegrid-now-indicator-container{bottom:0;overflow:hidden}.fc-direction-ltr .fc-timegrid-col-events{margin:0 2.5% 0 2px}.fc-direction-rtl .fc-timegrid-col-events{margin:0 2px 0 2.5%}.fc-timegrid-event-harness{position:absolute}.fc-timegrid-event-harness>.fc-timegrid-event{bottom:0;left:0;position:absolute;right:0;top:0}.fc-timegrid-event-harness-inset .fc-timegrid-event,.fc-timegrid-event.fc-event-mirror,.fc-timegrid-more-link{box-shadow:0 0 0 1px var(--fc-page-bg-color)}.fc-timegrid-event,.fc-timegrid-more-link{border-radius:3px;font-size:var(--fc-small-font-size)}.fc-timegrid-event{margin-bottom:1px}.fc-timegrid-event .fc-event-main{padding:1px 1px 0}.fc-timegrid-event .fc-event-time{font-size:var(--fc-small-font-size);margin-bottom:1px;white-space:nowrap}.fc-timegrid-event-short .fc-event-main-frame{flex-direction:row;overflow:hidden}.fc-timegrid-event-short .fc-event-time:after{content:\"\\00a0-\\00a0\"}.fc-timegrid-event-short .fc-event-title{font-size:var(--fc-small-font-size)}.fc-timegrid-more-link{background:var(--fc-more-link-bg-color);color:var(--fc-more-link-text-color);cursor:pointer;margin-bottom:1px;position:absolute;z-index:9999}.fc-timegrid-more-link-inner{padding:3px 2px;top:0}.fc-direction-ltr .fc-timegrid-more-link{right:0}.fc-direction-rtl .fc-timegrid-more-link{left:0}.fc .fc-timegrid-now-indicator-line{border-color:var(--fc-now-indicator-color);border-style:solid;border-width:1px 0 0;left:0;position:absolute;right:0;z-index:4}.fc .fc-timegrid-now-indicator-arrow{border-color:var(--fc-now-indicator-color);border-style:solid;margin-top:-5px;position:absolute;z-index:4}.fc-direction-ltr .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 0 5px 6px;left:0}.fc-direction-rtl .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 6px 5px 0;right:0}";
+    var css_248z$2 = ".fc-v-event{background-color:var(--fc-event-bg-color);border:1px solid var(--fc-event-border-color);display:block}.fc-v-event .fc-event-main{color:var(--fc-event-text-color);height:100%}.fc-v-event .fc-event-main-frame{display:flex;flex-direction:column;height:100%}.fc-v-event .fc-event-time{flex-grow:0;flex-shrink:0;max-height:100%;overflow:hidden}.fc-v-event .fc-event-title-container{flex-grow:1;flex-shrink:1;min-height:0}.fc-v-event .fc-event-title{bottom:0;max-height:100%;overflow:hidden;top:0}.fc-v-event:not(.fc-event-start){border-top-left-radius:0;border-top-right-radius:0;border-top-width:0}.fc-v-event:not(.fc-event-end){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-width:0}.fc-v-event.fc-event-selected:before{left:-10px;right:-10px}.fc-v-event .fc-event-resizer-start{cursor:n-resize}.fc-v-event .fc-event-resizer-end{cursor:s-resize}.fc-v-event:not(.fc-event-selected) .fc-event-resizer{height:var(--fc-event-resizer-thickness);left:0;right:0}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-start{top:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer{left:50%;margin-left:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-start{top:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc .fc-timegrid .fc-daygrid-body{z-index:2}.fc .fc-timegrid-divider{padding:0 0 2px}.fc .fc-timegrid-body{min-height:100%;position:relative;z-index:1}.fc .fc-timegrid-axis-chunk{position:relative}.fc .fc-timegrid-axis-chunk>table,.fc .fc-timegrid-slots{position:relative;z-index:1}.fc .fc-timegrid-slot{border-bottom:0;height:1.5em}.fc .fc-timegrid-slot:empty:before{content:\"\\00a0\"}.fc .fc-timegrid-slot-minor{border-top-style:dotted}.fc .fc-timegrid-slot-label-cushion{display:inline-block;white-space:nowrap}.fc .fc-timegrid-slot-label{vertical-align:middle}.fc .fc-timegrid-axis-cushion,.fc .fc-timegrid-slot-label-cushion{padding:0 4px}.fc .fc-timegrid-axis-frame-liquid{height:100%}.fc .fc-timegrid-axis-frame{align-items:center;display:flex;justify-content:flex-end;overflow:hidden}.fc .fc-timegrid-axis-cushion{flex-shrink:0;max-width:60px}.fc-direction-ltr .fc-timegrid-slot-label-frame{text-align:right}.fc-direction-rtl .fc-timegrid-slot-label-frame{text-align:left}.fc-liquid-hack .fc-timegrid-axis-frame-liquid{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col.fc-day-today{background-color:var(--fc-today-bg-color)}.fc .fc-timegrid-col-frame{min-height:100%;position:relative}.fc-media-screen.fc-liquid-hack .fc-timegrid-col-frame{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols{bottom:0;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols>table{height:100%}.fc-media-screen .fc-timegrid-col-bg,.fc-media-screen .fc-timegrid-col-events,.fc-media-screen .fc-timegrid-now-indicator-container{left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col-bg{z-index:2}.fc .fc-timegrid-col-bg .fc-non-business{z-index:1}.fc .fc-timegrid-col-bg .fc-bg-event{z-index:2}.fc .fc-timegrid-col-bg .fc-highlight{z-index:3}.fc .fc-timegrid-bg-harness{left:0;position:absolute;right:0}.fc .fc-timegrid-col-events{z-index:3}.fc .fc-timegrid-now-indicator-container{bottom:0;overflow:hidden}.fc-direction-ltr .fc-timegrid-col-events{margin:0 2.5% 0 2px}.fc-direction-rtl .fc-timegrid-col-events{margin:0 2px 0 2.5%}.fc-timegrid-event-harness{position:absolute}.fc-timegrid-event-harness>.fc-timegrid-event{bottom:0;left:0;position:absolute;right:0;top:0}.fc-timegrid-event-harness-inset .fc-timegrid-event,.fc-timegrid-event.fc-event-mirror,.fc-timegrid-more-link{box-shadow:0 0 0 1px var(--fc-page-bg-color)}.fc-timegrid-event,.fc-timegrid-more-link{border-radius:3px;font-size:var(--fc-small-font-size)}.fc-timegrid-event{margin-bottom:1px}.fc-timegrid-event .fc-event-main{padding:1px 1px 0}.fc-timegrid-event .fc-event-time{font-size:var(--fc-small-font-size);margin-bottom:1px;white-space:nowrap}.fc-timegrid-event-short .fc-event-main-frame{flex-direction:row;overflow:hidden}.fc-timegrid-event-short .fc-event-time:after{content:\"\\00a0-\\00a0\"}.fc-timegrid-event-short .fc-event-title{font-size:var(--fc-small-font-size)}.fc-timegrid-more-link{background:var(--fc-more-link-bg-color);color:var(--fc-more-link-text-color);cursor:pointer;margin-bottom:1px;position:absolute;z-index:9999}.fc-timegrid-more-link-inner{padding:3px 2px;top:0}.fc-direction-ltr .fc-timegrid-more-link{right:0}.fc-direction-rtl .fc-timegrid-more-link{left:0}.fc .fc-timegrid-now-indicator-arrow,.fc .fc-timegrid-now-indicator-line{pointer-events:none}.fc .fc-timegrid-now-indicator-line{border-color:var(--fc-now-indicator-color);border-style:solid;border-width:1px 0 0;left:0;position:absolute;right:0;z-index:4}.fc .fc-timegrid-now-indicator-arrow{border-color:var(--fc-now-indicator-color);border-style:solid;margin-top:-5px;position:absolute;z-index:4}.fc-direction-ltr .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 0 5px 6px;left:0}.fc-direction-rtl .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 6px 5px 0;right:0}";
     injectStyles(css_248z$2);
 
     const OPTION_REFINERS$2 = {
@@ -14499,6 +14627,9 @@ var FullCalendar = (function (exports) {
                 (monthTableWidth != null && monthTableWidth < 400) ?
                     'fc-multimonth-compact' :
                     '',
+                props.isHeightAuto ?
+                    '' :
+                    'fc-scroller', // for AutoScroller
             ];
             return (y(ViewContainer, { elRef: this.scrollElRef, elClasses: rootClassNames, viewSpec: context.viewSpec }, monthDateProfiles.map((monthDateProfile, i) => {
                 const monthStr = formatIsoMonthStr(monthDateProfile.currentRange.start);
