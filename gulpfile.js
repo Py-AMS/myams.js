@@ -10,6 +10,7 @@ const rename = require('gulp-rename');
 const uglify = require('gulp-terser');
 const sass = require('gulp-sass')(require('sass'));
 const clean = require('gulp-clean-css');
+const merge = require('merge-stream');
 
 const package = require('./package.json');
 
@@ -26,6 +27,9 @@ task('ext', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
+		.pipe(dest('src/myams_js/static/js/ext'))
+		.pipe(uglify())
+		.pipe(rename({extname: '.min.js'}))
 		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
@@ -40,6 +44,9 @@ task('jquery', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
+		.pipe(dest('src/myams_js/static/js/ext'))
+		.pipe(uglify())
+		.pipe(rename({extname: '.min.js'}))
 		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
@@ -54,15 +61,19 @@ task('bootstrap', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
-		.pipe(rename(function(path) {
-			path.basename = 'bootstrap';
-		}))
+		.pipe(rename({basename: 'bootstrap'}))
+		.pipe(dest('src/myams_js/static/js/ext'))
+		.pipe(uglify())
+		.pipe(rename({extname: '.min.js'}))
 		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
 task('bootstrap_css', function() {
 	return src('node_modules/bootstrap/dist/css/bootstrap.css')
+		.pipe(dest('src/myams_js/static/css/ext'))
+		.pipe(clean())
+		.pipe(rename({extname: '.min.css'}))
 		.pipe(dest('src/myams_js/static/css/ext'));
 });
 
@@ -77,18 +88,20 @@ task('fontawesome', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
-		.pipe(rename(function(path) {
-			path.basename = 'fontawesome';
-		}))
+		.pipe(rename({basename: 'fontawesome'}))
+		.pipe(dest('src/myams_js/static/js/ext'))
+		.pipe(uglify())
+		.pipe(rename({extname: '.min.js'}))
 		.pipe(dest('src/myams_js/static/js/ext'));
 });
 
 
 task('fontawesome_css', function() {
 	return src('node_modules/@fortawesome/fontawesome-free/css/all.css')
-		.pipe(rename(function(path) {
-			path.basename = 'fontawesome-all';
-		}))
+		.pipe(rename({basename: 'fontawesome-all'}))
+		.pipe(dest('src/myams_js/static/css/ext'))
+		.pipe(clean())
+		.pipe(rename({extname: '.min.css'}))
 		.pipe(dest('src/myams_js/static/css/ext'));
 });
 
@@ -103,7 +116,135 @@ task('jsrender', function() {
 				'@babel/plugin-transform-modules-umd'
 			]
 		}))
+		.pipe(dest('src/myams_js/static/js/ext'))
+		.pipe(uglify())
+		.pipe(rename({extname: '.min.js'}))
 		.pipe(dest('src/myams_js/static/js/ext'));
+});
+
+
+task('datatables', function() {
+	const statics = [
+		'dataTables.css',
+		'dataTables.bootstrap4.css'
+	];
+	const sasses = [
+		{'-datetime': ['dataTables.dateTime.scss']},
+	];
+	const styles = [
+		{'-autofill-bs4': ['autoFill.bootstrap4.css']},
+		{'-buttons-bs4': ['buttons.bootstrap4.css']},
+		{'-colreorder-bs4': ['colReorder.bootstrap4.css']},
+		{'-fixedcolumns-bs4': ['fixedColumns.bootstrap4.css']},
+		{'-fixedheader-bs4': ['fixedHeader.bootstrap4.css']},
+		{'-keytable-bs4': ['keyTable.bootstrap4.css']},
+		{'-responsive-bs4': ['responsive.bootstrap4.css']},
+		{'-rowgroup-bs4': ['rowGroup.bootstrap4.css']},
+		{'-rowreorder-bs4': ['rowReorder.bootstrap4.css']},
+		{'-scroller-bs4': ['scroller.bootstrap4.css']},
+		{'-searchbuilder-bs4': ['searchBuilder.bootstrap4.css']},
+		{'-searchpanes-bs4': ['searchPanes.bootstrap4.css']},
+		{'-select-bs4': ['select.bootstrap4.css']},
+		{'-staterestore-bs4': ['stateRestore.bootstrap4.css']},
+	];
+	const extensions = [
+		{'': ['jquery.dataTables.js']},
+		{'-bs4': ['dataTables.bootstrap4.js']},
+		{'-autofill': ['dataTables.autoFill.js']},
+		{'-autofill-bs4': ['autoFill.bootstrap4.js']},
+		{'-buttons': [
+			'dataTables.buttons.js',
+			'buttons.colVis.js',
+			'buttons.flash.js',
+			'buttons.html5.js',
+			'buttons.print.js'
+		]},
+		{'-buttons-bs4': ['buttons.bootstrap4.js']},
+		{'-colreorder': ['dataTables.colReorder.js']},
+		{'-colreorder-bs4': ['colReorder.bootstrap4.js']},
+		{'-datetime': ['dataTables.dateTime.js']},
+		{'-fixedcolumns': ['dataTables.fixedColumns.js']},
+		{'-fixedcolumns-bs4': ['fixedColumns.bootstrap4.js']},
+		{'-fixedheader': ['dataTables.fixedHeader.js']},
+		{'-fixedheader-bs4': ['fixedHeader.bootstrap4.js']},
+		{'-keytable': ['dataTables.keyTable.js']},
+		{'-keytable-bs4': ['keyTable.bootstrap4.js']},
+		{'-responsive': ['dataTables.responsive.js']},
+		{'-responsive-bs4': ['responsive.bootstrap4.js']},
+		{'-rowgroup': ['dataTables.rowGroup.js']},
+		{'-rowgroup-bs4': ['rowGroup.bootstrap4.js']},
+		{'-rowreorder': ['dataTables.rowReorder.js']},
+		{'-rowreorder-bs4': ['rowReorder.bootstrap4.js']},
+		{'-scroller': ['dataTables.scroller.js']},
+		{'-scroller-bs4': ['scroller.bootstrap4.js']},
+		{'-searchbuilder': ['dataTables.searchBuilder.js']},
+		{'-searchbuilder-bs4': ['searchBuilder.bootstrap4.js']},
+		{'-searchpanes': ['dataTables.searchPanes.js']},
+		{'-searchpanes-bs4': ['searchPanes.bootstrap4.js']},
+		{'-select': ['dataTables.select.js']},
+		{'-select-bs4': ['select.bootstrap4.js']},
+		{'-staterestore': ['dataTables.stateRestore.js']},
+		{'-staterestore-bs4': ['stateRestore.bootstrap4.js']}
+	];
+	const others = [
+		'jszip/dist/jszip.js',
+		'pdfmake/build/pdfmake.js'
+	];
+	const tasks = [];
+	statics.forEach(name => {
+		tasks.push(
+			src(`src/myams_js/static/css/ext/datatables/${name}`)
+				.pipe(clean())
+				.pipe(rename({extname: '.min.css'}))
+				.pipe(dest('src/myams_js/static/css/ext/datatables')));
+	});
+	sasses.forEach(obj => {
+		Object.entries(obj).forEach(([name, values]) => {
+			values.map(value => {
+				tasks.push(
+					src(`node_modules/datatables.net${name}/css/${value}`)
+						.pipe(sass())
+						.pipe(rename({extname: '.css'}))
+						.pipe(dest('src/myams_js/static/css/ext/datatables'))
+						.pipe(clean())
+						.pipe(rename({extname: '.min.css'}))
+						.pipe(dest('src/myams_js/static/css/ext/datatables')));
+			});
+		});
+	});
+	styles.forEach(obj => {
+		Object.entries(obj).forEach(([name, values]) => {
+			values.map(value => {
+				tasks.push(
+					src(`node_modules/datatables.net${name}/css/${value}`)
+						.pipe(dest('src/myams_js/static/css/ext/datatables'))
+						.pipe(clean())
+						.pipe(rename({extname: '.min.css'}))
+						.pipe(dest('src/myams_js/static/css/ext/datatables')));
+			});
+		});
+	});
+	extensions.forEach(obj => {
+		Object.entries(obj).forEach(([name, values]) => {
+			values.map(value => {
+				tasks.push(
+					src(`node_modules/datatables.net${name}/js/${value}`)
+						.pipe(dest('src/myams_js/static/js/ext/datatables'))
+						.pipe(uglify())
+						.pipe(rename({extname: '.min.js'}))
+						.pipe(dest('src/myams_js/static/js/ext/datatables')));
+			});
+		});
+	});
+	others.forEach(name => {
+		tasks.push(
+			src(`node_modules/${name}`)
+				.pipe(dest('src/myams_js/static/js/ext/datatables'))
+				.pipe(uglify())
+				.pipe(rename({extname: '.min.js'}))
+				.pipe(dest('src/myams_js/static/js/ext/datatables')));
+	});
+	return merge(tasks);
 });
 
 
@@ -309,6 +450,7 @@ exports.bootstrap = task('bootstrap');
 exports.bootstrap_css = task('bootstrap_css');
 exports.fontawesome = task('fontawesome');
 exports.fontawesome_css = task('fontawesome_css');
+exports.datatables = task('datatables');
 
 exports.ext = task('ext');
 
@@ -324,6 +466,24 @@ exports.mini_dev = task('mini_dev');
 exports.mini_prod = task('mini_prod');
 exports.core_dev = task('core_dev');
 exports.core_prod = task('core_prod');
+
+
+exports.all = parallel(
+	'jquery',
+	'bootstrap', 'bootstrap_css',
+	'fontawesome', 'fontawesome_css',
+	'datatables',
+	'ext',
+	'sass_dev', 'sass_prod',
+	'sass_emerald_dev', 'sass_emerald_prod',
+	'sass_darkmode_dev', 'sass_darkmode_prod',
+	'sass_lightmode_dev', 'sass_lightmode_prod',
+	'i18n_dev', 'i18n_prod',
+	'mods_dev', 'mods_prod',
+	'full_dev', 'full_prod',
+	'mini_dev', 'mini_prod',
+	'core_dev', 'core_prod'
+)
 
 
 exports.default = function() {
