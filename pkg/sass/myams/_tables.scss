@@ -70,7 +70,7 @@ table {
   tr {
     &[data-ams-url] * {
       cursor: pointer!important;
-  }
+    }
   }
   th {
     white-space: nowrap;
@@ -91,11 +91,28 @@ table {
         color: $primary;
       }
     }
+    &.dtr-control {
+      white-space: nowrap;
+    }
+    input[type="checkbox"] {
+      vertical-align: middle;
+    }
   }
   &.dataTable {
     &.my-0 {
       margin-top: 0!important;
       margin-bottom: 0!important;
+    }
+    >tbody {
+      >tr.child {
+        ul {
+          &.dtr-details {
+            >li {
+              padding: 0.25em 0 !important;
+            }
+          }
+        }
+      }
     }
   }
 }
