@@ -14,32 +14,31 @@
             box-sizing: border-box;
             list-style: none;
             margin: 0;
-            padding: 1px 0.25em;
+            padding: 1px 3.25em 1px 0.25em;
             width: 100%;
 
             &.ui-sortable {
                 padding-right: 1.5em;
-
-                &::after {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    top: 1em;
-                    right: 0.5em;
-                    width: 0;
-                    height: 0;
-                    margin-left: -4px;
-                    margin-top: -2px;
-                    border-color: $gray-800 transparent transparent transparent;
-                    border-style: solid;
-                    border-width: 5px 4px 0 4px;
-                }
+            }
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 1em;
+                right: 0.5em;
+                width: 0;
+                height: 0;
+                margin-left: -4px;
+                margin-top: -2px;
+                border-color: $gray-800 transparent transparent transparent;
+                border-style: solid;
+                border-width: 5px 4px 0 4px;
             }
         }
 
         .select2-selection__clear {
             right: 1.35em;
-            margin: 0.2em;
+            margin: 0.25em 0.2em;
         }
 
         // each selected item in input box
@@ -53,13 +52,13 @@
             padding-left: 5px;
             cursor: pointer;
             float: left;
-            margin-top: 0.35em;
+            margin-top: 0.25em;
             margin-right: 5px;
-            margin-bottom: 0.35em;
+            margin-bottom: 0.25em;
             line-height: 1.5;
 
             .select2.sortable + & {
-                margin-top: 0.15em;
+                margin-top: 0.2em;
                 margin-bottom: 0.1em;
                 cursor: move;
                 width: 100%;
