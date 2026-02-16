@@ -145,8 +145,6 @@ src/myams_js/static/css/ext/dropzone.css
 src/myams_js/static/css/ext/dropzone.min.css
 src/myams_js/static/css/ext/fontawesome-all.css
 src/myams_js/static/css/ext/fontawesome-all.min.css
-src/myams_js/static/css/ext/fontawesome.css
-src/myams_js/static/css/ext/fontawesome.min.css
 src/myams_js/static/css/ext/imgareaselect-animated.css
 src/myams_js/static/css/ext/imgareaselect-animated.min.css
 src/myams_js/static/css/ext/imgareaselect-default.css
@@ -3643,6 +3641,8 @@ src/myams_js/static/js/ext/datatables/buttons.bootstrap4.js
 src/myams_js/static/js/ext/datatables/buttons.bootstrap4.min.js
 src/myams_js/static/js/ext/datatables/buttons.colVis.js
 src/myams_js/static/js/ext/datatables/buttons.colVis.min.js
+src/myams_js/static/js/ext/datatables/buttons.flash.js
+src/myams_js/static/js/ext/datatables/buttons.flash.min.js
 src/myams_js/static/js/ext/datatables/buttons.html5.js
 src/myams_js/static/js/ext/datatables/buttons.html5.min.js
 src/myams_js/static/js/ext/datatables/buttons.print.js

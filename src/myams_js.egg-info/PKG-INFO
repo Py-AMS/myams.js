@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: myams_js
-Version: 2.9.6
+Version: 2.10.0
 Summary: MyAMS.js extension framework
 Home-page: https://pyams.readthedocs.io
 Author: Thierry Florac
@@ -16,6 +16,7 @@ Requires-Python: >=3.7
 License-File: LICENSE
 Requires-Dist: setuptools
 Requires-Dist: fanstatic
+Requires-Dist: importlib_resources; python_version < "3.9"
 Requires-Dist: pyams_utils>=2.0.0
 Provides-Extra: test
 Requires-Dist: pyramid_zcml; extra == "test"
@@ -77,6 +78,31 @@ is relying on MyAMS.js.
 
 Changelog
 =========
+
+2.10.0
+------
+ - updated dependencies: JsRender, FontAwesome, FullCalendar...
+ - updated Gulp script
+
+2.9.10
+------
+ - small CSS updates on calendars
+
+2.9.9
+-----
+ - small CSS updates on calendars
+
+2.9.8
+-----
+ - small CSS updates
+
+2.9.7
+-----
+ - updated importlib.resources dependency
+
+2.9.6
+-----
+ - updated packaging
 
 2.9.5
 -----

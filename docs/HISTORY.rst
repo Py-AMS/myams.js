@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.10.1
+------
+ - updated background opacity of tree term on mouse hover
+ - updated Select2 and Datatables styles
+
 2.10.0
 ------
  - updated dependencies: JsRender, FontAwesome, FullCalendar...

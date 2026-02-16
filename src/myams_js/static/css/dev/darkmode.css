@@ -9756,26 +9756,26 @@ select[readonly].select2-hidden-accessible + .select2-container {
     box-sizing: border-box;
     list-style: none;
     margin: 0;
-    padding: 1px 0.25em;
+    padding: 1px 3.25em 1px 0.25em;
     width: 100%; }
     .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered.ui-sortable {
       padding-right: 1.5em; }
-      .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered.ui-sortable::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 1em;
-        right: 0.5em;
-        width: 0;
-        height: 0;
-        margin-left: -4px;
-        margin-top: -2px;
-        border-color: #c2b5c7 transparent transparent transparent;
-        border-style: solid;
-        border-width: 5px 4px 0 4px; }
+    .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 1em;
+      right: 0.5em;
+      width: 0;
+      height: 0;
+      margin-left: -4px;
+      margin-top: -2px;
+      border-color: #c2b5c7 transparent transparent transparent;
+      border-style: solid;
+      border-width: 5px 4px 0 4px; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__clear {
     right: 1.35em;
-    margin: 0.2em; }
+    margin: 0.25em 0.2em; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
     font-family: -apple-system, BlinkMacSystemFont, "Afacad", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     color: #7f7682;
@@ -9786,12 +9786,12 @@ select[readonly].select2-hidden-accessible + .select2-container {
     padding-left: 5px;
     cursor: pointer;
     float: left;
-    margin-top: 0.35em;
+    margin-top: 0.25em;
     margin-right: 5px;
-    margin-bottom: 0.35em;
+    margin-bottom: 0.25em;
     line-height: 1.5; }
     .select2.sortable + .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
-      margin-top: 0.15em;
+      margin-top: 0.2em;
       margin-bottom: 0.1em;
       cursor: move;
       width: 100%; }
@@ -10043,9 +10043,18 @@ table td.action, table td.reorder {
   table td.action:hover, table td.reorder:hover {
     color: #cc8029; }
 
+table td.dtr-control {
+  white-space: nowrap; }
+
+table td input[type="checkbox"] {
+  vertical-align: middle; }
+
 table.dataTable.my-0 {
   margin-top: 0 !important;
   margin-bottom: 0 !important; }
+
+table.dataTable > tbody > tr.child ul.dtr-details > li {
+  padding: 0.25em 0 !important; }
 
 .tree {
   min-height: 20px; }
@@ -10074,7 +10083,7 @@ table.dataTable.my-0 {
       top: 14px;
       width: 15px; }
     .tree li:hover {
-      background: rgba(0, 0, 0, 0.15); }
+      background: rgba(0, 0, 0, 0.025); }
     .tree li > span {
       color: #f8ecf8;
       border: 1px solid #999;
