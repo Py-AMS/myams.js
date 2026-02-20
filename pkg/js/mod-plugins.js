@@ -1593,6 +1593,11 @@ export function switcher(element) {
 					}
 					$(`<i class="fa fa-fw fa-${state === 'open' ? minusClass : plusClass} mr-2"></i>`)
 						.prependTo(legend);
+					if (data.amsHint) {
+						$(`<i class="fa fa-fw fa-${data.amsHintIconClass || 'question-circle'} ml-2 text-body hint"></i>`)
+							.attr('data-original-title', data.amsHint)
+							.appendTo(legend);
+					}
 					legend.on('click', (evt) => {
 						evt.preventDefault();
 						const veto = {};
@@ -1602,7 +1607,7 @@ export function switcher(element) {
 						}
 						if (fieldset.hasClass('switched')) {
 							fieldset.removeClass('switched');
-							MyAMS.core.switchIcon($('i', legend), plusClass, minusClass);
+							MyAMS.core.switchIcon($('i', legend).first(), plusClass, minusClass);
 							legend.trigger('opened.ams.switcher', [legend]);
 							const id = legend.attr('id');
 							if (id) {
@@ -1615,7 +1620,7 @@ export function switcher(element) {
 							}
 						} else {
 							fieldset.addClass('switched');
-							MyAMS.core.switchIcon($('i', legend), minusClass, plusClass);
+							MyAMS.core.switchIcon($('i', legend).first(), minusClass, plusClass);
 							legend.trigger('closed.ams.switcher', [legend]);
 						}
 					});
