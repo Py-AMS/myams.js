@@ -8609,12 +8609,12 @@ a[href] > *,
 
 .ui-sortable-placeholder {
   min-height: 2em;
-  background-color: white; }
+  background-color: #cce3f5; }
   .visible-placeholder .ui-sortable-placeholder {
     visibility: visible !important; }
 
 .visible-helper .ui-sortable-helper {
-  background-color: #f7fafd; }
+  background-color: #b7d7f1; }
 
 .colorpicker-bs-popover {
   z-index: 1999; }
@@ -8637,7 +8637,7 @@ img {
     height: 100% !important; }
 
 .dropzone.dz-drag-hover {
-  background-color: #eccaa2 !important; }
+  background-color: #dfa562 !important; }
 
 .thumbnail {
   min-width: 128px; }
@@ -10218,6 +10218,37 @@ table.dataTable > tbody > tr.child ul.dtr-details > li {
     position: absolute;
     bottom: 0; }
 
+.booking-legend ul {
+  display: flex;
+  flex-direction: column; }
+  .booking-legend ul li {
+    display: flex;
+    flex-direction: row;
+    font-weight: normal; }
+    .booking-legend ul li.booking-marker::before {
+      content: " ";
+      display: block;
+      border: 1px solid var(--body);
+      background-color: var(--fc-enabled-bg);
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: 0.25em; }
+    .booking-legend ul li.booking-marker.booking-waiting::before {
+      background-color: var(--secondary);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-cancelled::before {
+      background-color: var(--warning);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-refused::before {
+      background-color: var(--danger);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-optional::before {
+      background-color: var(--info);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-confirmed::before {
+      background-color: var(--success);
+      filter: brightness(115%); }
+
 .leaflet-control-layers .leaflet-control-layers-list {
   border: none !important; }
 
@@ -10938,12 +10969,12 @@ table.dataTable > tbody > tr.child ul.dtr-details > li {
 :root {
   --body:                #f8ecf8;
   --body-bg:             rgba(37, 34, 38, 0.9);
-  --primary-light:       #f5e2cc;
-  --secondary-light:     #d0cdd1;
-  --success-light:       #ccf5cc;
-  --info-light:          #cce3f5;
-  --warning-light:       white;
-  --danger-light:        #f5cfcc;
+  --primary-light:       #e8bd8d;
+  --secondary-light:     #aaa5ad;
+  --success-light:       #8de88d;
+  --info-light:          #8dc0e8;
+  --warning-light:       #ffedb3;
+  --danger-light:        #e8948d;
   --dark-light:          #bdb8be;
   --fc-disabled-text:    #f3f3f3;
   --fc-disabled-bg:      #CED4DA;

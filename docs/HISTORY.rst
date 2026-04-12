@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.10.2
+------
+ - added support for legend hint and icon in fields switchers
+ - small CSS styles updates
+
 2.10.1
 ------
  - updated background opacity of tree term on mouse hover

@@ -163,3 +163,49 @@
     }
   }
 }
+
+
+.booking-legend {
+  ul {
+    display: flex;
+    flex-direction: column;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      font-weight: normal;
+
+      &.booking-marker {
+        &::before {
+          content: " ";
+          display: block;
+          border: 1px solid var(--body);
+          background-color: var(--fc-enabled-bg);
+          width: 1.5em;
+          height: 1.5em;
+          margin-right: 0.25em;
+        }
+        &.booking-waiting::before {
+          background-color: var(--secondary);
+          filter: brightness(115%);
+        }
+        &.booking-cancelled::before {
+          background-color: var(--warning);
+          filter: brightness(115%);
+        }
+        &.booking-refused::before {
+          background-color: var(--danger);
+          filter: brightness(115%);
+        }
+        &.booking-optional::before {
+          background-color: var(--info);
+          filter: brightness(115%);
+        }
+        &.booking-confirmed::before {
+          background-color: var(--success);
+          filter: brightness(115%);
+        }
+      }
+    }
+  }
+}

@@ -8637,7 +8637,7 @@ img {
     height: 100% !important; }
 
 .dropzone.dz-drag-hover {
-  background-color: #bcd4ec !important; }
+  background-color: #80addc !important; }
 
 .thumbnail {
   min-width: 128px; }
@@ -10181,6 +10181,37 @@ table.dataTable > tbody > tr.child ul.dtr-details > li {
     position: absolute;
     bottom: 0; }
 
+.booking-legend ul {
+  display: flex;
+  flex-direction: column; }
+  .booking-legend ul li {
+    display: flex;
+    flex-direction: row;
+    font-weight: normal; }
+    .booking-legend ul li.booking-marker::before {
+      content: " ";
+      display: block;
+      border: 1px solid var(--body);
+      background-color: var(--fc-enabled-bg);
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: 0.25em; }
+    .booking-legend ul li.booking-marker.booking-waiting::before {
+      background-color: var(--secondary);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-cancelled::before {
+      background-color: var(--warning);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-refused::before {
+      background-color: var(--danger);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-optional::before {
+      background-color: var(--info);
+      filter: brightness(115%); }
+    .booking-legend ul li.booking-marker.booking-confirmed::before {
+      background-color: var(--success);
+      filter: brightness(115%); }
+
 .leaflet-control-layers .leaflet-control-layers-list {
   border: none !important; }
 
@@ -10903,12 +10934,12 @@ table.dataTable > tbody > tr.child ul.dtr-details > li {
 :root {
   --body:                #797979;
   --body-bg:             rgba(255, 255, 255, 0.9);
-  --primary-light:       #e4edf7;
+  --primary-light:       #a8c7e7;
   --secondary-light:     white;
-  --success-light:       white;
+  --success-light:       #eef9ee;
   --info-light:          white;
   --warning-light:       white;
-  --danger-light:        #ebcdcc;
+  --danger-light:        #d69695;
   --dark-light:          #96a0aa;
   --fc-disabled-text:    #f3f3f3;
   --fc-disabled-bg:      #CED4DA;

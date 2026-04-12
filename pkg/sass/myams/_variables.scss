@@ -45,8 +45,19 @@ $cyan:                      #346597 !default;
 
 $primary:                     $blue !default;
 $success:                   #478e47 !default;
-$warning:                   $orange !default;
 $secondary:               $gray-400 !default;
+$info:                      #8dbae2 !default;
+$warning:                   $yellow !default;
+$danger:                       $red !default;
+
+
+$primary-light:           lighten($primary, 25) !default;
+$success-light:           lighten($success, 25) !default;
+$secondary-light:         lighten($secondary, 25) !default;
+$info-light:              lighten($info, 25) !default;
+$warning-light:           lighten($warning, 25) !default;
+$danger-light:            lighten($danger, 25) !default;
+
 
 $focus-border:              #84c6b7 !default;
 $focus-shadow:           0 0 0 0.2rem rgba(64, 139, 122, 0.25) !default;
